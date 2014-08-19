@@ -1,0 +1,10 @@
+safe: true
+
+lsi: false
+
+source: .
+
+markdown: redcarpet
+
+redcarpet:
+    extensions: [tables]
