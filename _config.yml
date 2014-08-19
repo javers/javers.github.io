@@ -4,7 +4,4 @@ highlighter: rouge
 
 source: .
 
-markdown: redcarpet
-
-redcarpet:
-    extensions: [tables]
+markdown: kramdown

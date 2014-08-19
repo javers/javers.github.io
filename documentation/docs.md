@@ -10,8 +10,7 @@ Core building blocks of JaVers are:
 * parameter
 * level
 
-
-~~~java
+~~~ java
     ParamEngineConfig engineConfig = ParamEngineConfigBuilder.paramEngineConfig()
         .withParameterRepositories(/* insert repositories */).build();
     
