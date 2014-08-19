@@ -9,8 +9,6 @@ Core building blocks of JaVers are:
 
 * parameter
 * level
-* parameter entry
-* function (plugin)
 
 
 ~~~java
