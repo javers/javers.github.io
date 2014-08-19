@@ -16,4 +16,3 @@ Core building blocks of JaVers are:
     
     ParamEngine engine = ParamEngineFactory.paramEngine(engineConfig);
 {% endhighlight %}
-

@@ -1,6 +1,6 @@
 safe: true
 lsi: false
-highlighter: rouge
+highlighter: pygments
 
 source: .
 
