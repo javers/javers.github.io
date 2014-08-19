@@ -1,5 +1,5 @@
 ---
-layout: main
+layout: docs
 title: JaVers Documentation
 ---
 
