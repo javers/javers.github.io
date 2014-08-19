@@ -13,10 +13,10 @@ Core building blocks of JaVers are:
 * function (plugin)
 
 
-```java
+~~~java
     ParamEngineConfig engineConfig = ParamEngineConfigBuilder.paramEngineConfig()
         .withParameterRepositories(/* insert repositories */).build();
     
     ParamEngine engine = ParamEngineFactory.paramEngine(engineConfig);
-```
+~~~
 
