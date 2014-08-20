@@ -1,168 +1,116 @@
 body, html {
-	height: 100%;
-	width: 100%;
+    height: 100%;
+    width: 100%;
+    position: relative;
 }
 
 body, a, h1, h2, h3, h4, h5, h6 {
-	font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 a, h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
-.white {
-    color: #ffffff;
-}
-
 .lead {
-	font-size: 18px;
-	font-weight: 400;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .intro-header {
-	padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
-	padding-bottom: 50px;
-	color: #f8f8f8;
-	background-size: cover;
-	text-align: center;
+    text-align: center;
 }
 
-.intro-image {
-    padding-top: 2%;
-    padding-bottom: 2%;
+.intro-header img {
+    padding: 4%;
 }
 
 .intro-message {
-	position: relative;
-	padding-top: 1%;
-	padding-bottom: 1%;
-    background: #f8f8f8;
-    border-top: 1px solid #e7e7e7;
+    text-align: center;
+    padding: 20px;
+}
+
+.intro-message hr {
+    width: 90%;
+    border-top: 1px solid #f8f8f8;
     border-bottom: 1px solid #e7e7e7;
 }
 
-/*.intro-message > h2 {*/
-	/*text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);*/
-/*}*/
-
-/*.intro-message > h4 {*/
-    /*text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);*/
-/*}*/
-
-.intro-divider {
-	width: 800px;
-	border-top: 1px solid #f8f8f8;
-	border-bottom: 1px solid #e7e7e7;
+.intro-message ul {
+    list-style: none;
 }
 
-
-
 @media (max-width: 767px) {
-	.intro-message {
-		padding-bottom: 15%;
-	}
 
-	.intro-message > h1 {
-		font-size: 3em;
-	}
+    .intro-message > h1 {
+        font-size: 1.7em;
+    }
 
-	ul.intro-social-buttons > li {
-		display: block;
-		margin-bottom: 20px;
-		padding: 0;
-	}
+    ul.intro-social-buttons > li {
+        display: block;
+        margin-bottom: 20px;
+        padding: 0;
+    }
 
-	ul.intro-social-buttons > li:last-child {
-		margin-bottom: 0;
-	}
+    ul.intro-social-buttons > li:last-child {
+        margin-bottom: 0;
+    }
 
-	.intro-divider {
-		width: 100%;
-	}
 }
 
 .network-name {
-	text-transform: uppercase;
-	font-size: 14px;
-	font-weight: 400;
-	letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 2px;
 }
 
-.content-section-a {
-	background-color: #f8f8f8;
-	padding: 50px 0;
-    border-top: 1px solid #e7e7e7;
+body > section {
+    border-bottom: 1px solid #e7e7e7;
 }
 
-.content-section-b {
-	border-top: 1px solid #e7e7e7;
-	border-bottom: 1px solid #e7e7e7;
-	padding: 50px 0;
+body > section:nth-child(odd) {
+    background-color: #f8f8f8;
 }
 
-.section-heading {
-	margin-bottom: 30px;
+body > section {
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
-.section-heading-spacer {
-	border-top: 3px solid #e7e7e7;
-	width: 200px;
-	float: left;
-}
-
-.banner {
-	padding: 100px 0;
-	color: #f8f8f8;
-	background: url(../img/banner-bg.jpg) no-repeat center center;
-	background-size: cover;
-}
-
-.banner h2 {
-	margin: 0;
-	text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
-	font-size: 3em;
-}
-
-.banner ul {
-	margin-bottom: 0;
+body > section h2 {
+    margin-bottom: 30px;
 }
 
 .banner-social-buttons {
-	float: right;
-	margin-top: 0;
+    float: right;
+    margin-top: 0;
 }
 
 @media (max-width: 1199px) {
-	ul.banner-social-buttons {
-		float: left;
-		margin-top: 15px;
-	}	
+    ul.banner-social-buttons {
+        float: left;
+        margin-top: 15px;
+    }
 }
 
 @media (max-width: 767px) {
-	.banner h2 {
-		margin: 0;
-		text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
-		font-size: 3em;
-	}
+    ul.banner-social-buttons > li {
+        display: block;
+        margin-bottom: 20px;
+        padding: 0;
+    }
 
-	ul.banner-social-buttons > li {
-		display: block;
-		margin-bottom: 20px;
-		padding: 0;
-	}
-
-	ul.banner-social-buttons > li:last-child {
-		margin-bottom: 0;
-	}	
+    ul.banner-social-buttons > li:last-child {
+        margin-bottom: 0;
+    }
 }
 
 footer {
-	background-color: #f8f8f8;
-	padding: 50px 0;
+    background-color: #fff;
+    padding: 50px 0;
 }
 
 p.copyright {
-	margin: 15px 0 0;
+    margin: 15px 0 0;
 }
