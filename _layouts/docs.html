@@ -4,13 +4,19 @@
 <html>
 <head>
     {% include head.html %}
+    <link href="/css/documentation.css" rel="stylesheet">
 </head>
 <body data-spy="scroll" data-target=".javers-navbar">
 
 {% include menus.html %}
-<section id="documentation" class="container-fluid">
-    <div class="container">
-        {% include content.html %}
+<section id="documentation" class="container">
+    <div class="row">
+        <div class="col-md-9 well">
+            {% include content.html %}
+        </div>
+        <div class="col-md-3">
+            {% include docs-sidebar.html %}
+        </div>
     </div>
 </section>
 {% include footer.html %}

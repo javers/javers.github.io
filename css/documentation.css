@@ -1,0 +1,58 @@
+#documentation {
+    margin-top: 50px;
+}
+
+.docs-sidebar.affix {
+    position: fixed;
+}
+
+.docs-sidebar .nav > li > a {
+    display: block;
+    padding: 10px 15px;
+    font-size: 22px;
+    font-weight: 500;
+    color: #333;
+}
+
+.docs-sidebar .nav > li > a:hover,
+.docs-sidebar .nav > li > a:focus {
+    padding-left: 15px;
+    color: #3d7ac6;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.docs-sidebar .nav > .active > a,
+.docs-sidebar .nav > .active:hover > a,
+.docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: 700;
+    color: #3d7ac6;
+    background-color: transparent;
+    border-left: 2px solid #182a72;
+}
+
+.docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #999;
+
+}
+
+.docs-sidebar .nav .nav > li > a:hover,
+.docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+    color: #3d7ac6;
+    border-left: 1px solid #182a72;
+
+}
+
+.docs-sidebar .nav .nav > .active > a,
+.docs-sidebar .nav .nav > .active:hover > a,
+.docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
