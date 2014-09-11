@@ -17,7 +17,8 @@ Scenario is simple:
 * user is typing a query in a search input and fires a HTTP request
 * application server receives the request and queries the database server
 * database server is doing some hard work to calculate result set
-* application server renders data as JSON and sends response back to the user's browser
+* application server renders data as JSON
+* and sends response back to the user's browser
 
 When development is done, you deploy the system on test environment and start playing with performance tests.
 
@@ -51,7 +52,57 @@ When the failure occurs in one part it doesn't propagate to another parts and
 doesn't knock down the whole system. Of course some features will deny to work but others should work normally.
 
 
+## How classical Java Servlet approach affects Resilience?
+What about our use case, is this system Resilient? If you have chosen classical <code>Java Servlet</code> approach
+(sometimes referred as thread-per-socket), answer is simple, no. 
+
+Consider two parts of your system: users and database. What happens if database
+starts to suffer on *slow responses* or some users will have *slow connections*?
+
+**Slow Response from integration point**. Database is just an example, it could be search engine, distributed cache,
+external service or anything outside your JVM which you call by network. 
+
+Consider what happens when system you depends on will be overloaded, not necessarily by you but for some another reason.
+It will send you responses but really slowly. 
+In our case, for example, database server will send query result not in 500ms as usual but in 10 second.
+
+It means that all user search request and then <code>http threads</code> will be waiting for response from database.
+Users becomes angry and will click Search button several times, who wants to wait 10 seconds? So more requests to serve.
+Soon, http thread pool will saturate, and user search request will be queued to wait for idle http thread.
+
+Requests to main page are usually served without touching the database 
+but they also will be queued an waiting for idle http thread.
+ 
+Even worse, application server stops responding for http **health checks** from load balancer
+and it could decide to kick it off from the cluster. 
+It means more requests for remaining servers and inevitable disaster. 
+ 
+The whole system is completely knocked down because of database failure.
+Your CTO is calling to you, asking whats going on and gives you very boring lecture about mission critical systems
+and how much money company will loose per every second of system unavailability.
+ 
+Don't worry! There are several ways to made our system more resistant to *Slow Responses* from integration point.
+The simplest solution is using timeouts, something more cleaver are *promises* implemented in Java8 as 
+<code>Completable Futures</code>.
+But the most interesting solution is *Asynchronous requests processing*, I'will explain later how it works. 
+                                    
+**Slow Connections with users**.
+Another part of your system which can fail and knocks the whole system are users.
+Usually the are nice and use broadband internet connections. Usually they are not willing to harm you.
+
+Consider what happens when group of your legitimate users will go the the Airport, connect their smartfons to WiFi
+(probably all to the same WiFi router) and start to use search feature of your site.
+
+On test environment all network connections are fast, but on production, some people could connect via poor WiFi or just
+slow mobile networks. Suddenly, you could realize that the last phase of our scenario 
+, *sending response back to the user's browser*, for some mobile guys last for ages.
+Those guys could allocate all http threads from your pool and made 
+them wait (the worst thing a thread can do).
+Threads will wait to send http responses via slow  connections.
+  
+It could be the fast track to similar disaster as described above, whole system knock out.
 
 
 
-Feature of the system that can isolate failures is hard to knock out even if 
+
+
