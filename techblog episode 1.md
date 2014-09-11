@@ -7,9 +7,9 @@ Then we show how classical approach to request processing
 (often referred as thread-per-socket) can badly affect your site Capacity and Resilience.
 
 In the second part we explain the new approach to request processing called
- *asynchronous* or some times *non-blocking*. We will show how it can help you too keep your production stable.
+*asynchronous* or some times *non-blocking*. We will show how it can help you too keep your production stable.
 
-Example implementations on Tomcat and Undertow will be shown.
+Example implementations for <code>Tomcat</code> and <code>Undertow</code> will be shown.
 
 ## Use case - typical e-commerce site
 Consider, you are creating e-commerce site and you are working on the search feature.
@@ -84,10 +84,10 @@ and how much money company will loose per every second of system unavailability.
 Don't worry! There are several ways to made our system more resistant to *Slow Responses* from integration point.
 The simplest solution is using timeouts, something more cleaver are *promises* implemented in Java8 as 
 <code>Completable Futures</code>.
-But the most interesting solution is *Asynchronous requests processing*, I'will explain later how it works. 
+But the most interesting solution is *Asynchronous requests processing*, I'll explain later how it works. 
                                     
 **Slow Connections with users**.
-Another part of your system which can fail and knocks the whole system are users.
+Another part of your system which can easily knocks down the whole system are users.
 Usually the are nice and use broadband internet connections. Usually they are not willing to harm you.
 
 Consider what happens when group of your legitimate users will go the the Airport, connect their smartfons to WiFi
@@ -98,10 +98,27 @@ slow mobile networks. Suddenly, you could realize that the last phase of our sce
 , *sending response back to the user's browser*, for some mobile guys last for ages.
 Those guys could allocate all http threads from your pool and made 
 them wait (the worst thing a thread can do).
-Threads will wait to send http responses via slow  connections.
+Threads will be doing nothing but waiting to send another network packet via slow TCP connections.
   
-It could be the fast track to similar disaster as described above, whole system knock out.
+It could be a fast track to similar disaster as described above, whole system will be knocked down.
+The best way to solve this problem is asynchronous requests processing.
 
+## How classical Java Servlet approach affects Capacity?
+Lets talk about Capacity in our use case. 40 RPS is not very impressive thees days. What if your stakeholders require 
+thousands? First you could easily eliminate obvious bottleneck, the old good SQL database, and replace it with something modern, fancy and scalable,
+for example <code>SolrCloud</code>.
+
+When you perform another round of load test, you will realize that next capacity bottleneck is http thread pool.
+Tomcat defaults poll size to 200. 
+It could be extent but every thread a costs lot of resources: memory for stack and CPU time for switching.
+You can always add more nodes to the cluster, but still, the overall capacity will be limited by the size of http thread pools.
+
+The most elegant way to solve this problem (without buying more servers) is once again,
+asynchronous requests processing backed by NIO.
+
+
+In the second part of this article I'll explain how it works and 
+will show example implementations for <code>Tomcat</code> and <code>Undertow</code>.
 
 
 
