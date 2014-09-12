@@ -56,53 +56,51 @@ doesn't knock down the whole system. Of course some features will deny to work b
 What about our use case, is this system Resilient? If you have chosen classical <code>Java Servlet</code> approach
 (sometimes referred as thread-per-socket), answer is simple, no. 
 
-Let's consider two parts of your system: users and database. What happens if database
-starts to suffer on *slow responses* or some users will have *slow connections*?
+Let's consider one part of your system: users. 
+On the test environment all network connections are fast, but on production, some people could connect via poor WiFi or just
+slow mobile networks.
 
-**Slow Response from integration point**. Database is just an example, it could be search engine, distributed cache,
-external service or anything outside your JVM which you call by network. 
+What happens if some of your users will suffer on *slow connections*?
 
-Consider what happens when system you depend on will be overloaded, not necessarily by you but for some another reason.
-It will send you responses but really slowly. 
-In our case, for example, database server will send query result not in 500ms as usual but in 10 second.
+**Slow Connections with users**.
+Users are often the least tested part of your system and they like to cause troubles.
+Let's consider only legitimate users and not those guys who wants to DDOS you. 
 
-It means that all user search request and then <code>http threads</code> will be waiting for response from database.
-Users becomes angry and will click Search button several times, who wants to wait 10 seconds? So more requests to serve.
-Soon, http thread pool will saturate, and user search request will be queued and waiting for idle http thread.
+We often think that users are nice and use broadband internet connections but that's not true.
+Consider what happens when group of them will go to the Airport, connect their smartfons to WiFi
+(probably all to the same WLAN router) and start to use search feature of your site.
+The other group will connect via slow mobile networks and also star to click.
 
-Requests to main page are usually served without touching the database 
-but they also will be queued and waiting for thread.
- 
-Even worse, application server will stop responding for http **health checks** from load balancer
-and it could decide to kick it off from the cluster. 
+Suddenly it occurs, that network transport becomes bottleneck in our system. 
+For those mobile guys, the last phase of our scenario *'sending response back to the user's browser'*,
+will last for ages.
+OK, let's say 10 seconds instead of 10 milliseconds in the test environment.
+They will receive responses but very slowly and it wouldn't be even your fault but their networks. 
+
+As you know, in classical Java Servlet approach, every active TCP/IP connections is bound to exactly one 
+<code>http thread</code>. It means, that each request from mobile guy will allocate one http thread for 10 seconds.
+Soon, http thread pool will saturate, and all http request will be queued and waiting for the idle thread.
+
+At this time, some of your mobile friends becomes angry and will click Search button several times,
+who wants to wait so long? It means even more request to serve for you.
+Nice users with broadband connections will also get nervous because their requests also will
+be queued and waiting for the idle thread
+
+Even worse, overloaded application server will stop responding for http **health checks** from load balancer,
+who could decide to kick it off from the cluster. 
 It means more requests for remaining servers and inevitable disaster. 
- 
-The whole system is completely knocked down because of database failure.
+
+The whole system is completely knocked down because of slow connections with mobile guys.
+The funny thing is, that all of your servers are almost idle.
+Most of http threads do nothing (the worst thing a thread can do)
+but waiting to send another network packet via slow TCP connections.
+
 Your CTO is calling to you, asking whats going on and gives you very boring lecture about mission critical systems
 and how much money company will loose per every second of system unavailability.
- 
-Don't worry! There are several ways to made our system more resistant to *Slow Responses* from integration point.
-The simplest solution is using timeouts, something more clever are *promises* implemented in Java8 as 
-<code>Completable Futures</code>.
-But the most interesting solution is *Asynchronous requests processing*, I'll explain later how it works. 
+   
+Don't worry! There is a smart way to made our system resistant to *Slow Connections*.
+Of course, it's an *Asynchronous approach to requests processing*. 
                                     
-**Slow Connections with users**.
-Another part of your system which can easily knocks down the whole system are users.
-Usually the are nice and use broadband internet connections. Usually they are not willing to harm you.
-
-Consider what happens when group of your legitimate users will go to the Airport, connect their smartfons to WiFi
-(probably all to the same WiFi router) and start to use search feature of your site.
-
-On the test environment all network connections are fast, but on production, some people could connect via poor WiFi or just
-slow mobile networks. Suddenly, you could realize that the last phase of our scenario 
-, *sending response back to the user's browser*, for some mobile guys last for ages.
-Those guys could allocate all http threads from your pool and made 
-them wait (the worst thing a thread can do).
-Threads will be doing nothing but waiting to send another network packet via slow TCP connections.
-  
-It could be a fast track to similar disaster as described above, whole system will be knocked down.
-The best way to solve this problem is asynchronous requests processing.
-
 ## How classical Java Servlet approach affects Capacity?
 Lets talk about Capacity in our use case. 40 RPS is not very impressive these days. What if your stakeholders require 
 thousands? First you could easily eliminate obvious bottleneck, the old good SQL database, and replace it with something modern, fancy and scalable,
