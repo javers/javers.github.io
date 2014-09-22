@@ -1,7 +1,6 @@
-safe: true
-lsi: false
-highlighter: pygments
 
-source: .
-
-markdown: kramdown
+# Build settings
+markdown: redcarpet
+kramdown:
+    input: GFM
+    coderay_line_numbers: nil

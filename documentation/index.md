@@ -32,11 +32,3 @@ This is the niche JaVers fulfills. In JaVers, *version* and *change* are **first
 * We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects, pretty much the same like JPA does. We believe that this is right way of describing data.
 * JaVers is written in Java7 it can be run on JDK 6 or higher.
 
-
-Syntax highlight demo:
-{% highlight java %}
-    ParamEngineConfig engineConfig = ParamEngineConfigBuilder.paramEngineConfig()
-        .withParameterRepositories(/* insert repositories */).build();
-    
-    ParamEngine engine = ParamEngineFactory.paramEngine(engineConfig);
-{% endhighlight %}
