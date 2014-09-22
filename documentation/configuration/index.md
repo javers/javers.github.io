@@ -41,6 +41,7 @@ public class User {
 ```
 
 <code>BEAN</code> mapping style is selected in <code>JaversBuilder</code> as follows:
+
 ```java
 Javers javers = JaversBuilder
                .javers()
