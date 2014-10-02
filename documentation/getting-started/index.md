@@ -3,12 +3,13 @@ layout: docs
 title: Documentation - Getting started
 ---
 
-# Getting started
+<a name="getting-started"></a>
+# Getting started #
 
 To get JaVers add <code>javers-core</code>
 to your project dependencies and (optionally) add proper dependency on <code>javers-repository</code>.
 
-### javers-core
+### javers-core ###
 For maven: 
 
 ```xml
@@ -26,7 +27,7 @@ compile 'org.javers:javers-core:0.8.0'
 ```   
 If you are going to use JaVers as an object diff tool, this is only dependency you need.
         
-### javers-repository 
+### javers-repository ###
 If you are going to use JaVers as a data audit framework, choose proper repository implementation.
 For example, if you are using MongoDb add:
 
@@ -44,7 +45,8 @@ For gradle:
 compile 'org.javers:javers-persistence-mongo:0.8.0'
 ```
 
-## Create JaVers instance
+<a name="create-javers-instance"></a>
+## Create JaVers instance ##
 
 Use JaversBuilder to create JaVers instance:
 ```

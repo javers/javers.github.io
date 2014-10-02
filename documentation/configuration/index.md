@@ -70,7 +70,7 @@ Mapping is also a case in JaVers but don't worry:
   so we do not ask You to embrace another annotation set
 
 JaVers wants to know only a few basic facts about your domain model classes,
-particularly <a href="http://javers.org/javadoc_0.8.0/index.html?org/javers/core/metamodel/type/JaversType.html"><code>JaversType</code></a> 
+particularly [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html) 
 of each class spotted in runtime.
 **Proper mapping is essential** for diff algorithm, for example we need to know if objects of given class
 should be compared property-by-property or using equals().
@@ -84,15 +84,16 @@ The last two types are JaVers internals and can't be mapped by user.
 To make long story short, You as a user are asked to label your domain model classes as
 Entities, ValueObjects or Values.
 
-Do achieve this, use <a href="http://javers.org/javadoc_0.8.0/index.html?org/javers/core/JaversBuilder.html"><code>JaversBuilder</code></a> methods:
-* <a href="http://javers.org/javadoc_0.8.0/org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-"<code>JaversBuilder.registerEntity()</code></a>
-* <a href="http://javers.org/javadoc_0.8.0/org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-"<code>JaversBuilder.registerValueObject()</code></a>
-* <a href="http://javers.org/javadoc_0.8.0/org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-"<code>JaversBuilder.registerValue()</code></a>
+Do achieve this, use [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html) methods:
+
+* [`JaversBuilder.registerEntity()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-)
+* [`JaversBuilder.registerValueObject()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
+* [`JaversBuilder.registerValue()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
 
 Let's examine these three fundamental types more closely.
 
 ### Entity
-JaVers <a href="http://javers.org/javadoc_0.8.0/index.html?org/javers/core/metamodel/type/EntityType.html"><code>Entity</code></a>
+JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)</a>
 has exactly the same semantic like DDD Entity or JPA Entity.
 
 Usually, each entity instance represents concrete physical object.
@@ -102,7 +103,7 @@ Entity can contain ValueObjects, References (to entity instances), Containers, V
 For example Entities are: Person, Company.
 
 ### Value Object
-JaVers <a href="http://javers.org/javadoc_0.8.0/index.html?org/javers/core/metamodel/type/ValueObjectType.html"><code>ValueObject</code></a>
+JaVers [`ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
 It's a complex value holder with a list of mutable properties but without unique identifier.
 
@@ -113,13 +114,13 @@ So in JaVers, ValueObject is just Entity without identity.
 For example ValueObjects are: Address, Point.
 
 ### Value
-JaVers <a href="http://javers.org/javadoc_0.8.0/index.html?org/javers/core/metamodel/type/ValueType.html"><code>Value</code></a> is a simple (scalar) value holder.
+JaVers [`Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html) is a simple (scalar) value holder.
 Two Values are compared using **equals()** method so its highly important to implement it properly by comparing underlying state.
 
 For example Values are: BigDecimal, LocalDate.
 
 For Values it's advisable to customize JSON serialization by implementing *Type Adapters*,
-see <a href="http://javers.org/javadoc_0.8.0/index.html?org/javers/core/json/JsonConverter.html"><code>JsonConverter</code></a>.
+see [`JsonConverter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonConverter.html).
 
 ### TypeMapper and type inferring policy
 JaVers use lazy approach to type mapping so types are resolved only for classes spotted in runtime.

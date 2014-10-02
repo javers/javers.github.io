@@ -4,3 +4,7 @@ markdown: redcarpet
 kramdown:
     input: GFM
     coderay_line_numbers: nil
+
+
+#Site content configuration
+javadoc_url: http://javers.org/javadoc_0.8.0/
