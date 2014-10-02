@@ -3,16 +3,56 @@ layout: docs
 title: Documentation - Configuration
 ---
 
-## Configuration
+# Configuration #
+None of us likes to configure tools but don't worry, we at JaVers know it and 
+do the hard work to minimize configuration efforts on your side.
 
-## Choose mapping style
-There are two mapping styles in JaVers:
+As we stated before, JaVers configuration is very concise.
+You can start with zero config and give JaVers a chance to infer all facts about your domain model.
 
-* <code>FIELD</code>, used by **default** and recommended in most cases, 
-* <code>BEAN</code>, useful for domain models compliant with <code>Java Bean</code> convention.
+Take a look how JaVers deals with your data. If it's fine, let the defaults works for.  
+Add configuration when you would like to change the default behavior.
  
-When using <code>FIELD</code> style, JaVers is accessing objects state directly from fields.
-In this case, <code>@Id</code> annotation should be placed at field level. For example:
+There are two areas of configuration
+[Domain model mapping](/documentation/configuration#domain-model-mapping) 
+and 
+[Repository setup](/documentation/configuration#repository-setup).
+
+For now we support Java config via [`JaversBuilder`]({{ javadoc_url }}index.html?org/javers/core/JaversBuilder.html). 
+
+<a name="domain-model-mapping"></a>
+## Domain model mapping
+
+### Why domain model mapping?
+Many frameworks which deal with user domain model (aka data model) use some kind of <b>mapping</b>.
+For example JPA uses annotations in order to map user classes into relational database.
+Plenty of XML and JSON serializers uses various approaches to mapping, usually based on annotations.
+
+When combined together, all of those framework-specific annotations could be a pain and
+pollution in Your business domain code.
+
+Mapping is also a case in JaVers but don't worry:
+* It's far more simple than JPA
+* JaVers uses reasonable defaults and takes advantage of type inferring algorithm.
+  So for a quick start just let it do the mapping for You.
+  Later on, it would be advisable to refine the mapping in order to optimize a diff semantic
+* We believe that domain model classes should be framework agnostic,
+  so we do not ask You to embrace another annotation set
+
+JaVers wants to know only a few basic facts about your domain model classes,
+particularly [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html) 
+of each class spotted in runtime.
+**Proper mapping is essential** for diff algorithm, for example we need to know if objects of given class
+should be compared property-by-property or using equals().
+
+### Choose mapping style
+There are two mapping styles in JaVers `FIELD` and `BEAN`.
+FIELD style is the default one. We recommend not to change it, as it's suitable in most cases.   
+
+BEAN style is useful for domain models compliant with <code>Java Bean</code> convention.
+ 
+When using <code>FIELD</code> style, JaVers accesses objects state directly from fields.
+In this case, <code>@Id</code> annotation should be placed at the field level. For example:
 
 ```java
 public class User {
@@ -23,8 +63,8 @@ public class User {
 }
 ```
 
-When using <code>BEAN</code> style, JaVers is accessing objects state by calling **getters**, annotations should be placed at method level. 
-For example:
+When using <code>BEAN</code> style, JaVers is accessing objects state by calling **getters**,
+annotations should be placed at the method level. For example:
 
 ```java
 public class User {
@@ -50,30 +90,6 @@ Javers javers = JaversBuilder
 ```
 
 In both styles, access modifiers are not important, it could be private ;)
-
-## Domain model mapping
-
-###Why domain model mapping?
-Many frameworks which deal with user domain model (aka data model) use some kind of <b>mapping</b>.
-For example JPA uses annotations in order to map user classes into relational database.
-Plenty of XML and JSON serializers uses various approaches to mapping, usually based on annotations.
-
-When combined together, all of those framework-specific annotations could be a pain and
-pollution in Your business domain code.
-
-Mapping is also a case in JaVers but don't worry:
-* It's far more simple than JPA
-* JaVers uses reasonable defaults and takes advantage of type inferring algorithm.
-  So for a quick start just let it do the mapping for You.
-  Later on, it would be advisable to refine the mapping in order to optimize a diff semantic
-* We believe that domain model classes should be framework agnostic,
-  so we do not ask You to embrace another annotation set
-
-JaVers wants to know only a few basic facts about your domain model classes,
-particularly [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html) 
-of each class spotted in runtime.
-**Proper mapping is essential** for diff algorithm, for example we need to know if objects of given class
-should be compared property-by-property or using equals().
 
 ### Javers Types
 We use *Entity* and *ValueObjects* notions following Eric Evans
@@ -149,6 +165,7 @@ Minimize JaversBuilder configuration by taking advantage of type inferring polic
 For Values, remember about implementing equals() properly
 and consider implementing JSON type adapters.
   
+<a name="repository-setup"></a>
 ## Repository setup
 If you are going to use JaVers as data audit framework you are supposed to configure JaversRepository.
  
