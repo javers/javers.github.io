@@ -49,7 +49,8 @@ compile 'org.javers:javers-persistence-mongo:0.8.0'
 ## Create JaVers instance ##
 
 Use JaversBuilder to create JaVers instance:
-```
+
+```java
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 //...
