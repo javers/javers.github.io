@@ -10,13 +10,21 @@ do the hard work to minimize configuration efforts on your side.
 As we stated before, JaVers configuration is very concise.
 You can start with zero config and give JaVers a chance to infer all facts about your domain model.
 
-Take a look how JaVers deals with your data. If it's fine, let the defaults works for.  
+Take a look how JaVers deals with your data. If it's fine, let the defaults work for.  
 Add configuration when you would like to change the default behavior.
  
-There are two areas of configuration
-[Domain model mapping](/documentation/configuration#domain-model-mapping) 
+There are two logical areas of configuration,
+[domain model mapping](/documentation/configuration#domain-model-mapping) 
 and 
-[Repository setup](/documentation/configuration#repository-setup).
+[repository setup](/documentation/configuration#repository-setup).
+Proper mapping is important for both JaVers features, object diff and data audit (JaversRepository).
+
+Object diff algorithm is the core of JaVers. When two objects are compared, JaVers needs to know what
+type they are. We distinct following types: *Entities*, *ValueObjects*, *Values*, *Containers* and *Primitives*.  
+Each type has a different comparing style. 
+
+JaVers can infer the type of your classes, but if it goes wrong the diff result could be strange.
+In this case you should tune the type mapping.
 
 For now we support Java config via [`JaversBuilder`]({{ javadoc_url }}index.html?org/javers/core/JaversBuilder.html). 
 
