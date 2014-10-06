@@ -40,6 +40,7 @@ When combined together, all of those framework-specific annotations could be a p
 pollution in Your business domain code.
 
 Mapping is also a case in JaVers but don't worry:
+
 * It's far more simple than JPA
 * JaVers uses reasonable defaults and takes advantage of type inferring algorithm.
   So for a quick start just let it do the mapping for You.
