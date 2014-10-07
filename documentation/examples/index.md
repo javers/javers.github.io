@@ -5,8 +5,6 @@ title: Documentation - Examples
 
 # Examples #
 
-## Diff ##
-
 <a name="compare-entities"></a>
 ### Compare Entities ###
 
@@ -106,8 +104,6 @@ Output:
         Value before change: Johny
         Value after change: Charlie
         
-## Audit ##
-   
 <a name="commit-changes"></a>
 ### Commit changes ###
 
