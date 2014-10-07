@@ -10,11 +10,9 @@ title: Documentation - Examples
 <a name="compare-entities"></a>
 ### Compare Entities ###
 
-To find diff between two entities you don't have to register entity class in Javers building process. Javers  automatically discover type of 
-object. If Javers find @Id annotation in proper place then it will be recognize as Entity, in other way it will be recognized as 
-ValueObject.
-
-The object has to be the same class and has to be object of custom class (you can't compare standard Java objects)
+In order to find diff between two entities you don't have to register an entity class in Javers. Javers  automatically discovers the type of 
+the object passed. If Javers finds an @Id annotation in the proper place, it will treat it as Entity, in other wise it will be interpreted 
+as ValueObject.
 
 
 ```java
@@ -70,7 +68,7 @@ Output of running this program is:
 <a name="compare-valueobjects"></a>
 ### Compare Value Objects ###
 
-If you don't put @Id annotation in the class definition Javers recognize object as Value Object. Javers compare property by property and 
+If you don't put an @Id annotation in the class definition Javers recognize an object as Value Object. Javers treat Id as other fields and 
 returns ```ValueObject``` changes:
 
 
@@ -113,8 +111,8 @@ Output:
 <a name="commit-changes"></a>
 ### Commit changes ###
 
-When your domain object has changed you probably want to persist details about this change. You can do this by call ```commit``` method on 
-Javers instance:
+Whenever your domain object changes you have to persist details about the change. You can do this with a call ```commit``` method on Javers 
+instance:
 
 
 ```java           
@@ -156,15 +154,16 @@ Javers instance:
 <a name="read-snapshots-history"></a>
 ### Read snapshots history ###
 
-After taking some commits you can read persisted snapshots from repository. 
-To read snapshots you have to provide:
+Having some commits executed you can read the list of persisted snapshots from the repository. 
+In order to read snapshots you have to provide:
     <ul>
         <li>entity id</li>
         <li>entity class</li>
         <li>maximum number of snapshots to download</li>
     </ul>    
     
-Javers read snapshots in reverse chronological order, so for example if you set limit to 10 Javers returns 10 newest snapshots.
+Javers read snapshots in the reversed chronological order. For example if you set the limit to 10 Javers returns the list of 10 latest 
+snapshots.
    
 
 ```java        
@@ -214,8 +213,8 @@ output:
 <a name="read-changes-history"></a>
 ### Read changes history ###
      
-If you want to read changes of given entity Javers can calculate diffs from persisted snapshots.
-To read changes you have to provide:
+If you want to read changes for a given entity, Javers can calculate diffs from persisted snapshots.
+In order read changes you have to provide:
      <ul>
          <li>entity id</li>
          <li>entity class</li>
