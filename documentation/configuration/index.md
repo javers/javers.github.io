@@ -26,7 +26,7 @@ Each type has a different comparing style.
 JaVers can infer the type of your classes, but if it goes wrong the diff result could be strange.
 In this case you should tune the type mapping.
 
-For now we support Java config via [`JaversBuilder`]({{ javadoc_url }}index.html?org/javers/core/JaversBuilder.html). 
+For now, we support Java config via [`JaversBuilder`]({{ javadoc_url }}index.html?org/javers/core/JaversBuilder.html). 
 
 <a name="domain-model-mapping"></a>
 ## Domain model mapping
@@ -42,7 +42,7 @@ pollution in Your business domain code.
 Mapping is also a case in JaVers but don't worry:
 
 * It's far more simple than JPA
-* JaVers uses reasonable defaults and takes advantage of type inferring algorithm.
+* JaVers uses reasonable defaults and takes advantage of *type inferring algorithm*.
   So for a quick start just let it do the mapping for You.
   Later on, it would be advisable to refine the mapping in order to optimize a diff semantic
 * We believe that domain model classes should be framework agnostic,
@@ -51,7 +51,7 @@ Mapping is also a case in JaVers but don't worry:
 JaVers wants to know only a few basic facts about your domain model classes,
 particularly [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html) 
 of each class spotted in runtime.
-**Proper mapping is essential** for diff algorithm, for example we need to know if objects of given class
+**Proper mapping is essential** for diff algorithm, for example we need to know if given objects 
 should be compared property-by-property or using equals().
 
 ### Choose mapping style
@@ -101,15 +101,22 @@ Javers javers = JaversBuilder
 In both styles, access modifiers are not important, it could be private ;)
 
 ### Javers Types
-We use *Entity* and *ValueObjects* notions following Eric Evans
+JaVers type system is based on *Entity* and *ValueObjects* notions, following Eric Evans
 Domain Driven Design terminology (DDD).
-Furthermore, we use *Values*, *Primitives* and *Containers*.
+Furthermore, it uses *Value*, *Primitive* and *Container* notions.
 The last two types are JaVers internals and can't be mapped by user.
 
-To make long story short, You as a user are asked to label your domain model classes as
-Entities, ValueObjects or Values.
+To make long story short, JaVers needs to know a Javers Type
+of each class spotted in runtime.
 
-Do achieve this, use [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html) methods:
+There are two ways to achieve this: 
+
+* annotations, JPA or JaVers, well known
+* type inferring algorithm based class inheritance tree
+* explicit, use [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html)
+  methods to label your domain model classes as Entities, ValueObjects or Values.
+
+These methods are listed below:
 
 * [`JaversBuilder.registerEntity()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-)
 * [`JaversBuilder.registerValueObject()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
@@ -147,33 +154,22 @@ For example Values are: BigDecimal, LocalDate.
 For Values it's advisable to customize JSON serialization by implementing *Type Adapters*,
 see [`JsonConverter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonConverter.html).
 
-### TypeMapper and type inferring policy
-JaVers use lazy approach to type mapping so types are resolved only for classes spotted in runtime.
+### Mapping scenario 
+Your task is to identify Entities and ValueObjects and Values in your domain model
+and make sure JaVers got it. So what should you do?
 
-To show You how it works, assume that JaVers is calculating diff on two graphs of objects
-and currently two Person.class instances are compared.
+* 
+For example, if all your Entities extends some abstract class, like
 
-ObjectGraphBuilder asks TypeMapper about JaversType of Person.class. TypeMapper does the following:
+First, try to distinct them by high level abstract classes or interfaces.
 
-* If Person.class was spotted before in the graphs, TypeMapper has exact mapping for it and just returns already known JaversType
-* If this is a first question about Person.class, TypeMapper checks if it was registered in JaversBuilder
-  as one of Entity, ValueObject or Value. If so, answer is easy
-* Then TypeMapper tries to find so called *Prototype&mdash;nearest* class or interface that is already mapped and is assignable from Person.class.
-  So as You can see, it's easy to map whole bunch of classes with a common superclass or interface with one call to JaversBuilder.
-  Just register high level concepts (classes or interfaces at the top of the inheritance hierarchy)
-* When Prototype is not found, JaVers tries to infer Type by looking for <code>@Id</code> annotations at property level
-  (only the annotation class name is important, package is not checked, 
-  so you can use well known javax.persistence.Id or custom annotation).
-  If @Id is found, class would be mapped as an Entity, otherwise as a ValueObject.
+  
 
-Tu summarize, when JaVers knows nothing about your class, it will be mapped as ValueObject.
-
-So your task is to identify Entities and ValueObjects and Values in your domain model.
-Try to distinct them by high level abstract classes or interfaces.
-Minimize JaversBuilder configuration by taking advantage of type inferring policy.
+Minimize JaversBuilder configuration by taking advantage of type inferring algorithm.
 For Values, remember about implementing equals() properly
 and consider implementing JSON type adapters.
-  
+*
+ 
 <a name="repository-setup"></a>
 ## Repository setup
 If you are going to use JaVers as data audit framework you are supposed to configure JaversRepository.
