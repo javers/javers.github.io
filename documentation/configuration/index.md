@@ -4,16 +4,16 @@ title: Documentation - Configuration
 ---
 
 # Configuration #
-None of us likes to configure tools but don't worry, we at JaVers know it and 
-do the hard work to minimize configuration efforts on your side.
+None of us likes to configure tools but don't worry, JaVers knows it and
+does the hard work to minimize the configuration efforts on your side.
 
 As we stated before, JaVers configuration is very concise.
 You can start with zero config and give JaVers a chance to infer all facts about your domain model.
 
 Take a look how JaVers deals with your data. If it's fine, let the defaults work for.  
-Add configuration when you would like to change the default behavior.
+Add more configuration when you would like to change the default behavior.
  
-There are two logical areas of configuration,
+There are two logical areas of the configuration,
 [domain model mapping](/documentation/configuration#domain-model-mapping) 
 and 
 [repository setup](/documentation/configuration#repository-setup).
