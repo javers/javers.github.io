@@ -153,27 +153,27 @@ JaVers annotations support is based on two sets, JPA & JaVers.
 
 In the table header, there are JaVers types resulting from annotations, listed in table cells.
 As you can see, the trick is, JaVers ignores package names and cares only about annotation simple class names.
-So you can use any annotations sets as far as their names match JPA or JaVers names.
+So you can use any annotations set as far as their names match JPA or JaVers names.
 
 Class level annotations:
 
-Entity                                       | ValueObject                                       | Value
--------------------------------------------- | ------------------------------------------------- | -------------------------------------------
-@javax.persistence.Entity                    | @javax.persistence.Embeddable                     | @org.javers.core.metamodel.annotation.Value
-@org.javers.core.metamodel.annotation.Entity | @org.javers.core.metamodel.annotation.ValueObject | @*.Value
-@javax.persistence.MappedSuperclass          | @*.Embeddable  |
-@*.Entity                                    | @*.ValueObject |
-@*.MappedSuperclass                          | |
+Entity                                         | ValueObject                                         | Value
+---------------------------------------------- | --------------------------------------------------- | -------------------------------------------
+`@javax.persistence.Entity`                    | `@javax.persistence.Embeddable`                     | `@org.javers.core.metamodel.annotation.Value`
+`@org.javers.core.metamodel.annotation.Entity` | `@org.javers.core.metamodel.annotation.ValueObject` | `@*.Value`
+`@javax.persistence.MappedSuperclass`          | `@*.Embeddable`  |
+`@*.Entity`                                    | `@*.ValueObject` |
+`@*.MappedSuperclass`                          | |
 
 
 Property level annotations:
 
-DiffIgnore                                        | Id
-------------------------------------------------- | ----------------------------------------
-@javax.persistence.Transient                      | @javax.persistence.Id
-@org.javers.core.metamodel.annotation.DiffIgnore  | @org.javers.core.metamodel.annotation.Id
-@*.Transient                                      | @*.Id
-@*.DiffIgnore                                     |
+DiffIgnore                                         | Id
+-------------------------------------------------- | ----------------------------------------
+`@javax.persistence.Transient`                     | `@javax.persistence.Id`
+`@org.javers.core.metamodel.annotation.DiffIgnore` | `@org.javers.core.metamodel.annotation.Id`
+`@*.Transient`                                     | `@*.Id`
+`@*.DiffIgnore`                                    |
 
 
 ### Property mapping style
