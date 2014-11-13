@@ -45,7 +45,7 @@ Mapping is also a case in JaVers but don't worry:
 * JaVers wants to know only a few basic facts about your domain model classes.
 * Mapping is done mainly on the class level, property level mapping is required only for
   choosing Entity ID.
-* JaVers scans well known annotations sets like JPA and Hibernate.
+* JaVers scans well known annotations sets like JPA and Hibernate, see [supported annotations table](#supported-annotations).
   So if your classes are already annotated with these sets, you are lucky.
   If not, JaVers provides its [own annotations set]({{ site.javadoc_url }}org/javers/core/metamodel/annotation/package-summary.html).
 * If you'd rather keep your domain domain model classes framework agnostic,
@@ -134,7 +134,7 @@ see [`JsonConverter`]({{ site.javadoc_url }}index.html?org/javers/core/json/Json
 Your task is to identify Entities and ValueObjects and Values in your domain model
 and make sure JaVers got it. So what should you do?
 
-* 
+***
 For example, if all your Entities extends some abstract class, like
 
 First, try to distinct them by high level abstract classes or interfaces.
@@ -144,7 +144,34 @@ First, try to distinct them by high level abstract classes or interfaces.
 Minimize JaversBuilder configuration by taking advantage of type inferring algorithm.
 For Values, remember about implementing equals() properly
 and consider implementing JSON type adapters.
-*
+***
+
+<a name="supported-annotations"></a>
+### Supported annotations
+
+In the table header, there are JaVers types resulting from annotations, listed in table cells.
+As you can see, the trick is, JaVers ignores package names and cares only about annotation simple names.
+
+Class level annotations:
+
+Entity  | ValueObject | Value
+-------------------------------------------- | ------------------------------------------------- | -------------------------------------------
+@javax.persistence.Entity                    | @javax.persistence.Embeddable                     | @org.javers.core.metamodel.annotation.Value
+@org.hibernate.annotations.Entity            | @*.Embeddable                                     | @*.Value
+@org.javers.core.metamodel.annotation.Entity | @org.javers.core.metamodel.annotation.ValueObject |
+@*.Entity                                    | @*.ValueObject |
+@javax.persistence.MappedSuperclass          | |
+@*.MappedSuperclass                          | |
+
+Property level annotations:
+
+Transient                                         | Id
+------------------------------------------------- | ----------------------------------------
+@javax.persistence.Transient                      | @javax.persistence.Id
+@*.Transient                                      | @org.javers.core.metamodel.annotation.Id
+@org.javers.core.metamodel.annotation.DiffIgnore  | @*.Id
+@*.DiffIgnore                                     |
+
 
 ### Property mapping style
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
