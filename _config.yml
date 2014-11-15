@@ -7,4 +7,5 @@ kramdown:
 
 
 #Site content configuration
-javadoc_url: http://javers.org/javadoc_0.8.0/
+javadoc_url: /javadoc_1.0.0/
+javers_current_version: 1.0.0-RC1
