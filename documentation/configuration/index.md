@@ -155,26 +155,62 @@ In the table header, there are JaVers types resulting from annotations, listed i
 As you can see, the trick is, JaVers ignores package names and cares only about annotation simple class names.
 So you can use any annotations set as far as their names match JPA or JaVers names.
 
-Class level annotations:
+**Class level annotations:**
+<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
+<tr>
+    <th>Entity</th>
+    <th>ValueObject</th>
+    <th>Value</th>
+</tr>
+    <td>@javax.persistence.<wbr>Entity</td>
+    <td>@javax.persistence.<wbr>Embeddable</td>
+    <td>@org.javers.core<wbr>.metamodel.annotation.<wbr>Value</td>
+<tr>
+</tr>
+    <td>@org.javers.core.<wbr>metamodel.annotation.<wbr>Entity</td>
+    <td>@org.javers.core.<wbr>metamodel.annotation.<wbr>ValueObject</td>
+    <td>@*.Value</td>
+<tr>
+</tr>
+    <td>@javax.persistence.<wbr>MappedSuperclass </td>
+    <td>@*.Embeddable</td>
+    <td></td>
+<tr>
+</tr>
+    <td>@*.Entity </td>
+    <td>@*.ValueObject </td>
+    <td></td>
+<tr>
+</tr>
+    <td>@*.MappedSuperclass </td>
+    <td></td>
+    <td></td>
+<tr>
+</table>
 
-Entity                                         | ValueObject                                         | Value
----------------------------------------------- | --------------------------------------------------- | -------------------------------------------
-`@javax.persistence.Entity`                    | `@javax.persistence.Embeddable`                     | `@org.javers.core.metamodel.annotation.Value`
-`@org.javers.core.metamodel.annotation.Entity` | `@org.javers.core.metamodel.annotation.ValueObject` | `@*.Value`
-`@javax.persistence.MappedSuperclass`          | `@*.Embeddable`  |
-`@*.Entity`                                    | `@*.ValueObject` |
-`@*.MappedSuperclass`                          | |
-
-
-Property level annotations:
-
-DiffIgnore                                         | Id
--------------------------------------------------- | ----------------------------------------
-`@javax.persistence.Transient`                     | `@javax.persistence.Id`
-`@org.javers.core.metamodel.annotation.DiffIgnore` | `@org.javers.core.metamodel.annotation.Id`
-`@*.Transient`                                     | `@*.Id`
-`@*.DiffIgnore`                                    |
-
+**Property level annotations:**
+<table class="table" width="100%" style='font-family: monospace;'>
+<tr>
+    <th>DiffIgnore</th>
+    <th>Id</th>
+</tr>
+<tr>
+    <td>@javax.persistence.<wbr>Transient</td>
+    <td>@javax.persistence.<wbr>Id</td>
+</tr>
+<tr>
+    <td>@org.javers.core.<wbr>metamodel.<wbr>annotation.DiffIgnore</td>
+    <td>@org.javers.core.<wbr>metamodel.<wbr>annotation.Id</td>
+</tr>
+<tr>
+    <td>@*.Transient</td>
+    <td>@*.Id</td>
+</tr>
+<tr>
+    <td>@*.DiffIgnore</td>
+    <td></td>
+</tr>
+</table>
 
 ### Property mapping style
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
@@ -242,8 +278,10 @@ just provide working database connection.
 
 For `MongoDB`:
 
-        Db database = ... //autowired or configured here,
-                          //preferably, use the same database connection
-                          //as you are using for your main (domain) database
-        MongoRepository mongoRepo =  new MongoRepository(database)
-        JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
+```java
+Db database = ... //autowired or configured here,
+                  //preferably, use the same database connection
+                  //as you are using for your main (domain) database
+MongoRepository mongoRepo =  new MongoRepository(database)
+JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
+```
