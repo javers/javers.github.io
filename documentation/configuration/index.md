@@ -243,6 +243,7 @@ just provide working database connection.
 For `MongoDB`:
 
         Db database = ... //autowired or configured here,
-                          //preferably, use the same database connection as you are using for your main (domain) database 
+                          //preferably, use the same database connection
+                          //as you are using for your main (domain) database
         MongoRepository mongoRepo =  new MongoRepository(database)
         JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
