@@ -66,19 +66,7 @@ The last two types are JaVers internals and can't be mapped by user.
 To make long story short, JaVers needs to know
 the [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html)
 for each of your class spotted in runtime.
-
-There are two ways to achieve this: 
- .....
-* annotations, JPA or JaVers, well known
-* type inferring algorithm based class inheritance tree
-* explicit, use [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html)
-  methods to label your domain model classes as Entities, ValueObjects or Values.
-
-These methods are listed below:
-
-* [`JaversBuilder.registerEntity()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-)
-* [`JaversBuilder.registerValueObject()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
-* [`JaversBuilder.registerValue()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
+See [mapping configuration](#mapping-configuration).
 
 Let's examine these three fundamental types more closely.
 
@@ -130,21 +118,33 @@ So it's highly important to implement it properly by comparing underlying state.
 For Values it's advisable to customize JSON serialization by implementing *Type Adapters*,
 see [`JsonConverter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonConverter.html).
 
-### Mapping scenario 
-Your task is to identify Entities and ValueObjects and Values in your domain model
+<a name="mapping-configuration"></a>
+### Mapping configuration
+Your task is to identify Entities, ValueObjects and Values in your domain model
 and make sure JaVers got it. So what should you do?
 
-***
-For example, if all your Entities extends some abstract class, like
+There are three ways to map a class:
 
-First, try to distinct them by high level abstract classes or interfaces.
+1. explicitly, by JPA or JaVers annotations, see [table below](#supported-annotations)
+1. explicitly, by <tt>JaversBuilder</tt> methods :
+    * [`JaversBuilder.registerEntity(Class<?> entityClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-), @ID annotation is pointing to id-property
+    * [`JaversBuilder.registerEntity(Class<?> entityClass, String idPropertyName)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-java.lang.String-), id-property given by name
+    * [`JaversBuilder.registerValueObject(Class<?> valueObjectClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
+    * [`JaversBuilder.registerValue(Class<?> valueClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
+1. implicitly, using type inferring algorithm based on class inheritance hierarchy.
+   JaVers **propagates** the class mapping down to the inheritance hierarchy.
+   If a class is not explicitly mapped, JaVers maps it the same as its nearest supertype (superclass or interface).
 
-  
+Mapping hints:
 
-Minimize JaversBuilder configuration by taking advantage of type inferring algorithm.
-For Values, remember about implementing equals() properly
-and consider implementing JSON type adapters.
-***
+* First, try to map high level abstract classes or interfaces.
+  For example, if all of your Entities extends some abstract class,
+  you should map only this class.
+* JaVers automatically scans JPA annotations
+  and maps classes with `@Entity` annotation as Entities
+  and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,
+  your mapping is probably already done.
+* By default, JaVers maps a class as ValueObject.
 
 <a name="supported-annotations"></a>
 ### Supported annotations
@@ -180,10 +180,10 @@ DiffIgnore                                         | Id
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
 FIELD style is the default one. We recommend not to change it, as it's suitable in most cases.
 
-BEAN style is useful for domain models compliant with <code>Java Bean</code> convention.
+BEAN style is useful for domain models compliant with `Java Bean` convention.
 
-When using <code>FIELD</code> style, JaVers accesses objects state directly from fields.
-In this case, <code>@Id</code> annotation should be placed at the field level. For example:
+When using `FIELD` style, JaVers accesses objects state directly from fields.
+In this case, `@Id` annotation should be placed at the field level. For example:
 
 ```java
 public class User {
@@ -194,7 +194,7 @@ public class User {
 }
 ```
 
-When using <code>BEAN</code> style, JaVers is accessing objects state by calling **getters**,
+When using `BEAN` style, JaVers is accessing objects state by calling **getters**,
 annotations should be placed at the method level. For example:
 
 ```java
@@ -211,7 +211,7 @@ public class User {
 }
 ```
 
-<code>BEAN</code> mapping style is selected in <code>JaversBuilder</code> as follows:
+`BEAN` mapping style is selected in `JaversBuilder` as follows:
 
 ```java
 Javers javers = JaversBuilder
@@ -234,13 +234,13 @@ JaVers comes by default with in-memory repository implementation. It's perfect f
 for production enviroment you will need something real.
 
 First, choose proper JaversRepository implementation.
-If you are using <code>MongoDB</code>, choose <code>org.javers.repository.mongo.MongoRepository</code>.
-(Support for <code>SQL</code> databases, is scheduled for releasing with JaVers 1.1)
+If you are using `MongoDB`, choose `org.javers.repository.mongo.MongoRepository`.
+(Support for `SQL` databases, is scheduled for releasing with JaVers 1.1)
  
 The idea of configuring the JaversRepository is simple, 
 just provide working database connection. 
 
-For <code>MongoDB</code>:
+For `MongoDB`:
 
         Db database = ... //autowired or configured here,
                           //preferably, use the same database connection as you are using for your main (domain) database 
