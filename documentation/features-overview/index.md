@@ -11,7 +11,7 @@ With JaVers you can easily commit changes performed on your objects graph to spe
 (called [`JaversRepository`]({{ site.javadoc_url }}index.html?org/javers/repository/api/JaversRepository.html)).
 Then you can browse detailed change history of given object in two forms - diffs and snapshots. 
 
-Data auditing framework is built on the top of **object diff** engine, which could be use as standalone object diff tool for ad-hoc
+Data auditing framework is built on the top of the **object diff** engine, which could be use as standalone object diff tool for ad-hoc
 comparing of two objects graphs.
 
 All JaVers functions are exposed via single Facade, the
