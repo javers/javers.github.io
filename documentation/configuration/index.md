@@ -151,11 +151,11 @@ Mapping hints:
 
 JaVers annotations support is based on two sets, JPA & JaVers.
 
-In the table header, there are JaVers types resulting from annotations, listed in table cells.
-As you can see, the trick is, JaVers ignores package names and cares only about annotation simple class names.
+**Class level annotations**<br/>
+In the table below, there are JaVers types (headers) resulting from annotations (cells).
+As you can see, the trick is, JaVers ignores package names and cares only about simple class names.
 So you can use any annotations set as far as their names match JPA or JaVers names.
 
-**Class level annotations:**
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
 <tr>
     <th>Entity</th>
@@ -188,10 +188,16 @@ So you can use any annotations set as far as their names match JPA or JaVers nam
 <tr>
 </table>
 
-**Property level annotations:**
+**Property level annotations**<br/>
+There are two kinds of property level annotations.
+
+* `Id` annotation points to id-property of an Entity class.
+  Furthermore, it maps owning class as Entity, so when you use `@Id`, the class level `@Entity` is optional.
+* `Ignore` annotation marks a property as ignored by the diff engine
+
 <table class="table" width="100%" style='font-family: monospace;'>
 <tr>
-    <th>DiffIgnore</th>
+    <th>Ignore</th>
     <th>Id</th>
 </tr>
 <tr>
