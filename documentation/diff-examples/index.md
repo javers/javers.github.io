@@ -27,21 +27,20 @@ Since every Person has his own identity, it's the `Entity`
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
 
 **The case**<br/>
-We have objects, `tommyOld` and `tommyNew`. These objects represent two *versions* of the same being (person called Tommy).
+We have two objects, `tommyOld` and `tommyNew`. These objects represent two *versions* of the same being (person called Tommy).
 To find out what has changed, just call
 
     javers.compare(tommyOld, tommyNew)
 
 **Configuration** <br/>
-In this case, no configuration is required.
-JaVers finds `@Id` annotation in the proper place and treats Person class as the Entity.
+JaVers needs to know that Person class is an Entity.
+It's enough to annotate `login` field with `@Id` annotation.
 
 **What's important**<br/>
-Notice, that both objects have the same Id value (<tt>"tommy"</tt>).
+Notice, that both objects have the same Id value (<tt>'tommy'</tt>).
 That's why they are matched and compared.
-JaVers compares only objects with the same Id
-(for Entities we call it [<tt>InstanceId</tt>]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html)).
-
+JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
+In this case, it's <tt>'org.javers.core.examples.model.Person/tommy'</tt>.
 
 <tt>Person.class :</tt>
 
@@ -96,67 +95,149 @@ public class BasicEntityDiffExample {
         Diff diff = javers.compare(tommyOld, tommyNew);
 
         //then
-        ValueChange change = (ValueChange)  diff.getChanges().get(0);
+        //there should be one change of type {@link ValueChange}
+        ValueChange change = (ValueChange) diff.getChanges().get(0);
 
         assertThat(diff.getChanges()).hasSize(1);
         assertThat(change.getProperty().getName()).isEqualTo("name");
+        assertThat(change.getAffectedCdoId().value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
         assertThat(change.getLeft()).isEqualTo("Tommy Smart");
         assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
 
-        System.out.println("changes count:       " + diff.getChanges().size());
-        System.out.println("entity id:           " + change.getAffectedCdoId().getCdoId());
-        System.out.println("changed property:    " + change.getProperty().getName());
-        System.out.println("value before change: " + change.getLeft());
-        System.out.println("value after change : " + change.getRight());
+        System.out.println("diff: " + javers.toJson(diff));
+    }
+}
+
+```    
+
+Output of running this program is:
+
+```json
+diff: {
+  "changes": [
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "entity": "org.javers.core.examples.model.Person",
+        "cdoId": "tommy"
+      },
+      "property": "name",
+      "left": "Tommy Smart",
+      "right": "Tommy C. Smart"
+    }
+  ]
+}
+```
+
+<a name="compare-valueobjects"></a>
+### Compare ValueObjects ###
+
+This example shows how to find a diff between two objects of `Address` class.
+Address is a typical `ValueObject`, it doesn't have its own identity. It's just a complex value holder.
+
+(see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for ValueObject definition).
+
+**The case**<br/>
+We have two objects, `address1` and `address2`. These objects represent two different addresses.
+To find out what's the difference, just call
+
+    javers.compare(address1, address2)
+
+**Configuration** <br/>
+In this case, no configuration is required since JaVers is going to map
+Address class as ValueObject by default.
+
+
+**What's important**<br/>
+When JaVers knows nothing about a class, treats it as a ValueObject.
+As we said in the previous example, JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
+What's the Address Id? Well, it's a tricky beast...
+
+It's based on the path in the object graph. In this case, both objects are roots, so the path is simply <tt>'/'</tt>
+and the GlobalId is <tt>'org.javers.core.examples.model.Address/'</tt>
+
+
+<tt>Address.class :</tt>
+
+```java
+package org.javers.core.examples.model;
+
+public class Address {
+    private final String city;
+    private final String street;
+
+    public Address(String city, String street) {
+        this.city = city;
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+}
+```
+
+<tt>BasicValueObjectDiffExample.class :</tt>
+
+```java
+package org.javers.core.examples;
+
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Diff;
+import org.javers.core.diff.changetype.ValueChange;
+import org.javers.core.examples.model.Address;
+import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+public class BasicValueObjectDiffExample {
+
+    @Test
+    public void shouldCompareTwoObjects() {
+
+        //given
+        Javers javers = JaversBuilder.javers().build();
+
+        Address address1 = new Address("New York","5th Avenue");
+        Address address2 = new Address("New York","6th Avenue");
+
+        //when
+        Diff diff = javers.compare(address1, address2);
+
+        //then
+        //there should be one change of type {@link ValueChange}
+        ValueChange change =  (ValueChange) diff.getChanges().get(0);
+
+        assertThat(diff.getChanges()).hasSize(1);
+        assertThat(change.getAffectedCdoId().value()).isEqualTo("org.javers.core.examples.model.Address/");
+        assertThat(change.getProperty().getName()).isEqualTo("street");
+        assertThat(change.getLeft()).isEqualTo("5th Avenue");
+        assertThat(change.getRight()).isEqualTo("6th Avenue");
+
+        System.out.println("diff: " + javers.toJson(diff));
     }
 }
 ```    
 
 Output of running this program is:
 
-    changes count:       1
-    entity id:           tommy
-    changed property:    name
-    value before change: Tommy Smart
-    value after change : Tommy C. Smart
-
-<a name="compare-valueobjects"></a>
-### Compare Value Objects ###
-
-If you don't put an @Id annotation in the class definition Javers recognize an object as Value Object. Javers treat Id as other fields and 
-returns ```ValueObject``` changes:
-
-
-```java
-     public static void main(String[] args) {
-        Javers javers = JaversBuilder
-                            .javers()
-                            .build();
-
-        User johny = new User(25, "Johny");
-        User tommy = new User(26, "Charlie");
-
-        Diff diff = javers.compare(johny, tommy);
-        List<Change> changes = diff.getChanges();
-        ValueChange change1 = (ValueChange) changes.get(0);
-        ValueChange change2 = (ValueChange) changes.get(1);
-
-        System.out.println("Changes size: " + changes.size());
-        System.out.println("Changed property: " + change1.getProperty());
-        System.out.println("Value before change: " + change1.getLeft());
-        System.out.println("Value after change: " + change1.getRight());
-        System.out.println("Changed property: " + change2.getProperty());
-        System.out.println("Value before change: " + change2.getLeft());
-        System.out.println("Value after change: " + change2.getRight());
+```json
+diff: {
+  "changes": [
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "valueObject": "org.javers.core.examples.model.Address",
+        "cdoId": "/"
+      },
+      "property": "street",
+      "left": "5th Avenue",
+      "right": "6th Avenue"
     }
-```    
-
-Output:
-
-        Changes size: 2
-        Changed property: User.id
-        Value before change: 25
-        Value after change: 26
-        Changed property: User.name
-        Value before change: Johny
-        Value after change: Charlie
+  ]
+}
+```
