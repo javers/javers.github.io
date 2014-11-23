@@ -59,13 +59,9 @@ public class Person {
         this.name = name;
     }
 
-    public String getLogin() {
-        return login;
-    }
+    public String getLogin() { return login; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 }
 ```
 
@@ -96,7 +92,7 @@ public class BasicEntityDiffExample {
 
         //then
         //there should be one change of type {@link ValueChange}
-        ValueChange change = (ValueChange) diff.getChanges().get(0);
+        ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
         assertThat(diff.getChanges()).hasSize(1);
         assertThat(change.getProperty().getName()).isEqualTo("name");
@@ -171,13 +167,9 @@ public class Address {
         this.street = street;
     }
 
-    public String getCity() {
-        return city;
-    }
+    public String getCity() { return city; }
 
-    public String getStreet() {
-        return street;
-    }
+    public String getStreet() { return street; }
 }
 ```
 
@@ -210,7 +202,7 @@ public class BasicValueObjectDiffExample {
 
         //then
         //there should be one change of type {@link ValueChange}
-        ValueChange change =  (ValueChange) diff.getChanges().get(0);
+        ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
         assertThat(diff.getChanges()).hasSize(1);
         assertThat(change.getAffectedCdoId().value()).isEqualTo("org.javers.core.examples.model.Address/");
@@ -241,3 +233,6 @@ diff: {
   ]
 }
 ```
+
+<a name="employee-hierarchies"></a>
+### Compare Employee hierarchies ###
