@@ -1,6 +1,6 @@
 org.javers.common.collections
 org.javers.common.date
-org.javers.common.exception.exceptions
+org.javers.common.exception
 org.javers.common.patterns.visitors
 org.javers.common.pico
 org.javers.common.properties
