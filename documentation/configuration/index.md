@@ -125,15 +125,16 @@ and make sure JaVers got it. So what should you do?
 
 There are three ways to map a class:
 
-1. explicitly, by JPA or JaVers annotations, see [table below](#supported-annotations)
-1. explicitly, by <tt>JaversBuilder</tt> methods :
+1. explicitly, by the <tt>JaversBuilder</tt> methods :
     * [`JaversBuilder.registerEntity(Class<?> entityClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-), @ID annotation is pointing to id-property
     * [`JaversBuilder.registerEntity(Class<?> entityClass, String idPropertyName)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-java.lang.String-), id-property given by name
     * [`JaversBuilder.registerValueObject(Class<?> valueObjectClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
     * [`JaversBuilder.registerValue(Class<?> valueClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
-1. implicitly, using type inferring algorithm based on class inheritance hierarchy.
+1. implicitly, by annotations (JPA, JaVers or others), see [table below](#supported-annotations)
+1. implicitly, using type inferring algorithm based on a class inheritance hierarchy.
    JaVers **propagates** the class mapping down to the inheritance hierarchy.
-   If a class is not explicitly mapped, JaVers maps it the same as its nearest supertype (superclass or interface).
+   If a class is not mapped (by the method 1 or 2),
+   JaVers maps this class the same as its nearest supertype (superclass or interface).
 
 Mapping hints:
 
@@ -144,7 +145,13 @@ Mapping hints:
   and maps classes with `@Entity` annotation as Entities
   and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,
   your mapping is probably already done.
-* By default, JaVers maps a class as ValueObject.
+* In some cases, annotations could be misleading for JaVers.
+  For example [Morphia](https://github.com/mongodb/morphia) framework uses `@Entity` annotation for each persistent class
+  (even for ValueObjects). This could cause wrong JaVers mapping.
+  As a solution, use explicit mapping with the <tt>JaversBuilder</tt> methods,
+  as it has the highest priority.
+* If JaVers knows nothing about a class, maps it as ValueObject **by default**.
+
 
 <a name="supported-annotations"></a>
 ### Supported annotations
