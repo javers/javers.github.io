@@ -150,8 +150,8 @@ Mapping hints:
   (even for ValueObjects). This could cause wrong JaVers mapping.
   As a solution, use explicit mapping with the <tt>JaversBuilder</tt> methods,
   as it has the highest priority.
-* If JaVers knows nothing about a class, maps it as ValueObject **by default**.
-
+* For <tt>Entity</tt>, a type of it's Id-property is mapped as <tt>Value</tt> by default.
+* If JaVers knows nothing about a class, maps it as <tt>ValueObject</tt> **by default**.
 
 <a name="supported-annotations"></a>
 ### Supported annotations
@@ -225,6 +225,88 @@ There are two kinds of property level annotations.
 </tr>
 </table>
 
+<a name="entity-id-property"></a>
+### Entity Id property
+Entity `Id` has a special role in JaVers. It identifies an Entity instance.
+You need to point **exactly one** property as <tt>Id</tt> for each od your Entity class.
+
+The JaversType of <tt>Id</tt> can be <tt>Primitive</tt> or <tt>Value</tt>
+so one of the types with atomic values, compared by <tt>equals()</tt>.
+We discourage to use <tt>ValueObject</tt> here, as it has multiple values.
+
+This rule is expressed in JaVers type inferring algorithm.
+If Entity <tt>Id</tt> is not <tt>Primitive</tt>, JaVers maps it as <tt>Value</tt> by default.
+
+Consider the following Entity mapping example:
+
+```java
+package org.javers.core.cases.morphia;
+
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Entity;
+
+@Entity
+public class MongoStoredEntity {
+    @Id
+    private ObjectId _id;
+
+    @Property("description")
+    private String description;
+
+    ... //
+```
+
+With zero config, JaVers maps:
+
+- <tt>MongoStoredEntity</tt> class as <tt>Entity</tt>,
+  since <tt>@Id</tt> and <tt>@Entity</tt> annotations are scanned,
+- <tt>ObjectId</tt> class as <tt>Value</tt>, since it's the type of Id-property.
+
+So far so good. This mapping is OK for calculating diffs.
+Nevertheless, if you plan to persists diffs as JSON (or use `JaversRepository`),
+you could see something like that:
+
+```json
+diff: {
+  "changes": [
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
+        "cdoId": {
+          "_time": 1417358422,
+          "_machine": 1904935013,
+          "_inc": 1615625682,
+          "_new": true
+        }
+      },
+      "property": "description",
+      "left": null,
+      "right": "A new description"
+    }
+  ]
+}
+```
+
+As tou can see, <tt>Id</tt> is serialized as `"cdoId"`
+using 4 internal attributes of <tt>ObjectId</tt> class.
+The resulting JSON is verbose and ugly. You would rather expect neat and atomic value like that:
+
+```json
+ "globalId": {
+        "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
+        "cdoId": "54789e5cfb2ca07e65130e7c"
+      },
+```
+
+That's why JaVers maps Id type as <tt>Value</tt> by default.
+For <tt>Value</tt> you can use custom
+[`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html)
+and persist neat, atomic values in JSON.
+
+<a name="property-mapping-style"></a>
 ### Property mapping style
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
 FIELD style is the default one. We recommend not to change it, as it's suitable in most cases.
