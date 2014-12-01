@@ -79,7 +79,7 @@ Entity has a list of mutable properties and its own *identity* hold in *ID prope
 
 Each Entity instance has a global identifier called
 [`InstanceId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html).
-It's consists of a class name and an ID value.
+It consists of a class name and an ID value.
 
 **Comparing strategy** for Entity references is based on ID and
 for the Entity state is property-by-property.
@@ -96,7 +96,7 @@ It can't be dereferenced.
 
 ValueObject instance has a 'best effort' global identifier called
 [`ValueObjectId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
-It's consists of a class name and a path in the object graph.
+It consists of a class name and a path in the object graph.
 
 **Comparing strategy** for ValueObject state is property-by-property.
 
@@ -150,7 +150,7 @@ Mapping hints:
   (even for ValueObjects). This could cause wrong JaVers mapping.
   As a solution, use explicit mapping with the <tt>JaversBuilder</tt> methods,
   as it has the highest priority.
-* For <tt>Entity</tt>, a type of it's Id-property is mapped as <tt>Value</tt> by default.
+* For <tt>Entity</tt>, a type of its Id-property is mapped as <tt>Value</tt> by default.
 * If JaVers knows nothing about a class, maps it as <tt>ValueObject</tt> **by default**.
 
 <a name="supported-annotations"></a>
@@ -198,9 +198,9 @@ So you can use any annotations set as far as their names match JPA or JaVers nam
 **Property level annotations**<br/>
 There are two kinds of property level annotations.
 
-* `Id` annotation points to id-property of an Entity class.
-  Furthermore, it maps owning class as Entity, so when you use `@Id`, the class level `@Entity` is optional.
-* `Ignore` annotation marks a property as ignored by the diff engine
+* `Id` annotation, to mark an Id-property of an Entity class.
+  Furthermore, it maps owning class as <tt>Entity</tt>. So when you use `@Id`, the class level `@Entity` is optional.
+* `Ignore` annotation, to mark a property as ignored by the diff engine
 
 <table class="table" width="100%" style='font-family: monospace;'>
 <tr>
@@ -260,12 +260,12 @@ public class MongoStoredEntity {
 
 With zero config, JaVers maps:
 
-- <tt>MongoStoredEntity</tt> class as <tt>Entity</tt>,
-  since <tt>@Id</tt> and <tt>@Entity</tt> annotations are scanned,
-- <tt>ObjectId</tt> class as <tt>Value</tt>, since it's the type of Id-property.
+- <tt>MongoStoredEntity</tt> class as `Entity`,
+  since <tt>@Id</tt> and <tt>Entity</tt> annotations are scanned (JaVers cares only about annotation class name, not package name).
+- <tt>ObjectId</tt> class as `Value`, since it's the type of Id-property.
 
 So far so good. This mapping is OK for calculating diffs.
-Nevertheless, if you plan to persists diffs as JSON (or use `JaversRepository`),
+Nevertheless, if you plan to persists diffs as JSON (or use <tt>JaversRepository</tt>),
 you could see something like that:
 
 ```json
