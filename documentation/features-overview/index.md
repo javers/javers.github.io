@@ -77,4 +77,5 @@ JaversRepository interface and contribute it to JaVers project.
 JaVers has well designed and customizable JSON serialization & deserialization module, based on 
 [`GSON`](https://code.google.com/p/google-gson/) and Java reflection. 
 Your data are splited into chunks (atomic changes) and persisted in database as JSON
-with minimal mapping configuration effort. (`//TODO` link to JSON TypeAdapters Configuration page)
+with minimal mapping configuration effort
+(see [custom JSON serialization](/documentation/configuration#custom-json-serialization)).
