@@ -105,6 +105,7 @@ So in JaVers, ValueObject is just an Entity without identity.
 
 **For example** ValueObjects are: Address, Point.
 
+<a name="ValueType"></a>
 ### Value
 JaVers [`Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
 is a simple (scalar) value holder.
@@ -125,11 +126,11 @@ and make sure that JaVers has got it. So what should you do?
 There are three ways to map a class:
 
 1. explicitly, with the `JaversBuilder` methods :
-    * [`registerEntity(Class<?> entityClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-),
+    * [`registerEntity(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-),
       <tt>@ID</tt> annotation points to *Id-property*
     * [`registerEntity(Class<?> entityClass, String idPropertyName)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-java.lang.String-), Id-property given by name
-    * [`registerValueObject(Class<?> valueObjectClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
-    * [`registerValue(Class<?> valueClass)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
+    * [`registerValueObject(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
+    * [`registerValue(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
 1. implicitly, with annotations (JPA, JaVers or others, see [table below](#supported-annotations))
 1. implicitly, using a *type inferring algorithm* based on a class inheritance hierarchy.
    JaVers **propagates** the class mapping down to the inheritance hierarchy.
@@ -267,8 +268,8 @@ With zero config, JaVers maps:
 
 So far so good. This mapping is OK for calculating diffs.
 Nevertheless, if you plan to use *JaversRepository*,
-consider providing custom [JsonTypeAdapters](#json-type-adapters)
-for your each of your *Value* types, especially Id types like <tt>ObjectId</tt>.
+consider providing custom JSON *TypeAdapters*
+for your each of your *Value* types, especially Id types like <tt>ObjectId</tt> (see [JSON TypeAdapters](#json-type-adapters)).
 
 <a name="property-mapping-style"></a>
 ### Property mapping style
@@ -356,7 +357,7 @@ But sometimes Gson's default JSON representation isn't what you like.
 This happens when dealing with *Values* like Date, Money or ObjectId.
 
 Consider [<tt>org.bson.types.ObjectId</tt>](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
-offten used as *Id-property* for objects persisted in MongoDB.
+often used as *Id-property* for objects persisted in MongoDB.
 
 By deafult, JaVers serializes ObjectId as follows:
 
@@ -372,7 +373,7 @@ By deafult, JaVers serializes ObjectId as follows:
   }
 </pre>
 
-As you can see, ObjectIdId is serialized using its 4 internal fields.
+As you can see, ObjectId is serialized using its 4 internal fields.
 The resulting JSON is verbose and ugly. You would rather expect neat and atomic value like this:
 
 <pre>
@@ -393,25 +394,26 @@ by providing *TypeAdapters* for your *Value* types.
 JaVers supports two families of TypeAdapters.
 
 
-1. JaVers family, specified by <tt>JsonTypeAdapter</tt> interface.
+1. **JaVers family**, specified by [`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
    It's a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has nice API and isolates you (to some extent) from low level Gson API.
-   * Implement [`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface
+   * Implement <tt>JsonTypeAdapter</tt> interface
      if you need the full control over JSON conversion process.
-     Register your instances with
-     [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter typeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
+     Register your adapters with
+     [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
    * [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
      is a convenient scaffolding implementation of JsonTypeAdapter interface.
      Extend it if you want to represent your *Value* type as atomic String
      (and when you don't want to deal with JSON API).
-     //TODO.. See example for <tt>ObjectId</tt> class.
-1. Gson family ...
-  * native Gson {@link TypeAdapter}
-  * native Gson {@link JsonSerializer}
-  * native Gson {@link JsonDeserializer}
+     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for <tt>ObjectId</tt>.
+1. **Gson family**, useful when you are already using Gson and have adapters implementing
+    [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
+     Register your adapters with
+     [`JaversBuilder.registerValueGsonTypeAdapter(Class, TypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueGsonTypeAdapter-java.lang.Class-com.google.gson.TypeAdapter-).
 
-JaVers provides JsonTypeAdapter's for some well known Value like {@link LocalDateTime}.
+JaVers provides JsonTypeAdapters for some well known *Values* like
+<tt>org.joda.time.LocalDate</tt>.
 
 
 
