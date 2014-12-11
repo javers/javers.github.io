@@ -4,6 +4,7 @@ title: Documentation - Configuration
 ---
 
 # Configuration #
+
 None of us like to configure tools but don't worry — JaVers knows it and
 does the hard work to minimize the configuration efforts on your side.
 
@@ -119,7 +120,7 @@ For Values it's advisable to customize the JSON serialization by implementing *T
 (see [custom json serialization](#custom-json-serialization)).
 
 <a name="mapping-configuration"></a>
-### Mapping configuration
+## Mapping configuration
 Your task is to identify *Entities*, *ValueObjects* and *Values* in your domain model
 and make sure that JaVers has got it. So what should you do?
 

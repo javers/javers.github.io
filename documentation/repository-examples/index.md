@@ -3,10 +3,10 @@ layout: docs
 title: Documentation - Repository examples
 ---
 
-# Repository examples #
+# Repository examples
 
 <a name="commit-changes"></a>
-### Commit changes
+## Commit changes
 
 Whenever your domain object changes you have to persist details about the change. You can do this with a call ```commit``` method on Javers 
 instance:
@@ -49,7 +49,7 @@ instance:
 ```
              
 <a name="read-snapshots-history"></a>
-### Read snapshots history
+## Read snapshots history
 
 Having some commits executed you can read the list of persisted snapshots from the repository. 
 In order to read snapshots you have to provide:
@@ -108,7 +108,7 @@ output:
     Property value after second commit: another value
     
 <a name="read-changes-history"></a>
-### Read changes history
+## Read changes history
      
 If you want to read changes for a given entity, Javers can calculate diffs from persisted snapshots.
 In order read changes you have to provide:
@@ -169,7 +169,7 @@ output:
         Property value after change: another value
 
 <a name="json-type-adapter"></a>
-###JSON TypeAdapter for ObjectId
+## JSON TypeAdapter for ObjectId
 
 *JsonTypeAdapter* allows you to customize how JaVers
 serialize your [Value types](/documentation/configuration#ValueType) to JSON.
