@@ -1,15 +1,62 @@
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 300;
+    src: local("Roboto Light"), local("Roboto-Light"), url("http://fonts.gstatic.com/s/roboto/v14/Pru33qjShpZSmG3z6VYwnT8E0i7KZn-EPnyo3HZu7kw.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Roboto Regular"), local("Roboto-Regular"), url("http://fonts.gstatic.com/s/roboto/v14/Xyjz-jNkfiYuJf8UC3Lizw.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    src: local("Roboto Medium"), local("Roboto-Medium"), url("http://fonts.gstatic.com/s/roboto/v14/7KXg6nyyqN8gyMoNwQ7aOQ.woff") format("woff");
+}
+
 body, html {
     height: 100%;
     width: 100%;
     position: relative;
+    color: black;
 }
 
 body, a, h1, h2, h3, h4, h5, h6 {
-    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    font-weight: 300;
 }
 
-a, h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
+a {
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
+    margin: 40px 0px 20px;
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 34px;
+}
+
+h2 {
+    font-size: 26px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+b, strong {
+    font-weight: 500;
 }
 
 .lead {

@@ -19,7 +19,7 @@ All JaVers functions are exposed via single Facade, the
 As you can see, JaVers api is concise and simple.
 
 <a name="object-diff"></a>
-## Object diff ##
+## Object diff
 JaVers Object Diff is the easiest way to deeply compare two graphs of objects.
 
 **How to use it?**
@@ -33,7 +33,7 @@ JaVers Object Diff is the easiest way to deeply compare two graphs of objects.
   [`Change`]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html) class, to get complete list).      
 
 <a name="javers-repository"></a>
-## JaVers Repository ##
+## JaVers Repository
 [`JaversRepository`]({{ site.javadoc_url }}index.html?org/javers/repository/api/JaversRepository.html)
 is a central part of our data auditing engine. 
 
@@ -73,7 +73,7 @@ If you are using another database, for example `Cassandra`, you are encouraged t
 JaversRepository interface and contribute it to JaVers project.
 
 <a name="json-serialization"></a>
-## JSON serialization ##
+## JSON serialization
 JaVers has well designed and customizable JSON serialization & deserialization module, based on 
 [`GSON`](https://code.google.com/p/google-gson/) and Java reflection. 
 Your data are splited into chunks (atomic changes) and persisted in database as JSON

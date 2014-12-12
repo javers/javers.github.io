@@ -3,7 +3,7 @@ layout: docs
 title: Documentation - Examples
 ---
 
-# Examples #
+# Diff examples
 
 All examples are runnable.
 Checkout our github repository:
@@ -22,7 +22,7 @@ gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
 ```
 
 <a name="compare-entities"></a>
-### Compare two Entity objects ###
+## Compare two Entity objects
 
 Lets start from something simple, this example shows how to find a diff between two objects of <tt>Person</tt> class.
 Since every Person has his own identity, it's the `Entity`
@@ -129,7 +129,7 @@ diff: {
 ```
 
 <a name="compare-valueobjects"></a>
-### Compare ValueObjects ###
+## Compare ValueObjects
 
 This example shows how to find a diff between two objects of <tt>Address</tt> class.
 Address is a typical `ValueObject`, it doesn't have its own identity. It's just a complex value holder.
@@ -237,7 +237,7 @@ diff: {
 ```
 
 <a name="compare-graphs"></a>
-### Compare graphs ###
+## Compare graphs
 
 JaVers can compare arbitrary complex structures of objects.
 In this example, we show how easily you can compare employee hierarchies.
