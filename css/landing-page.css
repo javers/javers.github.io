@@ -37,22 +37,28 @@ a {
     font-weight: 400;
 }
 
+
 h1, h2, h3, h4, h5, h6 {
     line-height: 1;
-    margin: 40px 0px 20px;
     font-weight: 300;
 }
 
 h1 {
     font-size: 34px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 h2 {
     font-size: 26px;
+    margin-top: 35px;
+    margin-bottom: 20px;
 }
 
 h3 {
     font-size: 20px;
+    margin-top: 35px;
+    margin-bottom: 20px;
 }
 
 b, strong {
@@ -123,10 +129,6 @@ body > section:nth-child(odd) {
 body > section {
     padding-top: 50px;
     padding-bottom: 20px;
-}
-
-body > section h2 {
-    margin-bottom: 30px;
 }
 
 .banner-social-buttons {

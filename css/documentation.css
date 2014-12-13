@@ -18,10 +18,11 @@
 
 .docs-sidebar .nav > li > a {
     display: block;
-    padding: 10px 15px;
+    padding-top: 20px;
+    padding-bottom: 10px;
     font-size: 22px;
     font-weight: 300;
-    color: #111;
+    color: #222;
 }
 
 .docs-sidebar .nav .nav > li > a {
