@@ -18,10 +18,10 @@ There are two logical areas of the the configuration,
 [domain model mapping](/documentation/configuration#domain-model-mapping) 
 and 
 [repository setup](/documentation/configuration#repository-setup).
-Proper mapping is important for both JaVers features, the object *diff* and the data audit (*JaversRepository*).
+Proper mapping is important for both JaVers features, the object *diff* and the data audit (`JaversRepository`).
 
 The object diff algorithm is the core of JaVers. When two objects are compared, JaVers needs to know what
-type they are. We distinguish between the following types: *Entities*, *ValueObjects*, *Values*, *Containers* and *Primitives*.
+type they are. We distinguish between the following types: `Entities`, `ValueObjects`, `Values`, `Containers` and `Primitives`.
 Each type has a different comparing style. 
 
 JaVers can infer the type of your classes, but if it goes wrong, the diff result might be strange.
@@ -59,7 +59,7 @@ Proper mapping is essential for the diff algorithm, for example JaVers needs to 
 should be compared property-by-property or using equals().
 
 ### JaVers Types
-The JaVers type system is based on *Entity* and *ValueObjects* notions, following Eric Evans
+The JaVers type system is based on `Entity` and `ValueObjects` notions, following Eric Evans
 Domain Driven Design terminology (DDD).
 Furthermore, it uses *Value*, *Primitive* and *Container* notions.
 The last two types are JaVers internals and can't be mapped by the user.
@@ -121,14 +121,14 @@ For Values it's advisable to customize the JSON serialization by implementing *T
 
 <a name="mapping-configuration"></a>
 ## Mapping configuration
-Your task is to identify *Entities*, *ValueObjects* and *Values* in your domain model
+Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
 and make sure that JaVers has got it. So what should you do?
 
 There are three ways to map a class:
 
-1. explicitly, with the `JaversBuilder` methods :
+1. explicitly, with the JaversBuilder methods :
     * [`registerEntity(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-),
-      <tt>@ID</tt> annotation points to *Id-property*
+      `@ID` annotation points to *Id-property*
     * [`registerEntity(Class<?> entityClass, String idPropertyName)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-java.lang.String-), Id-property given by name
     * [`registerValueObject(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
     * [`registerValue(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
@@ -144,15 +144,15 @@ Mapping hints:
   For example, if all of your Entities extend some abstract class,
   you should map only this class.
 * JaVers automatically scans JPA annotations
-  and maps classes with <tt>@Entity</tt> annotation as Entities
-  and classes with <tt>@Embeddable</tt> as ValueObjects. So if you are using frameworks like Hibernate,
+  and maps classes with `@Entity` annotation as Entities
+  and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,
   your mapping is probably already done.
 * In some cases, annotations could be misleading for JaVers.
-  For example [Morphia](https://github.com/mongodb/morphia) framework uses <tt>@Entity</tt> annotation for each persistent class
+  For example [Morphia](https://github.com/mongodb/morphia) framework uses `@Entity` annotation for each persistent class
   (even for ValueObjects). This could cause incorrect JaVers mapping.
-  As a solution, use explicit mapping with the <tt>JaversBuilder</tt> methods,
+  As a solution, use explicit mapping with the JaversBuilder methods,
   as it has the highest priority.
-* For an Entity, a type of its *Id-property* is mapped as Value by default.
+* For an Entity, a type of its `Id-property` is mapped as Value by default.
 * If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
 
 <a name="supported-annotations"></a>
@@ -202,7 +202,7 @@ There are two kinds of property level annotations.
 
 * `Id` annotation, to mark the Id-property of an Entity class.
   Furthermore, Id annotation maps the owning class as an Entity.
-  So when you use <tt>@Id</tt>, the class level <tt>@Entity</tt> is optional.
+  So when you use `@Id`, the class level `@Entity` is optional.
 * `Ignore` annotation, to mark a property as ignored by the diff engine.
 
 <table class="table" width="100%" style='font-family: monospace;'>
@@ -231,11 +231,11 @@ There are two kinds of property level annotations.
 <a name="entity-id-property"></a>
 ### Entity Id property
 Entity `Id` has a special role in JaVers. It identifies an Entity instance.
-You need to choose **exactly one** property as Id for each of your Entity classes (we call it *Id-property*).
+You need to choose **exactly one** property as Id for each of your Entity classes (we call it `Id-property`).
 
 The *JaversType* of Id can be *Primitive* or *Value*
-so one of the types with atomic values, compared by <tt>equals()</tt>.
-We discourage the use of *ValueObject* here as it has multiple values.
+so one of the types with atomic values, compared by `equals()`.
+We discourage the use of `ValueObject` here as it has multiple values.
 
 This rule is expressed in the JaVers type inferring algorithm.
 If an Entity Id is not Primitive, JaVers maps it as *Value* by default.
@@ -263,14 +263,14 @@ public class MongoStoredEntity {
 
 With zero config, JaVers maps:
 
-- <tt>MongoStoredEntity</tt> class as *Entity*,
-  since <tt>@Id</tt> and <tt>@Entity</tt> annotations are scanned (JaVers only cares about the annotation class name, not package name).
-- <tt>ObjectId</tt> class as *Value*, since it's the type of the *Id-property* and it's not *Primitive*.
+- `MongoStoredEntity` class as `Entity`,
+  since `@Id` and `@Entity` annotations are scanned (JaVers only cares about the annotation class name, not package name).
+- `ObjectId` class as `Value`, since it's the type of the `Id-property` and it's not *Primitive*.
 
 So far so good. This mapping is OK for calculating diffs.
-Nevertheless, if you plan to use *JaversRepository*,
-consider providing custom JSON *TypeAdapters*
-for your each of your *Value* types, especially Id types like <tt>ObjectId</tt> (see [JSON TypeAdapters](#json-type-adapters)).
+Nevertheless, if you plan to use `JaversRepository`,
+consider providing custom JSON `TypeAdapters`
+for your each of your `Value` types, especially Id types like `ObjectId` (see [JSON TypeAdapters](#json-type-adapters)).
 
 <a name="property-mapping-style"></a>
 ### Property mapping style
@@ -279,7 +279,7 @@ FIELD style is the default one. We recommend not changing it, as it's suitable i
 
 BEAN style is useful for domain models compliant with *Java Bean* convention.
 
-When using `FIELD` style, JaVers accesses object state directly from fields.
+When using FIELD style, JaVers accesses object state directly from fields.
 In this case, `@Id` annotation should be placed at the field level. For example:
 
 ```java
@@ -291,7 +291,7 @@ public class User {
 }
 ```
 
-When using `BEAN` style, JaVers accesses object state by calling **getters**.
+When using BEAN style, JaVers accesses object state by calling **getters**.
 `@Id` annotation should be placed at the method level. For example:
 
 ```java
@@ -308,7 +308,7 @@ public class User {
 }
 ```
 
-BEAN mapping style is selected in <tt>JaversBuilder</tt> as follows:
+BEAN mapping style is selected in `JaversBuilder` as follows:
 
 ```java
 Javers javers = JaversBuilder
@@ -321,20 +321,19 @@ In both styles, access modifiers are not important, it could be private ;)
 
 <a name="repository-setup"></a>
 ## JaversRepository setup
-If you are going to use JaVers as a data audit framework you are supposed to configure *JaversRepository*.
+If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
  
-The purpose of JaversRepository is simply to store JaVers *Commits* in your database,
+The purpose of JaversRepository is simply to store JaVers commits in your database,
 alongside your domain data.
 
 JaVers comes by default with in-memory repository implementation. It's perfect for testing but
 for production a environment you will need something real.
 
 First, choose proper JaversRepository implementation.
-Currently, JaVers supports `MongoDB`.
-Support for `SQL` databases, is scheduled for release with JaVers 1.1.
+Currently, JaVers supports **MongoDB**.
+Support for SQL databases, is scheduled for release with JaVers 1.1.
 
-**For MongoDB**:
-If you are using `MongoDB`, choose `org.javers.repository.mongo.MongoRepository`.
+If you are using MongoDB, choose `org.javers.repository.mongo.MongoRepository`.
 The idea of configuring MongoRepository is simple,
 just provide a working database client.
 
@@ -355,10 +354,10 @@ JaVers uses [Gson](http://sites.google.com/site/gson/) library which provides ne
 and pretty JSON representation for well known Java types.
 
 But sometimes Gson's default JSON representation isn't what you like.
-This happens when dealing with *Values* like Date, Money or ObjectId.
+This happens when dealing with `Values` like Date, Money or ObjectId.
 
-Consider [<tt>org.bson.types.ObjectId</tt>](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
-often used as *Id-property* for objects persisted in MongoDB.
+Consider [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
+often used as `Id-property` for objects persisted in MongoDB.
 
 By deafult, JaVers serializes ObjectId as follows:
 
@@ -384,13 +383,13 @@ The resulting JSON is verbose and ugly. You would rather expect neat and atomic 
     },
 </pre>
 
-That's where custom JSON *TypeAdapters* come into play.
+That's where custom JSON `TypeAdapters` come into play.
 
 <a name="json-type-adapters"></a>
 ###JSON TypeAdapters
 
 You can easily customize JaVers serialization/deserialization behaviour
-by providing *TypeAdapters* for your *Value* types.
+by providing TypeAdapters for your `Value` types.
 
 JaVers supports two families of TypeAdapters.
 
@@ -399,22 +398,22 @@ JaVers supports two families of TypeAdapters.
    It's a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has nice API and isolates you (to some extent) from low level Gson API.
-   * Implement <tt>JsonTypeAdapter</tt> interface
+   * Implement `JsonTypeAdapter` interface
      if you need the full control over JSON conversion process.
      Register your adapters with
      [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
    * [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
      is a convenient scaffolding implementation of JsonTypeAdapter interface.
-     Extend it if you want to represent your *Value* type as atomic String
+     Extend it if you want to represent your `Value` type as atomic String
      (and when you don't want to deal with JSON API).
-     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for <tt>ObjectId</tt>.
+     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for `ObjectId`.
 1. **Gson family**, useful when you are already using Gson and have adapters implementing
     [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
      Register your adapters with
      [`JaversBuilder.registerValueGsonTypeAdapter(Class, TypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueGsonTypeAdapter-java.lang.Class-com.google.gson.TypeAdapter-).
 
-JaVers provides JsonTypeAdapters for some well known *Values* like
-<tt>org.joda.time.LocalDate</tt>.
+JaVers provides JsonTypeAdapters for some well known `Values` like
+`org.joda.time.LocalDate`.
 
 
 

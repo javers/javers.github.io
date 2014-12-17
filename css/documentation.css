@@ -8,6 +8,14 @@
     border-radius: 4px;
 }
 
+.javers-well code {
+    font-size: 16px;
+    border: none;
+    background: none;
+    color: black;
+    padding: 0;
+}
+
 #documentation {
     margin-top: 50px;
 }
