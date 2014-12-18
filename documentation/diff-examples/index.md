@@ -103,29 +103,18 @@ public class BasicEntityDiffExample {
         assertThat(change.getLeft()).isEqualTo("Tommy Smart");
         assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
 
-        System.out.println("diff: " + javers.toJson(diff));
+        System.out.println(diff);
     }
 }
-
-```    
+```
 
 Output of running this program is:
 
-```json
-diff: {
-  "changes": [
-    {
-      "changeType": "ValueChange",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Person",
-        "cdoId": "tommy"
-      },
-      "property": "name",
-      "left": "Tommy Smart",
-      "right": "Tommy C. Smart"
-    }
-  ]
-}
+```
+Diff:
+1. ValueChange{globalId:'org.javers.core.examples.model.Person/tommy',
+               property:'name', oldVal:'Tommy Smart', newVal:'Tommy C. Smart'}
+
 ```
 
 <a name="compare-valueobjects"></a>
@@ -212,28 +201,17 @@ public class BasicValueObjectDiffExample {
         assertThat(change.getLeft()).isEqualTo("5th Avenue");
         assertThat(change.getRight()).isEqualTo("6th Avenue");
 
-        System.out.println("diff: " + javers.toJson(diff));
+        System.out.println(diff);
     }
 }
 ```    
 
 Output of running this program is:
 
-```json
-diff: {
-  "changes": [
-    {
-      "changeType": "ValueChange",
-      "globalId": {
-        "valueObject": "org.javers.core.examples.model.Address",
-        "cdoId": "/"
-      },
-      "property": "street",
-      "left": "5th Avenue",
-      "right": "6th Avenue"
-    }
-  ]
-}
+```
+Diff:
+1. ValueChange{globalId:'org.javers.core.examples.model.Address/',
+               property:'street', oldVal:'5th Avenue', newVal:'6th Avenue'}
 ```
 
 <a name="compare-graphs"></a>
@@ -330,254 +308,161 @@ import org.javers.core.diff.changetype.ReferenceChange;
 import org.javers.core.diff.changetype.ValueChange;
 import org.javers.core.examples.model.Employee;
 import org.junit.Test;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/**
- * @author bartosz walacik
- */
 public class EmployeeHierarchiesDiffExample {
 
-    /** {@link ValueChange} example */
-    @Test
-    public void shouldDetectSalaryChange(){
-        //given
-        Javers javers = JaversBuilder.javers().build();
+  /** {@link ValueChange} example */
+  @Test
+  public void shouldDetectSalaryChange(){
+    //given
+    Javers javers = JaversBuilder.javers().build();
 
-        Employee oldBoss = new Employee("Big Boss")
-            .addSubordinates(
-                    new Employee("Noisy Manager"),
-                    new Employee("Great Developer", 10000));
+    Employee oldBoss = new Employee("Big Boss")
+        .addSubordinates(
+            new Employee("Noisy Manager"),
+            new Employee("Great Developer", 10000));
 
-        Employee newBoss = new Employee("Big Boss")
-            .addSubordinates(
-                    new Employee("Noisy Manager"),
-                    new Employee("Great Developer", 20000));
+    Employee newBoss = new Employee("Big Boss")
+        .addSubordinates(
+            new Employee("Noisy Manager"),
+            new Employee("Great Developer", 20000));
 
-        //when
-        Diff diff = javers.compare(oldBoss, newBoss);
+    //when
+    Diff diff = javers.compare(oldBoss, newBoss);
 
-        //then
-        ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
+    //then
+    ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
 
-        assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-        assertThat(change.getProperty().getName()).isEqualTo("salary");
-        assertThat(change.getLeft()).isEqualTo(10000);
-        assertThat(change.getRight()).isEqualTo(20000);
+    assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
+    assertThat(change.getProperty().getName()).isEqualTo("salary");
+    assertThat(change.getLeft()).isEqualTo(10000);
+    assertThat(change.getRight()).isEqualTo(20000);
 
-        System.out.println("diff: " + javers.toJson(diff));
+    System.out.println(diff);
+  }
+
+  /** {@link NewObject} example */
+  @Test
+  public void shouldDetectHired() {
+    //given
+    Javers javers = JaversBuilder.javers().build();
+
+    Employee oldBoss = new Employee("Big Boss")
+        .addSubordinates(
+            new Employee("Great Developer"));
+
+    Employee newBoss = new Employee("Big Boss")
+        .addSubordinates(
+            new Employee("Great Developer"),
+            new Employee("Hired One"),
+            new Employee("Hired Second"));
+
+    //when
+    Diff diff = javers.compare(oldBoss, newBoss);
+
+    //then
+    assertThat(diff.getObjectsByChangeType(NewObject.class))
+        .hasSize(2)
+        .containsOnly(new Employee("Hired One"),
+                      new Employee("Hired Second"));
+
+    System.out.println(diff);
+  }
+
+  /** {@link ReferenceChange} example */
+  @Test
+  public void shouldDetectBossChange() {
+    //given
+    Javers javers = JaversBuilder.javers().build();
+
+    Employee oldBoss = new Employee("Big Boss")
+        .addSubordinates(
+             new Employee("Manager One")
+                 .addSubordinate(new Employee("Great Developer")),
+             new Employee("Manager Second"));
+
+    Employee newBoss = new Employee("Big Boss")
+        .addSubordinates(
+             new Employee("Manager One"),
+             new Employee("Manager Second")
+                 .addSubordinate(new Employee("Great Developer")));
+
+    //when
+    Diff diff = javers.compare(oldBoss, newBoss);
+
+    //then
+    ReferenceChange change = diff.getChangesByType(ReferenceChange.class).get(0);
+
+    assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
+    assertThat(change.getLeft().getCdoId()).isEqualTo("Manager One");
+    assertThat(change.getRight().getCdoId()).isEqualTo("Manager Second");
+
+    System.out.println(diff);
+  }
+
+  /** {@link NewObject} example, large structure */
+  @Test
+  public void shouldDetectFiredForLargeDepthStructure() {
+    //given
+    Javers javers = JaversBuilder.javers().build();
+
+    Employee oldBoss = new Employee("Big Boss");
+    Employee boss = oldBoss;
+    for (int i=0; i<1000; i++){
+        boss.addSubordinate(new Employee("Emp no."+i));
+        boss = boss.getSubordinates().get(0);
     }
 
-    /** {@link NewObject} example */
-    @Test
-    public void shouldDetectHired() {
-        //given
-        Javers javers = JaversBuilder.javers().build();
+    Employee newBoss = new Employee("Big Boss");
 
-        Employee oldBoss = new Employee("Big Boss")
-                .addSubordinates(
-                        new Employee("Great Developer"));
+    //when
+    Diff diff = javers.compare(oldBoss, newBoss);
 
-        Employee newBoss = new Employee("Big Boss")
-                .addSubordinates(
-                        new Employee("Great Developer"),
-                        new Employee("Hired One"),
-                        new Employee("Hired Second"));
-
-        //when
-        Diff diff = javers.compare(oldBoss, newBoss);
-
-        //then
-        assertThat(diff.getObjectsByChangeType(NewObject.class))
-                .hasSize(2)
-                .containsOnly(new Employee("Hired One"),
-                              new Employee("Hired Second"));
-
-        System.out.println("diff: " + javers.toJson(diff));
-    }
-
-    /** {@link ReferenceChange} example */
-    @Test
-    public void shouldDetectBossChange() {
-        //given
-        Javers javers = JaversBuilder.javers().build();
-
-        Employee oldBoss = new Employee("Big Boss")
-                .addSubordinates(
-                        new Employee("Manager One")
-                                .addSubordinate(new Employee("Great Developer")),
-                        new Employee("Manager Second"));
-
-        Employee newBoss = new Employee("Big Boss")
-                .addSubordinates(
-                        new Employee("Manager One"),
-                        new Employee("Manager Second")
-                                .addSubordinate(new Employee("Great Developer")));
-
-        //when
-        Diff diff = javers.compare(oldBoss, newBoss);
-
-        //then
-        ReferenceChange change = diff.getChangesByType(ReferenceChange.class).get(0);
-
-        assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-        assertThat(change.getLeft().getCdoId()).isEqualTo("Manager One");
-        assertThat(change.getRight().getCdoId()).isEqualTo("Manager Second");
-
-        System.out.println("diff: " + javers.toJson(diff));
-    }
-
-    /** {@link NewObject} example, large structure */
-    @Test
-    public void shouldDetectFiredForLargeDepthStructure() {
-        //given
-        Javers javers = JaversBuilder.javers().build();
-
-        Employee oldBoss = new Employee("Big Boss");
-        Employee boss = oldBoss;
-        for (int i=0; i<1000; i++){
-            boss.addSubordinate(new Employee("Emp no."+i));
-            boss = boss.getSubordinates().get(0);
-        }
-
-        Employee newBoss = new Employee("Big Boss");
-
-        //when
-        Diff diff = javers.compare(oldBoss, newBoss);
-
-        //then
-        assertThat(diff.getChangesByType(ObjectRemoved.class)).hasSize(1000);
-    }
+    //then
+    assertThat(diff.getChangesByType(ObjectRemoved.class)).hasSize(1000);
+  }
 }
 ```
 
 Output of running this program is:
 
-- <tt>shouldDetectSalaryChange</tt>():
-
-```json
-diff: {
-  "changes": [
-    {
-      "changeType": "ValueChange",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Great Developer"
-      },
-      "property": "salary",
-      "left": 10000,
-      "right": 20000
-    }
-  ]
-}
 ```
+//.. shouldDetectSalaryChange()
 
-- <tt>shouldDetectHired</tt>():
-
-```json
-diff: {
-  "changes": [
-    {
-      "changeType": "NewObject",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Hired Second"
-      }
-    },
-    {
-      "changeType": "NewObject",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Hired One"
-      }
-    },
-    {
-      "changeType": "ListChange",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Big Boss"
-      },
-      "property": "subordinates",
-      "elementChanges": [
-        {
-          "elementChangeType": "ValueAdded",
-          "index": 1,
-          "value": {
-            "entity": "org.javers.core.examples.model.Employee",
-            "cdoId": "Hired One"
-          }
-        },
-        {
-          "elementChangeType": "ValueAdded",
-          "index": 2,
-          "value": {
-            "entity": "org.javers.core.examples.model.Employee",
-            "cdoId": "Hired Second"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
+1. ValueChange{
+   globalId:'org.javers.core.examples.model.Employee/Great Developer',
+   property:'salary', oldVal:'10000', newVal:'20000'}
 
 
-- <tt>shouldDetectBossChange</tt>():
+//.. shouldDetectHired()
 
-```json
-diff: {
-  "changes": [
-    {
-      "changeType": "ListChange",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Manager Second"
-      },
-      "property": "subordinates",
-      "elementChanges": [
-        {
-          "elementChangeType": "ValueAdded",
-          "index": 0,
-          "value": {
-            "entity": "org.javers.core.examples.model.Employee",
-            "cdoId": "Great Developer"
-          }
-        }
-      ]
-    },
-    {
-      "changeType": "ReferenceChange",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Great Developer"
-      },
-      "property": "boss",
-      "left": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Manager One"
-      },
-      "right": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Manager Second"
-      }
-    },
-    {
-      "changeType": "ListChange",
-      "globalId": {
-        "entity": "org.javers.core.examples.model.Employee",
-        "cdoId": "Manager One"
-      },
-      "property": "subordinates",
-      "elementChanges": [
-        {
-          "elementChangeType": "ValueRemoved",
-          "index": 0,
-          "value": {
-            "entity": "org.javers.core.examples.model.Employee",
-            "cdoId": "Great Developer"
-          }
-        }
-      ]
-    }
-  ]
-}
+1. NewObject {
+   globalId:'org.javers.core.examples.model.Employee/Hired Second'}
+2. NewObject {
+   globalId:'org.javers.core.examples.model.Employee/Hired One'}
+3. ListChange{
+   globalId:'org.javers.core.examples.model.Employee/Big Boss',
+   property:'subordinates',
+   containerChanges:[(1).added:'org.javers.core.examples.model.Employee/Hired One',
+                     (2).added:'org.javers.core.examples.model.Employee/Hired Second']}
+
+
+//.. shouldDetectBossChange()
+
+Diff:
+1. ReferenceChange{
+   globalId:'org.javers.core.examples.model.Employee/Great Developer',
+   property:'boss',
+   oldRef:'org.javers.core.examples.model.Employee/Manager One',
+   newRef:'org.javers.core.examples.model.Employee/Manager Second'}
+2. ListChange{
+   globalId:'org.javers.core.examples.model.Employee/Manager Second',
+   property:'subordinates',
+   containerChanges:[(0).added:'org.javers.core.examples.model.Employee/Great Developer']}
+3. ListChange{
+   globalId:'org.javers.core.examples.model.Employee/Manager One',
+   property:'subordinates',
+   containerChanges:[(0).removed:'org.javers.core.examples.model.Employee/Great Developer']}
 ```

@@ -16,6 +16,10 @@
     padding: 0;
 }
 
+.javers-well pre code {
+    font-size: 14px;
+}
+
 #documentation {
     margin-top: 50px;
 }
