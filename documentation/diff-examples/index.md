@@ -82,29 +82,29 @@ import org.junit.Test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class BasicEntityDiffExample {
-    @Test
-    public void shouldCompareTwoEntityObjects() {
-        //given
-        Javers javers = JaversBuilder.javers().build();
+  @Test
+  public void shouldCompareTwoEntityObjects() {
+    //given
+    Javers javers = JaversBuilder.javers().build();
 
-        Person tommyOld = new Person("tommy", "Tommy Smart");
-        Person tommyNew = new Person("tommy", "Tommy C. Smart");
+    Person tommyOld = new Person("tommy", "Tommy Smart");
+    Person tommyNew = new Person("tommy", "Tommy C. Smart");
 
-        //when
-        Diff diff = javers.compare(tommyOld, tommyNew);
+    //when
+    Diff diff = javers.compare(tommyOld, tommyNew);
 
-        //then
-        //there should be one change of type {@link ValueChange}
-        ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
+    //then
+    //there should be one change of type {@link ValueChange}
+    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
-        assertThat(diff.getChanges()).hasSize(1);
-        assertThat(change.getProperty().getName()).isEqualTo("name");
-        assertThat(change.getAffectedCdoId().value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
-        assertThat(change.getLeft()).isEqualTo("Tommy Smart");
-        assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
+    assertThat(diff.getChanges()).hasSize(1);
+    assertThat(change.getProperty().getName()).isEqualTo("name");
+    assertThat(change.getAffectedGlobalId().value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
+    assertThat(change.getLeft()).isEqualTo("Tommy Smart");
+    assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
 
-        System.out.println(diff);
-    }
+    System.out.println(diff);
+  }
 }
 ```
 
@@ -179,30 +179,31 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class BasicValueObjectDiffExample {
 
-    @Test
-    public void shouldCompareTwoObjects() {
+  @Test
+  public void shouldCompareTwoObjects() {
 
-        //given
-        Javers javers = JaversBuilder.javers().build();
+    //given
+    Javers javers = JaversBuilder.javers().build();
 
-        Address address1 = new Address("New York","5th Avenue");
-        Address address2 = new Address("New York","6th Avenue");
+    Address address1 = new Address("New York","5th Avenue");
+    Address address2 = new Address("New York","6th Avenue");
 
-        //when
-        Diff diff = javers.compare(address1, address2);
+    //when
+    Diff diff = javers.compare(address1, address2);
 
-        //then
-        //there should be one change of type {@link ValueChange}
-        ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
+    //then
+    //there should be one change of type {@link ValueChange}
+    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
-        assertThat(diff.getChanges()).hasSize(1);
-        assertThat(change.getAffectedCdoId().value()).isEqualTo("org.javers.core.examples.model.Address/");
-        assertThat(change.getProperty().getName()).isEqualTo("street");
-        assertThat(change.getLeft()).isEqualTo("5th Avenue");
-        assertThat(change.getRight()).isEqualTo("6th Avenue");
+    assertThat(diff.getChanges()).hasSize(1);
+    assertThat(change.getAffectedGlobalId().value())
+              .isEqualTo("org.javers.core.examples.model.Address/");
+    assertThat(change.getProperty().getName()).isEqualTo("street");
+    assertThat(change.getLeft()).isEqualTo("5th Avenue");
+    assertThat(change.getRight()).isEqualTo("6th Avenue");
 
-        System.out.println(diff);
-    }
+    System.out.println(diff);
+  }
 }
 ```    
 
