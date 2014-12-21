@@ -24,28 +24,28 @@ gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
 <a name="compare-entities"></a>
 ## Compare two Entity objects
 
-Lets start from something simple, this example shows how to find a diff between two objects of <tt>Person</tt> class.
+Let's start from something simple, this example shows how to find a diff between two objects of `Person` class.
 Since every Person has his own identity, it's the `Entity`
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
 
 **The case**<br/>
-We have two objects, <tt>tommyOld</tt> and <tt>tommyNew</tt>.
-These objects represent two *versions* of the same being (person called Tommy).
+We have two objects, `tommyOld` and `tommyNew`.
+These objects represent two versions of the same being (person called Tommy).
 To find out what has changed, just call
 
     javers.compare(tommyOld, tommyNew)
 
 **Configuration** <br/>
-JaVers needs to know that <tt>Person</tt> class is an Entity.
-It's enough to annotate <tt>login</tt> field with `@Id` annotation.
+JaVers needs to know that Person class is an Entity.
+It's enough to annotate `login` field with `@Id` annotation.
 
 **What's important**<br/>
-Notice, that both objects have the same Id value (<tt>'tommy'</tt>).
+Notice, that both objects have the same Id value (`'tommy'`).
 That's why they are matched and compared.
 JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
-In this case, it's <tt>'org.javers.core.examples.model.Person/tommy'</tt>.
+In this case, it's `'org.javers.core.examples.model.Person/tommy'`.
 
-<tt>Person.class :</tt>
+`Person.class:`
 
 ```java
 package org.javers.core.examples.model;
@@ -68,7 +68,7 @@ public class Person {
 }
 ```
 
-<tt>[BasicEntityDiffExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/BasicEntityDiffExample.java)</tt>:
+`BasicEntityDiffExample.class`:
 
 ```java
 package org.javers.core.examples;
@@ -120,31 +120,31 @@ Diff:
 <a name="compare-valueobjects"></a>
 ## Compare ValueObjects
 
-This example shows how to find a diff between two objects of <tt>Address</tt> class.
+This example shows how to find a diff between two objects of `Address` class.
 Address is a typical `ValueObject`, it doesn't have its own identity. It's just a complex value holder.
 
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for ValueObject definition).
 
 **The case**<br/>
-We have two objects, <tt>address1</tt> and <tt>address2</tt>. These objects represent two different addresses.
+We have two objects, `address1` and `address2`. These objects represent two different addresses.
 To find out what's the difference, just call
 
     javers.compare(address1, address2)
 
 **Configuration** <br/>
 In this case, no configuration is required since JaVers is going to map
-Address class as `ValueObject` by default.
+Address class as ValueObject by default.
 
 **What's important**<br/>
-When JaVers knows nothing about a class, treats it as a ValueObject.
+When JaVers knows nothing about a class, treats it as ValueObject.
 As we said in the previous example, JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
 What's the Address Id? Well, it's a tricky beast...
 
-It's based on the path in the object graph. In this case, both objects are roots, so the path is simply <tt>'/'</tt>
-and the GlobalId is <tt>'org.javers.core.examples.model.Address/'</tt>
+It's based on the path in the object graph. In this case, both objects are roots, so the path is simply `'/'`
+and the GlobalId is `'org.javers.core.examples.model.Address/'`
 
 
-<tt>Address.class :</tt>
+`Address.class:`
 
 ```java
 package org.javers.core.examples.model;
@@ -164,7 +164,7 @@ public class Address {
 }
 ```
 
-<tt>[BasicValueObjectDiffExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/BasicValueObjectDiffExample.java)</tt>:
+`BasicValueObjectDiffExample.class:`
 
 ```java
 package org.javers.core.examples;
@@ -222,31 +222,31 @@ JaVers can compare arbitrary complex structures of objects.
 In this example, we show how easily you can compare employee hierarchies.
 
 For the simplicity of this example, data model is reduced to one class,
-<tt>Employee</tt>, see below.
+`Employee`, see below.
 
 Conceptually, employees hierarchy is a tree.
 Technically, we have graph with cycles here (since relation between boss and employees is bidirectional).
 
 **The case**<br/>
 We are comparing two versions (historical states) of some employees hierarchy.
-We have two <tt>Employee</tt> objects, <tt>oldBoss</tt> and <tt>newBoss</tt>. These guys are roots and handles to
+We have two Employee objects, `oldBoss` and `newBoss`. These guys are roots and handles to
 our hierarchies.
 
 We could consider following types of changes:
 
-- employee hired, [`NewObject`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
-- employee fired, [`ObjectRemoved`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
-- salary change, [`ValueChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
-- boss change, [`ReferenceChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
-- change on subordinates list, [`ListChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html).
+- employee hired — [`NewObject`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
+- employee fired — [`ObjectRemoved`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
+- salary change — [`ValueChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
+- boss change — [`ReferenceChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
+- change on subordinates list — [`ListChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html).
 
 We show code examples for 3 cases, employee hired, salary and boss change
 (other cases are done similarly).
-See the tests in <tt>EmployeeHierarchiesDiffExample.class</tt> below.
+See the tests in `EmployeeHierarchiesDiffExample.class` below.
 
 **Configuration** <br/>
-JaVers needs to know that <tt>Employee</tt> class is an Entity.
-It's enough to annotate <tt>name</tt> field with `@Id` annotation.
+JaVers needs to know that Employee class is an Entity.
+It's enough to annotate `name` field with `@Id` annotation.
 
 **What's important**<br/>
 JaVers makes no assumptions about your data structures
