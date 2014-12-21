@@ -5,168 +5,217 @@ title: Documentation - Repository examples
 
 # Repository examples
 
+All examples are runnable.
+Checkout our github repository:
+
+```
+git clone https://github.com/javers/javers.git
+cd javers
+```
+
+Run examples as unit tests:
+
+```
+gradlew javers-core:example -Dtest.single=BasicCommitExample
+```
+
 <a name="commit-changes"></a>
 ## Commit changes
 
-Whenever your domain object changes you have to persist details about the change. You can do this with a call ```commit``` method on Javers 
-instance:
+This example shows how to persist changes done on a domain object in `JaversRepository`.
 
+Then we show how to fetch the history of this object from the repository.
 
-```java           
-        import org.javers.core.Javers;
-        import javax.persistence.Id;
-        import java.net.UnknownHostException;
-                    
-        public static void main(String[] args) throws UnknownHostException {
-                Javers javers; //provide javers with registered repository
-                String author = "Pawel";
-        
-                MyEntity myEntity = new MyEntity(1, "Some test value");
-        
-                //initial commit
-                javers.commit(author, myEntity);
-                
-                //change something and commit again
-                myEntity.setValue("Another test value");
-                javers.commit(author, myEntity);
-            }
-        
-            private static class MyEntity {
-        
-                @Id
-                private int id;
-                private String value;
-        
-                private MyEntity(int id, String value) {
-                    this.id = id;
-                    this.value = value;
-                }
-        
-                public void setValue(String value) {
-                    this.value = value;
-                }
-            } 
-```
-             
-<a name="read-snapshots-history"></a>
-## Read snapshots history
+**The case**<br/>
+We have the object of `Person` class, which represents person called Robert.
+Our goal is to track changes done on Robert object.
+Whenever the object is changed we want to save its state in JaversRepository.
+With JaVers, it can be done with single `commit()` call:
 
-Having some commits executed you can read the list of persisted snapshots from the repository. 
-In order to read snapshots you have to provide:
-    <ul>
-        <li>entity id</li>
-        <li>entity class</li>
-        <li>maximum number of snapshots to download</li>
-    </ul>    
-    
-Javers read snapshots in the reversed chronological order. For example if you set the limit to 10 Javers returns the list of 10 latest 
-snapshots.
-   
+    javers.commit("user", robert);
 
-```java        
-        public static void main(String[] args) {
-            Javers javers = JaversBuilder.javers().build();
-            MyEntity entity = new MyEntity(1, "some value");
-            javers.commit("author", entity);
-            entity.setValue("another value");
-            javers.commit("author", entity);
+**Configuration** <br/>
+By default, JaVers uses in-memory repository, which is perfect for testing.
+For production environment you will need to setup a real database repository
+(see [repository-setup](/documentation/configuration#repository-setup)).
 
-            //get state history
-            List<CdoSnapshot> stateHistory = javers.getStateHistory(1, MyEntity.class, 100);
-            System.out.println("Snapshots count: " + stateHistory.size());
+We need to tell JaVers that Person class is an Entity.
+It's enough to annotate `login` field with `@Id` annotation.
 
-            //snapshot after initial commit
-            CdoSnapshot v1 = stateHistory.get(1);
-            System.out.println("Property value after first commit: " + v1.getPropertyValue("value"));
+**What's important** <br/>
+Person is a typical Entity
+(see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
+JaVers uses [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
+for identifying and querying for Entities.
+In this case, it's expressed as `InstanceIdDTO.instanceId("bob", Person.class)`.
 
-            //second snapshot
-            CdoSnapshot v2 = stateHistory.get(0);
-            System.out.println("Property value after second commit: " + v2.getPropertyValue("value"));
-        }
-
-    private static class MyEntity {
-
-        @Id
-        private int id;
-        private String value;
-
-        private MyEntity(int id, String value) {
-            this.id = id;
-            this.value = value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-```    
-    
-output:
-    
-    Changes count: 2
-    Property value after first commit: some value
-    Property value after second commit: another value
-    
-<a name="read-changes-history"></a>
-## Read changes history
-     
-If you want to read changes for a given entity, Javers can calculate diffs from persisted snapshots.
-In order read changes you have to provide:
-     <ul>
-         <li>entity id</li>
-         <li>entity class</li>
-         <li>maximum number of snapshots to download</li>
-     </ul>    
-Javers read changes in reverse chronological order, so for example if you set limit to 10 Javers returns 10 newest changes.
-
+`Person.class:`
 
 ```java
-    public static void main(String[] args) {
-            Javers javers = JaversBuilder.javers().build();
-            MyEntity entity = new MyEntity(1, "some value");
+package org.javers.core.examples.model;
 
-            //initial commit
-            javers.commit("author", entity);
+import javax.persistence.Id;
 
-            //some change
-            entity.setValue("another value");
+public class Person {
+    @Id
+    private String login;
+    private String name;
 
-            //commit after change
-            javers.commit("author", entity);
+    public Person(String login, String name) {
+        this.login = login;
+        this.name = name;
+    }
 
-            //get state history
-            List<Change> stateHistory = javers.getChangeHistory(1, MyEntity.class, 100);
-            System.out.println("Changes count: " + stateHistory.size());
+    public String getLogin() { return login; }
 
-            //snapshot after initial commit
-            ValueChange change = (ValueChange) stateHistory.get(0);
-            System.out.println("Property value before change: " + change.getLeft());
-            System.out.println("Property value after change: " + change.getRight());
-        }
+    public String getName() { return name; }
+}
+```
 
+`BasicCommitExample#shouldCommitToJaversRepository()`:
 
-        private static class MyEntity {
+```java
+package org.javers.core.examples;
 
-            @Id
-            private int id;
-            private String value;
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Change;
+import org.javers.core.diff.changetype.ValueChange;
+import org.javers.core.examples.model.Person;
+import org.javers.core.metamodel.object.CdoSnapshot;
+import org.javers.core.metamodel.object.InstanceIdDTO;
+import org.junit.Test;
+import java.util.List;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.javers.core.metamodel.object.InstanceIdDTO.instanceId;
 
-            private MyEntity(int id, String value) {
-                this.id = id;
-                this.value = value;
-            }
+public class BasicCommitExample {
+    @Test
+    public void shouldCommitToJaversRepository() {
+        //given:
 
-            public void setValue(String value) {
-                this.value = value;
-            }
-        }
-```        
-        
-output:
+        // prepare JaVers instance. By default, JaVers uses InMemoryRepository,
+        // it's useful for testing
+        Javers javers = JaversBuilder.javers().build();
 
-        Changes count: 1
-        Property value before change: some value
-        Property value after change: another value
+        // init your data
+        Person robert = new Person("bob", "Robert Martin");
+        // and persist initial commit
+        javers.commit("user", robert);
+
+        // do some changes
+        robert.setName("Robert C.");
+        // and persist another commit
+        javers.commit("user", robert);
+
+        // when:
+        List<CdoSnapshot> snapshots =
+            javers.getStateHistory(InstanceIdDTO.instanceId("bob", Person.class),10);
+
+        // then:
+        // there should be two Snapshots with Bob's state
+        assertThat(snapshots).hasSize(2);
+    }
+    ... //
+```
+
+<a name="read-snapshots-history"></a>
+## Read snapshots history
+Let's continue the previous example.
+Having some commits saved in `JaversRepository` we can fetch the list of Robert's object snapshots
+and check how Robert looked like in the past:
+
+```java
+List<CdoSnapshot> snapshots =
+    javers.getStateHistory(InstanceIdDTO.instanceId("bob", Person.class),10);
+```
+
+**What's important** <br/>
+In JaVers, snapshot is an object state recorded during `commit()` call.
+Technically, it's a map from property name to property value.
+
+Under the hood, JaVers reuses snapshots, and creates a new one only when given object is changed.
+It allows you to save significant amount of repository space.
+
+JaVers reads snapshots in the reversed chronological order.
+So if you set the limit to 10, Javers returns the list of 10 latest
+snapshots.
+
+`BasicCommitExample#shouldListStateHistory()`:
+
+```java
+... //
+public class BasicCommitExample {
+    ... //
+
+    @Test
+    public void shouldListStateHistory() {
+        // given:
+        // commit some changes
+        Javers javers = JaversBuilder.javers().build();
+        Person robert = new Person("bob", "Robert Martin");
+        javers.commit("user", robert);
+
+        robert.setName("Robert C.");
+        javers.commit("user", robert);
+
+        // when:
+        // list state history - snapshots
+        List<CdoSnapshot> snapshots =
+            javers.getStateHistory(instanceId("bob", Person.class), 5);
+
+        // then:
+        // there should be two Snapshots with Bob's state
+        assertThat(snapshots).hasSize(2);
+        CdoSnapshot newState = snapshots.get(0);
+        CdoSnapshot oldState = snapshots.get(1);
+        assertThat(oldState.getPropertyValue("name")).isEqualTo("Robert Martin");
+        assertThat(newState.getPropertyValue("name")).isEqualTo("Robert C.");
+    }
+
+    ... //
+```
+
+<a name="read-changes-history"></a>
+## Read changes history
+Let's continue the previous example.
+
+    //TODO
+
+`BasicCommitExample#shouldListChangeHistory()`:
+
+```java
+... //
+public class BasicCommitExample {
+    ... //
+
+    @Test
+    public void shouldListChangeHistory() {
+        // given:
+        // commit some changes
+        Javers javers = JaversBuilder.javers().build();
+        Person robert = new Person("bob", "Robert Martin");
+        javers.commit("user", robert);
+
+        robert.setName("Robert C.");
+        javers.commit("user", robert);
+
+        // when:
+        // list change history
+        List<Change> changes =
+            javers.getChangeHistory(InstanceIdDTO.instanceId("bob", Person.class), 5);
+
+        // then:
+        // there should be one ValueChange with Bob's firstName
+        assertThat(changes).hasSize(1);
+        ValueChange change = (ValueChange) changes.get(0);
+        assertThat(change.getProperty().getName()).isEqualTo("name");
+        assertThat(change.getLeft()).isEqualTo("Robert Martin");
+        assertThat(change.getRight()).isEqualTo("Robert C.");
+    }
+
+    ... //
+```
 
 <a name="json-type-adapter"></a>
 ## JSON TypeAdapter for ObjectId

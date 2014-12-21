@@ -327,7 +327,7 @@ The purpose of JaversRepository is simply to store JaVers commits in your databa
 alongside your domain data.
 
 JaVers comes by default with in-memory repository implementation. It's perfect for testing but
-for production a environment you will need something real.
+for production environment you will need something real.
 
 First, choose proper JaversRepository implementation.
 Currently, JaVers supports **MongoDB**.
