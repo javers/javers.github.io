@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <title>JaVers</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Oxygen:700,400,300&amp;subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top navbar-javers" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://javers.org">
+                <img alt="JaVers logo" src="img/logotype.png"/>
+            </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse navbar-right">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/documentation/features-overview">Features</a></li>
+                <li><a href="/documentation.html">Documentation</a></li>
+                <li><a href="/javadoc_1.0.0/index.html">Javadoc</a></li>
+                <li><a href="/#demo-app">Demo app</a></li>
+                <li><a href="/#team">Team</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="container-fluid hero-container">
+    <div class="hero">
+        <h1><strong>JaVers</strong> is a lightweight Java library <br/>for versioning domain objects</h1>
+
+        <p>We all want to be prepared for the audit.</p>
+
+        <p>Using <strong>JaVers</strong> you can forget about the troublesome data versioning.</p>
+
+        <p>Let the changes in your data be managed by JaVers.</p>
+
+        <div class="repositories visible-lg">
+            <a href="#" class="maven">
+                <small>get from</small>
+                maven
+                <img src="img/maven_logo.png"/>
+            </a>
+            <span>or</span>
+            <a href="#" class="github">
+                <small>clone from</small>
+                github
+                <img src="img/github_logo.png"/>
+            </a>
+        </div>
+
+    </div>
+</header>
+
+<h3 class="black-header">Why Javers?</h3>
+
+<section id="why-javers" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>
+                <img src="img/icon_paper_plane.svg" alt="lightweight and versatile"/>
+            </span>
+            <h4>lightweight<br/>and versatile</h4>
+        </div>
+        <div class="col-xs-4 col-md-4">
+            <span>
+                <img src="img/icon_gears.svg" alt="easy configuration"/>
+            </span>
+            <h4>easy<br/>configuration</h4>
+        </div>
+        <div class="col-xs-4 col-md-4">
+            <span>
+                <img src="img/icon_plug.svg" alt="open source"/>
+            </span>
+            <h4>open for extension<br/>and contributors</h4>
+        </div>
+    </div>
+</section>
+
+<section class="grey-container">
+    <div class="container">
+        <div class="row">
+            <div id="features" class="col-md-6">
+                <h2>Features</h2>
+
+                <h3>With version 1.0.0-RC3 you can:</h3>
+                <ul>
+                    <li><p>Compare complex objects structures using Diff.compare()</p></li>
+                    <li><p>Commit changes performed on your domain objects graph with single
+                        <code>javers.commit()</code> call.</p></li>
+                    <li><p>Persist objects change history in <code>MongoDB</code></p></li>
+                    <li><p>Track every change on object fields as well as relations changes.</p></li>
+                    <li><p>Use unified object GlobalId to easily identify your Entity instances and Value Objects.</p>
+                    </li>
+                    <li><p>Browse detailed change history of given object in two forms - diffs and snapshots.</p></li>
+                    <li><p>Perform ad-hoc diff between two graph of objects.</p></li>
+                </ul>
+            </div>
+            <div id="demo-app" class="col-md-6">
+                <h2>Demo app</h2>
+
+                <h3>Test it out with few seconds</h3>
+
+                <p>
+                    Check out our new &amp; cool Demo webapp based on <code>spring-boot</code> Launch it from command
+                    line using provided
+                    <code>Gradle</code> wrapper.
+                    Requiremets: <code>MongoDB</code> (running mongod at localhost) and <code>Java8</code>
+                </p>
+
+                <p class="console">
+                    git clone https://github.com/javers/javers-demo.git
+                    <br/>
+                    gradlew bootRun
+                </p>
+
+                <p><strong>In few seconds, app should be up & ready at <code>http://localhost:8080</code></strong></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Release plan</h2>
+                <ul>
+                    <li>v1.0 - production-ready release with stable API</li>
+                    <li>v1.1 &nbsp;- <strong>PostgreSQL</strong>, <strong>MySql</strong> and <strong>H2</strong> support
+                    </li>
+                    <li>v1.2 - Oracle support</li>
+                </ul>
+                <h4>Report an issue</h4>
+
+                <p>Found a bug? Documentation is unclear?<br/>Report an issue on our <a
+                        href="https://github.com/javers/javers/issues/">github issues</a>.</p>
+            </div>
+            <div id="team" class="col-md-4">
+                <h2>Project team</h2>
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt="Bartosz Walacik Gravatar"
+                             src="http://www.gravatar.com/avatar/09d370c8f5e6c5caf365a31f1f2128fc" class="profile-img"/>
+                        <strong>Bartosz Walacik</strong>&nbsp;
+                        <small>owner</small>
+                        <a href="mailto:bartek@javers.com" title="Bartosz Walaciak">bartek@javers.com</a>
+                    </li>
+                    <li>
+                        <img alt="Paweł Szymczyk Gravatar"
+                             src="http://www.gravatar.com/avatar/c81d83fdbe3a8ea5f5fef874a2272094" class="profile-img"/>
+                        <strong>Paweł Szymczyk</strong>&nbsp;
+                        <small>committer</small>
+                        <a href="mailto:pawel@javers.org" title="Paweł Szymczyk">pawel@javers.org</a>
+                    </li>
+                    <li>
+                        <img alt="Wioleta Goździk Gravatar"
+                             src="http://www.gravatar.com/avatar/b3da0eac665dcb596b84931cc4407221" class="profile-img"/>
+                        <strong>Wiola Goździk</strong>&nbsp;
+                        <small>committer</small>
+                        <a href="mailto:wiola@javers.org" title="Wiola Goździk">wiola@javers.org</a>
+                    </li>
+                    <li>
+                        <img alt="Bartosz Gałek Gravatar"
+                             src="http://www.gravatar.com/avatar/cb50c20f3cf5ff15832969b9f646438b" class="profile-img"/>
+                        <strong>Bartosz Gałek</strong>&nbsp;
+                        <small>committer</small>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <br/>
+                <a class="twitter-timeline" href="https://twitter.com/BartoszWalacik"
+                   data-widget-id="469928071974232064">Tweets by
+                    @BartoszWalacik</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <p class="col-md-12">
+                <img alt="JaVers logo small" src="img/logotype-small.png"/><br/>
+                JaVers is released under<br/>
+                <a title="Apache License Version 2.0" href="http://opensource.org/licenses/Apache-2.0">Apache License
+                    Version 2.0</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + "://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, "script", "twitter-wjs");
+</script>
+</body>
+</html>

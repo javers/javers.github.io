@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="50"
+   height="50"
+   viewBox="0 0 40 40"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg2"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="paper_plane.svg">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1154"
+     id="namedview10"
+     showgrid="false"
+     inkscape:zoom="4.17193"
+     inkscape:cx="29.92203"
+     inkscape:cy="28.496454"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <metadata
+     id="metadata4">
+Created by potrace 1.11, written by Peter Selinger 2001-2013
+<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     transform="matrix(0.00668843,0,0,-0.00676362,0.00364735,38.089149)"
+     id="g6"
+     style="fill:#ffffff;stroke:none">
+    <path
+       d="M 4885,5113 C 4857,5108 190,2588 98,2527 35,2485 7,2433 7,2360 c 1,-67 32,-126 85,-158 18,-11 318,-106 666,-211 349,-104 636,-192 638,-194 3,-2 45,-323 94,-713 49,-390 94,-728 99,-752 30,-144 140,-166 247,-50 22,24 176,236 343,471 l 304,428 581,-579 C 3602,65 3648,22 3690,12 c 46,-11 109,-4 145,15 31,17 73,65 85,97 16,42 1180,4700 1190,4763 23,137 -86,246 -225,226 z m -265,-593 c 0,-11 -980,-3933 -984,-3937 -1,-1 -252,248 -559,555 l -557,557 706,980 c 388,539 750,1042 805,1118 55,76 94,135 87,131 -7,-4 -571,-406 -1253,-893 -682,-487 -1247,-885 -1255,-885 -33,1 -900,268 -893,275 12,10 3887,2109 3896,2109 4,0 7,-5 7,-10 z"
+       id="path8"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff" />
+  </g>
+</svg>

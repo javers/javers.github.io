@@ -1,0 +1,398 @@
+/* Global styles */
+body {
+    font-family: 'Oxygen', sans-serif;
+    padding-top: 60px;
+}
+
+a {
+    color: #ea4d1a;
+}
+
+a:hover {
+    color: #ea9817;
+}
+
+code {
+    background-color: #e3e3e3;
+    color: #ea4d1a;
+}
+
+.navbar-nav > li > a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.navbar-javers {
+    border: none;
+    background: #1a1f25;
+}
+
+.navbar-javers .navbar-nav > .active > a {
+    border-bottom: solid 2px #ea4d1a;
+}
+
+.navbar-javers .navbar-nav > .active > a,
+.navbar-javers .navbar-nav > .active > a:hover {
+    background: none;
+
+}
+
+.navbar-javers .navbar-nav > li > a {
+    font-family: 'Oxygen', sans-serif;
+    font-weight: 300;
+    font-size: 0.9em;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    padding-right: 4px;
+    padding-left: 4px;
+    margin-right: 10px;
+    margin-left: 10px;
+    text-transform: uppercase;
+}
+
+.hero-container {
+    background: #1a1f25 url(../img/beans.jpg) center center repeat-x;
+}
+
+.hero {
+    text-align: center;
+    color: #fff;
+}
+
+.hero h1 {
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    color: #707e8b;
+    margin: 0 0 5px;
+}
+
+.hero .repositories {
+    padding-top: 50px;
+}
+
+.hero .repositories span {
+    padding: 15px;
+}
+
+.hero .repositories a {
+    position: relative;
+    display: inline-block;
+    padding: 15px;
+    border-radius: 10px;
+    border: #fff solid 4px;
+    max-width: 210px;
+    font-size: 1.6em;
+    text-transform: uppercase;
+    line-height: 20px;
+    color:#e7e7df;
+}
+
+.hero .repositories a:hover {
+    text-decoration: none;
+}
+
+.hero .repositories a.maven:hover {
+    background-color: #d96521;
+    border: #ee6c21 solid 4px;
+}
+
+.hero .repositories a.github:hover {
+    background-color: #3e7ab5;
+    border: #4183c4 solid 4px;
+}
+
+.hero .repositories a img {
+    position: absolute;
+}
+
+.hero .repositories a.maven {
+    padding-left:80px;
+    text-align: right;
+}
+
+.hero .repositories a.github {
+    padding-right:80px;
+    text-align: left;
+}
+
+.hero .repositories a.maven img {
+    left: -15px;
+    top: 10px;
+}
+
+.hero .repositories a.github img {
+    right: -15px;
+    top: 5px;
+}
+
+.hero .repositories a small {
+    color: #e7e7df;
+    font-size:0.6em;
+}
+
+h3.black-header {
+    background-color: #181d23;
+    color: #fff;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#why-javers .row {
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#why-javers .row > div {
+    text-align: center;
+    background-color: #fff;
+    padding: 25px 0;
+}
+
+#why-javers .row > div > span {
+    display: inline-block;
+    border-radius: 100%;
+    background-color: #3c79b2;
+    width: 75px;
+    height: 75px;
+    padding: 12px;
+    margin-right: 15px;
+}
+
+#why-javers .row > div > h4 {
+    margin-top: 5px;
+    display: inline-table;
+    vertical-align: middle;
+    text-align: center;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.grey-container {
+    background-color: #f0f4f7;
+    padding-bottom: 15px;
+}
+
+.grey-container h2 {
+    font-weight: 400;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+.grey-container h3 {
+    color: #707e8b;
+    font-weight: 300;
+    line-height: 10px;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+.console {
+    border-radius: 0;
+    color: #fff;
+    display: block;
+    padding: 20px 20px 20px 60px;
+    line-height: 2em;
+    font-family: monospace;
+    background: #23527c url('../img/prompt.png') no-repeat 5% center;
+}
+
+section.dark {
+    background-color: #1a1f25;
+    color: #fff;
+}
+
+section.dark > h2 {
+    text-transform: uppercase;
+}
+
+section.dark > h3 {
+    text-transform: uppercase;
+}
+
+section.dark #team > ul li {
+    height: 60px;
+}
+
+section.dark #team > ul li img.profile-img {
+    width: 48px;
+    height: 48px;
+    margin: 0 15px 0 0;
+    border-radius: 50%;
+    float: left;
+}
+
+section.dark #team ul li strong {
+    font-size: 1.2em;
+}
+
+section.dark #team ul li small {
+    color: #707e8b;
+    padding-right: 12%;
+}
+
+footer {
+    background-color: #181d23;
+    padding: 10px;
+}
+
+footer p {
+    text-align: center;
+    color: #fff;
+}
+
+footer p img {
+    padding: 5px;
+}
+
+body.page section header {
+    background-color: #232a30;
+}
+
+body.page section header h1 {
+    margin: 0;
+    padding: 15px 0;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1.7em;
+    font-weight: 300;
+}
+
+body.page section h2 {
+    text-transform: uppercase;
+}
+
+body.page section #content {
+
+}
+
+body.page section #sidebar {
+    background-color: #f0f4f7;
+}
+
+body.page section #sidebar section.active h2 {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #3d79b4;
+    padding-bottom:10px;
+}
+
+body.page section #sidebar ul li a {
+    font-weight: bold;
+    color: #232a2f;
+}
+
+/* Small devices (tablets, 768px and down) */
+@media (max-width: 767px) {
+    .navbar-javers {
+        margin-bottom: 0;
+        height: 60px;
+    }
+
+    .navbar-javers .navbar-collapse {
+        background: #1a1f25;
+    }
+
+    .hero {
+        padding: 20px 5px;
+    }
+
+    .hero h1 {
+        font-size: 1.3em;
+    }
+
+    .hero p {
+        font-size: 0.8em;
+    }
+
+    #why-javers .row > div > span {
+        margin-right: 0;
+    }
+
+    #why-javers .row > div > h4 {
+        font-size: 0.7em;
+    }
+
+    h3.black-header {
+        font-size: 0.85em;
+        padding: 10px;
+    }
+
+    .grey-container h2 {
+        font-size: 1.2em;
+    }
+
+    .grey-container h3 {
+        font-size: 1.2em;
+        line-height: 1.2em;
+    }
+
+    .console {
+        font-size: 0.6em;
+        padding: 20px;
+    }
+}
+
+/* Medium devices (desktops, 992px and down) */
+@media (min-width: 768px) {
+
+    .hero {
+        padding: 20px 5px;
+    }
+
+    .hero h1 {
+        font-size: 2.5em;
+    }
+
+    .hero p {
+        font-size: 0.9em;
+    }
+
+    h3.black-header {
+        font-size: 1.1em;
+        padding: 10px;
+    }
+
+    .grey-container h2 {
+        font-size: 1.9em;
+    }
+
+    .grey-container h3 {
+        font-size: 0.9em;
+    }
+
+}
+
+/* Large devices (large desktops, 1200px and down) */
+@media (min-width: 1200px) {
+    .hero {
+        padding: 80px 15px;
+    }
+
+    .hero h1 {
+        font-size: 3em;
+    }
+
+    .hero p {
+        font-size: 1.3em;
+    }
+
+    h3.black-header {
+        font-size: 1.5em;
+        padding: 15px;
+    }
+
+    .grey-container h2 {
+        font-size: 2.4em;
+    }
+
+    .grey-container h3 {
+        font-size: 1.2em;
+        line-height: 1.2em;
+    }
+
+}
