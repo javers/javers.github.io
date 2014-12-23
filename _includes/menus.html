@@ -1,21 +1,25 @@
-<nav class="javers-navbar navbar-fixed-top" role="navigation">
+{% assign current = page.url | downcase | split: '/' %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top navbar-javers" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Javers</a>
+            <a class="navbar-brand" href="http://javers.org">
+                <img alt="JaVers logo" src="/img/logotype.png"/>
+            </a>
         </div>
-        <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
+        <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-                <li><a href="/documentation/features-overview">Features</a></li>
-                <li><a href="/documentation">Documentation</a></li>
-                <li><a href="{{ site.javadoc_url }}index.html">Javadoc</a></li>
-                <li><a href="/#demo-app">Demo app</a></li>
-                <li><a href="/#team">Team</a>
+                <li {% if current[1] == 'index.html' %}class='active'{% endif %}><a href="/">Features</a></li>
+                <li {% if current[1] == 'documentation' %}class='active'{% endif %}><a href="/documentation">Documentation</a></li>
+                <li><a href="/javadoc_1.0.0/index.html">Javadoc</a></li>
                 </li>
             </ul>
         </div>

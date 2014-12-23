@@ -87,7 +87,7 @@ code {
     font-size: 1.6em;
     text-transform: uppercase;
     line-height: 20px;
-    color:#e7e7df;
+    color: #e7e7df;
 }
 
 .hero .repositories a:hover {
@@ -109,12 +109,12 @@ code {
 }
 
 .hero .repositories a.maven {
-    padding-left:80px;
+    padding-left: 80px;
     text-align: right;
 }
 
 .hero .repositories a.github {
-    padding-right:80px;
+    padding-right: 80px;
     text-align: left;
 }
 
@@ -130,7 +130,7 @@ code {
 
 .hero .repositories a small {
     color: #e7e7df;
-    font-size:0.6em;
+    font-size: 0.6em;
 }
 
 h3.black-header {
@@ -253,37 +253,65 @@ body.page section header {
     background-color: #232a30;
 }
 
-body.page section header h1 {
-    margin: 0;
-    padding: 15px 0;
+body.page section #main {
+    padding-right: 35px;
+    padding-bottom: 35px;
+}
+
+body.page section #main h1 {
+    text-transform: uppercase;
+}
+
+body.page section #content #main h2 {
+    color: #708494;
+}
+
+body.page section #content #main h2:before {
+    display: block;
+    content: " ";
+    margin-top: -75px;
+    height: 75px;
+    visibility: hidden;
+}
+
+body.page section #content #main blockquote {
+    background-color: #3d79b4;
+    padding: 20px;
+    border: none;
     color: #fff;
-    text-transform: uppercase;
-    font-size: 1.7em;
-    font-weight: 300;
-}
-
-body.page section h2 {
-    text-transform: uppercase;
-}
-
-body.page section #content {
-
+    margin:10px 0;
+    font-size:1.1em;
 }
 
 body.page section #sidebar {
+    padding: 0;
     background-color: #f0f4f7;
+    border-left: 1px solid #dde0e2;
+    border-right: 1px solid #dde0e2;
 }
 
-body.page section #sidebar section.active h2 {
-    font-weight: bold;
+body.page section #sidebar section {
+    padding: 0 25px 0;
+}
+
+body.page section #sidebar section h2 a{
+    font-weight: 300;
     text-transform: uppercase;
     color: #3d79b4;
-    padding-bottom:10px;
+    font-size:0.8em;
 }
 
-body.page section #sidebar ul li a {
-    font-weight: bold;
-    color: #232a2f;
+body.page section #sidebar section h2 a:hover {
+    text-decoration: none;
+}
+
+body.page section #sidebar section ul {
+    line-height: 1.8em;
+}
+
+body.page section #sidebar section ul li a {
+    font-weight: 300;
+    color: #000;
 }
 
 /* Small devices (tablets, 768px and down) */

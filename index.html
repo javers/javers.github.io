@@ -1,209 +1,156 @@
 ---
 layout: main
 title: JaVers - Lightweight Java Objects Auditing And Diff Framework
+descritpion: Javers desription
 ---
+<header class="container-fluid hero-container">
+    <div class="hero">
+        <h1><strong>JaVers</strong> is a lightweight Java library <br/>for versioning domain objects</h1>
 
-<section id="home" class="intro-header container-fluid center-block">
-    <img class="img-responsive center-block" src="img/javers_big.png" alt="Javers Logo">
+        <p>We all want to be prepared for the audit.</p>
 
-    <ul class="list-inline">
-        <li>
-            <a href="http://search.maven.org/#search|ga|1|javers-core" title="Javers Maven Repository"
-               class="btn btn-default btn-lg">
-                <i class="fa fa-download fa-fw"></i>&nbsp;<span class="network-name">Maven</span>
+        <p>Using <strong>JaVers</strong> you can forget about the troublesome data versioning.</p>
+
+        <p>Let the changes in your data be managed by JaVers.</p>
+
+        <div class="repositories visible-lg">
+            <a href="#" class="maven">
+                <small>get from</small>
+                maven
+                <img src="img/maven_logo.png"/>
             </a>
-        </li>
-        <li>
-            <a href="https://github.com/javers/javers" title="Javers Github" class="btn btn-default btn-lg">
-                <i class="fa fa-github fa-fw"></i>&nbsp;<span class="network-name">GitHub</span>
+            <span>or</span>
+            <a href="#" class="github">
+                <small>clone from</small>
+                github
+                <img src="img/github_logo.png"/>
             </a>
-        </li>
-    </ul>
-</section>
-
-<section class="intro-message container-fluid">
-    <h1 class="javers-font-color-blue">
-        JaVers is a lightweight Java library for versioning object-oriented data<br/>
-    </h1>
-    <h5 class="javers-font-color-blue">
-        We all want to be prepared for the audit.
-        Using JaVers you can forget about the troublesome data versioning.
-        Let the changes in your data be managed by JaVers.
-    </h5>
-    <hr>
-    <div class="section container-fluid">
-        <div class="col-lg-4 col-md-4">
-            <h3 class="javers-font-color-blue"><i class="fa fa-question-circle"></i> What is Javers?</h3>
-
-            <p class="javers-font-color-blue">
-                JaVers is a lightweight, open source java library for auditing changes in
-                your object-oriented data.
-                We all use Version Control Systems for source code,
-                why not to use specialized tool to track changes done on domain objects by our users?
-            </p>
         </div>
-        <div class="col-lg-4 col-md-4">
-            <h3 class="javers-font-color-blue"><i class="fa fa-question-circle"></i> Why Javers?</h3>
 
-            <p class="javers-font-color-blue">
-                It's lightweight and versatile
-                <br> Configuration is easy
-                <br> We are open for extensions and contributions
-            </p>
+    </div>
+</header>
+
+<h3 class="black-header">Why Javers?</h3>
+
+<section id="why-javers" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>
+                <img src="img/icon_paper_plane.svg" alt="lightweight and versatile"/>
+            </span>
+            <h4>lightweight<br/>and versatile</h4>
         </div>
-        <div class="col-lg-4 col-md-4">
-            <h3 class="javers-font-color-blue"><i class="fa fa-check-circle "></i>
-                Version {{ site.javers_current_version }} features</h3>
-            <ul class="javers-font-color-blue">
-                <li>Object Diff</li>
-                <li>Convenient API for selecting changes from Diff</li>
-                <li>Object changes repository</li>
-                <li>Browsing object history, both snapshots and diffs</li>
-                <li>MongoDB support</li>
-            </ul>
+        <div class="col-xs-4 col-md-4">
+            <span>
+                <img src="img/icon_gears.svg" alt="easy configuration"/>
+            </span>
+            <h4>easy<br/>configuration</h4>
+        </div>
+        <div class="col-xs-4 col-md-4">
+            <span>
+                <img src="img/icon_plug.svg" alt="open source"/>
+            </span>
+            <h4>open for extension<br/>and contributors</h4>
         </div>
     </div>
 </section>
 
-<section id="features">
+<section class="grey-container">
     <div class="container">
-        <div class="col-lg-12">
-            <h2 class="javers-font-color-blue section-heading">Features</h2>
+        <div class="row">
+            <div id="features" class="col-md-6">
+                <h2>Features</h2>
 
-            <p class="javers-font-color-blue lead">With JaVers version {{ site.javers_current_version }} you can:</p>
-            <ul class="javers-font-color-blue lead">
-                <li>Compare complex objects structures using Diff.compare()</li>
-                <li>Commit changes performed on your domain objects graph with single <code>javers.commit()</code> call.</li>
-                <li>Persist objects change history in <code>MongoDB</code></li>
-                <li>Track every change on object fields as well as relations changes.</li>
-                <li>Use unified object GlobalId to easily identify your Entity instances and Value Objects.
-                <li>Browse detailed change history of given object in two forms - diffs and snapshots.</li>
-                <li>Perform ad-hoc diff between two graph of objects.</li>
-            </ul>
+                <h3>With version 1.0.0-RC3 you can:</h3>
+                <ul>
+                    <li><p>Compare complex objects structures using Diff.compare()</p></li>
+                    <li><p>Commit changes performed on your domain objects graph with single
+                        <code>javers.commit()</code> call.</p></li>
+                    <li><p>Persist objects change history in <code>MongoDB</code></p></li>
+                    <li><p>Track every change on object fields as well as relations changes.</p></li>
+                    <li><p>Use unified object GlobalId to easily identify your Entity instances and Value Objects.</p>
+                    </li>
+                    <li><p>Browse detailed change history of given object in two forms - diffs and snapshots.</p></li>
+                    <li><p>Perform ad-hoc diff between two graph of objects.</p></li>
+                </ul>
+            </div>
+            <div id="demo-app" class="col-md-6">
+                <h2>Demo app</h2>
+
+                <h3>Test it out with few seconds</h3>
+
+                <p>
+                    Check out our new &amp; cool Demo webapp based on <code>spring-boot</code> Launch it from command
+                    line using provided
+                    <code>Gradle</code> wrapper.
+                    Requiremets: <code>MongoDB</code> (running mongod at localhost) and <code>Java8</code>
+                </p>
+
+                <p class="console">
+                    git clone https://github.com/javers/javers-demo.git
+                    <br/>
+                    gradlew bootRun
+                </p>
+
+                <p><strong>In few seconds, app should be up & ready at <code>http://localhost:8080</code></strong></p>
+            </div>
         </div>
     </div>
 </section>
 
-<section id="demo-app">
+<section class="dark">
     <div class="container">
-        <div class="col-lg-12">
-            <h2 class="javers-font-color-blue">Demo App</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Release plan</h2>
+                <ul>
+                    <li>v1.0 - production-ready release with stable API</li>
+                    <li>v1.1 &nbsp;- <strong>PostgreSQL</strong>, <strong>MySql</strong> and <strong>H2</strong> support
+                    </li>
+                    <li>v1.2 - Oracle support</li>
+                </ul>
+                <h4>Report an issue</h4>
 
-            <p class="javers-font-color-blue lead">
-                Check out our new &amp; cool Demo webapp based on <code>spring-boot</code>
+                <p>Found a bug? Documentation is unclear?<br/>Report an issue on our <a
+                        href="https://github.com/javers/javers/issues/">github issues</a>.</p>
+            </div>
+            <div id="team" class="col-md-4">
+                <h2>Project team</h2>
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt="Bartosz Walacik Gravatar"
+                             src="http://www.gravatar.com/avatar/09d370c8f5e6c5caf365a31f1f2128fc" class="profile-img"/>
+                        <strong>Bartosz Walacik</strong>&nbsp;
+                        <small>owner</small>
+                        <a href="mailto:bartek@javers.com" title="Bartosz Walaciak">bartek@javers.com</a>
+                    </li>
+                    <li>
+                        <img alt="Paweł Szymczyk Gravatar"
+                             src="http://www.gravatar.com/avatar/c81d83fdbe3a8ea5f5fef874a2272094" class="profile-img"/>
+                        <strong>Paweł Szymczyk</strong>&nbsp;
+                        <small>committer</small>
+                        <a href="mailto:pawel@javers.org" title="Paweł Szymczyk">pawel@javers.org</a>
+                    </li>
+                    <li>
+                        <img alt="Wioleta Goździk Gravatar"
+                             src="http://www.gravatar.com/avatar/b3da0eac665dcb596b84931cc4407221" class="profile-img"/>
+                        <strong>Wiola Goździk</strong>&nbsp;
+                        <small>committer</small>
+                        <a href="mailto:wiola@javers.org" title="Wiola Goździk">wiola@javers.org</a>
+                    </li>
+                    <li>
+                        <img alt="Bartosz Gałek Gravatar"
+                             src="http://www.gravatar.com/avatar/cb50c20f3cf5ff15832969b9f646438b" class="profile-img"/>
+                        <strong>Bartosz Gałek</strong>&nbsp;
+                        <small>committer</small>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
                 <br/>
-                Launch it from command line using provided <code>Gradle</code> wrapper.
-                Requiremets: <code>MongoDB</code> (running mongod at localhost) and Java8
-            </p>
-            <pre><code>git clone https://github.com/javers/javers-demo.git</code><br/><code>gradlew bootRun</code></pre>
-            <p class="javers-font-color-blue lead">
-                In few seconds, app should be up &amp; ready at http://localhost:8080
-            </p>
-        </div>
-    </div>
-</section>
-
-<section id="story">
-    <div class="container">
-        <div class="col-lg-5 col-sm-6">
-            <div class="clearfix"></div>
-            <h2 class="javers-font-color-blue">Story</h2>
-
-            <p class="javers-font-color-blue lead">When developing an application, we usually concentrate on the current state of domain
-                objects. So we simply instantiate them, apply some changes and eventually, delete them, not paying much attention to
-                previous states.</p>
-
-            <p class="javers-font-color-blue lead">The challenge arises when a new requirement is discovered: As a User, I want to know who
-                changed this status,
-                when the change was performed and what was the previous status.
-            </p>
-
-            <p class="javers-font-color-blue lead">The problem is, that both version and change notions are not easily expressible neither
-                in the Java language
-                nor in the mainstream databases (although NoSQL document databases have advantage here over relational ones).
-            </p>
-
-            <p class="javers-font-color-blue lead">This is the niche JaVers fulfills. In JaVers, version and change are first class
-                citizens.</p>
-        </div>
-        <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-            <img class="img-responsive" src="img/old_pc_small.png"
-                 alt="http://upload.wikimedia.org/wikipedia/commons/8/82/PDP-12-Update-Uppsala.jpeg">
-        </div>
-    </div>
-</section>
-
-<section id="vision">
-    <div class="container">
-        <div class="col-lg-5 col-lg-offset-1 col-sm-push-6 col-sm-6">
-            <div class="clearfix"></div>
-            <h2 class="javers-font-color-blue">Vision</h2>
-
-            <p class="javers-font-color-blue lead">Upcoming releases:</p>
-            <ul class="javers-font-color-blue lead">
-                <li>v1.0 - production-ready release with stable API</li>
-                <li>v1.1 - <code>PostgreSQL</code>, <code>MySql</code> and <code>H2</code> support</li>
-                <li>v1.2 - <code>Oracle</code> support</li>
-            </ul>
-        </div>
-        <div class="col-lg-5 col-sm-pull-6 col-sm-6">
-            <img class="img-responsive" src="img/road.png" alt="">
-        </div>
-    </div>
-</section>
-
-<section id="facts">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 col-sm-6">
-                <div class="clearfix"></div>
-                <h2 class="javers-font-color-blue">Basic facts about JaVers</h2>
-                <ul class="javers-font-color-blue lead">
-                    <li>It's lightweight and versatile. We don't take any assumptions about your data model, bean container or
-                        underlying
-                        data storage.
-                    </li>
-                    <li>Configuration is easy. Since we use <code>JSON</code> for objects serialization, we don't want you to provide
-                        detailed ORM-like mapping. JaVers needs to know only some high-level facts about your data model.
-                    </li>
-                    <li>JaVers is meant to keep its data versioning records (snapshots)
-                        in application primary database alongside with main data.
-                    </li>
-                    <li>We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects,
-                        pretty much the same like JPA does. We believe that this is right way of describing data.
-                    </li>
-                    <li>JaVers is written in <code>Java7</code> it can be run on <code>JDK 6</code> or higher.</li>
-                </ul>
-            </div>
-            <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                <img class="img-responsive" src="img/postit.png" alt="http://upload.wikimedia.org/wikipedia/commons/b/b4/Postit.jpg">
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="team">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
-                <div class="clearfix"></div>
-                <h2 class="javers-font-color-blue">Project team</h2>
-                <ul class="javers-font-color-blue lead">
-                    <li>Bartosz Walacik - owner, commiter - <a href="mailto:bartek@javers.com"
-                                                               title="Bartosz Walaciak">bartek@javers.com</a></li>
-                    <li>Paweł Szymczyk - committer - <a href="mailto:pawel@javers.org" title="Paweł Szymczyk">pawel@javers.org</a></li>
-                    <li>Bartosz Gałek - committer</li>
-                    <li>Wiola Goździk - committer - <a href="mailto:wiola@javers.org" title="Wiola Goździk">wiola@javers.org</a></li>
-                </ul>
-                <h4 class="javers-font-color-blue">Report an issue</h4>
-                Report an issue to our <a href="https://github.com/javers/javers/issues/">github issues</a>.
-
-            </div>
-            <div class="col-lg-5 col-sm-pull-6  col-sm-6">
-                <a class="twitter-timeline" href="https://twitter.com/BartoszWalacik" data-widget-id="469928071974232064">Tweets by
+                <a class="twitter-timeline" href="https://twitter.com/BartoszWalacik"
+                   data-widget-id="469928071974232064">Tweets by
                     @BartoszWalacik</a>
-                <!-- TODO zrobic mniejsza wersje
-                <img class="img-responsive" src="img/snicker.png"> -->
             </div>
         </div>
     </div>
