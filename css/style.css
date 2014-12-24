@@ -50,9 +50,15 @@ code {
     margin-left: 10px;
     text-transform: uppercase;
 }
-
 .navbar-javers .navbar-nav > li > ul {
     color: #fff;
+}
+
+.navbar-javers .logo-version {
+    color: #EA4D1A;
+    margin-top: 1.1em;
+    font-size:1.4em;
+    float:right;
 }
 
 .hero-container {
@@ -274,6 +280,7 @@ body.page section #main h1 {
 body.page section #content #main h2 {
     color: #708494;
 }
+
 body.page section #content #main h3:before,
 body.page section #content #main h2:before {
     display: block;
@@ -320,9 +327,9 @@ body.page section #sidebar section ul li a {
     font-weight: 300;
     color: #000;
     padding: 10px;
-    margin-left:0;
-    margin-bottom:10px;
-    margin-top:10px;
+    margin-left: 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 body.page section #sidebar section ul li a:hover,
@@ -334,6 +341,12 @@ body.page section #sidebar section ul li.active a {
 
 /* Small devices (tablets, 768px and down) */
 @media (max-width: 767px) {
+
+    .navbar-javers .logo-version {
+        float: none;
+        display: inline-block;
+    }
+
     .navbar-javers {
         margin-bottom: 0;
         height: 60px;
