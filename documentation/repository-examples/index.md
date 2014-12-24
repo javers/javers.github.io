@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Repository examples
+submenu: repository-examples
 ---
 
 # Repository examples

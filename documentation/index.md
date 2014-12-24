@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Introduction
+submenu: introduction
 ---
 
 # Introduction
@@ -34,4 +35,3 @@ This is the niche JaVers fulfills. In JaVers, *version* and *change* are **first
 * JaVers is meant to keep its data versioning records (snapshots) in application primary database alongside with main data.
 * We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects, pretty much the same like JPA does. We believe that this is right way of describing data.
 * JaVers is written in Java7 it can be run on JDK 6 or higher.
-

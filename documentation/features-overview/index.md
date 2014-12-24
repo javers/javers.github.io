@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Features Overview
+submenu: features-overview
 ---
 
 # Features Overview #

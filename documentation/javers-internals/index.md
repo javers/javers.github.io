@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Javers Internals
+submenu: javers-internals
 ---
 
 # Javers Internals

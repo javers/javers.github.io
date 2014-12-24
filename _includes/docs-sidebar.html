@@ -4,10 +4,10 @@
             Introduction
         </a>
     </h2>
-    <ul class="list-unstyled">
-        <li><a href="/documentation/#what-is-javers">What is JaVers</a></li>
-        <li><a href="/documentation/#story">Story</a></li>
-        <li><a href="/documentation/#basic-facts-about-javers">Basic facts about JaVers</a></li>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'introduction' %} hidden {% endif %}">
+        <li><a href="#what-is-javers">What is JaVers</a></li>
+        <li><a href="#story">Story</a></li>
+        <li><a href="#basic-facts-about-javers">Basic facts about JaVers</a></li>
     </ul>
 </section>
 
@@ -17,7 +17,7 @@
             Features overview
         </a>
     </h2>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled {% if page.submenu != 'features-overview' %} hidden {% endif %}">
         <li><a href="/documentation/features-overview#object-diff">Object diff</a></li>
         <li><a href="/documentation/features-overview#javers-repository">Javers Repository</a></li>
         <li><a href="/documentation/features-overview#json-serialization">JSON Serialization</a></li>
@@ -30,7 +30,7 @@
             Getting Started
         </a>
     </h2>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled {% if page.submenu != 'getting-started' %} hidden {% endif %}">
         <li><a href="/documentation/getting-started#get-javers">Get JaVers</a></li>
         <li><a href="/documentation/getting-started#create-javers-instance">Create JaVers instance</a></li>
     </ul>
@@ -38,11 +38,24 @@
 
 <section>
     <h2>
-        <a href="/documentation/repository-examples">
+        <a href="/documentation/diff-examples">
             Examples &mdash; Diff
         </a>
     </h2>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled {% if page.submenu != 'diff-examples' %} hidden {% endif %}">
+        <li><a href="/documentation/diff-examples#compare-entities">Compare Entities</a></li>
+        <li><a href="/documentation/diff-examples#compare-valueobjects">Compare Value Objects</a></li>
+        <li><a href="/documentation/diff-examples#compare-graphs">Compare graphs</a></li>
+    </ul>
+</section>
+
+<section>
+    <h2>
+        <a href="/documentation/repository-examples">
+            Examples &mdash; Repository
+        </a>
+    </h2>
+    <ul class="list-unstyled {% if page.submenu != 'repository-examples' %} hidden {% endif %}">
         <li><a href="/documentation/repository-examples#commit-changes">Commit changes</a></li>
         <li><a href="/documentation/repository-examples#read-snapshots-history">Read snapshots history</a></li>
         <li><a href="/documentation/repository-examples#read-changes-history">Read changes history</a></li>
@@ -56,7 +69,7 @@
             Configuration
         </a>
     </h2>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled {% if page.submenu != 'configuration' %} hidden {% endif %}">
         <li><a href="/documentation/configuration#domain-model-mapping">Domain model mapping</a></li>
         <li><a href="/documentation/configuration#mapping-configuration">Mapping configuration</a>
         <li><a href="/documentation/configuration#supported-annotations">&nbsp; &nbsp; Supported annotations</a>
@@ -74,7 +87,7 @@
     <h2>
         <a href="/documentation/javers-internals">JaVers internals</a>
     </h2>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled {% if page.submenu != 'javers-internals' %} hidden {% endif %}">
         <li><a href="/documentation/javers-internals#type-mapper">TypeMapper</a></li>
     </ul>
 </section>

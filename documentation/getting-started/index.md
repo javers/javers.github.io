@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Getting started
+submenu: getting-started
 ---
 
 <a name="getting-started"></a>

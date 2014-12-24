@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Configuration
+submenu: configuration
 ---
 
 <h1 id="configuration">Configuration</h1>

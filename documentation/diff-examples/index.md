@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Examples
+submenu: diff-examples
 ---
 
 # Diff examples

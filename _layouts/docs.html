@@ -3,7 +3,7 @@
 <head>
     {% include head.html %}
 </head>
-<body class="page">
+<body class="page" data-spy="scroll" data-target="#sidebar">
 {% include menus.html %}
 
 <section>
@@ -13,12 +13,13 @@
                 {{ content }}
             </div>
             <div id="sidebar" class="col-md-4 visible-md visible-lg">
-                {% include docs-sidebar.html %}
+                <div data-spy="affix" data-offset-top="160" data-offset-bottom="-160">
+                    {% include docs-sidebar.html %}
+                </div>
             </div>
         </div>
     </div>
 </section>
-
 
 {% include footer.html %}
 </body>
