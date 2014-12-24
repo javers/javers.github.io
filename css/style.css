@@ -13,8 +13,9 @@ a:hover {
 }
 
 code {
-    background-color: white;
+    background: transparent;
     color: black;
+    font-size: 1em;
 }
 
 .navbar-nav > li > a {
