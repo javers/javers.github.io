@@ -274,7 +274,7 @@ body.page section #main h1 {
 body.page section #content #main h2 {
     color: #708494;
 }
-
+body.page section #content #main h3:before,
 body.page section #content #main h2:before {
     display: block;
     content: " ";
@@ -319,14 +319,17 @@ body.page section #sidebar section ul {
 body.page section #sidebar section ul li a {
     font-weight: 300;
     color: #000;
-    padding: 5px;
+    padding: 10px;
+    margin-left:0;
+    margin-bottom:10px;
+    margin-top:10px;
 }
 
-body.page section #sidebar section ul li a:hover {
+body.page section #sidebar section ul li a:hover,
+body.page section #sidebar section ul li.active a {
     background: transparent;
     color: #ee6c21;
-    border-left: 3px solid red;
-    padding-left:2px;
+    border-left: 2px solid red;
 }
 
 /* Small devices (tablets, 768px and down) */

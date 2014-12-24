@@ -6,8 +6,7 @@ submenu: introduction
 
 # Introduction
 
-<a name="what-is-javers"></a>
-## What is JaVers
+<h2 id="what-is-javers">What is JaVers</h2>
 JaVers is a lightweight java library for **auditing** changes in your data.
 
 We all use Version Control Systems for source code,
