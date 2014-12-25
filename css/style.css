@@ -16,7 +16,7 @@ a:hover {
 code {
     background: transparent;
     color: black;
-    font-size: 1em;
+    font-size: 1.1em;
 }
 
 .navbar-nav > li > a {
@@ -271,14 +271,22 @@ body.page section header {
 body.page section #main {
     padding-right: 35px;
     padding-bottom: 35px;
+    font-size: 1.1em;
 }
 
 body.page section #main h1 {
+    font-size: 2.2em;
     text-transform: uppercase;
 }
 
 body.page section #content #main h2 {
     color: #708494;
+    font-size: 1.8em;
+}
+
+body.page section #content #main h3 {
+    color: #708494;
+    font-size: 1.4em;
 }
 
 body.page section #content #main h3:before,
@@ -305,18 +313,27 @@ body.page section #content #main blockquote {
 }
 
 body.page section #sidebar section {
-    padding: 0 25px 0;
+    padding-left: 15px;
+    padding-bottom: 2px;
+    padding-right: 0px;
 }
 
-body.page section #sidebar section h2 a {
+
+body.page section #sidebar section a {
+    font-size: 1.6em;
     font-weight: 300;
-    text-transform: uppercase;
     color: #3d79b4;
-    font-size: 0.8em;
+    padding-left: 15px;
+    padding-right: 0px;
 }
 
-body.page section #sidebar section h2 a:hover {
+body.page section #sidebar section a:hover,
+body.page section #sidebar section.active a {
+    background: transparent;
+    color: #3d79b4;
+    border-left: 2px solid red;
     text-decoration: none;
+    padding-left: 13px;
 }
 
 body.page section #sidebar section ul {
@@ -324,12 +341,15 @@ body.page section #sidebar section ul {
 }
 
 body.page section #sidebar section ul li a {
+    font-size: 1.1em;
+    color: #444;
     font-weight: 300;
-    color: #000;
-    padding: 10px;
-    margin-left: 0;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    padding-left: 15px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin: 0px;
+    margin-left:15px;
 }
 
 body.page section #sidebar section ul li a:hover,
@@ -337,6 +357,7 @@ body.page section #sidebar section ul li.active a {
     background: transparent;
     color: #ee6c21;
     border-left: 2px solid red;
+    padding-left: 13px;
 }
 
 /* Small devices (tablets, 768px and down) */
