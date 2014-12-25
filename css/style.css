@@ -5,12 +5,8 @@ body {
     position: relative;
 }
 
-a {
+a, a:hover, a:active {
     color: #ea4d1a;
-}
-
-a:hover {
-    color: #ea9817;
 }
 
 code {
@@ -54,11 +50,16 @@ code {
     color: #fff;
 }
 
-.navbar-javers .logo-version {
-    color: #EA4D1A;
-    margin-top: 1.1em;
-    font-size:1.4em;
+
+.logo-version:active {
+   color:black;
+}
+
+.logo-version {
+    margin-top: 17px;
+    font-size:1.6em;
     float:right;
+    text-decoration: none;
 }
 
 .hero-container {
@@ -195,7 +196,7 @@ h3.black-header {
 }
 
 .grey-container h3 {
-    color: #707e8b;
+    color: #444;
     font-weight: 300;
     line-height: 10px;
     text-transform: uppercase;
@@ -352,12 +353,13 @@ body.page section #sidebar section ul li a {
 }
 
 body.page section #sidebar section ul li a:hover,
-body.page section #sidebar section ul li.active a {
+body.page section #sidebar section ul li.active a{
     background: transparent;
     color: #ee6c21;
     border-left: 2px solid red;
     padding-left: 23px;
 }
+
 
 /* Small devices (tablets, 768px and down) */
 @media (max-width: 767px) {

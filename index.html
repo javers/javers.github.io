@@ -12,7 +12,7 @@ descritpion: JaVers - Lightweight Java Objects Auditing And Diff Framework
         <p>Let the changes in your data be managed by JaVers</p>
 
         <div class="repositories visible-lg">
-            <a href="http://search.maven.org/#search|ga|1|javers-core" class="maven">
+            <a href="http://search.maven.org/#artifactdetails|org.javers|javers-core|{{site.javers_current_version}}|jar" class="maven">
                 maven
                 <small>central</small>
                 <img src="img/maven_logo.png"/>
@@ -48,7 +48,8 @@ descritpion: JaVers - Lightweight Java Objects Auditing And Diff Framework
             <span>
                 <img src="img/icon_plug.svg" alt="open source"/>
             </span>
-            <h4>open for extension<br/>and contributors</h4>
+            <h4><a href="https://github.com/javers/javers/issues/">
+                open for extension<br/>and contributors</a></h4>
         </div>
     </div>
 </section>
@@ -58,18 +59,18 @@ descritpion: JaVers - Lightweight Java Objects Auditing And Diff Framework
         <div class="row">
             <div id="features" class="col-md-6">
                 <h2>Features</h2>
-
                 <h3>With version {{site.javers_current_version}} you can:</h3>
                 <ul>
-                    <li><p>Compare complex objects structures using Diff.compare()</p></li>
-                    <li><p>Commit changes performed on your domain objects graph with single
-                        <code>javers.commit()</code> call.</p></li>
+                    <li><p><a href="/documentation/diff-examples/">Compare</a> complex objects structures using <code>javers.compare()</code></p></li>
+                    <li><p><a href="/documentation/repository-examples/#commit-changes">Commit</a> changes done on your domain objects with a single
+                        <code>javers.commit()</code> call</p></li>
+                    <li><p>Browse detailed change history of given object in two forms &mdash;
+                        <a href="/documentation/repository-examples/#read-changes-history">diffs</a> and
+                        <a href="/documentation/repository-examples/#read-snapshots-history">snapshots</a></p></li>
                     <li><p>Persist objects change history in <code>MongoDB</code></p></li>
-                    <li><p>Track every change on object fields as well as relations changes.</p></li>
-                    <li><p>Use unified object GlobalId to easily identify your Entity instances and Value Objects.</p>
+                    <li><p>Track every change on object fields as well as relations changes</p></li>
+                    <li><p>Use unified object GlobalId to easily identify your Entities and ValueObjects</p>
                     </li>
-                    <li><p>Browse detailed change history of given object in two forms - diffs and snapshots.</p></li>
-                    <li><p>Perform ad-hoc diff between two graph of objects.</p></li>
                 </ul>
             </div>
             <div id="demo-app" class="col-md-6">
@@ -78,7 +79,7 @@ descritpion: JaVers - Lightweight Java Objects Auditing And Diff Framework
                 <h3>Test it out with few seconds</h3>
 
                 <p>
-                    Check out our new &amp; cool Demo webapp based on <code>spring-boot</code> Launch it from command
+                    Check out our cool Demo webapp based on <code>spring-boot</code> Launch it from command
                     line using provided
                     <code>Gradle</code> wrapper.
                     Requiremets: <code>MongoDB</code> (running mongod at localhost) and <code>Java8</code>
@@ -107,7 +108,7 @@ descritpion: JaVers - Lightweight Java Objects Auditing And Diff Framework
                     </li>
                     <li>v1.2 - Oracle support</li>
                 </ul>
-                <h4>Report an issue</h4>
+                <h2>Report an issue</h2>
 
                 <p>Found a bug? Documentation is unclear?<br/>Report an issue on our <a
                         href="https://github.com/javers/javers/issues/">github issues</a>.</p>

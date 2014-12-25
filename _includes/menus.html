@@ -14,11 +14,13 @@
             <a class="navbar-brand" href="/">
                 <img alt="JaVers logo" src="/img/logotype.png"/>
             </a>
-            <small class="logo-version">{{site.javers_current_version}}</small>
+            <a class="logo-version" href="http://search.maven.org/#artifactdetails|org.javers|javers-core|{{site.javers_current_version}}|jar" >
+                {{site.javers_current_version}}
+            </a>
         </div>
         <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-                <li {% if current[1] == 'index.html' %}class='active'{% endif %}>
+                <li {% if current[1] == 'documentation/features-overview' %}class='active'{% endif %}>
                     <a href="/documentation/features-overview">Features</a>
                 </li>
                 <li {% if current[1] == 'documentation' %}class='active'{% endif %}>
