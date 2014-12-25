@@ -1,19 +1,19 @@
 ---
 layout: docs
 title: Documentation - Introduction
+submenu: introduction
 ---
 
 # Introduction
 
-<a name="what-is-javers"></a>
-## What is JaVers
+<h2 id="what-is-javers">What is JaVers</h2>
 JaVers is a lightweight java library for **auditing** changes in your data.
 
 We all use Version Control Systems for source code,
 why not to use specialized framework to provide an audit trail of your Java objects (entities, POJO, data objects)?
 
-<a name="story"></a>
-## Story
+<h2 id="story">Story</h2>
+
 When developing an application, we usually concentrate on the current state of domain objects.
 So we simply instantiate them, apply some changes and eventually, delete them, not paying much attention to previous states.
 
@@ -27,11 +27,10 @@ Java language nor in the mainstream databases (although NoSQL document databases
 
 This is the niche JaVers fulfills. In JaVers, *version* and *change* are **first class citizens**.
 
-<a name="basic-facts-about-javers"></a>
-## Basic facts about JaVers
+<h2 id="basic-facts-about-javers">Basic facts about JaVers</h2>
+
 * It's lightweight and versatile. We don't take any assumptions about your data model, bean container or underlying data storage.
 * Configuration is easy. Since we use JSON for objects serialization, we don't want you to provide detailed ORM-like mapping. JaVers needs to know only some high-level facts about your data model.
 * JaVers is meant to keep its data versioning records (snapshots) in application primary database alongside with main data.
 * We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects, pretty much the same like JPA does. We believe that this is right way of describing data.
 * JaVers is written in Java7 it can be run on JDK 6 or higher.
-

@@ -1,13 +1,12 @@
 ---
 layout: docs
 title: Documentation - Getting started
+submenu: getting-started
 ---
 
-<a name="getting-started"></a>
-# Getting started #
+# Getting started
 
-<a name="get-javers"></a>
-## Get JaVers
+<h2 id="get-javers">Get JaVers</h2>
 
 To get JaVers add <code>javers-core</code>
 to your project dependencies and (optionally) add proper dependency on <code>javers-repository</code>.
@@ -19,14 +18,14 @@ For maven:
 <dependency>
     <groupId>org.javers</groupId>
     <artifactId>javers-core</artifactId>
-    <version>0.8.0</version>
+    <version>{{site.javers_current_version}}</version>
 </dependency>
 ```
 
 For gradle: 
 
 ```groovy
-compile 'org.javers:javers-core:0.8.0'
+compile 'org.javers:javers-core:{{site.javers_current_version}}'
 ```   
 If you are going to use JaVers as an object diff tool, this is only dependency you need.
         
@@ -38,19 +37,17 @@ For example, if you are using MongoDb add:
 <dependency>
     <groupId>org.javers</groupId>
     <artifactId>javers-persistence-mongo</artifactId>
-    <version>0.8.0</version>
+    <version>{{site.javers_current_version}}</version>
 </dependency>
 ```
 
 For gradle: 
 
 ```groovy
-compile 'org.javers:javers-persistence-mongo:0.8.0'
+compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
-<a name="create-javers-instance"></a>
-## Create JaVers instance
-
+<h2 id="create-javers-instance">Create JaVers instance</h2>
 Use JaversBuilder to create JaVers instance:
 
 ```java

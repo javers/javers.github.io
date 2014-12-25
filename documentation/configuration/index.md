@@ -1,9 +1,10 @@
 ---
 layout: docs
 title: Documentation - Configuration
+submenu: configuration
 ---
 
-# Configuration #
+# Configuration
 
 None of us like to configure tools but don't worry — JaVers knows it and
 does the hard work to minimize the configuration efforts on your side.
@@ -30,8 +31,7 @@ In this case you should tune the type mapping.
 For now, we support both the Java config via [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html)
 and the annotations config.
 
-<a name="domain-model-mapping"></a>
-## Domain model mapping
+<h2 id="domain-model-mapping">Domain model mapping</h2>
 
 ### Why domain model mapping is important?
 Many frameworks which deal with user domain model (aka data model) use some kind of <b>mapping</b>.
@@ -106,8 +106,7 @@ So in JaVers, ValueObject is just an Entity without identity.
 
 **For example** ValueObjects are: Address, Point.
 
-<a name="ValueType"></a>
-### Value
+<h3 id="ValueType">Value</h3>
 JaVers [`Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
 is a simple (scalar) value holder.
 
@@ -119,8 +118,7 @@ So it's highly important to implement it properly by comparing the underlying st
 For Values it's advisable to customize the JSON serialization by implementing *Type Adapters*
 (see [custom json serialization](#custom-json-serialization)).
 
-<a name="mapping-configuration"></a>
-## Mapping configuration
+<h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
 and make sure that JaVers has got it. So what should you do?
 
@@ -155,8 +153,7 @@ Mapping hints:
 * For an Entity, a type of its `Id-property` is mapped as Value by default.
 * If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
 
-<a name="supported-annotations"></a>
-### Supported annotations
+<h3 id="supported-annotations">Supported annotations</h3>
 
 JaVers annotations support is based on two sets, JPA and JaVers.
 
@@ -228,8 +225,7 @@ There are two kinds of property level annotations.
 </tr>
 </table>
 
-<a name="entity-id-property"></a>
-### Entity Id property
+<h3 id="entity-id-property">Entity Id property</h3>
 Entity `Id` has a special role in JaVers. It identifies an Entity instance.
 You need to choose **exactly one** property as Id for each of your Entity classes (we call it `Id-property`).
 
@@ -272,8 +268,7 @@ Nevertheless, if you plan to use `JaversRepository`,
 consider providing custom JSON `TypeAdapters`
 for your each of your `Value` types, especially Id types like `ObjectId` (see [JSON TypeAdapters](#json-type-adapters)).
 
-<a name="property-mapping-style"></a>
-### Property mapping style
+<h3 id="property-mapping-style">Property mapping style</h3>
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
 FIELD style is the default one. We recommend not changing it, as it's suitable in most cases.
 
@@ -319,8 +314,7 @@ Javers javers = JaversBuilder
 
 In both styles, access modifiers are not important, it could be private ;)
 
-<a name="repository-setup"></a>
-## JaversRepository setup
+<h2 id="repository-setup">JaversRepository setup</h2>
 If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
  
 The purpose of JaversRepository is simply to store JaVers commits in your database,
@@ -345,8 +339,7 @@ MongoRepository mongoRepo =  new MongoRepository(database)
 JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
 ```
 
-<a name="custom-json-serialization"></a>
-###Custom JSON serialization
+<h3 id="custom-json-serialization">Custom JSON serialization</h3>
 JaVers is meant to support various persistence stores for
 any kind of client's data. Hence we use JSON format to serialize client's domain objects.
 
@@ -385,9 +378,7 @@ The resulting JSON is verbose and ugly. You would rather expect neat and atomic 
 
 That's where custom JSON `TypeAdapters` come into play.
 
-<a name="json-type-adapters"></a>
-###JSON TypeAdapters
-
+<h3 id="json-type-adapters">JSON TypeAdapters</h3>
 You can easily customize JaVers serialization/deserialization behaviour
 by providing TypeAdapters for your `Value` types.
 

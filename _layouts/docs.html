@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<html>
 <head>
     {% include head.html %}
-    <link href="/css/documentation.css" rel="stylesheet">
 </head>
-<body data-spy="scroll" data-target=".javers-navbar">
-
+<body class="page" data-spy="scroll" data-target="#sidebar">
 {% include menus.html %}
-<section id="documentation" class="container">
-    <div class="row">
 
-        <div class="col-md-4">
-            {% include docs-sidebar.html %}
-        </div>
-        <div class="col-md-8 javers-well">
-            {% include content.html %}
+<section>
+    <div id="content" class="container">
+        <div class="row">
+            <div id="main" class="col-md-8">
+                {{ content }}
+            </div>
+            <div id="sidebar" class="col-md-4 visible-md visible-lg">
+                <div data-spy="affix" data-offset-top="160" data-offset-bottom="-160">
+                    {% include docs-sidebar.html %}
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -1,12 +1,12 @@
 ---
 layout: docs
 title: Documentation - Javers Internals
+submenu: javers-internals
 ---
 
 # Javers Internals
 
-<a name="type-mapper"></a>
-## TypeMapper and the type inferring algorithm
+<h2 name="type-mapper">TypeMapper and the type inferring algorithm</h2>
 JaVers use lazy approach to type mapping so types are resolved only for classes spotted in runtime.
 
 To show You how it works, assume that JaVers is calculating diff on two graphs of objects

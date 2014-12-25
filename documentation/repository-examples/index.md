@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Documentation - Repository examples
+submenu: repository-examples
 ---
 
 # Repository examples
@@ -19,8 +20,7 @@ Run examples as unit tests:
 gradlew javers-core:example -Dtest.single=BasicCommitExample
 ```
 
-<a name="commit-changes"></a>
-## Commit changes
+<h2 id="commit-changes">Commit changes</h2>
 
 This example shows how to persist changes done on a domain object in `JaversRepository`.
 
@@ -119,8 +119,8 @@ public class BasicCommitExample {
     ... //
 ```
 
-<a name="read-snapshots-history"></a>
-## Read snapshots history
+<h2 id="read-snapshots-history">Read snapshots history</h2>
+
 Let's continue the previous example.
 Having some commits saved in `JaversRepository` we can fetch the list of Robert's object snapshots
 and check how Robert looked like in the past:
@@ -176,8 +176,8 @@ public class BasicCommitExample {
     ... //
 ```
 
-<a name="read-changes-history"></a>
-## Read changes history
+<h2 id="read-changes-history">Read changes history</h2>
+
 Let's continue the previous example.
 
     //TODO
@@ -217,8 +217,7 @@ public class BasicCommitExample {
     ... //
 ```
 
-<a name="json-type-adapter"></a>
-## JSON TypeAdapter for ObjectId
+<h2 id="json-type-adapter">JSON TypeAdapter for ObjectId</h2>
 
 *JsonTypeAdapter* allows you to customize how JaVers
 serialize your [Value types](/documentation/configuration#ValueType) to JSON.
