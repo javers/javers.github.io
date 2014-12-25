@@ -4,7 +4,7 @@ title: Documentation - Configuration
 submenu: configuration
 ---
 
-<h1 id="configuration">Configuration</h1>
+# Configuration
 
 None of us like to configure tools but don't worry — JaVers knows it and
 does the hard work to minimize the configuration efforts on your side.

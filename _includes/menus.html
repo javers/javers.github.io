@@ -11,15 +11,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://javers.org">
+            <a class="navbar-brand" href="/">
                 <img alt="JaVers logo" src="/img/logotype.png"/>
             </a>
             <small class="logo-version">{{site.javers_current_version}}</small>
         </div>
         <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-                <li {% if current[1] == 'index.html' %}class='active'{% endif %}><a href="/">Features</a></li>
-                <li {% if current[1] == 'documentation' %}class='active'{% endif %}><a href="/documentation">Documentation</a>
+                <li {% if current[1] == 'index.html' %}class='active'{% endif %}>
+                    <a href="/documentation/features-overview">Features</a>
+                </li>
+                <li {% if current[1] == 'documentation' %}class='active'{% endif %}>
+                    <a href="/documentation">Documentation</a>
                     <ul class="visible-xs">
                         <li><a href="/documentation/">Introduction</a></li>
                         <li><a href="/documentation/features-overview">Features overview</a></li>
