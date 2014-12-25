@@ -344,12 +344,11 @@ body.page section #sidebar section ul li a {
     font-size: 1.1em;
     color: #444;
     font-weight: 300;
-    padding-left: 15px;
+    padding-left: 25px;
     padding-right: 0px;
     padding-top: 0px;
     padding-bottom: 0px;
     margin: 0px;
-    margin-left:15px;
 }
 
 body.page section #sidebar section ul li a:hover,
@@ -357,7 +356,7 @@ body.page section #sidebar section ul li.active a {
     background: transparent;
     color: #ee6c21;
     border-left: 2px solid red;
-    padding-left: 13px;
+    padding-left: 23px;
 }
 
 /* Small devices (tablets, 768px and down) */
