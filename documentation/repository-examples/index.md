@@ -121,8 +121,8 @@ public class BasicCommitExample {
 
 <h2 id="read-snapshots-history">Read snapshots history</h2>
 
-Let's continue the previous example.
-Having some commits saved in `JaversRepository` we can fetch the list of Robert's object snapshots
+Having some commits saved in `JaversRepository` we can fetch the list of Robert's object
+[Snapshots]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
 and check how Robert looked like in the past:
 
 ```java
@@ -131,7 +131,7 @@ List<CdoSnapshot> snapshots =
 ```
 
 **What's important** <br/>
-In JaVers, snapshot is an object state recorded during `commit()` call.
+In JaVers, snapshot is an objects state recorded during `commit()` call.
 Technically, it's a map from property name to property value.
 
 Under the hood, JaVers reuses snapshots, and creates a new one only when given object is changed.
@@ -178,9 +178,27 @@ public class BasicCommitExample {
 
 <h2 id="read-changes-history">Read changes history</h2>
 
-Let's continue the previous example.
+Once we have some commits saved in `JaversRepository` we can fetch the list of
+[Changes]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)
+done on given object.
 
-    //TODO
+There are three top-level types of changes:
+
+* NewObject &mdash; appears when object is committed to the JaversRepository for the first time,
+* ObjectRemoved &mdash; when object is deleted,
+* PropertyChange &mdash; when object changed its state on some property.
+
+Then, PropertyChange has following subtypes:
+
+* ContainerChange &mdash; list of changed items in `Set`, `List` or `Array`
+* MapChange &mdash; list of changed `Map` entries,
+* ReferenceChange &mdash; changed Entity reference, //link
+* ValueChange &mdash; changed primitive or Value. //link
+
+**What's important** <br/>
+Changes list is different than snapshots list as it shows only changed properties.
+It's works similarly to GIT blame function.
+
 
 `BasicCommitExample#shouldListChangeHistory()`:
 
@@ -219,13 +237,13 @@ public class BasicCommitExample {
 
 <h2 id="json-type-adapter">JSON TypeAdapter for ObjectId</h2>
 
-*JsonTypeAdapter* allows you to customize how JaVers
+`JsonTypeAdapter` allows you to customize how JaVers
 serialize your [Value types](/documentation/configuration#ValueType) to JSON.
 That is especially important for complex Id types like
-[<tt>org.bson.types.ObjectId</tt>](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
-often used as *Id-property* for objects persisted in MongoDB.
+[`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
+often used as Id-property for objects persisted in MongoDB.
 
-Consider following domain *Entity*:
+Consider following domain Entity:
 
 ```java
 package org.javers.core.cases.morphia;
@@ -244,7 +262,7 @@ public class MongoStoredEntity {
 ```
 
 
-Without custom *JsonTypeAdapter*, ObjectId is serialized using its 4 internal fields
+Without custom JsonTypeAdapter, ObjectId is serialized using its 4 internal fields
 as follows:
 
 <pre>
@@ -269,11 +287,11 @@ In this example we show, how to turn this verbose JSON into something neat like 
 </pre>
 
 **The case**<br/>
-Our goal is to improve JSON serialization of <tt>ObjectId</tt>
-used as Id in domain *Entity* &mdash; <tt>MongoStoredEntity</tt>.
+Our goal is to improve JSON serialization of ObjectId
+used as Id in domain Entity &mdash; `MongoStoredEntity`.
 
 **Configuration** <br/>
-First we need to implement the JSON *TypeAdapter*.
+First we need to implement the `JsonTypeAdapter` interface.
 In this case, we recommend extending
 [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html) abstract class.
 
@@ -304,7 +322,7 @@ public class ObjectIdTypeAdapter extends BasicStringTypeAdapter {
 }
 ```
 
-Then, our *TypeAdapter* should be registered in *JaversBuilder*:
+Then, our TypeAdapter should be registered in `JaversBuilder`:
 
     JaversBuilder.javers().registerValueTypeAdapter(new ObjectIdTypeAdapter())
 
