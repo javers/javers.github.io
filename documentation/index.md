@@ -4,7 +4,7 @@ title: Documentation - Introduction
 submenu: introduction
 ---
 
-# Introduction
+# Overview
 
 <h2 id="what-is-javers">What is JaVers</h2>
 JaVers is a lightweight java library for **auditing** changes in your data.
@@ -34,3 +34,8 @@ This is the niche JaVers fulfills. In JaVers, *version* and *change* are **first
 * JaVers is meant to keep its data versioning records (snapshots) in application primary database alongside with main data.
 * We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects, pretty much the same like JPA does. We believe that this is right way of describing data.
 * JaVers is written in Java7 it can be run on JDK 6 or higher.
+
+<h2 id="licence">Licence</h2>
+JaVers is released under
+<a title="Apache License Version 2.0" href="http://opensource.org/licenses/Apache-2.0">Apache License
+Version 2.0</a>.
