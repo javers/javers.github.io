@@ -40,7 +40,7 @@ For production environment you will need to setup a real database repository
 (see [repository-setup](/documentation/configuration#repository-setup)).
 
 We need to tell JaVers that Person class is an Entity.
-It's enough to annotate `login` field with `@Id` annotation.
+It's enough to annotate login field with `@Id` annotation.
 
 **What's important** <br/>
 Person is a typical Entity
@@ -184,21 +184,31 @@ done on given object.
 
 There are three top-level types of changes:
 
-* NewObject &mdash; appears when object is committed to the JaversRepository for the first time,
-* ObjectRemoved &mdash; when object is deleted,
-* PropertyChange &mdash; when object changed its state on some property.
+* [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
+  &mdash; appears when object is committed to the JaversRepository for the first time,
+* [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
+  &mdash; when object is deleted,
+* [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)
+  &mdash; when object changed its state on some property.
 
 Then, PropertyChange has following subtypes:
 
-* ContainerChange &mdash; list of changed items in `Set`, `List` or `Array`
-* MapChange &mdash; list of changed `Map` entries,
-* ReferenceChange &mdash; changed Entity reference, //link
-* ValueChange &mdash; changed primitive or Value. //link
+* [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
+  &mdash; list of changed items in `Set`, `List` or `Array`
+* [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
+  &mdash; list of changed `Map` entries,
+* [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
+  &mdash; changed Entity reference, //link
+* [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
+  &mdash; changed primitive or Value. //link
+
+
+In our example, we changed Robert's name. Se we expect one ValueChange
+in changes history.
 
 **What's important** <br/>
 Changes list is different than snapshots list as it shows only changed properties.
 It's works similarly to GIT blame function.
-
 
 `BasicCommitExample#shouldListChangeHistory()`:
 
