@@ -150,7 +150,7 @@ Mapping hints:
   (even for ValueObjects). This could cause incorrect JaVers mapping.
   As a solution, use explicit mapping with the JaversBuilder methods,
   as it has the highest priority.
-* For an Entity, a type of its `Id-property` is mapped as Value by default.
+* For an Entity, a type of its Id-property is mapped as Value by default.
 * If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
 
 <h3 id="supported-annotations">Supported annotations</h3>
@@ -227,7 +227,7 @@ There are two kinds of property level annotations.
 
 <h3 id="entity-id-property">Entity Id property</h3>
 Entity `Id` has a special role in JaVers. It identifies an Entity instance.
-You need to choose **exactly one** property as Id for each of your Entity classes (we call it `Id-property`).
+You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
 
 The *JaversType* of Id can be *Primitive* or *Value*
 so one of the types with atomic values, compared by `equals()`.
@@ -261,7 +261,7 @@ With zero config, JaVers maps:
 
 - `MongoStoredEntity` class as `Entity`,
   since `@Id` and `@Entity` annotations are scanned (JaVers only cares about the annotation class name, not package name).
-- `ObjectId` class as `Value`, since it's the type of the `Id-property` and it's not *Primitive*.
+- `ObjectId` class as `Value`, since it's the type of the Id-property and it's not Primitive.
 
 So far so good. This mapping is OK for calculating diffs.
 Nevertheless, if you plan to use `JaversRepository`,
@@ -350,7 +350,7 @@ But sometimes Gson's default JSON representation isn't what you like.
 This happens when dealing with `Values` like Date, Money or ObjectId.
 
 Consider [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
-often used as `Id-property` for objects persisted in MongoDB.
+often used as Id-property for objects persisted in MongoDB.
 
 By deafult, JaVers serializes ObjectId as follows:
 
