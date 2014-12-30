@@ -18,6 +18,8 @@ Run examples as unit tests:
 
 ```
 gradlew javers-core:example -Dtest.single=BasicCommitExample
+gradlew javers-core:example -Dtest.single=ChangeLogExample
+gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
 ```
 
 <h2 id="commit-changes">Commit changes</h2>
@@ -194,13 +196,13 @@ There are three top-level types of changes:
 Then, PropertyChange has following subtypes:
 
 * [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
-  &mdash; list of changed items in `Set`, `List` or `Array`
+  &mdash; list of changed items in Set, List or Array
 * [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
-  &mdash; list of changed `Map` entries,
+  &mdash; list of changed Map entries,
 * [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
-  &mdash; changed Entity reference, //link
+  &mdash; changed Entity reference,
 * [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
-  &mdash; changed primitive or Value. //link
+  &mdash; changed primitive or Value.
 
 
 In our example, we changed Robert's name. Se we expect one ValueChange
@@ -245,7 +247,103 @@ public class BasicCommitExample {
     ... //
 ```
 
-<h2 id="json-type-adapter">JSON TypeAdapter for ObjectId</h2>
+<h2 id="change-log">Change log</h2>
+In this example we show how to create a change log &mdash;
+a nicely formatted list of changes done on a particular object.
+
+Implementing a change log straightforwardly by iterating over a list of changes on your own
+is doable but cumbersome. You will end up with series of `if` and `instanceof` statements.
+
+The smarter way is to use
+[ChangeProcessor]({{ site.javadoc_url }}index.html?org/javers/core/changelog/ChangeProcessor.html)
+&mdash; the general-purpose
+method for processing a change list.
+
+**The case** <br/>
+We have an `Employee` called Bob, who gets promoted and
+gets two trainees assigned as subordinates.
+Our goal is to print a detailed Bob's change log with dates,
+commit authors, and change flow, like that:
+
+    commit 3.0, author:hr.manager, 2014-12-30 23:02:37
+      changed object: org.javers.core.examples.model.Employee/Bob
+        list changed on 'subordinates' property:
+          [(0).added:'org.javers.core.examples.model.Employee/Trainee One',
+           (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
+    commit 2.0, author:hr.director, 2014-12-30 23:02:36
+      changed object: org.javers.core.examples.model.Employee/Bob
+        value changed on 'position' property: 'Scrum master' -> 'Team Lead'
+        value changed on 'salary' property: '9000' -> '11000'
+
+We use text format here for brevity but ChangeProcessor API
+is suitable for creating a change log in any format.
+
+To print this nice change log, just call
+
+    List<Change> changes = javers.getChangeHistory(InstanceIdDTO.instanceId("Bob", Employee.class),5);
+    String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
+
+**What is important** <br/>
+You can think of ChangeProcessor as a `callback` based approach.
+JaVers processes a list of changes and fires callbacks provided by you when particular event occurs.
+
+ChangeProcessor is an interface. You can implement it from scratch or use `AbstractTextChangeLog` &mdash;
+the scaffolding class designed to be extended by concrete change log renderer.
+
+JaVers comes with one concrete change log implementation &mdash; `SimpleTextChangeLog`.
+We use it in this example
+but of course, you can provide a custom implementation to meet your change log requirements.
+
+ChangeProcessor can be also used for processing changes calculated by ad-hoc diff
+but it shines when used for changes fetched from JaversRepository.
+
+
+Full example is shown below.
+
+<tt>ChangeLogExample.class :</tt>
+
+```java
+package org.javers.core.examples;
+
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.core.changelog.SimpleTextChangeLog;
+import org.javers.core.diff.Change;
+import org.javers.core.examples.model.Employee;
+import org.javers.core.metamodel.object.InstanceIdDTO;
+import org.junit.Test;
+
+import java.util.List;
+
+public class ChangeLogExample {
+
+  @Test
+  public void shoudPrintTextChangeLog() {
+    // given:
+    Javers javers = JaversBuilder.javers().build();
+    Employee bob = new Employee("Bob", 9_000, "Scrum master" );
+    javers.commit("hr.manager", bob);
+
+    // do some changes and commit
+    bob.setPosition("Team Lead");
+    bob.setSalary(11_000);
+    javers.commit("hr.director", bob);
+
+    bob.addSubordinates(new Employee("Trainee One"), new Employee("Trainee Two"));
+    javers.commit("hr.manager", bob);
+
+    // when:
+    List<Change> changes =
+       javers.getChangeHistory(InstanceIdDTO.instanceId("Bob", Employee.class),5);
+    String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
+
+    // then:
+    System.out.println(changeLog);
+  }
+}
+```
+
+<h2 id="json-type-adapter">JSON TypeAdapter</h2>
 
 `JsonTypeAdapter` allows you to customize how JaVers
 serialize your [Value types](/documentation/configuration#ValueType) to JSON.
