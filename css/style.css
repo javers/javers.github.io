@@ -5,13 +5,17 @@ body {
     position: relative;
 }
 
+p {
+   color: #222;
+}
+
 a, a:hover, a:active {
     color: #ea4d1a;
 }
 
 code {
     background: transparent;
-    color: black;
+    color: #111;
     font-size: 1.1em;
 }
 
