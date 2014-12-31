@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Examples
+title: Documentation — Examples
 submenu: diff-examples
 ---
 
@@ -24,8 +24,8 @@ gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
 
-Let's start from something simple, this example shows how to find a diff between two objects of `Person` class.
-Since every Person has his own identity, it's the `Entity`
+Let’s start from something simple, this example shows how to find a diff between two objects of `Person` class.
+Since every Person has his own identity, it’s the `Entity`
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
 
 **The case**<br/>
@@ -37,13 +37,13 @@ To find out what has changed, just call
 
 **Configuration** <br/>
 JaVers needs to know that Person class is an Entity.
-It's enough to annotate `login` field with `@Id` annotation.
+It’s enough to annotate `login` field with `@Id` annotation.
 
-**What's important**<br/>
+**What’s important**<br/>
 Notice, that both objects have the same Id value (`'tommy'`).
-That's why they are matched and compared.
+That’s why they are matched and compared.
 JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
-In this case, it's `'org.javers.core.examples.model.Person/tommy'`.
+In this case, it’s `'org.javers.core.examples.model.Person/tommy'`.
 
 `Person.class:`
 
@@ -120,13 +120,13 @@ Diff:
 <h2 id="compare-valueobjects">Compare ValueObjects</h2>
 
 This example shows how to find a diff between two objects of `Address` class.
-Address is a typical `ValueObject`, it doesn't have its own identity. It's just a complex value holder.
+Address is a typical `ValueObject`, it doesn’t have its own identity. It’s just a complex value holder.
 
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for ValueObject definition).
 
 **The case**<br/>
 We have two objects, `address1` and `address2`. These objects represent two different addresses.
-To find out what's the difference, just call
+To find out what’s the difference, just call
 
     javers.compare(address1, address2)
 
@@ -134,12 +134,12 @@ To find out what's the difference, just call
 In this case, no configuration is required since JaVers is going to map
 Address class as ValueObject by default.
 
-**What's important**<br/>
+**What’s important**<br/>
 When JaVers knows nothing about a class, treats it as ValueObject.
 As we said in the previous example, JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
-What's the Address Id? Well, it's a tricky beast...
+What’s the Address Id? Well, it’s a tricky beast...
 
-It's based on the path in the object graph. In this case, both objects are roots, so the path is simply `'/'`
+It’s based on the path in the object graph. In this case, both objects are roots, so the path is simply `'/'`
 and the GlobalId is `'org.javers.core.examples.model.Address/'`
 
 
@@ -244,9 +244,9 @@ See the tests in `EmployeeHierarchiesDiffExample.class` below.
 
 **Configuration** <br/>
 JaVers needs to know that Employee class is an Entity.
-It's enough to annotate `name` field with `@Id` annotation.
+It’s enough to annotate `name` field with `@Id` annotation.
 
-**What's important**<br/>
+**What’s important**<br/>
 JaVers makes no assumptions about your data structures
 and treats them just like a graphs with cycles (the same like JVM do).
 There are no limitation about number of nodes in the graph.

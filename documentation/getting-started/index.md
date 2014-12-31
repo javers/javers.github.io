@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Getting started
+title: Documentation — Getting started
 submenu: getting-started
 ---
 

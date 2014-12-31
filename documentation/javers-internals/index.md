@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Javers Internals
+title: Documentation — Javers Internals
 submenu: javers-internals
 ---
 
@@ -18,7 +18,7 @@ ObjectGraphBuilder asks TypeMapper about JaversType of Person.class. TypeMapper 
 * If this is a first question about Person.class, TypeMapper checks if it was registered in JaversBuilder
   as one of Entity, ValueObject or Value. If so, answer is easy
 * Then TypeMapper tries to find so called *Prototype&mdash;nearest* class or interface that is already mapped and is assignable from Person.class.
-  So as You can see, it's easy to map whole bunch of classes with a common superclass or interface with one call to JaversBuilder.
+  So as You can see, it’s easy to map whole bunch of classes with a common superclass or interface with one call to JaversBuilder.
   Just register high level concepts (classes or interfaces at the top of the inheritance hierarchy)
 * When Prototype is not found, JaVers tries to infer Type by looking for <code>@Id</code> annotations at property level
   (only the annotation class name is important, package is not checked, 

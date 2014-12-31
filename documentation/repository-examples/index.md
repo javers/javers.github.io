@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Repository examples
+title: Documentation — Repository examples
 submenu: repository-examples
 ---
 
@@ -162,12 +162,12 @@ public class BasicCommitExample {
         javers.commit("user", robert);
 
         // when:
-        // list state history - snapshots
+        // list state history — snapshots
         List<CdoSnapshot> snapshots =
             javers.getStateHistory(instanceId("bob", Person.class), 5);
 
         // then:
-        // there should be two Snapshots with Bob's state
+        // there should be two Snapshots with Bob’s state
         assertThat(snapshots).hasSize(2);
         CdoSnapshot newState = snapshots.get(0);
         CdoSnapshot oldState = snapshots.get(1);
@@ -205,12 +205,12 @@ Then, PropertyChange has following subtypes:
   &mdash; changed primitive or Value.
 
 
-In our example, we changed Robert's name. Se we expect one ValueChange
+In our example, we changed Robert’s name. Se we expect one ValueChange
 in changes history.
 
-**What's important** <br/>
+**What’s important** <br/>
 Changes list is different than snapshots list as it shows only changed properties.
-It's works similarly to GIT blame function.
+It’s works similarly to GIT blame function.
 
 `BasicCommitExample#shouldListChangeHistory()`:
 
@@ -236,7 +236,7 @@ public class BasicCommitExample {
             javers.getChangeHistory(InstanceIdDTO.instanceId("bob", Person.class), 5);
 
         // then:
-        // there should be one ValueChange with Bob's firstName
+        // there should be one ValueChange with Bob’s firstName
         assertThat(changes).hasSize(1);
         ValueChange change = (ValueChange) changes.get(0);
         assertThat(change.getProperty().getName()).isEqualTo("name");
@@ -262,7 +262,7 @@ method for processing a change list.
 **The case** <br/>
 We have an `Employee` called Bob, who gets promoted and
 gets two trainees assigned as subordinates.
-Our goal is to print a detailed Bob's change log with dates,
+Our goal is to print a detailed Bob’s change log with dates,
 commit authors, and change flow, like that:
 
     commit 3.0, author:hr.manager, 2014-12-30 23:02:37
@@ -434,7 +434,7 @@ Then, our TypeAdapter should be registered in `JaversBuilder`:
 
     JaversBuilder.javers().registerValueTypeAdapter(new ObjectIdTypeAdapter())
 
-That's it! Runnable example is shown below.
+That’s it! Runnable example is shown below.
 
 <tt>[JsonTypeAdapterExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/JsonTypeAdapterExample.java)</tt>:
 
