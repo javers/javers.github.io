@@ -6,13 +6,13 @@ submenu: configuration
 
 # Configuration
 
-None of us like to configure tools but don't worry — JaVers knows it and
+None of us like to configure tools but don’t worry — JaVers knows it and
 does the hard work to minimize the configuration efforts on your side.
 
 As we stated before, JaVers configuration is very concise.
 You can start with zero config and give JaVers a chance to infer all the facts about your domain model.
 
-Take a look how JaVers deals with your data. If it's fine, let the defaults work for you.
+Take a look how JaVers deals with your data. If it’s fine, let the defaults work for you.
 Add more configuration when you want to change the default behavior.
  
 There are two logical areas of the the configuration,
@@ -41,7 +41,7 @@ Plenty of XML and JSON serializers use various approaches to mapping, usually ba
 When combined together, all of those framework-specific annotations could be a pain and a
 pollution in your business domain code.
 
-Mapping is also a case in JaVers but don't worry:
+Mapping is also a case in JaVers but don’t worry:
 
 * JaVers wants to know only a few basic facts about your domain model classes.
 * Mapping is done mainly on the class level — property level mapping is required only for
@@ -49,7 +49,7 @@ Mapping is also a case in JaVers but don't worry:
 * JaVers scans well-known annotations sets like JPA and Hibernate (see [supported annotations table](#supported-annotations)).
   So if your classes are already annotated with these sets, you are lucky.
   If not, JaVers provides its [own annotations set]({{ site.javadoc_url }}org/javers/core/metamodel/annotation/package-summary.html).
-* If you'd rather keep your domain model classes framework agnostic,
+* If you’d rather keep your domain model classes framework agnostic,
   use [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html).
 * JaVers uses reasonable defaults and takes advantage of a *type inferring algorithm*.
   So for a quick start just let JaVers do the mapping for you.
@@ -62,13 +62,13 @@ should be compared property-by-property or using equals().
 The JaVers type system is based on `Entity` and `ValueObjects` notions, following Eric Evans
 Domain Driven Design terminology (DDD).
 Furthermore, it uses *Value*, *Primitive* and *Container* notions.
-The last two types are JaVers internals and can't be mapped by the user.
+The last two types are JaVers internals and can’t be mapped by the user.
 
 To make long story short, JaVers needs to know
 the [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html)
 for each of your classes spotted in runtime (see [mapping configuration](#mapping-configuration)).
 
-Let's examine these three fundamental types more closely.
+Let’s examine these three fundamental types more closely.
 
 ### Entity
 JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)</a>
@@ -91,16 +91,16 @@ The Entity can contain ValueObjects, References, Containers, Values and Primitiv
 ### Value Object
 JaVers [`ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
-It's a complex value holder with a list of mutable properties but without a unique identifier.
-It can't be dereferenced.
+It’s a complex value holder with a list of mutable properties but without a unique identifier.
+It can’t be dereferenced.
 
-The ValueObject instance has a 'best effort' global identifier called
+The ValueObject instance has a ‘best effort’ global identifier called
 [`ValueObjectId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
 It consists of a class name and a path in the object graph.
 
 **Comparing strategy** for the ValueObject state is property-by-property.
 
-In a strict DDD approach, ValueObject can't exist independently and has to be bound to an Entity instance
+In a strict DDD approach, ValueObject can’t exist independently and has to be bound to an Entity instance
 (as a part of an Aggregate). JaVers is not so radical and supports both embedded and dangling ValueObjects.
 So in JaVers, ValueObject is just an Entity without identity.
 
@@ -111,11 +111,11 @@ JaVers [`Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type
 is a simple (scalar) value holder.
 
 **Comparing strategy** for a Value state is based on the `equals()` method.
-So it's highly important to implement it properly by comparing the underlying state.
+So it’s highly important to implement it properly by comparing the underlying state.
 
 **For example** Values are: BigDecimal, LocalDate.
 
-For Values it's advisable to customize the JSON serialization by implementing *Type Adapters*
+For Values it’s advisable to customize the JSON serialization by implementing *Type Adapters*
 (see [custom json serialization](#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
@@ -261,7 +261,7 @@ With zero config, JaVers maps:
 
 - `MongoStoredEntity` class as `Entity`,
   since `@Id` and `@Entity` annotations are scanned (JaVers only cares about the annotation class name, not package name).
-- `ObjectId` class as `Value`, since it's the type of the Id-property and it's not Primitive.
+- `ObjectId` class as `Value`, since it’s the type of the Id-property and it’s not Primitive.
 
 So far so good. This mapping is OK for calculating diffs.
 Nevertheless, if you plan to use `JaversRepository`,
@@ -270,7 +270,7 @@ for your each of your `Value` types, especially Id types like `ObjectId` (see [J
 
 <h3 id="property-mapping-style">Property mapping style</h3>
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
-FIELD style is the default one. We recommend not changing it, as it's suitable in most cases.
+FIELD style is the default one. We recommend not changing it, as it’s suitable in most cases.
 
 BEAN style is useful for domain models compliant with *Java Bean* convention.
 
@@ -320,7 +320,7 @@ If you are going to use JaVers as a data audit framework you are supposed to con
 The purpose of JaversRepository is simply to store JaVers commits in your database,
 alongside your domain data.
 
-JaVers comes by default with in-memory repository implementation. It's perfect for testing but
+JaVers comes by default with in-memory repository implementation. It’s perfect for testing but
 for production environment you will need something real.
 
 First, choose proper JaversRepository implementation.
@@ -341,12 +341,12 @@ JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
 
 <h3 id="custom-json-serialization">Custom JSON serialization</h3>
 JaVers is meant to support various persistence stores for
-any kind of client's data. Hence we use JSON format to serialize client's domain objects.
+any kind of client’s data. Hence we use JSON format to serialize client’s domain objects.
 
 JaVers uses [Gson](http://sites.google.com/site/gson/) library which provides neat
 and pretty JSON representation for well known Java types.
 
-But sometimes Gson's default JSON representation isn't what you like.
+But sometimes Gson’s default JSON representation isn’t what you like.
 This happens when dealing with `Values` like Date, Money or ObjectId.
 
 Consider [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
@@ -376,7 +376,7 @@ The resulting JSON is verbose and ugly. You would rather expect neat and atomic 
     },
 </pre>
 
-That's where custom JSON `TypeAdapters` come into play.
+That’s where custom JSON `TypeAdapters` come into play.
 
 <h3 id="json-type-adapters">JSON TypeAdapters</h3>
 You can easily customize JaVers serialization/deserialization behaviour
@@ -386,7 +386,7 @@ JaVers supports two families of TypeAdapters.
 
 
 1. **JaVers family**, specified by [`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
-   It's a thin abstraction over Gson native type adapters.
+   It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has nice API and isolates you (to some extent) from low level Gson API.
    * Implement `JsonTypeAdapter` interface
@@ -396,7 +396,7 @@ JaVers supports two families of TypeAdapters.
    * [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
      is a convenient scaffolding implementation of JsonTypeAdapter interface.
      Extend it if you want to represent your `Value` type as atomic String
-     (and when you don't want to deal with JSON API).
+     (and when you don’t want to deal with JSON API).
      See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for `ObjectId`.
 1. **Gson family**, useful when you are already using Gson and have adapters implementing
     [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
