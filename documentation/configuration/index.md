@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Configuration
+title: Documentation — Configuration
 submenu: configuration
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Introduction
+title: Documentation — Introduction
 submenu: introduction
 ---
 

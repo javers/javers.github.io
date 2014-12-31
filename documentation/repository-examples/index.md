@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Repository examples
+title: Documentation — Repository examples
 submenu: repository-examples
 ---
 
@@ -162,7 +162,7 @@ public class BasicCommitExample {
         javers.commit("user", robert);
 
         // when:
-        // list state history - snapshots
+        // list state history — snapshots
         List<CdoSnapshot> snapshots =
             javers.getStateHistory(instanceId("bob", Person.class), 5);
 

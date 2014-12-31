@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Documentation - Features Overview
+title: Documentation — Features Overview
 submenu: features
 ---
 
@@ -10,7 +10,7 @@ JaVers is designed as a framework for **auditing changes** in your object-orient
 
 With JaVers you can easily commit changes performed on your objects graph to specialized repository
 (called [`JaversRepository`]({{ site.javadoc_url }}index.html?org/javers/repository/api/JaversRepository.html)).
-Then you can browse detailed change history of given object in two forms - diffs and snapshots. 
+Then you can browse detailed change history of given object in two forms — diffs and snapshots.
 
 Data auditing framework is built on the top of the **object diff** engine, which could be use as standalone object diff tool for ad-hoc
 comparing of two objects graphs.
