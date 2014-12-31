@@ -19,7 +19,7 @@ There are two logical areas of the the configuration,
 [domain model mapping](/documentation/configuration#domain-model-mapping) 
 and 
 [repository setup](/documentation/configuration#repository-setup).
-Proper mapping is important for both JaVers features, the object *diff* and the data audit (`JaversRepository`).
+Proper mapping is important for both JaVers features, the object diff and the data audit (JaversRepository).
 
 The object diff algorithm is the core of JaVers. When two objects are compared, JaVers needs to know what
 type they are. We distinguish between the following types: `Entities`, `ValueObjects`, `Values`, `Containers` and `Primitives`.
