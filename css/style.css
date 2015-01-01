@@ -30,7 +30,7 @@ code {
 }
 
 .navbar-javers .navbar-nav > .active > a {
-    border-bottom: solid 2px #ea4d1a;
+     border-bottom: solid 2px #ea4d1a;
 }
 
 .navbar-javers .navbar-nav > .active > a,
@@ -331,14 +331,15 @@ body.page section #sidebar section a {
     padding-left: 15px;
     padding-right: 0px;
 }
+body.page section #sidebar section a.active {
+    border-left: solid 2px #ea4d1a;
+    padding-left:13px;
+}
 
-body.page section #sidebar section a:hover,
-body.page section #sidebar section.active a {
+body.page section #sidebar section a:hover {
     background: transparent;
-    color: #3d79b4;
-    border-left: 2px solid red;
+    color: #ee6c21;
     text-decoration: none;
-    padding-left: 13px;
 }
 
 body.page section #sidebar section ul {
@@ -356,11 +357,13 @@ body.page section #sidebar section ul li a {
     margin: 0px;
 }
 
-body.page section #sidebar section ul li a:hover,
-body.page section #sidebar section ul li.active a{
+body.page section #sidebar section ul li a:hover{
     background: transparent;
     color: #ee6c21;
-    border-left: 2px solid red;
+    text-decoration: none;
+}
+body.page section #sidebar section ul li.active a{
+    border-left: 2px solid  #ee6c21;
     padding-left: 23px;
 }
 

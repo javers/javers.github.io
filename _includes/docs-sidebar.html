@@ -1,5 +1,10 @@
+{% assign current = page.url | downcase | split: '/' %}
+{% assign currentSubPage = current[2] %}
+
+
 <section>
-    <a href="/documentation">
+
+    <a {% if currentSubPage == 'index.html' %}class='active'{% endif %} href="/documentation" >
         Overview
         </a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'introduction' %} hidden {% endif %}">
@@ -11,7 +16,7 @@
 </section>
 
 <section>
-    <a href="/documentation/features">
+    <a {% if currentSubPage == 'features' %}class='active'{% endif %} href="/documentation/features">
             Features</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'features' %} hidden {% endif %}">
         <li><a href="#object-diff">Object diff</a></li>
@@ -21,8 +26,7 @@
 </section>
 
 <section>
-
-    <a href="/documentation/getting-started">
+    <a {% if currentSubPage == 'getting-started' %}class='active'{% endif %} href="/documentation/getting-started">
             Getting Started
     </a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'getting-started' %} hidden {% endif %}">
@@ -32,7 +36,7 @@
 </section>
 
 <section>
-    <a href="/documentation/diff-examples">
+    <a {% if currentSubPage == 'diff-examples' %}class='active'{% endif %} href="/documentation/diff-examples">
             Examples &mdash; Diff
     </a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'diff-examples' %} hidden {% endif %}">
@@ -43,7 +47,7 @@
 </section>
 
 <section>
-    <a href="/documentation/repository-examples">
+    <a {% if currentSubPage == 'repository-examples' %}class='active'{% endif %} href="/documentation/repository-examples">
             Examples &mdash; Repository
     </a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'repository-examples' %} hidden {% endif %}">
@@ -56,7 +60,7 @@
 </section>
 
 <section>
-    <a href="/documentation/configuration">
+    <a {% if currentSubPage == 'configuration' %}class='active'{% endif %} href="/documentation/configuration">
             Configuration
     </a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'configuration' %} hidden {% endif %}">
@@ -74,7 +78,7 @@
 </section>
 
 <section>
-    <a href="/documentation/javers-internals">JaVers internals</a>
+    <a {% if currentSubPage == 'javers-internals' %}class='active'{% endif %} href="/documentation/javers-internals">JaVers internals</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'javers-internals' %} hidden {% endif %}">
         <li><a href="#type-mapper">TypeMapper</a></li>
     </ul>
