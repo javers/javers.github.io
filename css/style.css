@@ -29,13 +29,16 @@ code {
     background: #1a1f25;
 }
 
-.navbar-javers .navbar-nav > .active > a {
+.navbar-javers .navbar-nav > li.active > a {
      border-bottom: solid 2px #ea4d1a;
+     background: transparent;
 }
 
-.navbar-javers .navbar-nav > .active > a,
-.navbar-javers .navbar-nav > .active > a:hover {
-    background: none;
+.navbar-javers .navbar-nav > li.active > a:hover,
+.navbar-javers .navbar-nav > li > a:hover {
+    color: #ea4d1a;
+    text-decoration: none;
+    background: transparent;
 }
 
 .navbar-javers .navbar-nav > li > a {
@@ -49,11 +52,8 @@ code {
     margin-right: 10px;
     margin-left: 10px;
     text-transform: uppercase;
+    color: white;
 }
-.navbar-javers .navbar-nav > li > ul {
-    color: #fff;
-}
-
 
 .logo-version:active {
    color:black;
