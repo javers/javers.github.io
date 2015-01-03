@@ -81,3 +81,18 @@ JaVers has well designed and customizable JSON serialization & deserialization m
 Your data are splited into chunks (atomic changes) and persisted in database as JSON
 with minimal mapping configuration effort
 (see [custom JSON serialization](/documentation/configuration#custom-json-serialization)).
+
+
+<h2 id="release-notes">Release notes</h2>
+
+### 1.0.1
+released on 2015-01-03
+
+* [#73](https://github.com/javers/javers/issues/73) Listing newObject event on change history<br/>
+  reported by [Chuck May](https://github.com/ctmay4)
+
+
+### 1.0.0
+released on 2014-12-25
+
+* Production-ready release with stable API
