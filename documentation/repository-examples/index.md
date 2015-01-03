@@ -236,12 +236,14 @@ public class BasicCommitExample {
             javers.getChangeHistory(InstanceIdDTO.instanceId("bob", Person.class), 5);
 
         // then:
-        // there should be one ValueChange with Bob’s firstName
-        assertThat(changes).hasSize(1);
+        // there should be one ValueChange with Bob's firstName
+        // and one NewObject change for Bob's initial commit
+        assertThat(changes).hasSize(2);
         ValueChange change = (ValueChange) changes.get(0);
         assertThat(change.getProperty().getName()).isEqualTo("name");
         assertThat(change.getLeft()).isEqualTo("Robert Martin");
         assertThat(change.getRight()).isEqualTo("Robert C.");
+        assertThat(changes.get(1)).isInstanceOf(NewObject.class);
     }
 
     ... //
@@ -265,15 +267,17 @@ gets two trainees assigned as subordinates.
 Our goal is to print a detailed Bob’s change log with dates,
 commit authors, and change flow, like that:
 
-    commit 3.0, author:hr.manager, 2014-12-30 23:02:37
+    commit 3.0, author:hr.manager, 2015-01-03 19:49:36
       changed object: org.javers.core.examples.model.Employee/Bob
-        list changed on 'subordinates' property:
-          [(0).added:'org.javers.core.examples.model.Employee/Trainee One',
-           (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
-    commit 2.0, author:hr.director, 2014-12-30 23:02:36
+        list changed on 'subordinates' property: [
+        (0).added:'org.javers.core.examples.model.Employee/Trainee One',
+        (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
+    commit 2.0, author:hr.director, 2015-01-03 19:49:36
       changed object: org.javers.core.examples.model.Employee/Bob
         value changed on 'position' property: 'Scrum master' -> 'Team Lead'
         value changed on 'salary' property: '9000' -> '11000'
+    commit 1.0, author:hr.manager, 2015-01-03 19:49:35
+        new object: 'org.javers.core.examples.model.Employee/Bob
 
 We use text format here for brevity but ChangeProcessor API
 is suitable for creating a change log in any format.
