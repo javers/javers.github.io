@@ -269,7 +269,9 @@ commit authors, and change flow, like that:
 
     commit 3.0, author:hr.manager, 2015-01-03 19:49:36
       changed object: org.javers.core.examples.model.Employee/Bob
-        list changed on 'subordinates' property: [(0).added:'org.javers.core.examples.model.Employee/Trainee One', (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
+        list changed on 'subordinates' property: [
+        (0).added:'org.javers.core.examples.model.Employee/Trainee One',
+        (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
     commit 2.0, author:hr.director, 2015-01-03 19:49:36
       changed object: org.javers.core.examples.model.Employee/Bob
         value changed on 'position' property: 'Scrum master' -> 'Team Lead'
