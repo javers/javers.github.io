@@ -277,7 +277,7 @@ commit authors, and change flow, like that:
         value changed on 'position' property: 'Scrum master' -> 'Team Lead'
         value changed on 'salary' property: '9000' -> '11000'
     commit 1.0, author:hr.manager, 2015-01-03 19:49:35
-        new object: 'org.javers.core.examples.model.Employee/Bob
+        new object: org.javers.core.examples.model.Employee/Bob
 
 We use text format here for brevity but ChangeProcessor API
 is suitable for creating a change log in any format.
