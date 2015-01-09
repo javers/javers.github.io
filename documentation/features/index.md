@@ -85,6 +85,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.0.2
+released on 2015-01-08
+
+* [#78](https://github.com/javers/javers/issues/78)
+  NullPointerException at ReflectionUtil.getAllFields() when using interface as a variable type
+
 ### 1.0.1
 released on 2015-01-03
 
