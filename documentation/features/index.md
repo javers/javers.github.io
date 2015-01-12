@@ -85,6 +85,20 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.0.3
+released on 2015-01-12
+
+* [#47](https://github.com/javers/javers/issues/47)
+  Spring integration. Added `@JaversAuditable` annotation for repository methods.
+
+* [#77](https://github.com/javers/javers/issues/77)
+  Added missing feature in Generics support
+  <br/>reported by [Bryan Hunt](https://github.com/binarytemple)
+
+* [#71](https://github.com/javers/javers/issues/71)
+  Tracking a top-level object deletion
+  <br/>reported by [Chuck May](https://github.com/ctmay4)
+
 ### 1.0.2
 released on 2015-01-08
 
@@ -94,8 +108,8 @@ released on 2015-01-08
 ### 1.0.1
 released on 2015-01-03
 
-* [#73](https://github.com/javers/javers/issues/73) Listing newObject event on change history<br/>
-  reported by [Chuck May](https://github.com/ctmay4)
+* [#73](https://github.com/javers/javers/issues/73) Listing newObject event on change history
+  <br/>reported by [Chuck May](https://github.com/ctmay4)
 
 
 ### 1.0.0
