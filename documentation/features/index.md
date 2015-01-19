@@ -21,13 +21,13 @@ All JaVers functions are exposed via a single Facade, the
 As you can see, JaVers API is concise and simple.
 
 <h2 id="object-diff">Object diff</h2>
-JaVers object diff is the easiest way to deeply compare two graphs of objects.
+JaVers object diff is the easiest way to deeply compare two object graphs.
 
 **How to use it?**
 
 * Create a JaVers instance (see [getting started](/documentation/getting-started/#create-javers-instance)) and  
   use [`javers.compare()`]({{ site.javadoc_url }}org/javers/core/Javers.html#compare-java.lang.Object-java.lang.Object-)
-  to compare two graphs of objects. 
+  to compare two object graphs.
    
 * As the result, you get list of atomic *Changes*.
   There are several types of Changes: ValueChange, ReferenceChange, ListChange and so on (see the inheritance hierarchy of
