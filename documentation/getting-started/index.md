@@ -57,8 +57,8 @@ import org.javers.core.JaversBuilder;
 Javers javers = JaversBuilder.javers().build();
 ```
 
-Now, JaVers instance is up & ready, configured with reasonable defaults. 
+Now, the JaVers instance is up and ready, configured with reasonable defaults.
 Good enough to start.
 
-Later on, you would probably need to refine the [configuration](http://javers.org/documentation/configuration), 
-introducing to JaVers some basic facts about your domain model.
+Later on, you would probably need to refine the [configuration](http://javers.org/documentation/configuration)
+and introduce some basic facts about your domain model to JaVers.
