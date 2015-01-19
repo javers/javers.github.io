@@ -8,13 +8,13 @@ submenu: features
 
 JaVers is designed as a framework for **auditing changes** in your object-oriented data.
 
-With JaVers you can easily commit changes performed on your objects’ graph to a specialized repository
+With JaVers you can easily commit changes performed on your object graph to a specialized repository
 (called JaversRepository).
 Then you can browse the detailed change history of a given object in two forms — diffs and snapshots.
 
 The data auditing framework is built on top of the **object diff engine**,
 which could be used as a standalone object diff tool for ad-hoc
-comparison of two objects’ graphs.
+comparison of two object graphs.
 
 All JaVers functions are exposed via a single Facade, the
 [JaVers]({{ site.javadoc_url }}index.html?org/javers/core/Javers.html) instance.
@@ -52,7 +52,7 @@ who made it and what was the value before and after.
   function in every place where 
   important data (domain objects) are being created and modified by application users.
   
-* You don’t need to commit every object. JaVers navigates through the objects’ graph, starting from
+* You don’t need to commit every object. JaVers navigates through the object graph, starting from
   the object passed to
   `javers.commit()` and deeply compares the whole structure with the previous version stored in JaversRepository.
   Thanks to that approach, you can commit large structures, like trees, graphs and DDD aggregates with a single
