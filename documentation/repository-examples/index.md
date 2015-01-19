@@ -42,14 +42,14 @@ For a production environment you will need to set up a real database repository
 (see [repository-setup](/documentation/configuration#repository-setup)).
 
 We need to tell JaVers that Person class is an Entity.
-It's enough to annotate the login field with `@Id` annotation.
+It’s enough to annotate the login field with `@Id` annotation.
 
-**What's important** <br/>
+**What’s important** <br/>
 Person is a typical Entity
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
 JaVers uses [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
 for identifying and querying Entities.
-In this case, it's expressed as `InstanceIdDTO.instanceId("bob", Person.class)`.
+In this case, it’s expressed as `InstanceIdDTO.instanceId("bob", Person.class)`.
 
 `Person.class:`
 
@@ -123,7 +123,7 @@ public class BasicCommitExample {
 
 <h2 id="read-snapshots-history">Read snapshots history</h2>
 
-Having some commits saved in JaversRepository, we can fetch the list of Robert's object
+Having some commits saved in JaversRepository, we can fetch the list of Robert’s object
 [Snapshots]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
 and check how Robert looked like in the past:
 
@@ -132,9 +132,9 @@ List<CdoSnapshot> snapshots =
     javers.getStateHistory(InstanceIdDTO.instanceId("bob", Person.class),10);
 ```
 
-**What's important** <br/>
+**What’s important** <br/>
 In JaVers, a snapshot is the state of an object recorded during a `commit()` call.
-Technically, it's a map from a property name to property value.
+Technically, it’s a map from a property name to property value.
 
 Under the hood, JaVers reuses snapshots and creates a new one only when the given object is changed.
 It allows you to save a significant amount of repository space.
