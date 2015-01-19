@@ -24,14 +24,14 @@ gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
 
-Let’s start from something simple, this example shows how to find a diff between two objects of `Person` class.
-Since every Person has his own identity, it’s the `Entity`
+Let’s start from something simple. This example shows how to find a diff between two objects of `Person` class.
+Since every person has his own identity, Person class is an Entity
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
 
 **The case**<br/>
 We have two objects, `tommyOld` and `tommyNew`.
-These objects represent two versions of the same being (person called Tommy).
-To find out what has changed, just call
+These objects represent two versions of the same being (a person called Tommy).
+To find out what’s changed, just call
 
     javers.compare(tommyOld, tommyNew)
 
@@ -40,7 +40,7 @@ JaVers needs to know that Person class is an Entity.
 It’s enough to annotate `login` field with `@Id` annotation.
 
 **What’s important**<br/>
-Notice, that both objects have the same Id value (`'tommy'`).
+Notice that both objects have the same Id value (`'tommy'`).
 That’s why they are matched and compared.
 JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
 In this case, it’s `'org.javers.core.examples.model.Person/tommy'`.
@@ -108,7 +108,7 @@ public class BasicEntityDiffExample {
 }
 ```
 
-Output of running this program is:
+The output of running this program is:
 
 ```
 Diff:
@@ -120,13 +120,12 @@ Diff:
 <h2 id="compare-valueobjects">Compare ValueObjects</h2>
 
 This example shows how to find a diff between two objects of `Address` class.
-Address is a typical `ValueObject`, it doesn’t have its own identity. It’s just a complex value holder.
-
+Address is a typical ValueObject; it doesn’t have its own identity. It’s just a complex value holder
 (see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for ValueObject definition).
 
 **The case**<br/>
 We have two objects, `address1` and `address2`. These objects represent two different addresses.
-To find out what’s the difference, just call
+To find out what the difference is, just call
 
     javers.compare(address1, address2)
 
@@ -135,12 +134,13 @@ In this case, no configuration is required since JaVers is going to map
 Address class as ValueObject by default.
 
 **What’s important**<br/>
-When JaVers knows nothing about a class, treats it as ValueObject.
-As we said in the previous example, JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
+When JaVers knows nothing about a class, it treats it as ValueObject.
+As we said in the previous example, JaVers compares only objects with the same
+[`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
 What’s the Address Id? Well, it’s a tricky beast...
 
 It’s based on the path in the object graph. In this case, both objects are roots, so the path is simply `'/'`
-and the GlobalId is `'org.javers.core.examples.model.Address/'`
+and the GlobalId is `'org.javers.core.examples.model.Address/'`.
 
 
 `Address.class:`
@@ -206,7 +206,7 @@ public class BasicValueObjectDiffExample {
 }
 ```    
 
-Output of running this program is:
+The output of running this program is:
 
 ```
 Diff:
@@ -219,18 +219,18 @@ Diff:
 JaVers can compare arbitrary complex structures of objects.
 In this example, we show how easily you can compare employee hierarchies.
 
-For the simplicity of this example, data model is reduced to one class,
-`Employee`, see below.
+For the simplicity of this example, the data model is reduced to one class,
+`Employee` (see below).
 
-Conceptually, employees hierarchy is a tree.
-Technically, we have graph with cycles here (since relation between boss and employees is bidirectional).
+Conceptually, an employee hierarchy is a tree.
+Technically, we have a graph with cycles here (since the relationship between boss and employees is bidirectional).
 
 **The case**<br/>
-We are comparing two versions (historical states) of some employees hierarchy.
+We are comparing two versions (historical states) of an employee hierarchy.
 We have two Employee objects, `oldBoss` and `newBoss`. These guys are roots and handles to
 our hierarchies.
 
-We could consider following types of changes:
+We could consider the following types of changes:
 
 - employee hired — [`NewObject`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
 - employee fired — [`ObjectRemoved`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
@@ -238,18 +238,18 @@ We could consider following types of changes:
 - boss change — [`ReferenceChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
 - change on subordinates list — [`ListChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html).
 
-We show code examples for 3 cases, employee hired, salary and boss change
+We show code examples for three cases: employee hired, salary change and boss change
 (other cases are done similarly).
 See the tests in `EmployeeHierarchiesDiffExample.class` below.
 
 **Configuration** <br/>
 JaVers needs to know that Employee class is an Entity.
-It’s enough to annotate `name` field with `@Id` annotation.
+It’s enough to annotate the `name` field with `@Id` annotation.
 
 **What’s important**<br/>
 JaVers makes no assumptions about your data structures
-and treats them just like a graphs with cycles (the same like JVM do).
-There are no limitation about number of nodes in the graph.
+and treats them just like graphs with cycles (the same as JVM does).
+There are no limitations on the number of nodes in the graph.
 
 <tt>[Employee.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java)</tt>:
 
@@ -425,7 +425,7 @@ public class EmployeeHierarchiesDiffExample {
 }
 ```
 
-Output of running this program is:
+The output of running this program is:
 
 ```
 //.. shouldDetectSalaryChange()

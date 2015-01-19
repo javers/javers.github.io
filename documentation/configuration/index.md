@@ -343,16 +343,16 @@ JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
 JaVers is meant to support various persistence stores for
 any kind of client’s data. Hence we use JSON format to serialize client’s domain objects.
 
-JaVers uses [Gson](http://sites.google.com/site/gson/) library which provides neat
+JaVers uses the [Gson](http://sites.google.com/site/gson/) library which provides neat
 and pretty JSON representation for well known Java types.
 
 But sometimes Gson’s default JSON representation isn’t what you like.
 This happens when dealing with `Values` like Date, Money or ObjectId.
 
-Consider [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
+Consider the [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
 often used as Id-property for objects persisted in MongoDB.
 
-By deafult, JaVers serializes ObjectId as follows:
+By default, JaVers serializes ObjectId as follows:
 
 <pre>
   "globalId": {
@@ -379,31 +379,31 @@ The resulting JSON is verbose and ugly. You would rather expect neat and atomic 
 That’s where custom JSON `TypeAdapters` come into play.
 
 <h3 id="json-type-adapters">JSON TypeAdapters</h3>
-You can easily customize JaVers serialization/deserialization behaviour
+You can easily customize JaVers serialization/deserialization behavior
 by providing TypeAdapters for your `Value` types.
 
 JaVers supports two families of TypeAdapters.
 
 
-1. **JaVers family**, specified by [`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
+1. **JaVers family**, specified by the [`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
    It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
-   as it has nice API and isolates you (to some extent) from low level Gson API.
-   * Implement `JsonTypeAdapter` interface
-     if you need the full control over JSON conversion process.
+   as it has a nice API and isolates you (to some extent) from low level Gson API.
+   * Implement the `JsonTypeAdapter` interface
+     if you need full control over the JSON conversion process.
      Register your adapters with
      [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
    * [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
-     is a convenient scaffolding implementation of JsonTypeAdapter interface.
-     Extend it if you want to represent your `Value` type as atomic String
+     is a convenient scaffolding implementation of the JsonTypeAdapter interface.
+     Extend it if you want to represent your Value type as atomic String
      (and when you don’t want to deal with JSON API).
-     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for `ObjectId`.
-1. **Gson family**, useful when you are already using Gson and have adapters implementing
+     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for ObjectId.
+1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
     [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
      Register your adapters with
      [`JaversBuilder.registerValueGsonTypeAdapter(Class, TypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueGsonTypeAdapter-java.lang.Class-com.google.gson.TypeAdapter-).
 
-JaVers provides JsonTypeAdapters for some well known `Values` like
+JaVers provides JsonTypeAdapters for some well-known Values like
 `org.joda.time.LocalDate`.
 
 
