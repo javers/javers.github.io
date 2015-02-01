@@ -85,6 +85,14 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.0.5
+released on 2015-02-01
+
+* [#76](https://github.com/javers/javers/issues/76)
+  AddedSupport for nested generic types like `List<List<String>>` or `List<ThreadLocal<String>>`.
+  Reported by [Chuck May](https://github.com/ctmay4)
+* fixed NPE in MongoRepository
+
 ### 1.0.4
 released on 2015-01-20
 
