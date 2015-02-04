@@ -317,34 +317,49 @@ In both styles, access modifiers are not important, it could be private ;)
 <h3 id="custom-comparators">Custom Comparators</h3>
 
 There are cases where JaVers default diff algorithm isn't appropriate.
-Good example are custom collections like Guava's Multimap,
+Good example are custom collections like Guava's [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html),
 which are not connected to Java Collections API.
 
-Let's focus on a Guava's [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html).
+Let's focus on a Guava's Multimap.
 JaVers doesn't support it out of the box, because Multimap is not a subtype of `java.util.Map`.
-Still, Multimap is quite popular and you would like to
+Still, Multimap is quite popular and you would expect to
 have your objects with Multimaps compared by JaVers.
 
-JaVers is meant to be lightweight and can't depend on large Guava library.
+JaVers is meant to be lightweight and can't depend on the large Guava library.
 Without custom comparator, JaVers maps Multimap as ValueType and compares its internal fields property-by-property.
 This is not very useful. What would we expect is MapType and a list of MapChanges as a diff result.
 
-
 Custom comparators comes to the rescue, as they gives you full control over the JaVers diff algorithm.
 You can register a custom comparator for any type (class or interface)
-to bypasses the JaVers type system and diff algorithm.
+to bypass the JaVers type system and diff algorithm.
 
 JaVers maps classes with custom comparators as `CustomTypes`, which pretty much means
 *I don't care what it is*.
 
-//TODO
-...
+**Implementation**<br/>
 
-All you can do is to implement a
+All you can do is to implement the
 [CustomPropertyComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomPropertyComparator.html)
-interface and register it with JaversBuilder.
+interface and register it with
+ [`JaversBuilder.registerCustomComparator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerCustomComparator-org.javers.core.diff.custom.CustomPropertyComparator-java.lang.Class-).
 
+Implementation should calculate a diff between two values of CustomType
+and return the result as concrete `Change` subclass, for example:
 
+```java
+public class GuavaCustomComparator implements CustomPropertyComparator<Multimap, MapChange> {
+    public MapChange compare(Multimap left, Multimap right, GlobalId affectedId, Property property) {
+        ... // omitted
+    }
+}
+```
+
+Register the custom comparator instance in JaversBuilder, for example:
+
+```java
+JaversBuilder.javers()
+    .registerCustomComparator(new GuavaCustomComparator(), Multimap.class).build()
+```
 
 <h2 id="repository-setup">JaversRepository setup</h2>
 If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
