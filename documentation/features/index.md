@@ -85,6 +85,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.0.6
+released on 2015-02-..
+
+* [#94](https://github.com/javers/javers/issues/94)
+  Specifying ignored properties without annotations.
+  <br/>Reported by [Chuck May](https://github.com/ctmay4)
+
 ### 1.0.5
 released on 2015-02-01
 

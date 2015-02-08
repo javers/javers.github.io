@@ -361,6 +361,23 @@ JaversBuilder.javers()
     .registerCustomComparator(new GuavaCustomComparator(), Multimap.class).build()
 ```
 
+<h3 id="ignoring-things">Ignoring things</h3>
+
+The ideal domain model contains only business relevant data and no technical clutter.
+Such model is compact and neat. All domain objects and their properties are important and worth being persisted.
+
+In real world, domain objects often contain various kind of noisy properties, you don't wont to audit.
+For example: dynamic proxies (like Hibernate lazy loading proxies), duplicated data,
+auto-generated data and so on.
+
+It is important to exclude these things from the JaVers mapping, simply to save a storage and CPU.
+It''s done by marking them as ignored.
+Ignored property is omitted by both JaVers diff algorithm and JaversRepository.
+
+...
+
+The rule of thumb: configure JaVers to ignore all business irrelevant data.
+
 <h2 id="repository-setup">JaversRepository setup</h2>
 If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
  
