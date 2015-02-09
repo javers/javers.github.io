@@ -108,6 +108,7 @@
 <br>
 <pre>public class <span class="typeNameLabel">ValueObjectDefinition</span>
 extends <a href="../../../../../org/javers/core/metamodel/clazz/ClientsClassDefinition.html" title="class in org.javers.core.metamodel.clazz">ClientsClassDefinition</a></pre>
+<div class="block">Recipe for <a href="../../../../../org/javers/core/metamodel/type/ValueObjectType.html" title="class in org.javers.core.metamodel.type"><code>ValueObjectType</code></a></div>
 </li>
 </ul>
 </div>
@@ -126,11 +127,15 @@ extends <a href="../../../../../org/javers/core/metamodel/clazz/ClientsClassDefi
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../org/javers/core/metamodel/clazz/ValueObjectDefinition.html#ValueObjectDefinition-java.lang.Class-">ValueObjectDefinition</a></span>(java.lang.Class&lt;?&gt;&nbsp;clazz)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../org/javers/core/metamodel/clazz/ValueObjectDefinition.html#ValueObjectDefinition-java.lang.Class-">ValueObjectDefinition</a></span>(java.lang.Class&lt;?&gt;&nbsp;valueObjectClass)</code>
+<div class="block">Basic definition, all properties of given class will be versioned</div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../org/javers/core/metamodel/clazz/ValueObjectDefinition.html#ValueObjectDefinition-java.lang.Class-java.util.List-">ValueObjectDefinition</a></span>(java.lang.Class&lt;?&gt;&nbsp;clazz,
-                     java.util.List&lt;java.lang.String&gt;&nbsp;ignoredProperties)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../org/javers/core/metamodel/clazz/ValueObjectDefinition.html#ValueObjectDefinition-java.lang.Class-java.util.List-">ValueObjectDefinition</a></span>(java.lang.Class&lt;?&gt;&nbsp;valueObjectClass,
+                     java.util.List&lt;java.lang.String&gt;&nbsp;ignoredProperties)</code>
+<div class="block">Creates ValueObject, ignores given properties</div>
+</td>
 </tr>
 </table>
 </li>
@@ -175,7 +180,8 @@ extends <a href="../../../../../org/javers/core/metamodel/clazz/ClientsClassDefi
 <ul class="blockList">
 <li class="blockList">
 <h4>ValueObjectDefinition</h4>
-<pre>public&nbsp;ValueObjectDefinition(java.lang.Class&lt;?&gt;&nbsp;clazz)</pre>
+<pre>public&nbsp;ValueObjectDefinition(java.lang.Class&lt;?&gt;&nbsp;valueObjectClass)</pre>
+<div class="block">Basic definition, all properties of given class will be versioned</div>
 </li>
 </ul>
 <a name="ValueObjectDefinition-java.lang.Class-java.util.List-">
@@ -184,8 +190,9 @@ extends <a href="../../../../../org/javers/core/metamodel/clazz/ClientsClassDefi
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ValueObjectDefinition</h4>
-<pre>public&nbsp;ValueObjectDefinition(java.lang.Class&lt;?&gt;&nbsp;clazz,
+<pre>public&nbsp;ValueObjectDefinition(java.lang.Class&lt;?&gt;&nbsp;valueObjectClass,
                              java.util.List&lt;java.lang.String&gt;&nbsp;ignoredProperties)</pre>
+<div class="block">Creates ValueObject, ignores given properties</div>
 </li>
 </ul>
 </li>
