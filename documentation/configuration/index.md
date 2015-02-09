@@ -366,17 +366,40 @@ JaversBuilder.javers()
 The ideal domain model contains only business relevant data and no technical clutter.
 Such model is compact and neat. All domain objects and their properties are important and worth being persisted.
 
-In real world, domain objects often contain various kind of noisy properties, you don't wont to audit.
-For example: dynamic proxies (like Hibernate lazy loading proxies), duplicated data,
+In real world, domain objects often contain various kind of noisy properties, you don’t wont to audit.
+For example: dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
 auto-generated data and so on.
 
 It is important to exclude these things from the JaVers mapping, simply to save a storage and CPU.
-It''s done by marking them as ignored.
+It can be done by marking them as ignored.
 Ignored property is omitted by both JaVers diff algorithm and JaversRepository.
 
-...
+Sometimes ignoring certain properties can dramatically improve performance.
+Imagine that you have a technical property updated every time when object is touched
+by some external system, for example:
 
-The rule of thumb: configure JaVers to ignore all business irrelevant data.
+```
+public class User {
+   ...
+   private Timestamp lastSyncWithDWH; //updated daily to currentdate, when object is exported to DWH
+   ...
+}
+```
+
+When a User is committed to JaversRepository,
+`lastSyncWithDWH` is likely to *cause* a new version of the User object, even if no important data are changed.
+Each new version means new User snapshot persisted to JaversRepository
+and one more DB insert in your commit.
+
+
+**The rule of thumb:**<br/>
+check JaVers log messages with commit statistics, e.g.
+
+```
+23:49:01.155 [main] INFO  org.javers.core.Javers - Commit(id:1.0, snapshots:2, changes - NewObject:2)
+
+```
+If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
 
 <h2 id="repository-setup">JaversRepository setup</h2>
 If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
