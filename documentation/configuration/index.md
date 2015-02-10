@@ -70,7 +70,7 @@ for each of your classes spotted in runtime (see [mapping configuration](#mappin
 
 Let’s examine these three fundamental types more closely.
 
-### Entity
+<h3 id="entity">Entity</h3>
 JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)</a>
 has exactly the same semantic as DDD Entity or JPA Entity.
 
@@ -88,7 +88,7 @@ The Entity can contain ValueObjects, References, Containers, Values and Primitiv
 
 **For example** Entities are: Person, Company.
 
-### Value Object
+<h3 id="value-object">Value Object</h3>
 JaVers [`ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
 It’s a complex value holder with a list of mutable properties but without a unique identifier.
@@ -194,7 +194,8 @@ So you can use any annotation set as long as the annotation names match JPA or J
 <tr>
 </table>
 
-**Property level annotations**<br/>
+<span id="property-level-annotations">**Property level annotations**</span>
+<br/>
 There are two kinds of property level annotations.
 
 * `Id` annotation, to mark the Id-property of an Entity class.
@@ -366,13 +367,13 @@ JaversBuilder.javers()
 The ideal domain model contains only business relevant data and no technical clutter.
 Such model is compact and neat. All domain objects and their properties are important and worth being persisted.
 
-In real world, domain objects often contain various kind of noisy properties, you don’t wont to audit.
+In the real world, domain objects often contain various kind of noisy properties you don’t wont to audit.
 For example: dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
 auto-generated data and so on.
 
-It is important to exclude these things from the JaVers mapping, simply to save a storage and CPU.
+It is important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
 It can be done by marking them as ignored.
-Ignored property is omitted by both JaVers diff algorithm and JaversRepository.
+Ignored properties are omitted by both JaVers diff algorithm and JaversRepository.
 
 Sometimes ignoring certain properties can dramatically improve performance.
 Imagine that you have a technical property updated every time when object is touched
@@ -386,11 +387,10 @@ public class User {
 }
 ```
 
-When a User is committed to JaversRepository,
+Whenever a User is committed to JaversRepository,
 `lastSyncWithDWH` is likely to *cause* a new version of the User object, even if no important data are changed.
 Each new version means new User snapshot persisted to JaversRepository
 and one more DB insert in your commit.
-
 
 **The rule of thumb:**<br/>
 check JaVers log messages with commit statistics, e.g.
@@ -400,6 +400,23 @@ check JaVers log messages with commit statistics, e.g.
 
 ```
 If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
+
+**How to configure ignored properties**<br/>
+There are two ways, first, you can use `@Transient` or `@DiffIgnore`
+[property annotations](#property-level-annotations) (this is the recommended way).
+
+Second, if you are not willing to use annotations, register your classes
+using
+[`JaversBuilder.registerEntity(EntityDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-org.javers.core.metamodel.clazz.EntityDefinition-)
+or
+[`JaversBuilder.registerValueObject(ValueObjectDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-org.javers.core.metamodel.clazz.ValueObjectDefinition-)
+, for example:
+
+```java
+JaversBuildert.javers()
+        .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
+        .build();
+```
 
 <h2 id="repository-setup">JaversRepository setup</h2>
 If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
