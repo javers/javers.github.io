@@ -314,7 +314,7 @@ body.page section #content #main blockquote {
 }
 
 #sidebar > div {
-    margin-top: 25px;
+    margin-top: 20px;
     border-left: 1px solid #dde0e2;
 }
 
@@ -326,7 +326,7 @@ body.page section #sidebar section {
 
 
 body.page section #sidebar section a {
-    font-size: 1.6em;
+    font-size: 1.5em;
     font-weight: 300;
     color: #3d79b4;
     padding-left: 15px;
