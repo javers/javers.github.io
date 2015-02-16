@@ -70,7 +70,7 @@ for each of your classes spotted in runtime (see [mapping configuration](#mappin
 
 Let’s examine these three fundamental types more closely.
 
-### Entity
+<h3 id="entity">Entity</h3>
 JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)</a>
 has exactly the same semantic as DDD Entity or JPA Entity.
 
@@ -88,7 +88,7 @@ The Entity can contain ValueObjects, References, Containers, Values and Primitiv
 
 **For example** Entities are: Person, Company.
 
-### Value Object
+<h3 id="value-object">Value Object</h3>
 JaVers [`ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
 It’s a complex value holder with a list of mutable properties but without a unique identifier.
@@ -118,7 +118,7 @@ So it’s highly important to implement it properly by comparing the underlying 
 For Values it’s advisable to customize the JSON serialization by implementing *Type Adapters*
 (see [custom json serialization](#custom-json-serialization)).
 
-<h2 id="mapping-configuration">Mapping configuration</h2>
+<h3 id="mapping-configuration">Mapping configuration</h3>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
 and make sure that JaVers has got it. So what should you do?
 
@@ -194,7 +194,8 @@ So you can use any annotation set as long as the annotation names match JPA or J
 <tr>
 </table>
 
-**Property level annotations**<br/>
+<span id="property-level-annotations">**Property level annotations**</span>
+<br/>
 There are two kinds of property level annotations.
 
 * `Id` annotation, to mark the Id-property of an Entity class.
@@ -314,6 +315,109 @@ Javers javers = JaversBuilder
 
 In both styles, access modifiers are not important, it could be private ;)
 
+<h3 id="custom-comparators">Custom Comparators</h3>
+
+There are cases where JaVers’ default diff algorithm isn’t appropriate.
+A good example is custom collections, like Guava’s [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html),
+which are not connected with Java Collections API.
+
+Let’s focus on Guava’s Multimap.
+JaVers doesn’t support it out of the box, because Multimap is not a subtype of `java.util.Map`.
+Still, Multimap is quite popular and you could expect to
+have your objects with Multimaps compared by JaVers.
+
+JaVers is meant to be lightweight and can’t depend on the large Guava library.
+Without a custom comparator, JaVers maps Multimap as ValueType and compares its internal fields property-by-property.
+This isn’t very useful. What we would expect is MapType and a list of MapChanges as a diff result.
+
+Custom comparators come to the rescue, as they give you full control over the JaVers diff algorithm.
+You can register a custom comparator for any type (class or interface)
+to bypass the JaVers type system and diff algorithm.
+
+JaVers maps classes with custom comparators as `CustomTypes`, which pretty much means
+*I don’t care what it is*.
+
+**Implementation**<br/>
+
+All you have to do is implement the
+[CustomPropertyComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomPropertyComparator.html)
+interface and register it with
+ [`JaversBuilder.registerCustomComparator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerCustomComparator-org.javers.core.diff.custom.CustomPropertyComparator-java.lang.Class-).
+
+Implementation should calculate a diff between two values of CustomType
+and return a result as a concrete `Change` subclass, for example:
+
+```java
+public class GuavaCustomComparator implements CustomPropertyComparator<Multimap, MapChange> {
+    public MapChange compare(Multimap left, Multimap right, GlobalId affectedId, Property property) {
+        ... // omitted
+    }
+}
+```
+
+Register the custom comparator instance in JaversBuilder, for example:
+
+```java
+JaversBuilder.javers()
+    .registerCustomComparator(new GuavaCustomComparator(), Multimap.class).build()
+```
+
+<h3 id="ignoring-things">Ignoring things</h3>
+
+The ideal domain model contains only business relevant data and no technical clutter.
+Such a model is compact and neat. All domain objects and their properties are important and worth being persisted.
+
+In the real world, domain objects often contain various kind of noisy properties you don’t want to audit,
+such as dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
+auto-generated data and so on.
+
+It is important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
+This can be done by marking them as ignored.
+Ignored properties are omitted by both the JaVers diff algorithm and JaversRepository.
+
+Sometimes ignoring certain properties can dramatically improve performance.
+Imagine that you have a technical property updated every time an object is touched
+by some external system, for example:
+
+```
+public class User {
+   ...
+   private Timestamp lastSyncWithDWH; //updated daily to currentdate, when object is exported to DWH
+   ...
+}
+```
+
+Whenever a User is committed to JaversRepository,
+`lastSyncWithDWH` is likely to *cause* a new version of the User object, even if no important data are changed.
+Each new version means a new User snapshot persisted to JaversRepository
+and one more DB insert in your commit.
+
+**The rule of thumb:**<br/>
+check JaVers log messages with commit statistics, e.g.
+
+```
+23:49:01.155 [main] INFO  org.javers.core.Javers - Commit(id:1.0, snapshots:2, changes - NewObject:2)
+
+```
+If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
+
+**How to configure ignored properties**<br/>
+There are two ways to do this. First, you can use `@Transient` or `@DiffIgnore`
+[property annotations](#property-level-annotations) (this is the recommended way).
+
+Second, if you are not willing to use annotations, register your classes
+using
+[`JaversBuilder.registerEntity(EntityDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-org.javers.core.metamodel.clazz.EntityDefinition-)
+or
+[`JaversBuilder.registerValueObject(ValueObjectDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-org.javers.core.metamodel.clazz.ValueObjectDefinition-)
+, for example:
+
+```java
+JaversBuildert.javers()
+        .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
+        .build();
+```
+
 <h2 id="repository-setup">JaversRepository setup</h2>
 If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
  
@@ -343,16 +447,16 @@ JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
 JaVers is meant to support various persistence stores for
 any kind of client’s data. Hence we use JSON format to serialize client’s domain objects.
 
-JaVers uses [Gson](http://sites.google.com/site/gson/) library which provides neat
+JaVers uses the [Gson](http://sites.google.com/site/gson/) library which provides neat
 and pretty JSON representation for well known Java types.
 
 But sometimes Gson’s default JSON representation isn’t what you like.
 This happens when dealing with `Values` like Date, Money or ObjectId.
 
-Consider [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
+Consider the [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
 often used as Id-property for objects persisted in MongoDB.
 
-By deafult, JaVers serializes ObjectId as follows:
+By default, JaVers serializes ObjectId as follows:
 
 <pre>
   "globalId": {
@@ -379,31 +483,31 @@ The resulting JSON is verbose and ugly. You would rather expect neat and atomic 
 That’s where custom JSON `TypeAdapters` come into play.
 
 <h3 id="json-type-adapters">JSON TypeAdapters</h3>
-You can easily customize JaVers serialization/deserialization behaviour
+You can easily customize JaVers serialization/deserialization behavior
 by providing TypeAdapters for your `Value` types.
 
 JaVers supports two families of TypeAdapters.
 
 
-1. **JaVers family**, specified by [`JsonTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
+1. **JaVers family**, specified by the [JsonTypeAdapter]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
    It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
-   as it has nice API and isolates you (to some extent) from low level Gson API.
-   * Implement `JsonTypeAdapter` interface
-     if you need the full control over JSON conversion process.
+   as it has a nice API and isolates you (to some extent) from low level Gson API.
+   * Implement the `JsonTypeAdapter` interface
+     if you need full control over the JSON conversion process.
      Register your adapters with
      [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
    * [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
-     is a convenient scaffolding implementation of JsonTypeAdapter interface.
-     Extend it if you want to represent your `Value` type as atomic String
+     is a convenient scaffolding implementation of the JsonTypeAdapter interface.
+     Extend it if you want to represent your Value type as atomic String
      (and when you don’t want to deal with JSON API).
-     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for `ObjectId`.
-1. **Gson family**, useful when you are already using Gson and have adapters implementing
+     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for ObjectId.
+1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
     [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
      Register your adapters with
      [`JaversBuilder.registerValueGsonTypeAdapter(Class, TypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueGsonTypeAdapter-java.lang.Class-com.google.gson.TypeAdapter-).
 
-JaVers provides JsonTypeAdapters for some well known `Values` like
+JaVers provides JsonTypeAdapters for some well-known Values like
 `org.joda.time.LocalDate`.
 
 

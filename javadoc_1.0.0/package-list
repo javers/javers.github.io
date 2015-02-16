@@ -13,6 +13,7 @@ org.javers.core.diff.appenders
 org.javers.core.diff.changetype
 org.javers.core.diff.changetype.container
 org.javers.core.diff.changetype.map
+org.javers.core.diff.custom
 org.javers.core.graph
 org.javers.core.json
 org.javers.core.json.typeadapter.change
