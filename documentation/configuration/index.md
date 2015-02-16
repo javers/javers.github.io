@@ -317,8 +317,8 @@ In both styles, access modifiers are not important, it could be private ;)
 
 <h3 id="custom-comparators">Custom Comparators</h3>
 
-There are cases where JaVers default diff algorithm isn’t appropriate.
-Good example are custom collections like Guava’s [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html),
+There are cases where JaVers’ default diff algorithm isn’t appropriate.
+A good example is custom collections, like Guava’s [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html),
 which are not connected with Java Collections API.
 
 Let’s focus on Guava’s Multimap.
@@ -328,7 +328,7 @@ have your objects with Multimaps compared by JaVers.
 
 JaVers is meant to be lightweight and can’t depend on the large Guava library.
 Without a custom comparator, JaVers maps Multimap as ValueType and compares its internal fields property-by-property.
-It is not very useful. What would we expect is MapType and a list of MapChanges as a diff result.
+This isn’t very useful. What we would expect is MapType and a list of MapChanges as a diff result.
 
 Custom comparators come to the rescue, as they give you full control over the JaVers diff algorithm.
 You can register a custom comparator for any type (class or interface)
@@ -365,18 +365,18 @@ JaversBuilder.javers()
 <h3 id="ignoring-things">Ignoring things</h3>
 
 The ideal domain model contains only business relevant data and no technical clutter.
-Such model is compact and neat. All domain objects and their properties are important and worth being persisted.
+Such a model is compact and neat. All domain objects and their properties are important and worth being persisted.
 
-In the real world, domain objects often contain various kind of noisy properties you don’t wont to audit.
-For example: dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
+In the real world, domain objects often contain various kind of noisy properties you don’t want to audit,
+such as dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
 auto-generated data and so on.
 
 It is important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
-It can be done by marking them as ignored.
-Ignored properties are omitted by both JaVers diff algorithm and JaversRepository.
+This can be done by marking them as ignored.
+Ignored properties are omitted by both the JaVers diff algorithm and JaversRepository.
 
 Sometimes ignoring certain properties can dramatically improve performance.
-Imagine that you have a technical property updated every time when object is touched
+Imagine that you have a technical property updated every time an object is touched
 by some external system, for example:
 
 ```
@@ -389,7 +389,7 @@ public class User {
 
 Whenever a User is committed to JaversRepository,
 `lastSyncWithDWH` is likely to *cause* a new version of the User object, even if no important data are changed.
-Each new version means new User snapshot persisted to JaversRepository
+Each new version means a new User snapshot persisted to JaversRepository
 and one more DB insert in your commit.
 
 **The rule of thumb:**<br/>
@@ -402,7 +402,7 @@ check JaVers log messages with commit statistics, e.g.
 If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
 
 **How to configure ignored properties**<br/>
-There are two ways, first, you can use `@Transient` or `@DiffIgnore`
+There are two ways to do this. First, you can use `@Transient` or `@DiffIgnore`
 [property annotations](#property-level-annotations) (this is the recommended way).
 
 Second, if you are not willing to use annotations, register your classes
