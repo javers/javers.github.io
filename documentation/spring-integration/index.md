@@ -8,61 +8,117 @@ submenu: spring-integration
 
 <h2 name="introduction">Introduction</h2>
 
-Our main approach at Javers is that our library should be very easy to use - so we made Javers compatible with
-Spring Framework. Integration is based on spring-context and spring-aop. Only thing you need to do
-is to annotate all Spring repository methods that modify your data with ```@JaversAuditable```. We'll use aspects
-to commit your changes in JaversRespository automatically, so you need to have them enabled as well. AWESOME!
+Our main approach at JaVers is that our library should be very easy to use — so we made JaVers compatible with
+Spring Framework. Integration is based on `Spring AOP` and frees you from calling `javers.commit()` in Repository methods.
+
+Only thing you need to do
+is to annotate all Repository methods that modify your data with `@JaversAuditable`.
+We use aspects to commit your changes to JaversRespository automatically, AWESOME!
 
 <h2 name="usage">Usage</h2>
 
 There are few steps you need to go through:
 
-<h3>Enable AspectJ Auto Proxy</h3>
+<h3>Enable @AspectJ support</h3>
 
-First thing you will have to do is to enable AspectJ Auto Proxy. Javers adds an aspect that will commit changes automatically after invoking annotated
-method - this is not possible if you disabled AspectJ. So please remember to put ```@EnableAspectJAutoProxy``` annotation in your Spring config.
-For to more info go to Spring documentation:
+First thing you have to do is to enable Spring `@AspectJ` support.
+JaVers registers an aspect that commits changes automatically, after invoking annotated
+method — this is not possible when @AspectJ support is disabled.
+So please remember to put `@EnableAspectJAutoProxy` annotation in your Spring config.
 
-[docs.spring.io](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-aspectj-support)
+For to more info refer to Spring [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj):
 
-<h3>Add AuthorProvider bean definition to application context</h3>
+<h3>Register AuthorProvider bean</h3>
 
-Every repository change should be connected to its executor (i.e. user making change).
-You should provide an implementation of [AuthorProvider](https://github.com/javers/javers/blob/664a2d2a3f8eec57f5f5647bcd23aea25e3b5f4f/javers-spring/src/main/java/org/javers/spring/AuthorProvider.java) interface:
-Result of ```provide()``` method will be passed to [JaversCommitAdvice](https://github.com/javers/javers/blob/664a2d2a3f8eec57f5f5647bcd23aea25e3b5f4f/javers-spring/src/main/java/org/javers/spring/aspect/JaversCommitAdvice.java) and persisted as commit author.
+Every commit (data change) should be connected to its author (i.e. user who made a change).
+You should provide an implementation of the `AuthorProvider` interface:
 
+```java
+package org.javers.spring;
+
+/**
+ * Implementation has to be thread-safe and has to provide
+ * an author (typically a user login), bounded to current transaction.
+ */
+public interface AuthorProvider {
+    String provide();
+}
 ```
+
+Result of `provide()` method is passed to `javers.commit()`
+and persisted as a commit author.
+Remember that AuthorProvider has to be thread-safe and connected to current user session.
+
+See example below for Spring Security implementation.
+
+<h3>Register JaversPostProcessor bean</h3>
+
+`JaversPostProcessor` is the implementation of Spring
+[BeanPostProcessor](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanPostProcessor.html)
+and it wraps all bean methods (typically Repository methods) annotated with `@JaversAuditable`.
+
+After executing of an annotated method, all its **arguments** are committed.
+In case where an argument is an instance of [Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html),
+JaVers iterates over it and commits each element separately.
+
+Full configuration example:
+
+```java
+package org.javers.spring.integration;
+
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.spring.AuthorProvider;
+import org.javers.spring.JaversPostProcessor;
+import org.springframework.context.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+/**
+ * @author bartosz walacik
+ */
+@Configuration
+@ComponentScan
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+public class ExampleApplicationConfig {
+
     @Bean
     public AuthorProvider authorProvider() {
-        return new AuthorProvider() {
-            @Override
-            public String provide() {
-                return SecurityContextHolder.getContext().getAuthentication().getName();
-            }
-        };
+        return new SpringSecurityAuthorProvider();
     }
-```
 
-<h3>Add JaversPostProcessor to application context</h3>
-
-[JaversPostProcessor](https://github.com/javers/javers/blob/664a2d2a3f8eec57f5f5647bcd23aea25e3b5f4f/javers-spring/src/main/java/org/javers/spring/JaversPostProcessor.java) is implementation of [BeanPostProcessor](http://docs.spring.io/spring-framework/docs/2.5.6/api/org/springframework/beans/factory/config/BeanPostProcessor.html) and it wraps all annotated in repository methods with [JaversCommitAdvice](https://github.com/javers/javers/blob/664a2d2a3f8eec57f5f5647bcd23aea25e3b5f4f/javers-spring/src/main/java/org/javers/spring/aspect/JaversCommitAdvice.java).
-After executing Javers annotated repository methods all the arguments should be committed. In case where argument is instance of
-[Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html) Javers will iterate over all elements and commit each separately.
-
-```
     @Bean
     public JaversPostProcessor javersPostProcessor() {
         return new JaversPostProcessor(javers(), authorProvider());
     }
+
+    @Bean
+    public Javers javers() {
+        return JaversBuilder.javers().build();
+    }
+
+    private static class SpringSecurityAuthorProvider implements AuthorProvider {
+        @Override
+        public String provide() {
+            Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+
+            if (auth == null) {
+                return "unauthenticated";
+            }
+
+            return auth.getName();
+        }
+    }
+}
 ```
 
-<h3>Annotate methods</h3>
+<h3>Annotate Repository methods</h3>
 
-You can select which methods should be proxied by simply annotating them with [@JaversAuditable](https://github.com/javers/javers/blob/664a2d2a3f8eec57f5f5647bcd23aea25e3b5f4f/javers-spring/src/main/java/org/javers/spring/JaversAuditable.java).
-If you want to annotate all methods from class just put annotation over the class definition.
+You can select which methods should be decorated by simply annotating them with `@JaversAuditable`.
+If you want to annotate all methods from a class, just put annotation over the class definition.
 
 
-```
+```java
     class UserRepository {
 
         @JaversAuditable
@@ -74,7 +130,7 @@ If you want to annotate all methods from class just put annotation over the clas
 
 or
 
-```
+```java
     @JaversAuditable
     class UserRepository {
 
