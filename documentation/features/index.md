@@ -85,8 +85,17 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.0.7
+released on 2015-02-25
+
+* [#47](https://github.com/javers/javers/issues/47)
+  Spring integration. Added `@JaversAuditable` aspect for auto-committing
+  changed done in Repositories. <br/>
+  [gessnerfl](https://github.com/gessnerfl) contributed `@JaversSpringDataAuditable`,
+  which gives a support for Spring-data Repositories.
+
 ### 1.0.6
-released on 2015-02-..
+released on 2015-02-10
 
 * [#94](https://github.com/javers/javers/issues/94)
   Specifying ignored properties without annotations.
