@@ -341,7 +341,26 @@ JaVers maps classes with custom comparators as `CustomTypes`, which pretty much 
 
 All you have to do is implement the
 [CustomPropertyComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomPropertyComparator.html)
-interface and register it with
+interface:
+
+ ```java
+ /**
+  * @param <T> custom type, e.g. Multimap
+  * @param <C> concrete type of PropertyChange returned by a comparator
+  */
+ public interface CustomPropertyComparator<T, C extends PropertyChange> {
+     /**
+      * @param left left (or old) property value
+      * @param right right (or current) property value
+      * @param affectedId Id of domain object being compared
+      * @param property property being compared
+      * @return should return null if compared objects have no differences
+      */
+     C compare(T left, T right, GlobalId affectedId, Property property);
+ }
+ ```
+
+and register it with
  [`JaversBuilder.registerCustomComparator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerCustomComparator-org.javers.core.diff.custom.CustomPropertyComparator-java.lang.Class-).
 
 Implementation should calculate a diff between two values of CustomType
@@ -360,6 +379,51 @@ Register the custom comparator instance in JaversBuilder, for example:
 ```java
 JaversBuilder.javers()
     .registerCustomComparator(new GuavaCustomComparator(), Multimap.class).build()
+```
+
+**Custom way to compare Value types**<br/>
+The same rules apply if you want to change JaVers’ default diff algorithm
+for existing Value type, for example `BigDecimal`.
+
+For Values, JaVers simply uses `equals()`, if it isn’t appropriate for you,
+override it with a Custom comparator.
+For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecimals before compare:
+
+```java
+/**
+ * Compares BigDecimals with custom precision.
+ * Before compare, values are rounded (HALF_UP) to required scale.
+ * <br/><br/>
+ *
+ * Usage example:
+ * <pre>
+ * JaversBuilder.javers()
+ *     .registerCustomComparator(new CustomBigDecimalComparator(2), BigDecimal).build();
+ * </pre>
+ *
+ * @author bartosz walacik
+ */
+public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange>{
+    private int significantDecimalPlaces;
+
+    public CustomBigDecimalComparator(int significantDecimalPlaces) {
+        this.significantDecimalPlaces = significantDecimalPlaces;
+    }
+
+    @Override
+    public ValueChange compare(BigDecimal left, BigDecimal right, GlobalId affectedId,
+        Property property)
+    {
+        BigDecimal leftRounded = left.setScale(significantDecimalPlaces, ROUND_HALF_UP);
+        BigDecimal rightRounded = right.setScale(significantDecimalPlaces, ROUND_HALF_UP);
+
+        if (leftRounded.equals(rightRounded)){
+            return null;
+        }
+
+        return new ValueChange(affectedId, property, left, right);
+    }
+}
 ```
 
 <h3 id="ignoring-things">Ignoring things</h3>
