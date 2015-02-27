@@ -17,7 +17,20 @@ We use aspects to commit your changes to JaversRespository automatically, AWESOM
 
 <h2 name="usage">Usage</h2>
 
-There are few steps you need to go through:
+There are few steps you need to go through.
+
+First add `javers-spring-data` module to your classpath:
+
+```groovy
+compile 'org.javers:javers-spring-data:{{site.javers_current_version}}'
+```
+
+If you are not using `spring-data` Repositories
+and don't want to put it on your classpath, choose `javers-spring` module instead of `javers-spring-data`:
+
+```groovy
+compile 'org.javers:javers-spring:{{site.javers_current_version}}'
+```
 
 <h3>Enable @AspectJ support</h3>
 
@@ -27,6 +40,17 @@ method — this is not possible when @AspectJ support is disabled.
 So please remember to put `@EnableAspectJAutoProxy` annotation in your Spring config.
 
 For to more info refer to Spring [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj):
+
+<h3>Register JaVers instance</h3>
+You need to have exactly one JaVers instance in your Application Context.
+This instance will be used to commit changes.
+
+```
+    @Bean
+    public Javers javers() {
+        return JaversBuilder.javers().build();
+    }
+```
 
 <h3>Register AuthorProvider bean</h3>
 
@@ -138,5 +162,6 @@ or
 
         public void update(User user) { ... }
     }
-
 ```
+
+From now, all object passed to annotated methods will be automatically versioned by JaVers.
