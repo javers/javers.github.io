@@ -318,6 +318,10 @@ body.page section #content #main blockquote {
     border-left: 1px solid #dde0e2;
 }
 
+#sidebar .affix {
+    position: fixed !important;
+}
+
 body.page section #sidebar section {
     padding-left: 15px;
     padding-bottom: 2px;
