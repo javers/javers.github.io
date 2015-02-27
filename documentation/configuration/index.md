@@ -386,8 +386,8 @@ The same rules apply if you want to change JaVers’ default diff algorithm
 for existing Value type, for example `BigDecimal`.
 
 For Values, JaVers simply uses `equals()`, if it isn’t appropriate for you,
-override it with Custom comparator.
-JaVers provides sample Custom comparator which rounds BigDecimals before compare:
+override it with a Custom comparator.
+For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecimals before compare:
 
 ```java
 /**
