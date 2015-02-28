@@ -400,8 +400,6 @@ For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecim
  * JaversBuilder.javers()
  *     .registerCustomComparator(new CustomBigDecimalComparator(2), BigDecimal).build();
  * </pre>
- *
- * @author bartosz walacik
  */
 public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange>{
     private int significantDecimalPlaces;
