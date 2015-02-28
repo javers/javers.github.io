@@ -6,7 +6,7 @@ submenu: spring-integration
 
 # Spring integration
 
-<h2 name="introduction">Introduction</h2>
+<h2 id="spring-integration-introduction">Introduction</h2>
 
 Our main approach at JaVers is that our library should be very easy to use — so we made JaVers compatible with
 Spring Framework. Integration is based on `Spring AOP` and frees you from calling `javers.commit()` in Repository methods.
@@ -15,7 +15,7 @@ Only thing you need to do
 is to annotate all Repository methods that modify your data with `@JaversAuditable`.
 We use aspects to commit your changes to JaversRespository automatically, AWESOME!
 
-<h2 name="usage">Usage</h2>
+<h2 id="spring-int-usage">Usage</h2>
 
 There are few steps you need to go through.
 
@@ -25,14 +25,19 @@ First add `javers-spring-data` module to your classpath:
 compile 'org.javers:javers-spring-data:{{site.javers_current_version}}'
 ```
 
-If you are not using `spring-data` Repositories
+If you are not using `Spring Data` Repositories
 and don't want to put it on your classpath, choose `javers-spring` module instead of `javers-spring-data`:
 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
 
-<h3>Enable @AspectJ support</h3>
+Check Maven Central pages:
+[javers-spring-data](http://search.maven.org/#artifactdetails|org.javers|javers-spring-data|{{site.javers_current_version}}|jar),
+[javers-spring](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar),
+ for snippets to other build tools.
+
+<h3 id="enable-aspectj-support">Enable @AspectJ support</h3>
 
 First thing you have to do is to enable Spring `@AspectJ` support.
 JaVers registers an aspect that commits changes automatically, after invoking annotated
@@ -41,7 +46,7 @@ So please remember to put `@EnableAspectJAutoProxy` annotation in your Spring co
 
 For to more info refer to Spring [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj):
 
-<h3>Register JaVers instance</h3>
+<h3 id="register-javers-instance">Register JaVers instance</h3>
 You need to have exactly one JaVers instance in your Application Context.
 This instance will be used to commit changes.
 
@@ -52,7 +57,17 @@ This instance will be used to commit changes.
     }
 ```
 
-<h3>Register AuthorProvider bean</h3>
+<h3 id="register-javers-post-processor">Register JaversPostProcessor bean</h3>
+
+`JaversPostProcessor` is the implementation of Spring
+[BeanPostProcessor](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanPostProcessor.html)
+and it wraps all bean methods (typically Repository methods) annotated with `@JaversAuditable`.
+
+After executing of an annotated method, all its **arguments** are committed.
+In case where an argument is an instance of [Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html),
+JaVers iterates over it and commits each element separately.
+
+<h2 id="register-author-provider">AuthorProvider</h2>
 
 Every commit (data change) should be connected to its author (i.e. user who made a change).
 You should provide an implementation of the `AuthorProvider` interface:
@@ -75,17 +90,7 @@ Remember that AuthorProvider has to be thread-safe and connected to current user
 
 See example below for Spring Security implementation.
 
-<h3>Register JaversPostProcessor bean</h3>
-
-`JaversPostProcessor` is the implementation of Spring
-[BeanPostProcessor](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanPostProcessor.html)
-and it wraps all bean methods (typically Repository methods) annotated with `@JaversAuditable`.
-
-After executing of an annotated method, all its **arguments** are committed.
-In case where an argument is an instance of [Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html),
-JaVers iterates over it and commits each element separately.
-
-Full configuration example:
+<h2 id="full-configuration-example">Full configuration example</h2>
 
 ```java
 package org.javers.spring.integration;
@@ -98,9 +103,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-/**
- * @author bartosz walacik
- */
 @Configuration
 @ComponentScan
 @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -136,10 +138,10 @@ public class ExampleApplicationConfig {
 }
 ```
 
-<h3>Annotate Repository methods</h3>
+<h3 id="javers-auditable-ann">Annotate Repository methods with @JaversAuditable</h3>
 
-You can select which methods should be decorated by simply annotating them with `@JaversAuditable`.
-If you want to annotate all methods from a class, just put annotation over the class definition.
+You can select which Repository methods should be audited by simply annotating them with `@JaversAuditable`.
+If you want to annotate all methods from a class, just put the annotation over the class definition.
 
 
 ```java
@@ -165,3 +167,23 @@ or
 ```
 
 From now, all object passed to annotated methods will be automatically versioned by JaVers.
+
+<h3 id="spring-data-integration">Spring Data integration</h3>
+If you are using `Spring Data`, your configuration would be even more simple.
+Just add `@JaversSpringDataAuditable` annotation to your Spring Data Repositories,
+for example:
+
+```java
+    package org.javers.spring.data.integration.testdata
+
+    import org.javers.spring.data.JaversSpringDataAuditable
+    import org.springframework.data.repository.CrudRepository
+    import org.springframework.stereotype.Repository
+
+    @Repository
+    @JaversSpringDataAuditable
+    interface UserRepository extends CrudRepository<User, String> {
+    }
+```
+
+From now, all object passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
