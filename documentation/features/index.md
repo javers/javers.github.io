@@ -45,7 +45,7 @@ who made it and what was the value before and after.
 **How to use it?**
 
 * Configure and build a
-  JaVers instance (see [configuration](/documentation/configuration)).
+  JaVers instance (see [configuration](/documentation/domain-configuration)).
 
 * Integrate JaVers with your system by applying 
   the [javers.commit()]({{ site.javadoc_url }}org/javers/core/Javers.html#commit-java.lang.String-java.lang.Object-)
@@ -80,7 +80,7 @@ JaVers has a well-designed and customizable JSON serialization and deserializati
 [`GSON`](https://code.google.com/p/google-gson/) and Java reflection. 
 Your data are split into chunks (atomic changes) and persisted in a database as JSON
 with minimal mapping configuration effort
-(see [custom JSON serialization](/documentation/configuration#custom-json-serialization)).
+(see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization)).
 
 
 <h2 id="release-notes">Release notes</h2>

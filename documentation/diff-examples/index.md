@@ -26,7 +26,7 @@ gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
 
 Let’s start from something simple. This example shows how to find a diff between two objects of `Person` class.
 Since every person has his own identity, Person class is an Entity
-(see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
+(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for Entity definition).
 
 **The case**<br/>
 We have two objects, `tommyOld` and `tommyNew`.
@@ -121,7 +121,7 @@ Diff:
 
 This example shows how to find a diff between two objects of `Address` class.
 Address is a typical ValueObject; it doesn’t have its own identity. It’s just a complex value holder
-(see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for ValueObject definition).
+(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for ValueObject definition).
 
 **The case**<br/>
 We have two objects, `address1` and `address2`. These objects represent two different addresses.
