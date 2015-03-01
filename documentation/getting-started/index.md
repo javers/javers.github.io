@@ -60,5 +60,5 @@ Javers javers = JaversBuilder.javers().build();
 Now, the JaVers instance is up and ready, configured with reasonable defaults.
 Good enough to start.
 
-Later on, you would probably need to refine the [configuration](http://javers.org/documentation/configuration)
+Later on, you would probably need to refine the [configuration](/documentation/domain-configuration)
 and introduce some basic facts about your domain model to JaVers.

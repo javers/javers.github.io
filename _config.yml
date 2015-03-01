@@ -1,3 +1,5 @@
+gems:
+  - jekyll-redirect-from
 
 # Build settings
 markdown: redcarpet
@@ -9,3 +11,4 @@ kramdown:
 #Site content configuration
 javadoc_url: /javadoc_1.0.0/
 javers_current_version: 1.0.7
+

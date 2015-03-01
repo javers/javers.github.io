@@ -60,27 +60,33 @@
 </section>
 
 <section>
-    <a {% if currentSubPage == 'configuration' %}class='active'{% endif %} href="/documentation/configuration">
-            Configuration
-    </a>
-    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'configuration' %} hidden {% endif %}">
+    <a {% if currentSubPage == 'domain-configuration' %}class='active'{% endif %}
+       href="/documentation/domain-configuration">Configuration &mdash; Domain</a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'domain-configuration' %} hidden {% endif %}">
         <li><a href="#domain-model-mapping">Domain model mapping</a></li>
-        <li><a href="#mapping-configuration">Mapping configuration</a>
-        <li><a href="#supported-annotations">&nbsp; &nbsp; Supported annotations</a>
-        <li><a href="#entity-id-property">&nbsp; &nbsp; Entity Id property</a>
-        <li><a href="#property-mapping-style">&nbsp; &nbsp; Property mapping style</a>
-        <li><a href="#custom-comparators">&nbsp; &nbsp; Custom Comparators</a>
-        <li><a href="#ignoring-things">&nbsp; &nbsp; Ignoring things</a>
-        </li>
-        <li><a href="#repository-setup">JaversRepository setup</a></li>
-        <li><a href="#custom-json-serialization">&nbsp; &nbsp; Custom JSON
-            serialization</a>
-        <li><a href="#json-type-adapters">&nbsp; &nbsp; JSON TypeAdapters</a>
+        <li><a href="#mapping-configuration">Mapping configuration</a></li>
+        <li><a href="#supported-annotations">&nbsp; &nbsp; Supported annotations</a></li>
+        <li><a href="#entity-id-property">&nbsp; &nbsp; Entity Id property</a></li>
+        <li><a href="#property-mapping-style">&nbsp; &nbsp; Property mapping style</a></li>
+        <li><a href="#custom-comparators">&nbsp; &nbsp; Custom Comparators</a></li>
+        <li><a href="#ignoring-things">&nbsp; &nbsp; Ignoring things</a></li>
     </ul>
 </section>
 
 <section>
-    <a {% if currentSubPage == 'javers-internals' %}class='active'{% endif %} href="/documentation/javers-internals">JaVers internals</a>
+    <a {% if currentSubPage == 'repository-configuration' %}class='active'{% endif %}
+       href="/documentation/repository-configuration">Configuration &mdash; Repository</a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'repository-configuration' %} hidden {% endif %}">
+        <li><a href="#choose-javers-repository">Choose JaversRepository</a></li>
+        <li><a href="#custom-json-serialization">Custom JSON
+            serialization</a>
+        <li><a href="#json-type-adapters">JSON TypeAdapters</a>
+    </ul>
+</section>
+
+<section>
+    <a {% if currentSubPage == 'javers-internals' %}class='active'{% endif %}
+    href="/documentation/javers-internals">JaVers internals</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'javers-internals' %} hidden {% endif %}">
         <li><a href="#type-mapper">TypeMapper</a></li>
     </ul>

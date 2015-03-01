@@ -39,14 +39,14 @@ With JaVers, it can be done with a single `commit()` call:
 **Configuration** <br/>
 By default, JaVers uses an in-memory repository, which is perfect for testing.
 For a production environment you will need to set up a real database repository
-(see [repository-setup](/documentation/configuration#repository-setup)).
+(see [repository-setup](/documentation/repository-configuration)).
 
 We need to tell JaVers that Person class is an Entity.
 It’s enough to annotate the login field with `@Id` annotation.
 
 **What’s important** <br/>
 Person is a typical Entity
-(see [domain-model-mapping](/documentation/configuration/#domain-model-mapping) for Entity definition).
+(see [domain-model-mapping](/documentation/domain-configuration/#entity) for Entity definition).
 JaVers uses [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
 for identifying and querying Entities.
 In this case, it’s expressed as `InstanceIdDTO.instanceId("bob", Person.class)`.
@@ -350,7 +350,7 @@ public class ChangeLogExample {
 <h2 id="json-type-adapter">JSON TypeAdapter</h2>
 
 `JsonTypeAdapter` allows you to customize how JaVers
-serializes your [Value types](/documentation/configuration#ValueType) to JSON.
+serializes your [Value types](/documentation/domain-configuration#ValueType) to JSON.
 This is especially important for complex Id types like
 the [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
 often used as Id-property for objects persisted in MongoDB.
