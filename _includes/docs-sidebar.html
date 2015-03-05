@@ -85,14 +85,6 @@
 </section>
 
 <section>
-    <a {% if currentSubPage == 'javers-internals' %}class='active'{% endif %}
-    href="/documentation/javers-internals">JaVers internals</a>
-    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'javers-internals' %} hidden {% endif %}">
-        <li><a href="#type-mapper">TypeMapper</a></li>
-    </ul>
-</section>
-
-<section>
     <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">Spring integration</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'spring-integration' %} hidden {% endif %}">
         <li><a href="#spring-integration-introduction">Introduction</a></li>
@@ -101,5 +93,13 @@
         <li><a href="#full-configuration-example">Full configuration example</a></li>
         <li><a href="#javers-auditable-ann">@JaversAuditable annotation</a></li>
         <li><a href="#spring-data-integration">Spring Data integration</a></li>
+    </ul>
+</section>
+
+<section>
+    <a {% if currentSubPage == 'javers-internals' %}class='active'{% endif %}
+    href="/documentation/javers-internals">JaVers internals</a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'javers-internals' %} hidden {% endif %}">
+        <li><a href="#type-mapper">TypeMapper</a></li>
     </ul>
 </section>
