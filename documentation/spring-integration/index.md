@@ -11,9 +11,8 @@ Spring Framework.
 
 `javers-spring` module provides the following features:
 
-* integration with [JpaTransactionManager](http://docs.spring.io/autorepo/docs/spring-framework/4.0.7.RELEASE/javadoc-api/org/springframework/orm/jpa/JpaTransactionManager.html)
-  for SQL databases,
-* annotations for Repository auto-audit (both SQL and NoSQL).
+* [annotations](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
+* [integration](#jpa-transaction-manager-integration) with Spring JpaTransactionManager for SQL databases.
 
 ## Usage
 
@@ -22,13 +21,12 @@ First add `javers-spring` module to your classpath:
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
-Check Maven Central pages:
-[javers-spring-data](http://search.maven.org/#artifactdetails|org.javers|javers-spring-data|{{site.javers_current_version}}|jar),
-[javers-spring](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar),
+Check
+[Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
  for snippets to other build tools.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>
-JaVers auto-audit aspect is based on `Spring AOP` and frees you
+JaVers auto-audit aspect is based on Spring AOP and frees you
 from calling `javers` methods in your data-changing Repositories.
 
 If you are using Spring Data, annotate your CRUD Repositories with `@JaversSpringDataAuditable`.
@@ -66,7 +64,7 @@ Put `@EnableAspectJAutoProxy` annotation in your Spring config.
 This enables Spring `@AspectJ` support.
 
 For to more info refer to Spring
-[@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj):
+[@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
 
 ### Register JaversAuditableRepositoryAspect
 
@@ -74,8 +72,8 @@ Register `JaversAuditableRepositoryAspect`, which provides the auto-audit featur
 It defines two pointcuts:
 
 * All `save(..)` and `delete(..)` methods within Spring Data `CrudRepository`
-  with class-level `@JaversSpringDataAuditable` annotation
-* Any method annotated with `@JaversAuditable`
+  with class-level `@JaversSpringDataAuditable` annotation.
+* Any method annotated with `@JaversAuditable`.
 
 After advices method is executed, all of its **arguments**
 are automatically saved to JaversRepository.
@@ -122,7 +120,7 @@ with class-level `@JaversSpringDataAuditable`, for example:
     }
 ```
 
-From now, all object passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
+From now, all objects passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
 
 ### Annotate your ordinary Repositories
 
@@ -146,13 +144,13 @@ For example:
 ```
 
 In fact, you can use this method-level annotation for advising any bean in your application.
-It could be a Service, Repository or anything which does domain objects changes.
+It could be a Service, Repository or anything which modifies domain objects.
 
-From now, all object passed to the annotated methods will be automatically versioned by JaVers.
+From now, all objects passed to the annotated methods will be automatically versioned by JaVers.
 
-See below for the complete example of Application Context.
+See below for the complete example of the Application Context.
 
-<h2 id="auto-audit-example">Auto-audit example with MongoDB</h2>
+<h3 id="auto-audit-example">Auto-audit example with MongoDB</h3>
 
 Here is an working example of Spring Application Context
 with JaVers instance, JaVers auto-audit aspect and Spring Data MongoDB.
@@ -191,8 +189,9 @@ public class JaversSpringMongoApplicationConfig {
     /**
      * Enables Repository auto-audit aspect. <br/>
      *
-     * Use @{@link org.javers.spring.annotation.JaversSpringDataAuditable} to annotate Spring Data Repositories,
-     * or @{@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate Spring Data Repositories
+     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
      */
     @Bean
     public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
@@ -233,14 +232,14 @@ should be executed in the context of the current application's transaction
 First, you need to register exactly one **transactional** JaVers instance in your Application Context.
 
 Second, you need register a transactional `ConnectionProvider`,
-which serves for your JaversSQLRepository as source of live JDBC connections.
+which serves for your JaversSQLRepository as the source of live JDBC connections.
 
 If you are using JPA with Hibernate, choose `JpaHibernateConnectionProvider`
 which is Persistence Context aware and plays along with JpaTransactionManager.
 
-See below for the complete example of [Spring JPA Application Context](#spring-jpa-config-example).
+See below for the complete example of the Application Context.
 
-<h2 id="spring-jpa-config-example">Spring JPA Config example</h2>
+<h3 id="spring-jpa-example">Spring JPA example</h3>
 
 Here is an working example of Spring Application Context
 with all JaVers beans, JPA, Hibernate, Spring Data and Spring TransactionManager.
@@ -279,8 +278,9 @@ public class JaversSpringJpaApplicationConfig {
     /**
      * Enables Repository auto-audit aspect. <br/>
      *
-     * Use @{@link JaversSpringDataAuditable} to annotate Spring Data Repositories,
-     * or @{@link JaversAuditable} for ordinary Repositories.
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate Spring Data Repositories
+     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
      */
     @Bean
     public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
