@@ -6,176 +6,110 @@ submenu: spring-integration
 
 # Spring integration
 
-<h2 id="spring-integration-introduction">Introduction</h2>
-
 Our main approach at JaVers is that our library should be very easy to use — so we made JaVers compatible with
-Spring Framework. Integration is based on `Spring AOP` and frees you from calling `javers.commit()` in Repository methods.
+Spring Framework.
 
-Only thing you need to do
-is to annotate all Repository methods that modify your data with `@JaversAuditable`.
-We use aspects to commit your changes to JaversRespository automatically, AWESOME!
+`javers-spring` module provides the following features:
 
-<h2 id="spring-int-usage">Usage</h2>
+* [annotations](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
+* [integration](#jpa-transaction-manager-integration) with Spring JpaTransactionManager for SQL databases.
 
-There are few steps you need to go through.
+## Usage
 
-First add `javers-spring-data` module to your classpath:
-
-```groovy
-compile 'org.javers:javers-spring-data:{{site.javers_current_version}}'
-```
-
-If you are not using `Spring Data` Repositories
-and don't want to put it on your classpath, choose `javers-spring` module instead of `javers-spring-data`:
+First add `javers-spring` module to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
-
-Check Maven Central pages:
-[javers-spring-data](http://search.maven.org/#artifactdetails|org.javers|javers-spring-data|{{site.javers_current_version}}|jar),
-[javers-spring](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar),
+Check
+[Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
  for snippets to other build tools.
 
-<h3 id="enable-aspectj-support">Enable @AspectJ support</h3>
+<h2 id="auto-audit-aspect">Auto-audit aspect</h2>
+JaVers auto-audit aspect is based on Spring AOP and frees you
+from calling `javers` methods in your data-changing Repositories.
 
-First thing you have to do is to enable Spring `@AspectJ` support.
-JaVers registers an aspect that commits changes automatically, after invoking annotated
-method — this is not possible when @AspectJ support is disabled.
-So please remember to put `@EnableAspectJAutoProxy` annotation in your Spring config.
+If you are using Spring Data, annotate your CRUD Repositories with `@JaversSpringDataAuditable`.
+For ordinary Repositories, use `@JaversAuditable` annotation to mark all data-changing methods.
 
-For to more info refer to Spring [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj):
+JaVers can audit your data changes automatically, AWESOME!
 
-<h3 id="register-javers-instance">Register JaVers instance</h3>
-You need to have exactly one JaVers instance in your Application Context.
-This instance will be used to commit changes.
+Below you can see which beans you need to register to use auto-audit feature.
 
-```
+### JaVers instance as a Spring bean
+
+You need to register exactly one JaVers instance in your Application Context.
+For example, if you are using MongoDB, setup JaVers as follows:
+
+```java
     @Bean
     public Javers javers() {
-        return JaversBuilder.javers().build();
+        MongoRepository javersMongoRepository = new MongoRepository(mongoDB());
+
+        return JaversBuilder.javers()
+                .registerJaversRepository(javersMongoRepository)
+                .build();
+    }
+
+    @Bean
+    public DB mongoDB(){
+        return new Fongo("test").getMongo().getDB("test");
     }
 ```
 
-<h3 id="register-javers-post-processor">Register JaversPostProcessor bean</h3>
+### Enable @AspectJ support
 
-`JaversPostProcessor` is the implementation of Spring
-[BeanPostProcessor](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanPostProcessor.html)
-and it wraps all bean methods (typically Repository methods) annotated with `@JaversAuditable`.
+JaVers registers an aspect which manages auto-audit feature.
+Put `@EnableAspectJAutoProxy` annotation in your Spring config.
+This enables Spring `@AspectJ` support.
 
-After executing of an annotated method, all its **arguments** are committed.
-In case where an argument is an instance of [Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html),
-JaVers iterates over it and commits each element separately.
+For to more info refer to Spring
+[@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
 
-<h2 id="register-author-provider">AuthorProvider</h2>
+### Register JaversAuditableRepositoryAspect
 
-Every commit (data change) should be connected to its author (i.e. user who made a change).
-You should provide an implementation of the `AuthorProvider` interface:
+Register `JaversAuditableRepositoryAspect`, which provides the auto-audit feature.
+It defines two pointcuts:
+
+* All `save(..)` and `delete(..)` methods within Spring Data `CrudRepository`
+  with class-level `@JaversSpringDataAuditable` annotation.
+* Any method annotated with `@JaversAuditable`.
+
+After advices method is executed, all of its **arguments**
+are automatically saved to JaversRepository.
+
+In case where an argument is the `Iterable` instance,
+JaVers iterates over it and saves each element separately.
+
+### Register AuthorProvider bean
+
+Every JaVers commit (data change) should be connected to its author, i.e. user who made a change.
+Please do not confuse JaVers commit (a bunch of data changes)
+with SQL commit command (finalizing an SQL transaction).
+
+You need to register an implementation of the `AuthorProvider` interface,
+which returns a current user login.
+
+Here is the contract:
 
 ```java
-package org.javers.spring;
+package org.javers.spring.auditable;
 
 /**
  * Implementation has to be thread-safe and has to provide
- * an author (typically a user login), bounded to current transaction.
+ * an author (typically a user login), bounded to current user session.
  */
 public interface AuthorProvider {
     String provide();
 }
 ```
 
-Result of `provide()` method is passed to `javers.commit()`
-and persisted as a commit author.
-Remember that AuthorProvider has to be thread-safe and connected to current user session.
+### Annotate your Spring Data Repositories
 
-See example below for Spring Security implementation.
-
-<h2 id="full-configuration-example">Full configuration example</h2>
+If you are using Spring Data, just annotate every Repository you want to audit
+with class-level `@JaversSpringDataAuditable`, for example:
 
 ```java
-package org.javers.spring.integration;
-
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.spring.AuthorProvider;
-import org.javers.spring.JaversPostProcessor;
-import org.springframework.context.annotation.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-@Configuration
-@ComponentScan
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-public class ExampleApplicationConfig {
-
-    @Bean
-    public AuthorProvider authorProvider() {
-        return new SpringSecurityAuthorProvider();
-    }
-
-    @Bean
-    public JaversPostProcessor javersPostProcessor() {
-        return new JaversPostProcessor(javers(), authorProvider());
-    }
-
-    @Bean
-    public Javers javers() {
-        return JaversBuilder.javers().build();
-    }
-
-    private static class SpringSecurityAuthorProvider implements AuthorProvider {
-        @Override
-        public String provide() {
-            Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
-
-            if (auth == null) {
-                return "unauthenticated";
-            }
-
-            return auth.getName();
-        }
-    }
-}
-```
-
-<h3 id="javers-auditable-ann">Annotate Repository methods with @JaversAuditable</h3>
-
-You can select which Repository methods should be audited by simply annotating them with `@JaversAuditable`.
-If you want to annotate all methods from a class, just put the annotation over the class definition.
-
-
-```java
-    class UserRepository {
-
-        @JaversAuditable
-        public void save(User user) { ... }
-
-        public void update(User user) { ... }
-    }
-```
-
-or
-
-```java
-    @JaversAuditable
-    class UserRepository {
-
-        public void save(User user) { ... }
-
-        public void update(User user) { ... }
-    }
-```
-
-From now, all object passed to annotated methods will be automatically versioned by JaVers.
-
-<h3 id="spring-data-integration">Spring Data integration</h3>
-If you are using `Spring Data`, your configuration would be even more simple.
-Just add `@JaversSpringDataAuditable` annotation to your Spring Data Repositories,
-for example:
-
-```java
-    package org.javers.spring.data.integration.testdata
-
     import org.javers.spring.data.JaversSpringDataAuditable
     import org.springframework.data.repository.CrudRepository
     import org.springframework.stereotype.Repository
@@ -186,4 +120,244 @@ for example:
     }
 ```
 
-From now, all object passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
+From now, all objects passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
+
+### Annotate your ordinary Repositories
+
+If you are using ordinary Repositories (non Spring Data),
+annotate all data-changing methods you want to audit with `@JaversAuditable`.
+
+For example:
+
+```java
+    class UserRepository {
+
+        @JaversAuditable
+        public void save(User user) {
+            ...//
+        }
+
+        public User find(String login) {
+            ...//
+        }
+    }
+```
+
+In fact, you can use this method-level annotation for advising any bean in your application.
+It could be a Service, Repository or anything which modifies domain objects.
+
+From now, all objects passed to the annotated methods will be automatically versioned by JaVers.
+
+See below for the complete example of the Application Context.
+
+<h3 id="auto-audit-example">Auto-audit example with MongoDB</h3>
+
+Here is an working example of Spring Application Context
+with JaVers instance, JaVers auto-audit aspect and Spring Data MongoDB.
+
+```java
+package org.javers.spring.example;
+
+import ...
+
+@Configuration
+@ComponentScan(basePackages = "org.javers.spring.repository.mongo")
+@EnableAspectJAutoProxy
+@EnableMongoRepositories(basePackages = "org.javers.spring.repository.mongo")
+public class JaversSpringMongoApplicationConfig {
+
+    /**
+     * Creates JaVers instance backed by {@link MongoRepository}
+     */
+    @Bean
+    public Javers javers() {
+        MongoRepository javersMongoRepository = new MongoRepository(mongoDB());
+
+        return JaversBuilder.javers()
+                .registerJaversRepository(javersMongoRepository)
+                .build();
+    }
+
+    /**
+     * MongoDB setup
+     */
+    @Bean
+    public DB mongoDB(){
+        return new Fongo("test").getMongo().getDB("test");
+    }
+
+    /**
+     * Enables Repository auto-audit aspect. <br/>
+     *
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate Spring Data Repositories
+     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
+     */
+    @Bean
+    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
+        return new JaversAuditableRepositoryAspect(javers(), authorProvider());
+    }
+
+    /**
+     * Required by Repository auto-audit aspect. <br/><br/>
+     *
+     * Returns mock implementation for testing.
+     * <br/>
+     * Provide real implementation,
+     * when using Spring Security you can use
+     * {@link org.javers.spring.auditable.SpringSecurityAuthorProvider}.
+     */
+    @Bean
+    public AuthorProvider authorProvider() {
+        return new AuthorProvider() {
+            @Override
+            public String provide() {
+                return "unknown";
+            }
+        };
+    }
+}
+```
+
+<h2 id="jpa-transaction-manager-integration">JPA Transaction Manager integration</h2>
+Transaction management is the important issue for applications backed by SQL databases.
+
+Generally, JaVers philosophy is to use application's transactions
+and never to call SQL `commit` or `rollback` commands on his own.
+So all SQL statements executed by `JaversSQLRepository`
+should be executed in the context of the current application's transaction
+(called Persistence Context in JPA terminology).
+
+### JaVers transactional instance as a Spring bean
+First, you need to register exactly one **transactional** JaVers instance in your Application Context.
+
+Second, you need register a transactional `ConnectionProvider`,
+which serves for your JaversSQLRepository as the source of live JDBC connections.
+
+If you are using JPA with Hibernate, choose `JpaHibernateConnectionProvider`
+which is Persistence Context aware and plays along with JpaTransactionManager.
+
+See below for the complete example of the Application Context.
+
+<h3 id="spring-jpa-example">Spring JPA example</h3>
+
+Here is an working example of Spring Application Context
+with all JaVers beans, JPA, Hibernate, Spring Data and Spring TransactionManager.
+
+```java
+package org.javers.spring.example;
+
+import ...
+
+@Configuration
+@ComponentScan(basePackages = "org.javers.spring.repository.jpa")
+@EnableTransactionManagement
+@EnableAspectJAutoProxy
+@EnableJpaRepositories(basePackages = "org.javers.spring.repository.jpa")
+public class JaversSpringJpaApplicationConfig {
+
+    //.. JaVers setup ..
+
+    /**
+     * Creates JaVers instance with {@link JaversSqlRepository}
+     */
+    @Bean
+    public Javers javers() {
+        JaversSqlRepository sqlRepository = SqlRepositoryBuilder
+                .sqlRepository()
+                .withConnectionProvider(jpaConnectionProvider())
+                .withDialect(DialectName.H2)
+                .build();
+
+        return TransactionalJaversBuilder
+                .javers()
+                .registerJaversRepository(sqlRepository)
+                .build();
+    }
+
+    /**
+     * Enables Repository auto-audit aspect. <br/>
+     *
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate Spring Data Repositories
+     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
+     */
+    @Bean
+    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
+        return new JaversAuditableRepositoryAspect(javers(), authorProvider());
+    }
+
+    /**
+     * Required by Repository auto-audit aspect. <br/><br/>
+     *
+     * Returns mock implementation for testing.
+     * <br/>
+     * Provide real implementation,
+     * when using Spring Security you can use
+     * {@link org.javers.spring.auditable.SpringSecurityAuthorProvider}.
+     */
+    @Bean
+    public AuthorProvider authorProvider() {
+        return new AuthorProvider() {
+            @Override
+            public String provide() {
+                return "unknown";
+            }
+        };
+    }
+
+    /**
+     * Integrates {@link JaversSqlRepository} with Spring {@link JpaTransactionManager}
+     */
+    @Bean
+    public ConnectionProvider jpaConnectionProvider() {
+        return new JpaHibernateConnectionProvider();
+    }
+    //.. EOF JaVers setup ..
+
+
+    //.. Spring-JPA-Hibernate setup ..
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("org.javers.spring.model");
+
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(additionalProperties());
+
+        return em;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+
+        return transactionManager;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Bean
+    public DataSource dataSource(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        return dataSource;
+    }
+
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.connection.autocommit", "false");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        return properties;
+    }
+    //.. EOF Spring-JPA-Hibernate setup ..
+}
+```
