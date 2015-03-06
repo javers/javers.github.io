@@ -6,27 +6,46 @@ submenu: spring-integration
 
 # Spring integration
 
-<h2 id="spring-integration-introduction">Introduction</h2>
+
 
 Our main approach at JaVers is that our library should be very easy to use — so we made JaVers compatible with
-Spring Framework. Integration is based on `Spring AOP` and frees you from calling `javers.commit()` in Repository methods.
+Spring Framework.
 
-Only thing you need to do
-is to annotate all Repository methods that modify your data with `@JaversAuditable`.
-We use aspects to commit your changes to JaversRespository automatically, AWESOME!
+`javers-spring` module provides the following features:
 
-<h2 id="spring-int-usage">Usage</h2>
+* integration with [JpaTransactionManager](http://docs.spring.io/autorepo/docs/spring-framework/4.0.7.RELEASE/javadoc-api/org/springframework/orm/jpa/JpaTransactionManager.html)
+  for SQL databases,
+* annotations for Repository auto-commit (both SQL and NoSQL).
+
+<h2 id="jpa-transaction-manager-integration">JpaTransactionManager integration</h2>
+Transaction management is the important issue for applications backed by SQL databases.
+
+Generally, JaVers philosophy is to use application's transactions
+and never to call `commit` or `rollback` on his own.
+So all SQL statements executed by `JaversSQLRepository`
+should be executed in the context of the current application's transaction
+(called Persistence Context in JPA terminology).
+
+If you are using JPA and Hibernate, setup your JaversSQLRepository
+with `JpaHibernateConnectionProvider` which is Persistence Context aware
+and plays along with JpaTransactionManager.
+
+<h2 id="repository-auto-commit">Repository auto-commit</h2>
+
+Repository auto-commit is based on `Spring AOP` and frees you from calling `javers.commit()` in your Repositories.
+
+If you are using Spring Data, annotate your CRUD Repositories with `@JaversSpringDataAuditable`.
+For ordinary Repositories, use `@JaversAuditable` annotation to mark all data modifying methods.
+
+JaVers use aspects to commit your changes to JaversRespository automatically, AWESOME!
+
+...///
+
+<h2 id="spring-int-configuration">Configuration</h2>
 
 There are few steps you need to go through.
 
-First add `javers-spring-data` module to your classpath:
-
-```groovy
-compile 'org.javers:javers-spring-data:{{site.javers_current_version}}'
-```
-
-If you are not using `Spring Data` Repositories
-and don't want to put it on your classpath, choose `javers-spring` module instead of `javers-spring-data`:
+First add `javers-spring` module to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
