@@ -20,26 +20,89 @@ Only snapshots are persisted in a database.
 When commit is being read from a database, snapshots are deserialized from JSON
 and diff is re-calculated by comparing snapshot pairs.
 
-JaVers comes by default with in-memory repository implementation. It’s perfect for testing but
-for production environment you will need something real.
+By default, jaVers comes with in-memory repository implementation. It’s perfect for testing but
+for production environment you need something real.
 
 <h2 id="choose-javers-repository">Choose JaversRepository</h2>
 
 First, choose proper JaversRepository implementation.
-Currently, JaVers supports **MongoDB**.
-Support for SQL databases, is scheduled for release with JaVers 1.1.
+Currently, JaVers supports **MongoDB**, **H2**, **PostgreSQL** and **MySQL**.
 
-If you are using MongoDB, choose `org.javers.repository.mongo.MongoRepository`.
+Support for Oracle and MS SQL is scheduled for JaVers 1.2 release.
+
+
+<h3 id="mongodb-configuration">MongoDB</h3>
+If you are using MongoDB, choose `MongoRepository`.
 The idea of configuring MongoRepository is simple,
-just provide a working database client.
+just provide a working Mongo client.
 
 ```java
-Db database = ... //autowired or configured here,
-                  //preferably, use the same database connection
-                  //as you are using for your primary database
-MongoRepository mongoRepo =  new MongoRepository(database)
-JaversBuilder.javers().registerJaversRepository(mongoRepo).build()
+import org.javers.repository.mongo.MongoRepository;
+import com.mongodb.DB;
+...//
+
+//preferably, use the same database connection
+//as you are using for your primary database
+DB database = new Mongo("localhost").getDB("test");
+
+MongoRepository mongoRepo = new MongoRepository(database);
+Javers javers = JaversBuilder.javers().registerJaversRepository(mongoRepo).build();
 ```
+
+Here is the [Spring Config example](/documentation/spring-integration/#auto-audit-example) for MongoRepository.
+
+**Schema**<br/>
+JaVers creates two collections in MongoDB:
+
+* `jv_head_id` — one document with last CommitId,
+* `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
+
+<h3 id="sql-databases">SQL databases</h3>
+JaVers is meant to be as lightweight and versatile as possible.
+That’s why we are using [PolyJDBC](http://polyjdbc.org/) which
+is an abstraction layer over various SQL dialects.
+
+PolyJDBC is a relatively young project. For now it supports **H2**, **PostgreSQL** and **MySQL**.
+Other databases will be added soon.
+
+For testing, you can setup `JaversSqlRepository` as follows:
+
+```java
+import org.javers.repository.sql.JaversSqlRepository;
+import java.sql.Connection;
+import java.sql.DriverManager;
+... //
+
+final Connection dbConnection = DriverManager.getConnection("jdbc:h2:mem:test");
+
+ConnectionProvider connectionProvider = new ConnectionProvider() {
+    @Override
+    public Connection getConnection() {
+        //suitable only for testing!
+        return dbConnection;
+    }
+};
+
+JaversSqlRepository sqlRepository = SqlRepositoryBuilder
+        .sqlRepository()
+        .withConnectionProvider(connectionProvider)
+        .withDialect(DialectName.H2).build();
+Javers javers = JaversBuilder.javers().registerJaversRepository(sqlRepository).build();
+```
+
+**Transaction management**<br/>
+
+**Schema**<br/>
+JaVers creates four tables in SQL database:
+
+*  `jv_cdo_class` — domain object class names,
+*  `jv_global_id` — domain object identifiers,
+*  `jv_commit` — JaVers commits metadata,
+*  `jv_snapshot` — domain object snapshots.
+
+JaVers has simple schema-create implementation.
+If table is absent, JaVers simply creates it, together with sequence and indexes.
+There is no schema-update, so if you drop a column, index or sequence, it wouldn’t be recreated automatically.
 
 <h2 id="custom-json-serialization">Custom JSON serialization</h2>
 JaVers is meant to support various persistence stores for
