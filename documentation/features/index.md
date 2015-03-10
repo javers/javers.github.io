@@ -92,7 +92,7 @@ released on 2015-02-25
   Spring integration. Added `@JaversAuditable` aspect for auto-committing
   changed done in Repositories. <br/>
   [gessnerfl](https://github.com/gessnerfl) contributed `@JaversSpringDataAuditable`,
-  which gives a support for Spring-data Repositories.
+  which gives a support for Spring Data Repositories.
 
 ### 1.0.6
 released on 2015-02-10
