@@ -220,20 +220,19 @@ public class JaversSpringMongoApplicationConfig {
 ```
 
 <h2 id="jpa-transaction-manager-integration">JPA Transaction Manager integration</h2>
-Transaction management is the important issue for applications backed by SQL databases.
-
-Generally, JaVers philosophy is to use application's transactions
-and never to call SQL `commit` or `rollback` commands on his own.
-So all SQL statements executed by `JaversSQLRepository`
+Transaction management is the important issue for applications backed by SQL databases
+Generally, all SQL statements executed by `JaversSQLRepository`
 should be executed in the context of the current application's transaction
 (called Persistence Context in JPA terminology).
 
+Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
+and JaVers’ approach to transaction management.
+
 ### JaVers transactional instance as a Spring bean
 First, you need to register exactly one **transactional** JaVers instance in your Application Context.
+Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
 
-Second, you need register a transactional `ConnectionProvider`,
-which serves for your JaversSQLRepository as the source of live JDBC connections.
-
+Second, you need register a transactional ConnectionProvider.
 If you are using JPA with Hibernate, choose `JpaHibernateConnectionProvider`
 which is Persistence Context aware and plays along with JpaTransactionManager.
 
