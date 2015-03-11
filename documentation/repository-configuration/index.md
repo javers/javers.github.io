@@ -165,24 +165,23 @@ That’s where custom JSON `TypeAdapters` come into play.
 
 <h2 id="json-type-adapters">JSON TypeAdapters</h2>
 You can easily customize JaVers serialization/deserialization behavior
-by providing TypeAdapters for your `Value` types.
+by providing TypeAdapters for your `Value` types.  <br/>
+See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for ObjectId.
 
 JaVers supports two families of TypeAdapters.
-
 
 1. **JaVers family**, specified by the [JsonTypeAdapter]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
    It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has a nice API and isolates you (to some extent) from low level Gson API.
+   * [BasicStringTypeAdapter]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
+     is a convenient scaffolding implementation of the JsonTypeAdapter interface.
+     Extend it if you want to represent your Value type as atomic String
+     (and when you don’t want to deal with JSON API).
    * Implement the `JsonTypeAdapter` interface
      if you need full control over the JSON conversion process.
      Register your adapters with
      [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
-   * [`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
-     is a convenient scaffolding implementation of the JsonTypeAdapter interface.
-     Extend it if you want to represent your Value type as atomic String
-     (and when you don’t want to deal with JSON API).
-     See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for ObjectId.
 1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
     [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
      Register your adapters with
