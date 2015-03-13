@@ -119,7 +119,7 @@ So it’s highly important to implement it properly by comparing the underlying 
 For Values it’s advisable to customize the JSON serialization by implementing *Type Adapters*
 (see [custom json serialization](#custom-json-serialization)).
 
-<h3 id="mapping-configuration">Mapping configuration</h3>
+<h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
 and make sure that JaVers has got it. So what should you do?
 
@@ -227,7 +227,7 @@ There are two kinds of property level annotations.
 </tr>
 </table>
 
-<h3 id="entity-id-property">Entity Id property</h3>
+<h3 id="entity-id-property">Entity Id</h3>
 Entity `Id` has a special role in JaVers. It identifies an Entity instance.
 You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
 
@@ -316,7 +316,63 @@ Javers javers = JaversBuilder
 
 In both styles, access modifiers are not important, it could be private ;)
 
-<h3 id="custom-comparators">Custom Comparators</h3>
+<h3 id="ignoring-things">Ignoring things</h3>
+
+The ideal domain model contains only business relevant data and no technical clutter.
+Such a model is compact and neat. All domain objects and their properties are important and worth being persisted.
+
+In the real world, domain objects often contain various kind of noisy properties you don’t want to audit,
+such as dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
+auto-generated data and so on.
+
+It is important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
+This can be done by marking them as ignored.
+Ignored properties are omitted by both the JaVers diff algorithm and JaversRepository.
+
+Sometimes ignoring certain properties can dramatically improve performance.
+Imagine that you have a technical property updated every time an object is touched
+by some external system, for example:
+
+```
+public class User {
+   ...
+   private Timestamp lastSyncWithDWH; //updated daily to currentdate, when object is exported to DWH
+   ...
+}
+```
+
+Whenever a User is committed to JaversRepository,
+`lastSyncWithDWH` is likely to *cause* a new version of the User object, even if no important data are changed.
+Each new version means a new User snapshot persisted to JaversRepository
+and one more DB insert in your commit.
+
+**The rule of thumb:**<br/>
+check JaVers log messages with commit statistics, e.g.
+
+```
+23:49:01.155 [main] INFO  org.javers.core.Javers - Commit(id:1.0, snapshots:2, changes - NewObject:2)
+
+```
+If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
+
+**How to configure ignored properties**<br/>
+There are two ways to do this. First, you can use `@Transient` or `@DiffIgnore`
+[property annotations](#property-level-annotations) (this is the recommended way).
+
+Second, if you are not willing to use annotations, register your classes
+using
+[`JaversBuilder.registerEntity(EntityDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-org.javers.core.metamodel.clazz.EntityDefinition-)
+or
+[`JaversBuilder.registerValueObject(ValueObjectDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-org.javers.core.metamodel.clazz.ValueObjectDefinition-)
+, for example:
+
+```java
+JaversBuildert.javers()
+        .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
+        .build();
+```
+
+<h2 id="custom-comparators">Custom Comparators</h2>
 
 There are cases where JaVers’ default diff algorithm isn’t appropriate.
 A good example is custom collections, like Guava’s [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html),
@@ -423,62 +479,6 @@ public class CustomBigDecimalComparator implements CustomPropertyComparator<BigD
         return new ValueChange(affectedId, property, left, right);
     }
 }
-```
-
-<h3 id="ignoring-things">Ignoring things</h3>
-
-The ideal domain model contains only business relevant data and no technical clutter.
-Such a model is compact and neat. All domain objects and their properties are important and worth being persisted.
-
-In the real world, domain objects often contain various kind of noisy properties you don’t want to audit,
-such as dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
-auto-generated data and so on.
-
-It is important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
-This can be done by marking them as ignored.
-Ignored properties are omitted by both the JaVers diff algorithm and JaversRepository.
-
-Sometimes ignoring certain properties can dramatically improve performance.
-Imagine that you have a technical property updated every time an object is touched
-by some external system, for example:
-
-```
-public class User {
-   ...
-   private Timestamp lastSyncWithDWH; //updated daily to currentdate, when object is exported to DWH
-   ...
-}
-```
-
-Whenever a User is committed to JaversRepository,
-`lastSyncWithDWH` is likely to *cause* a new version of the User object, even if no important data are changed.
-Each new version means a new User snapshot persisted to JaversRepository
-and one more DB insert in your commit.
-
-**The rule of thumb:**<br/>
-check JaVers log messages with commit statistics, e.g.
-
-```
-23:49:01.155 [main] INFO  org.javers.core.Javers - Commit(id:1.0, snapshots:2, changes - NewObject:2)
-
-```
-If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
-
-**How to configure ignored properties**<br/>
-There are two ways to do this. First, you can use `@Transient` or `@DiffIgnore`
-[property annotations](#property-level-annotations) (this is the recommended way).
-
-Second, if you are not willing to use annotations, register your classes
-using
-[`JaversBuilder.registerEntity(EntityDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-org.javers.core.metamodel.clazz.EntityDefinition-)
-or
-[`JaversBuilder.registerValueObject(ValueObjectDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-org.javers.core.metamodel.clazz.ValueObjectDefinition-)
-, for example:
-
-```java
-JaversBuildert.javers()
-        .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
-        .build();
 ```
 
 

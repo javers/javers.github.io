@@ -36,7 +36,7 @@ JaVers object diff is the easiest way to deeply compare two object graphs.
 * Take a look at [diff examples](/documentation/diff-examples).
 
 <h2 id="javers-repository">JaVers Repository</h2>
-[JaversRepository]({{ site.javadoc_url }}index.html?org/javers/repository/api/JaversRepository.html)
+[`JaversRepository`]({{ site.javadoc_url }}index.html?org/javers/repository/api/JaversRepository.html)
 is the central part of our data auditing engine.
 
 It tracks every change made on your data (both values and relations) so you can easily identify when the change was made,
@@ -48,7 +48,7 @@ who made it and what was the value before and after.
   JaVers instance (see [configuration](/documentation/domain-configuration)).
 
 * Integrate JaVers with your system by applying 
-  the [javers.commit()]({{ site.javadoc_url }}org/javers/core/Javers.html#commit-java.lang.String-java.lang.Object-)
+  the [`javers.commit()`]({{ site.javadoc_url }}org/javers/core/Javers.html#commit-java.lang.String-java.lang.Object-)
   function in every place where 
   important data (domain objects) are being created and modified by application users.
   
@@ -57,10 +57,13 @@ who made it and what was the value before and after.
   `javers.commit()` and deeply compares the whole structure with the previous version stored in JaversRepository.
   Thanks to that approach, you can commit large structures, like trees, graphs and DDD aggregates with a single
   `commit()` call.
-  
+
+* If you are using Spring Data, annotate your Repositories with @JaversSpringDataAuditable
+  and take advantage of the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
+
 * Once your domain objects are being managed by JaVers, you can query JaVers about change history.
   Use a unified
-  [GlobalId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
+  [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
   to identify both Entities and ValueObjects.
   
 * JaVers provides two views on object change history: diffs and snapshots.
@@ -71,7 +74,11 @@ who made it and what was the value before and after.
 * Take a look at [repository examples](/documentation/repository-examples).
 
 JaversRepository is designed to be easily implemented for any kind of database.
-At the moment we provide MongoDB implementation. SQL implementation will be provided soon.
+At the moment we provide **MongoDB** implementation and
+**SQL** implementation for the folowing dialects: MySQL, PostgreSQL and H2.
+Support for MS SQL and Oracle dialects will be  provided soon.
+See [repository configuratoin](/documentation/repository-configuration/).
+
 If you are using another database, for example Cassandra, you are encouraged to implement
 the JaversRepository interface and contribute it to JaVers project.
 
@@ -84,6 +91,12 @@ with minimal mapping configuration effort
 
 
 <h2 id="release-notes">Release notes</h2>
+
+### 1.1.0
+released on 2015-03-13<br/>
+
+* [#67](https://github.com/javers/javers/issues/67) JaversSQLRepository with support for MySQL, PostgreSQL and H2
+* [#89](https://github.com/javers/javers/issues/89) Spring JPA Transaction Manager integration for Hibernate.
 
 ### 1.0.7
 released on 2015-02-25
