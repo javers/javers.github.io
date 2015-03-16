@@ -92,6 +92,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.1.1
+released on 2015-03-17<br/>
+
+* [#97](https://github.com/javers/javers/issues/97) Levenshtein distance algorithm for smart list compare.
+  Contributed by [Kornel Kiełczewski](https://github.com/Kornel).
+
 ### 1.1.0
 released on 2015-03-13<br/>
 

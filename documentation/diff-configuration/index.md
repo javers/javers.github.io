@@ -16,7 +16,7 @@ For [comparing Lists](#list-algorithms), JaVers has two core comparators, pick o
 
 
 <h2 id="list-algorithms">List comparing algorithms</h2>
-Choose between two algorithms for comparing list,
+Choose between two algorithms for comparing list:
 [SIMPLE](#list-algorithm-simple) or [LEVENSHTEIN](#list-algorithm-levenshtein) distance.
 
 Generally, we recommend using LEVENSHTEIN, because it’s smarter.
