@@ -10,6 +10,7 @@ org.javers.core.changelog
 org.javers.core.commit
 org.javers.core.diff
 org.javers.core.diff.appenders
+org.javers.core.diff.appenders.levenshtein
 org.javers.core.diff.changetype
 org.javers.core.diff.changetype.container
 org.javers.core.diff.changetype.map

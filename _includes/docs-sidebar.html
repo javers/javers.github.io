@@ -72,7 +72,6 @@
         <li><a href="#entity-id-property">&nbsp; &nbsp; Entity Id</a></li>
         <li><a href="#property-mapping-style">&nbsp; &nbsp; Property mapping style</a></li>
         <li><a href="#ignoring-things">&nbsp; &nbsp; Ignoring things</a></li>
-        <li><a href="#custom-comparators">Custom Comparators</a></li>
     </ul>
 </section>
 
@@ -88,6 +87,18 @@
         <li><a href="#json-type-adapters">JSON TypeAdapters</a>
     </ul>
 </section>
+
+<section>
+    <a {% if currentSubPage == 'diff-configuration' %}class='active'{% endif %}
+    href="/documentation/diff-configuration">Configuration &mdash; Diff</a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'diff-configuration' %} hidden {% endif %}">
+        <li><a href="#list-algorithms">List comparing algorithms</a></li>
+        <li><a href="#list-algorithm-simple">&nbsp; &nbsp;Simple algorithm</a></li>
+        <li><a href="#list-algorithm-levenshtein">&nbsp; &nbsp;Levenshtein distance</a></li>
+        <li><a href="#custom-comparators">Custom comparators</a></li>
+    </ul>
+</section>
+
 
 <section>
     <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">Spring integration</a>
