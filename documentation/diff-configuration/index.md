@@ -17,12 +17,12 @@ For [comparing Lists](#list-algorithms), JaVers has two core comparators, pick o
 
 <h2 id="list-algorithms">List comparing algorithms</h2>
 Choose between two algorithms for comparing list:
-[SIMPLE](#list-algorithm-simple) or [LEVENSHTEIN](#list-algorithm-levenshtein) distance.
+[SIMPLE](#list-algorithm-simple) or [Levenshtein](#list-algorithm-levenshtein) distance.
 
-Generally, we recommend using LEVENSHTEIN, because it’s smarter.
+Generally, we recommend using Levenshtein, because it’s smarter.
 Hoverer, it can be slow for long lists, so SIMPLE is enabled by default.
 
-You can switch to LEVENSHTEIN in JaversBuilder:
+You can switch to Levenshtein in JaversBuilder:
 
 ```
     Javers javers = JaversBuilder
@@ -46,9 +46,10 @@ For example, for these two lists:
 SIMPLE algorithm generates **three** changes:
 
 ```
-    (0).'A'>>'B'
-    (1).'B'>>'C'
-    (2).removed:'C'
+    [ ValueChange(0,'A','B')
+      ValueChange(1,'B','C')
+      ValueRemoved(2,'C')
+    ]
 ```
 
 The main advantage of SIMPLE algorithm is speed, it has linear computation complexity.
@@ -56,7 +57,7 @@ The main disadvantage is a verbose output.
 
 <h3 id="list-algorithm-levenshtein">Levenshtein distance</h3>
 
-LEVENSHTEIN algorithm calculates short and clear change lists even
+Levenshtein algorithm calculates short and clear change list even
 in case when elements are shifted.
 It doesn’t care about index changes for shifted elements.
 
@@ -67,15 +68,27 @@ For example, for these two lists:
     right = [B, C]
 ```
 
-LEVENSHTEIN algorithm calculates **one** change:
+Levenshtein algorithm calculates only **one** change:
 
 ```
-    (0).removed:'A'
+    ValueRemoved(0,'A')
 ```
 
 For the same input, SIMPLE calculates **three** change.
-So as you can see, LEVENSHTEIN algorithm is far more smarter but could be slow for long lists,
+So as you can see, Levenshtein algorithm is far more smarter but could be slow for long lists,
 say more then 300 elements.
+
+**More about Levenshtein distance**<br/>
+The idea is based on the [Levenshtein edit distance](http://en.wikipedia.org/wiki/Levenshtein_distance)
+algorithm, usually used for comparing Strings.
+That is answering the question what changes should be done to go from one String to another?
+
+Since a list of characters (i.e. String) is equal to a list of objects up to isomorphism
+we can use the same algorithm for finding the Levenshtein edit distance for list of objects.
+
+The algorithm is based on computing the shortest path in a DAG. It takes both `O(nm)` space
+and time. Further work should improve it to take `O(n)` space and `O(nm)` time (n and m being
+the length of both compared lists).
 
 <h2 id="custom-comparators">Custom Comparators</h2>
 
