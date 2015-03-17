@@ -101,7 +101,7 @@ released on 2015-03-17<br/>
 ### 1.1.0
 released on 2015-03-13<br/>
 
-* [#67](https://github.com/javers/javers/issues/67) JaversSQLRepository with support for MySQL, PostgreSQL and H2
+* [#67](https://github.com/javers/javers/issues/67) JaversSQLRepository with support for MySQL, PostgreSQL and H2.
 * [#89](https://github.com/javers/javers/issues/89) Spring JPA Transaction Manager integration for Hibernate.
 
 ### 1.0.7
@@ -118,7 +118,7 @@ released on 2015-02-10
 
 * [#94](https://github.com/javers/javers/issues/94)
   Specifying ignored properties without annotations.
-  <br/>Reported by [Chuck May](https://github.com/ctmay4)
+  <br/>Reported by [Chuck May](https://github.com/ctmay4).
 
 ### 1.0.5
 released on 2015-02-01
@@ -126,7 +126,7 @@ released on 2015-02-01
 * [#76](https://github.com/javers/javers/issues/76)
   AddedSupport for nested generic types like `List<List<String>>` or `List<ThreadLocal<String>>`.
   Reported by [Chuck May](https://github.com/ctmay4)
-* fixed NPE in MongoRepository
+* Fixed NPE in MongoRepository.
 
 ### 1.0.4
 released on 2015-01-20
@@ -143,26 +143,26 @@ released on 2015-01-12
 
 * [#77](https://github.com/javers/javers/issues/77)
   Added missing feature in Generics support.
-  <br/>Reported by [Bryan Hunt](https://github.com/binarytemple)
+  <br/>Reported by [Bryan Hunt](https://github.com/binarytemple).
 
 * [#71](https://github.com/javers/javers/issues/71)
   Tracking a top-level object deletion.
-  <br/>Reported by [Chuck May](https://github.com/ctmay4)
+  <br/>Reported by [Chuck May](https://github.com/ctmay4).
 
 ### 1.0.2
 released on 2015-01-08
 
 * [#78](https://github.com/javers/javers/issues/78)
-  NullPointerException at ReflectionUtil.getAllFields() when using interface as a variable type
+  NullPointerException at ReflectionUtil.getAllFields() when using interface as a variable type.
 
 ### 1.0.1
 released on 2015-01-03
 
 * [#73](https://github.com/javers/javers/issues/73) Listing newObject event on change history.
-  <br/>Reported by [Chuck May](https://github.com/ctmay4)
+  <br/>Reported by [Chuck May](https://github.com/ctmay4).
 
 
 ### 1.0.0
 released on 2014-12-25
 
-* Production-ready release with stable API
+* Production-ready release with stable API.
