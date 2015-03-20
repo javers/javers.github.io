@@ -35,7 +35,7 @@ You can switch to Levenshtein in JaversBuilder:
         .build();
 ```
 
-<h3 id="list-algorithm-simple">Simple vs Levenshtein algorithm </h3>
+<h3 id="simple-vs-levenshtein">Simple vs Levenshtein algorithm</h3>
 
 SIMPLE algorithm generates changes for shifted elements (in case when elements are inserted or removed in the middle of a list).
 On the contrary, Levenshtein algorithm calculates short and clear change list even in case when elements are shifted.
@@ -104,7 +104,7 @@ the change list will the same:
     </tr>
 </table>
 
-**More about Levenshtein distance**<br/>
+<h3 id="more-about-levenshtein">More about Levenshtein distance</h3>
 The idea is based on the [Levenshtein edit distance](http://en.wikipedia.org/wiki/Levenshtein_distance)
 algorithm, usually used for comparing Strings.
 That is answering the question what changes should be done to go from one String to another?
