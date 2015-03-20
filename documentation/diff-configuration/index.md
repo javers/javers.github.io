@@ -16,69 +16,95 @@ For [comparing Lists](#list-algorithms), JaVers has two core comparators, pick o
 
 
 <h2 id="list-algorithms">List comparing algorithms</h2>
-Choose between two algorithms for comparing list:
-[SIMPLE](#list-algorithm-simple) or [Levenshtein](#list-algorithm-levenshtein) distance.
+Choose between two algorithms for comparing list: SIMPLE (default)
+or Levenshtein distance.
 
-Generally, we recommend using Levenshtein, because it’s smarter.
-Hoverer, it can be slow for long lists, so SIMPLE is enabled by default.
+Generally, we recommend using **Levenshtein**, because it’s smarter.
+But use it with caution, it could be slow for long lists,
+say more then 300 elements.
+
+The main advantage of **SIMPLE** algorithm is speed, it has linear computation complexity.
+The main disadvantage is a verbose output.
 
 You can switch to Levenshtein in JaversBuilder:
 
-```
+```java
     Javers javers = JaversBuilder
         .javers()
         .withListCompareAlgorithm(ListCompareAlgorithm.LEVENSHTEIN_DISTANCE)
         .build();
 ```
 
-<h3 id="list-algorithm-simple">Simple algorithm</h3>
+<h3 id="simple-vs-levenshtein">Simple vs Levenshtein algorithm</h3>
 
-SIMPLE algorithm generates changes for shifted elements
-(in case when elements are inserted or removed in the middle of a list).
-
-For example, for these two lists:
-
-```
-    left =  [A, B, C]
-    right = [B, C]
-```
-
-SIMPLE algorithm generates **three** changes:
-
-```
-    [ ValueChange(0,'A','B')
-      ValueChange(1,'B','C')
-      ValueRemoved(2,'C')
-    ]
-```
-
-The main advantage of SIMPLE algorithm is speed, it has linear computation complexity.
-The main disadvantage is a verbose output.
-
-<h3 id="list-algorithm-levenshtein">Levenshtein distance</h3>
-
-Levenshtein algorithm calculates short and clear change list even
-in case when elements are shifted.
+SIMPLE algorithm generates changes for shifted elements (in case when elements are inserted or removed in the middle of a list).
+On the contrary, Levenshtein algorithm calculates short and clear change list even in case when elements are shifted.
 It doesn’t care about index changes for shifted elements.
 
-For example, for these two lists:
+For example, when we remove one element from a list:
 
-```
-    left =  [A, B, C]
-    right = [B, C]
-```
-
-Levenshtein algorithm calculates only **one** change:
-
-```
-    ValueRemoved(0,'A')
+```java
+javers.compare(['a','b','c','d','e'],
+               ['a','c','d','e'])
 ```
 
-For the same input, SIMPLE calculates **three** change.
-So as you can see, Levenshtein algorithm is far more smarter but could be slow for long lists,
-say more then 300 elements.
+the change list will be different, depending on chosen algorithm:
 
-**More about Levenshtein distance**<br/>
+<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
+    <tr>
+        <th>
+        Output from Simple algorithm
+        </th>
+        <th>
+            Output from Levenshtein algorithm
+        </th>
+    </tr>
+    <tr>
+        <td>
+            (1). 'b'>>'c' <br />
+            (2). 'c'>>'d' <br />
+            (3). 'd'>>'e' <br />
+            (4). removed:'e'
+        </td>
+        <td>
+            (1). removed: 'b'
+        </td>
+    </tr>
+</table>
+
+But when both lists have the same size:
+
+```java
+javers.compare(['a','b','c','d'],
+               ['a','g','e','i'])
+```
+
+the change list will the same:
+
+<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
+    <tr>
+        <th>
+        Simple algorithm
+        </th>
+        <th>
+            Levenshtein algorithm
+        </th>
+    </tr>
+    <tr>
+        <td>
+            (1). 'b'>>'g' <br />
+            (2). 'c'>>'e' <br />
+            (3). 'd'>>'i' <br />
+        </td>
+        <td>
+            (1). 'b'>>'g' <br />
+            (2). 'c'>>'e' <br />
+            (3). 'd'>>'i' <br />
+        </td>
+    </tr>
+</table>
+
+<h3 id="more-about-levenshtein">More about Levenshtein distance</h3>
 The idea is based on the [Levenshtein edit distance](http://en.wikipedia.org/wiki/Levenshtein_distance)
 algorithm, usually used for comparing Strings.
 That is answering the question what changes should be done to go from one String to another?
