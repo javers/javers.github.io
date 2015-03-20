@@ -16,67 +16,70 @@ For [comparing Lists](#list-algorithms), JaVers has two core comparators, pick o
 
 
 <h2 id="list-algorithms">List comparing algorithms</h2>
-Choose between two algorithms for comparing list:
-SIMPLE or Levenshtein distance.
+Choose between two algorithms for comparing list: SIMPLE (default)
+or Levenshtein distance.
 
-Generally, we recommend using Levenshtein, because it’s smarter.
-Hoverer, it can be slow for long lists, so SIMPLE is enabled by default.
+Generally, we recommend using **Levenshtein**, because it’s smarter.
+But use it with caution, it could be slow for long lists,
+say more then 300 elements.
+
+The main advantage of **SIMPLE** algorithm is speed, it has linear computation complexity.
+The main disadvantage is a verbose output.
 
 You can switch to Levenshtein in JaversBuilder:
 
-```
+```java
     Javers javers = JaversBuilder
         .javers()
         .withListCompareAlgorithm(ListCompareAlgorithm.LEVENSHTEIN_DISTANCE)
         .build();
 ```
 
-<h3 id="list-algorithm-simple">Simple vs Levenstein algorithm </h3>
+<h3 id="list-algorithm-simple">Simple vs Levenshtein algorithm </h3>
 
-SIMPLE algorithm generates changes for shifted elements (in case when elements are inserted or removed in the middle of a list). 
-Levenshtein algorithm calculates short and clear change list even in case when elements are shifted.
+SIMPLE algorithm generates changes for shifted elements (in case when elements are inserted or removed in the middle of a list).
+On the contrary, Levenshtein algorithm calculates short and clear change list even in case when elements are shifted.
 It doesn’t care about index changes for shifted elements.
 
-For example:
+For example, when we remove one element from a list:
 
-**1. Remove element from beginning of the list**
+```java
+javers.compare(['a','b','c','d','e'],
+               ['a','c','d','e'])
+```
 
-```
-['a','b','c','d','e','f','g','h','i'] -> ['a','b','d','e','f','g','h','i']
-```
+the change list will be different, depending on chosen algorithm:
 
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
     <tr>
         <th>
-        Simple algorithm
+        Output from Simple algorithm
         </th>
         <th>
-            Levenstein algorithm
+            Output from Levenshtein algorithm
         </th>
     </tr>
     <tr>
         <td>
+            (1). 'b'>>'c' <br />
             (2). 'c'>>'d' <br />
             (3). 'd'>>'e' <br />
-            (4). 'e'>>'f' <br />
-            (5). 'f'>>'g' <br />
-            (6). 'g'>>'h' <br />
-            (7). 'h'>>'i' <br />
-            (8). removed:'i'
+            (4). removed:'e'
         </td>
         <td>
-            (2). removed: 'c'
+            (1). removed: 'b'
         </td>
     </tr>
 </table>
 
-For the same input, SIMPLE calculates **three** change while Levenstein only **one**.
+But when both lists have the same size:
 
-**2. Add element to beginning**
+```java
+javers.compare(['a','b','c','d'],
+               ['a','g','e','i'])
+```
 
-```
-['a','b','c','d','e','f','g','h','i'] -> ['a','b','x','d','e','f','g','h','i']
-```
+the change list will the same:
 
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
     <tr>
@@ -84,76 +87,22 @@ For the same input, SIMPLE calculates **three** change while Levenstein only **o
         Simple algorithm
         </th>
         <th>
-            Levenstein algorithm
+            Levenshtein algorithm
         </th>
     </tr>
     <tr>
         <td>
-            (2). 'c'>>'x' <br />
-            (3). 'd'>>'c' <br />
-            (4). 'e'>>'d' <br />
-            (5). 'f'>>'e' <br />
-            (6). 'g'>>'f' <br />
-            (7). 'h'>>'g' <br />
-            (8). 'i'>>'h' <br />
-            (9). added:'i'
-        </td>
-        <td>
-            (2). added:'x'
-        </td>
-    </tr>
-</table>
-
-Simple generates changes for shifted elements so there are **nine** changes, Levenstein is smarter so generates only **one** change.
-
-**3. Shuffle elements**
-
-```
-['a','b','c','d','e','f','g','h','i'] -> ['h','g','e','i','a','c','b','d','f']
-```
-<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
-    <tr>
-        <th>
-        Simple algorithm
-        </th>
-        <th>
-            Levenstein algorithm
-        </th>
-    </tr>
-    <tr>
-        <td>
-            (0). 'a'>>'h' <br />
             (1). 'b'>>'g' <br />
             (2). 'c'>>'e' <br />
             (3). 'd'>>'i' <br />
-            (4). 'e'>>'a' <br />
-            (5). 'f'>>'c' <br />
-            (6). 'g'>>'b' <br />
-            (7). 'h'>>'d' <br />
-            (8). 'i'>>'f'
         </td>
         <td>
-            (0). 'a'>>'h' <br />
             (1). 'b'>>'g' <br />
             (2). 'c'>>'e' <br />
             (3). 'd'>>'i' <br />
-            (4). 'e'>>'a' <br />
-            (5). 'f'>>'c' <br />
-            (6). 'g'>>'b' <br />
-            (7). 'h'>>'d' <br />
-            (8). 'i'>>'f'
         </td>
     </tr>
 </table>
-
-When we shuffle all elements the output is the same for SIMPLE and Levenstein.
-
-The main advantage of SIMPLE algorithm is speed, it has linear computation complexity.
-The main disadvantage is a verbose output.
-
-Levenshtein algorithm is far more smarter but could be slow for long lists,
-say more then 300 elements.
-
 
 **More about Levenshtein distance**<br/>
 The idea is based on the [Levenshtein edit distance](http://en.wikipedia.org/wiki/Levenshtein_distance)
