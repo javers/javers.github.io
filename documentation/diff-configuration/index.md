@@ -186,14 +186,14 @@ JaversBuilder.javers()
 The same rules apply if you want to change JaVers’ default diff algorithm
 for existing Value type, for example `BigDecimal`.
 
-For Values, JaVers simply uses `equals()`, if it isn’t appropriate for you,
+For Values, JaVers simply uses `equals()`. If this isn’t appropriate for you,
 override it with a Custom comparator.
-For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecimals before compare:
+For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecimals before comparing them:
 
 ```java
 /**
  * Compares BigDecimals with custom precision.
- * Before compare, values are rounded (HALF_UP) to required scale.
+ * Before comparing, values are rounded (HALF_UP) to required scale.
  * <br/><br/>
  *
  * Usage example:

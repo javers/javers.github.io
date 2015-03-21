@@ -6,33 +6,32 @@ submenu: repository-configuration
 
 # JaVers Repository Configuration
 
-If you are going to use JaVers as a data audit framework you are supposed to configure `JaversRepository`.
+If you’re going to use JaVers as a data audit framework you should configure `JaversRepository`.
 
 The purpose of JaversRepository is to store JaVers commits in your database,
 alongside your domain data. JSON format is used for serializing your data.
-This approach significantly simplifies JaversRepository construction.
-The hardest work — mapping domain object to persistent format (JSON)
+This approach significantly simplifies the construction of JaversRepository.
+The hardest work — mapping domain objects to persistent format (JSON) —
 is done by javers-core.
 This common JSON format is used by many JaversRepository implementations.
 
 In runtime, JaVers commit holds a list of domain object snapshots and a list of changes (a diff).
 Only snapshots are persisted in a database.
-When commit is being read from a database, snapshots are deserialized from JSON
-and diff is re-calculated by comparing snapshot pairs.
+When JaVers commit is being read from a database, snapshots are deserialized from JSON
+and the diff is re-calculated by comparing snapshot pairs.
 
-By default, jaVers comes with in-memory repository implementation. It’s perfect for testing but
-for production environment you need something real.
+By default, JaVers comes with in-memory repository implementation. It’s perfect for testing,
+but for production environment you need something real.
 
 <h2 id="choose-javers-repository">Choose JaversRepository</h2>
 
 First, choose proper JaversRepository implementation.
 Currently, JaVers supports **MongoDB**, **H2**, **PostgreSQL** and **MySQL**.
 
-Support for Oracle and MS SQL is scheduled for JaVers 1.2 release.
-
+Support for Oracle and MS SQL is scheduled for JaVers 1.3 release.
 
 <h2 id="mongodb-configuration">MongoDB</h2>
-If you are using MongoDB, choose `MongoRepository`.
+If you’re using MongoDB, choose `MongoRepository`.
 The idea of configuring MongoRepository is simple,
 just provide a working Mongo client.
 
@@ -49,17 +48,17 @@ MongoRepository mongoRepo = new MongoRepository(database);
 Javers javers = JaversBuilder.javers().registerJaversRepository(mongoRepo).build();
 ```
 
-Here is the [Spring Config example](/documentation/spring-integration/#auto-audit-example) for MongoRepository.
+Here’s the [Spring Config example](/documentation/spring-integration/#auto-audit-example) for MongoRepository.
 
 **Schema**<br/>
 JaVers creates two collections in MongoDB:
 
-* `jv_head_id` — one document with last CommitId,
+* `jv_head_id` — one document with the last CommitId,
 * `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
 
 <h2 id="sql-databases">SQL databases</h2>
 JaVers is meant to be as lightweight and versatile as possible.
-That’s why we are using [PolyJDBC](http://polyjdbc.org/) which
+That’s why we use [PolyJDBC](http://polyjdbc.org/), which
 is an abstraction layer over various SQL dialects.
 
 PolyJDBC is a relatively young project. For now, it supports **H2**, **PostgreSQL** and **MySQL**.
@@ -90,27 +89,27 @@ JaversSqlRepository sqlRepository = SqlRepositoryBuilder
 Javers javers = JaversBuilder.javers().registerJaversRepository(sqlRepository).build();
 ```
 
-As you can see, to setup JaversSqlRepository you need to provide two things: SQL dialect name
+As you can see, to setup JaversSqlRepository you need to provide two things: an SQL dialect name
 and a `ConnectionProvider` implementation.
 
 <h3 id="connection-provider">ConnectionProvider</h3>
-ConnectionProvider serves for your JaversSQLRepository as the source of live JDBC connections.
+ConnectionProvider serves as the source of live JDBC connections for your JaversSQLRepository.
 JaversSqlRepository works in *passive* mode, which means:
 
-* JaVers doesn’t create JDBC connections on his own and uses connections provided by an application
+* JaVers doesn’t create JDBC connections on its own and uses connections provided by an application
   (via `ConnectionProvider.getConnection()`).
 * JaVers philosophy is to use application’s transactions
-  and never to call SQL `commit` or `rollback` commands on his own.
+  and never to call SQL `commit` or `rollback` commands on its own.
 
-Thanks to this approach, data managed by application (domain objects) and data managed by JaVers (object snapshots)
+Thanks to this approach, data managed by an application (domain objects) and data managed by JaVers (object snapshots)
 can be saved to SQL database in one transaction.
 
-If you are using a **transaction manager**, implement a ConnectionProvider to integrate with it.
+If you’re using a **transaction manager**, implement a ConnectionProvider to integrate with it.
 For Spring users, we have out-of-the-box implementation: `JpaHibernateConnectionProvider` from `javers-spring` module.
-Choose it, if you are using Spring/JPA/Hibernate stack (see [JPA Transaction Manager integration](/documentation/spring-integration/#jpa-transaction-manager-integration)).
+Choose this, if you’re using Spring/JPA/Hibernate stack (see [JPA Transaction Manager integration](/documentation/spring-integration/#jpa-transaction-manager-integration)).
 
-If you are not using any kind of transaction manager, implement a ConnectionProvider to return
-current connection (thread-safely).
+If you’re not using any kind of transaction manager, implement a ConnectionProvider to return
+the current connection (thread-safely).
 
 **Schema**<br/>
 JaVers creates four tables in SQL database:
@@ -120,9 +119,9 @@ JaVers creates four tables in SQL database:
 *  `jv_commit` — JaVers commits metadata,
 *  `jv_snapshot` — domain object snapshots.
 
-JaVers has simple schema-create implementation.
-If table is absent, JaVers simply creates it, together with sequence and indexes.
-There is no schema-update, so if you drop a column, index or sequence, it wouldn’t be recreated automatically.
+JaVers has a simple schema-create implementation.
+If a table is missing, JaVers simply creates it, together with a sequence and indexes.
+There’s no schema-update, so if you drop a column, index or sequence, it wouldn’t be recreated automatically.
 
 <h2 id="custom-json-serialization">Custom JSON serialization</h2>
 JaVers is meant to support various persistence stores for
