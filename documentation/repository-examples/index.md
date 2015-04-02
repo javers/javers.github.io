@@ -267,16 +267,20 @@ gets two trainees assigned as subordinates.
 Our goal is to print Bob’s detailed change log with dates,
 commit authors, and change flow, like this:
 
-    commit 3.0, author:hr.manager, 2015-01-03 19:49:36
+    commit 3.0, author: hr.manager, 2015-04-02 18:14:16
       changed object: org.javers.core.examples.model.Employee/Bob
         list changed on 'subordinates' property: [
         (0).added:'org.javers.core.examples.model.Employee/Trainee One',
         (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
-    commit 2.0, author:hr.director, 2015-01-03 19:49:36
+    commit 2.0, author: hr.director, 2015-04-02 18:14:16
       changed object: org.javers.core.examples.model.Employee/Bob
         value changed on 'position' property: 'Scrum master' -> 'Team Lead'
         value changed on 'salary' property: '9000' -> '11000'
-    commit 1.0, author:hr.manager, 2015-01-03 19:49:35
+    commit 1.0, author: hr.manager, 2015-04-02 18:14:16
+      changed object: org.javers.core.examples.model.Employee/Bob
+        value changed on 'name' property: 'null' -> 'Bob'
+        value changed on 'position' property: 'null' -> 'Scrum master'
+        value changed on 'salary' property: '0' -> '9000'
         new object: org.javers.core.examples.model.Employee/Bob
 
 We use text format here for brevity but ChangeProcessor API
