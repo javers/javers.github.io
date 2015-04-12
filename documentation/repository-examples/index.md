@@ -232,7 +232,7 @@ public class BasicCommitExample {
         // when:
         // list change history
         List<Change> changes = javers.findChanges(
-            QueryBuilder.byInstanceId("bob", Person.class).build());
+                QueryBuilder.byInstanceId("bob", Person.class).build());
 
         // then:
         // there should be one ValueChange with Bob's firstName
@@ -250,9 +250,6 @@ public class BasicCommitExample {
         assertThat(change.getProperty().getName()).isEqualTo("name");
         assertThat(change.getLeft()).isNull();
         assertThat(change.getRight()).isEqualTo("Robert Martin");
-
-        //and one NewObject change for Bob's initial commit
-        assertThat(changes.get(3)).isInstanceOf(NewObject.class);
     }
 }
 ```
