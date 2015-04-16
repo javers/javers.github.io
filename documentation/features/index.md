@@ -92,6 +92,17 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.0 JQL
+released on 2015-04-20<br/>
+
+* [#36](https://github.com/javers/javers/issues/36) Javers Query Language.
+  New fluent API for querying JaversRepository.
+  New query types: by class, by property and more. See //TODO
+* [#98](https://github.com/javers/javers/issues/98) Track changes in collection. Tracking VO changes while looking at master Entity.
+* [#118](https://github.com/javers/javers/issues/118) API to get change history for a given property.
+* [#128](https://github.com/javers/javers/issues/128) Changes of a set of entities.
+* [#129](https://github.com/javers/javers/issues/129) Lists: newObject and ValueChange?
+
 ### 1.1.1
 released on 2015-03-17<br/>
 
