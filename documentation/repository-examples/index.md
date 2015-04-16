@@ -49,7 +49,7 @@ Person is a typical Entity
 (see [domain-model-mapping](/documentation/domain-configuration/#entity) for Entity definition).
 JaVers uses [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
 for identifying and querying Entities.
-In this case, it’s expressed as `InstanceIdDTO.instanceId("bob", Person.class)`.
+In this case, it’s expressed as `instanceId("bob", Person.class)`.
 
 `Person.class:`
 
@@ -162,9 +162,9 @@ public class BasicCommitExample {
         javers.commit("user", robert);
 
         // when:
-        // list state history — snapshots
+        // list state history - last 10 snapshots
         List<CdoSnapshot> snapshots = javers.findSnapshots(
-            QueryBuilder.byInstanceId("bob", Person.class).build());
+            QueryBuilder.byInstanceId("bob", Person.class).limit(10).build());
 
         // then:
         // there should be two Snapshots with Bob’s state
@@ -254,6 +254,8 @@ public class BasicCommitExample {
 }
 ```
 
+<h2 id="jql">Javers Query Language</h2>
+
 <h2 id="change-log">Change log</h2>
 In this example we show how to create a change log &mdash;
 a nicely formatted list of changes done on a particular object.
@@ -272,21 +274,20 @@ gets two trainees assigned as subordinates.
 Our goal is to print Bob’s detailed change log with dates,
 commit authors, and change flow, like this:
 
-    commit 3.0, author: hr.manager, 2015-04-02 18:14:16
-      changed object: org.javers.core.examples.model.Employee/Bob
-        list changed on 'subordinates' property: [
-        (0).added:'org.javers.core.examples.model.Employee/Trainee One',
-        (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
-    commit 2.0, author: hr.director, 2015-04-02 18:14:16
-      changed object: org.javers.core.examples.model.Employee/Bob
-        value changed on 'position' property: 'Scrum master' -> 'Team Lead'
-        value changed on 'salary' property: '9000' -> '11000'
-    commit 1.0, author: hr.manager, 2015-04-02 18:14:16
-      changed object: org.javers.core.examples.model.Employee/Bob
-        value changed on 'name' property: 'null' -> 'Bob'
-        value changed on 'position' property: 'null' -> 'Scrum master'
-        value changed on 'salary' property: '0' -> '9000'
-        new object: org.javers.core.examples.model.Employee/Bob
+```
+commit 3.0, author: hr.manager, 2015-04-16 22:16:50
+  changed object: org.javers.core.examples.model.Employee/Bob
+    list changed on 'subordinates' property: [(0).added:'org.javers.core.examples.model.Employee/Trainee One', (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
+commit 2.0, author: hr.director, 2015-04-16 22:16:50
+  changed object: org.javers.core.examples.model.Employee/Bob
+    value changed on 'position' property: 'Scrum master' -> 'Team Lead'
+    value changed on 'salary' property: '9000' -> '11000'
+commit 1.0, author: hr.manager, 2015-04-16 22:16:50
+  changed object: org.javers.core.examples.model.Employee/Bob
+    value changed on 'name' property: 'null' -> 'Bob'
+    value changed on 'position' property: 'null' -> 'Scrum master'
+    value changed on 'salary' property: '0' -> '9000'
+```
 
 We use text format here for brevity but ChangeProcessor API
 is suitable for creating a change log in any format.
