@@ -55,21 +55,20 @@ who made it and what was the value before and after.
 * You don’t need to commit every object. JaVers navigates through the object graph, starting from
   the object passed to
   `javers.commit()` and deeply compares the whole structure with the previous version stored in JaversRepository.
-  Thanks to that approach, you can commit large structures, like trees, graphs and DDD aggregates with a single
+  Thanks to this approach, you can commit large structures, like trees, graphs and DDD aggregates with a single
   `commit()` call.
 
 * If you are using Spring Data, annotate your Repositories with @JaversSpringDataAuditable
   and take advantage of the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
 
-* Once your domain objects are being managed by JaVers, you can query JaVers about change history.
-  Use a unified
-  [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
-  to identify both Entities and ValueObjects.
+* Once your domain objects are being managed by JaVers, you can query 
+  JaversRepository (see [JQL](/documentation/repository-examples/#jql)) 
+  for objects change history.
   
 * JaVers provides two views on object change history: diffs and snapshots.
-  Use [javers.getChangeHistory()]({{ site.javadoc_url }}org/javers/core/Javers.html#getChangeHistory-org.javers.core.metamodel.object.GlobalIdDTO-int-)
-  and [javers.getStateHistory()]({{ site.javadoc_url }}org/javers/core/Javers.html#getStateHistory-org.javers.core.metamodel.object.GlobalIdDTO-int-)
-  functions to browse the detailed history of a given object.
+  Use [javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
+  and [javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
+  functions to browse the detailed history of a given class, object or property.
 
 * Take a look at [repository examples](/documentation/repository-examples).
 
@@ -97,7 +96,7 @@ released on 2015-04-20<br/>
 
 * [#36](https://github.com/javers/javers/issues/36) Javers Query Language.
   New fluent API for querying JaversRepository.
-  New query types: by class, by property and more. See //TODO
+  New query types: by class, by property and more, See [JQL](/documentation/repository-examples/#jql).
 * [#98](https://github.com/javers/javers/issues/98) Track changes in collection. Tracking VO changes while looking at master Entity.
 * [#118](https://github.com/javers/javers/issues/118) API to get change history for a given property.
 * [#128](https://github.com/javers/javers/issues/128) Changes of a set of entities.
