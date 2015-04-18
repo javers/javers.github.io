@@ -18,6 +18,7 @@ Run examples as unit tests:
 
 ```
 gradlew javers-core:example -Dtest.single=BasicCommitExample
+gradlew javers-core:example -Dtest.single=JqlExample
 gradlew javers-core:example -Dtest.single=ChangeLogExample
 gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
 ```
@@ -254,7 +255,79 @@ public class BasicCommitExample {
 }
 ```
 
-<h2 id="jql">Javers Query Language</h2>
+<h2 id="jql">JaVers Query Language</h2>
+JaVers Query Language (JQL) is a simple, fluent API
+which allows you to query JaversRepository for changes of a given class, object or property.
+
+It’s not such a powerful language like SQL because it’s a kind of abstraction over native languages
+used by concrete JaversRepository implementations (like SQL, MongoDB).
+ 
+**The case** <br/> 
+In this example we show all types of JQL queries.
+This time, we use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
+as it’s far more readable for data-driven test than Java.
+
+Groovy is a nice, dynamic language, runnable on JVM
+and Spock is our tool of choice for TDD. We really like it so it would be a chance to
+encourage you to switch from JUnit to Spock.
+
+**What’s important** <br/> 
+Data history can be fetched from JaversRepository in two views — changes and snapshots.
+
+For changes use
+[javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
+and for snapshots use 
+[javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
+
+Both methods understand the same JQL API,
+so you can use the same query object to get changes and snapshots views.
+
+Let’s see how to query for changes.
+
+### Querying for Entity changes by instance Id
+This query selects changes done on concrete Entity instance.
+Query accepts two parameters:
+ 
+* `Object localId` &mdash; required instance Id, 
+* `Class entityClass`.
+
+Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types. 
+
+```groovy
+def "should query for Entity changes by instance Id"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new DummyUser(name:"bob",  age:30) )
+    javers.commit( "author", new DummyUser(name:"bob",  age:31) )
+    javers.commit( "author", new DummyUser(name:"john", age:25) )
+    javers.commit( "author", new DummyUser(name:"lucy", age:35) )
+
+    when:
+    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", DummyUser.class).build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 3
+}
+```    
+
+query result:
+
+```
+0. commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUser/bob', property:'age', oldVal:'30', newVal:'31'}
+1. commit 1.0: ValueChange{globalId:'org.javers.core.model.DummyUser/bob', property:'age', oldVal:'0', newVal:'30'}
+2. commit 1.0: ValueChange{globalId:'org.javers.core.model.DummyUser/bob', property:'name', oldVal:'', newVal:'bob'}
+```
+
+### Querying with limit
+`Limit` is the optional parameter for all queries, default limit is 100.
+It simply limits the number of snapshots to be read from JaversRepository.
+
+For a change query limit means: give me changes recorded for last n snapshots.
+Always choose reasonable limits to improve performance of your queries and to save server heap size.
+
+//TODO
 
 <h2 id="change-log">Change log</h2>
 In this example we show how to create a change log &mdash;
