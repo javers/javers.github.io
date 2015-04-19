@@ -285,11 +285,12 @@ so you can use the same query object to get changes and snapshots views.
 Let’s see how to query for changes.
 
 ### Querying for Entity changes by instance Id
-This query selects changes done on concrete Entity instance.
-Query accepts two parameters:
+This query selects changes done on concrete [Entity](/documentation/domain-configuration/#entity) instance.
+Query accepts three parameters:
  
 * `Object localId` &mdash; required instance Id, 
-* `Class entityClass`.
+* `Class entityClass` &mdash; required Entity class,
+* `String propertyName` &mdash; optional, selects only changes on given property.
 
 Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types. 
 
@@ -298,36 +299,142 @@ def "should query for Entity changes by instance Id"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new DummyUser(name:"bob",  age:30) )
-    javers.commit( "author", new DummyUser(name:"bob",  age:31) )
-    javers.commit( "author", new DummyUser(name:"john", age:25) )
-    javers.commit( "author", new DummyUser(name:"lucy", age:35) )
+    javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary:1200) )
+    javers.commit( "author", new Employee(name:"john",age:25) )
 
-    when:
-    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", DummyUser.class).build() )
+    when: "query by instance Id"
+    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 5
+
+    when: "query by instance Id and property"
+    changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
+        .andProperty("age").build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+}
+```    
+
+result of `query by instance Id`:
+
+```
+0. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
+1. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+2. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'name', oldVal:'', newVal:'bob'}
+3. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'0', newVal:'1000'}
+4. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'0', newVal:'30'}
+```
+
+result of `query by instance Id and property`:
+
+```
+0. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+1. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'0', newVal:'30'}
+```
+
+### Querying for ValueObject changes
+This query select changes done on a concrete [ValueObject](/documentation/domain-configuration/#value-object)
+(so a ValueObject owned by a concrete Entity instance)
+or changes done on all ValueObjects owned by any instance of a given Entity.
+
+When querying for ValueObjects you should keep in mind that ValueObjects,
+by definition don’t have their own identifiers. We identify them by providing
+owning Entity instance Id and a property name.
+So in this case, the property name serves as a sort of path.
+
+Optional filters: `limit()` and `property()` also work here.
+
+Let’s see how it works:
+
+```groovy
+def "should query for ValueObject changes by owning Entity instance and class"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new Employee(name:"bob",  postalAddress:  new Address(city:"Paris")))
+    javers.commit( "author", new Employee(name:"bob",  primaryAddress: new Address(city:"London")))
+    javers.commit( "author", new Employee(name:"bob",  primaryAddress: new Address(city:"Paris")))
+    javers.commit( "author", new Employee(name:"lucy", primaryAddress: new Address(city:"New York")))
+
+    when: "query for ValueObject changes by owning Entity instance Id"
+    def changes = javers
+        .findChanges( QueryBuilder.byValueObjectId("bob",Employee.class,"primaryAddress").build())
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+
+    when: "query for ValueObject changes by owning Entity class"
+    changes = javers
+        .findChanges( QueryBuilder.byValueObject(Employee.class,"primaryAddress").build())
 
     then:
     printChanges(changes)
     assert changes.size() == 3
 }
-```    
+```
 
-query result:
+result of `"query for ValueObject changes by owning Entity instance Id"`:
 
 ```
-0. commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUser/bob', property:'age', oldVal:'30', newVal:'31'}
-1. commit 1.0: ValueChange{globalId:'org.javers.core.model.DummyUser/bob', property:'age', oldVal:'0', newVal:'30'}
-2. commit 1.0: ValueChange{globalId:'org.javers.core.model.DummyUser/bob', property:'name', oldVal:'', newVal:'bob'}
+0. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
+1. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'', newVal:'London'}
 ```
+
+result of `query for ValueObject changes by owning Entity class`:
+
+```
+0. commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#primaryAddress', property:'city', oldVal:'', newVal:'New York'}
+1. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
+2. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'', newVal:'London'}
+```
+
+### Querying 
+
+//TODO
 
 ### Querying with limit
 `Limit` is the optional parameter for all queries, default limit is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
-
-For a change query limit means: give me changes recorded for last n snapshots.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
+When querying for changes, limit `n` means: give me changes recorded for last `n` snapshots.
 
-//TODO
+In this example we set limit to 3 so only last 3 Bob’s snapshots are being compared,
+which means 4 changes (two changes between fourth and third commit and two changes between third and second commit). 
+
+```groovy
+def "should query for changes with limit"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new Employee(name:"bob", age:29) )
+    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary: 1100) )
+    javers.commit( "author", new Employee(name:"bob", age:32, salary: 1200) )
+
+    when:
+    def changes = javers
+        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).limit(3).build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 4
+}
+```
+
+query result:
+
+```
+0. commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
+1. commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
+2. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
+3. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```
 
 <h2 id="change-log">Change log</h2>
 In this example we show how to create a change log &mdash;
@@ -386,7 +493,6 @@ but of course, you can provide a custom implementation to meet your change log r
 
 ChangeProcessor can also be used for processing changes calculated by ad-hoc diff,
 but it shines when used for changes fetched from JaversRepository.
-
 
 The full example is shown below.
 
