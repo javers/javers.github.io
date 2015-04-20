@@ -13,11 +13,14 @@ a, a:hover, a:active {
     color: #ea4d1a;
 }
 
-code {
+pre code {
     background: transparent;
-    padding-right: 0px;
+    padding-right: 0;
     color: #111;
     font-size: 1em;
+    white-space: pre;
+    word-wrap: normal;
+    overflow: auto;
 }
 
 .navbar-nav > li > a {
