@@ -233,24 +233,15 @@ public class BasicCommitExample {
         // when:
         // list change history
         List<Change> changes = javers.findChanges(
-                QueryBuilder.byInstanceId("bob", Person.class).build());
+            QueryBuilder.byInstanceId("bob", Person.class).build());
 
         // then:
         // there should be one ValueChange with Bob's firstName
+        assertThat(changes).hasSize(1);
         ValueChange change = (ValueChange) changes.get(0);
         assertThat(change.getProperty().getName()).isEqualTo("name");
         assertThat(change.getLeft()).isEqualTo("Robert Martin");
         assertThat(change.getRight()).isEqualTo("Robert C.");
-
-        // and two ValueChanges with Bob's initial values
-        change = (ValueChange) changes.get(1);
-        assertThat(change.getProperty().getName()).isEqualTo("login");
-        assertThat(change.getLeft()).isNull();
-        assertThat(change.getRight()).isEqualTo("bob");
-        change = (ValueChange) changes.get(2);
-        assertThat(change.getProperty().getName()).isEqualTo("name");
-        assertThat(change.getLeft()).isNull();
-        assertThat(change.getRight()).isEqualTo("Robert Martin");
     }
 }
 ```
@@ -308,7 +299,7 @@ def "should query for Entity changes by instance Id"() {
 
     then:
     printChanges(changes)
-    assert changes.size() == 5
+    assert changes.size() == 2
 
     when: "query by instance Id and property"
     changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
@@ -316,25 +307,21 @@ def "should query for Entity changes by instance Id"() {
 
     then:
     printChanges(changes)
-    assert changes.size() == 2
+    assert changes.size() == 1
 }
 ```    
 
 result of `query by instance Id`:
 
 ```
-0. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
-1. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
-2. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'name', oldVal:'', newVal:'bob'}
-3. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'0', newVal:'1000'}
-4. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'0', newVal:'30'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
 result of `query by instance Id and property`:
 
 ```
-0. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
-1. commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'0', newVal:'30'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
 ### Querying for ValueObject changes
@@ -367,7 +354,7 @@ def "should query for ValueObject changes by owning Entity instance and class"()
 
     then:
     printChanges(changes)
-    assert changes.size() == 2
+    assert changes.size() == 1
 
     when: "query for ValueObject changes by owning Entity class"
     changes = javers
@@ -375,26 +362,27 @@ def "should query for ValueObject changes by owning Entity instance and class"()
 
     then:
     printChanges(changes)
-    assert changes.size() == 3
+    assert changes.size() == 2
 }
 ```
 
 result of `"query for ValueObject changes by owning Entity instance Id"`:
 
 ```
-0. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
-1. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'', newVal:'London'}
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
 result of `query for ValueObject changes by owning Entity class`:
 
 ```
-0. commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#primaryAddress', property:'city', oldVal:'', newVal:'New York'}
-1. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
-2. commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'', newVal:'London'}
+commit 5.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#primaryAddress', property:'city', oldVal:'New York', newVal:'Washington'}
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-### Querying 
+### Querying for any object changes by its class
+This query is a kind of shotgun approach. The only mandatory parameter is a class.
+This query selects objects regardless of its JaversType,
+so it works for: Entities, ValueObjects and UnboundedValueObjects.
 
 //TODO
 
@@ -429,11 +417,11 @@ def "should query for changes with limit"() {
 
 query result:
 
-```
-0. commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
-1. commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
-2. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
-3. commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```text
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
 <h2 id="change-log">Change log</h2>
