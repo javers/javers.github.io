@@ -273,15 +273,27 @@ and for snapshots use
 Both methods understand the same JQL API,
 so you can use the same query object to get changes and snapshots views.
 
+**Big Picture** <br/>
+There are three types of queries: 
+
+* query for [Entity](#instance-id-query) changes by Instance Id,
+* query for [ValueObject](#by-value-object-query) changes,
+* query for any object changes [by its class](#by-class-query).
+
+For each query you can add one or more optional filters:
+
+* [property](#property-filter) filter,
+* [limit](#limit-filter) filter, 
+* [NewObject changes](#new-object-filter) filter.
+
 Let’s see how to query for changes.
 
-### Querying for Entity changes by instance Id
+<h3 id="instance-id-query">Querying for Entity changes by instance Id</h3>
 This query selects changes done on concrete [Entity](/documentation/domain-configuration/#entity) instance.
-Query accepts three parameters:
+Query accepts two mandatory parameters:
  
-* `Object localId` &mdash; required instance Id, 
-* `Class entityClass` &mdash; required Entity class,
-* `String propertyName` &mdash; optional, selects only changes on given property.
+* `Object localId` &mdash; expected instance Id, 
+* `Class entityClass` &mdash; expected Entity class.
 
 Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types. 
 
@@ -294,37 +306,23 @@ def "should query for Entity changes by instance Id"() {
     javers.commit( "author", new Employee(name:"bob", age:31, salary:1200) )
     javers.commit( "author", new Employee(name:"john",age:25) )
 
-    when: "query by instance Id"
+    when:
     def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
 
     then:
     printChanges(changes)
     assert changes.size() == 2
-
-    when: "query by instance Id and property"
-    changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
-        .andProperty("age").build() )
-
-    then:
-    printChanges(changes)
-    assert changes.size() == 1
 }
 ```    
 
-result of `query by instance Id`:
+query result:
 
 ```
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
-result of `query by instance Id and property`:
-
-```
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
-```
-
-### Querying for ValueObject changes
+<h3 id="by-value-object-query">Querying for ValueObject changes</h3>
 This query select changes done on a concrete [ValueObject](/documentation/domain-configuration/#value-object)
 (so a ValueObject owned by a concrete Entity instance)
 or changes done on all ValueObjects owned by any instance of a given Entity.
@@ -333,8 +331,6 @@ When querying for ValueObjects you should keep in mind that ValueObjects,
 by definition don’t have their own identifiers. We identify them by providing
 owning Entity instance Id and a property name.
 So in this case, the property name serves as a sort of path.
-
-Optional filters: `limit()` and `property()` also work here.
 
 Let’s see how it works:
 
@@ -379,24 +375,86 @@ commit 5.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#p
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-### Querying for any object changes by its class
+<h3 id="by-class-query">Querying for any object changes by its class</h3>
 This query is a kind of shotgun approach. The only mandatory parameter is a class.
-This query selects objects regardless of its JaversType,
-so it works for: Entities, ValueObjects and UnboundedValueObjects.
+It selects objects regardless of its JaversType and
+can be used for: Entities, ValueObjects and UnboundedValueObjects. 
 
-//TODO
+This query is useful for selecting UnboundedValueObjects (ValueObjects without owning Entity)
+and also for ValueObjects when we don’t care about owning Entity and path.
 
-### Querying with limit
-`Limit` is the optional parameter for all queries, default limit is 100.
+In the example, we show how to query for changes done on 
+ValueObjects owned by two different Entities.
+
+```groovy
+def "should query for Object changes by its class"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "London")))
+    javers.commit( "author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "Paris")))
+    javers.commit( "author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "New York")))
+    javers.commit( "author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "Washington")))
+
+    when:
+    def changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build())
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+}
+```
+
+query result:
+
+```
+commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueObjectRef', property:'city', oldVal:'New York', newVal:'Washington'}
+commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummyAddress', property:'city', oldVal:'London', newVal:'Paris'}
+```
+
+<h3 id="property-filter">Property filter</h3>
+When querying for changes, you can pass a property name to filter a query result
+to changes done on a concrete property.
+
+In the example, we show how to query for Employee’s salary changes,
+while ignoring changes done on other properties.
+
+```groovy
+def "should query for Entity changes by instance Id with property filter"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary:1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary:1200) )
+
+    when:
+    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
+       .andProperty("salary").build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 1
+}
+```
+
+query result:
+
+```
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```
+
+<h3 id="limit-filter">Limit filter</h3>
+Limit filter is the optional parameter for all queries, default value is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
 When querying for changes, limit `n` means: give me changes recorded for last `n` snapshots.
 
-In this example we set limit to 3 so only last 3 Bob’s snapshots are being compared,
+In the example we set limit to 3 so only last 3 Bob’s snapshots are being compared,
 which means 4 changes (two changes between fourth and third commit and two changes between third and second commit). 
 
 ```groovy
-def "should query for changes with limit"() {
+def "should query for changes with limit filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
@@ -423,6 +481,9 @@ commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
+
+<h3 id="new-object-filter">NewObject changes filter</h3>
+//TODO
 
 <h2 id="change-log">Change log</h2>
 In this example we show how to create a change log &mdash;
