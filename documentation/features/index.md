@@ -62,7 +62,7 @@ who made it and what was the value before and after.
   and take advantage of the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
 
 * Once your domain objects are being managed by JaVers, you can query 
-  JaversRepository (see [JQL](/documentation/repository-examples/#jql)) 
+  JaversRepository (see [JQL examples](/documentation/jql-examples/)) 
   for objects change history.
   
 * JaVers provides two views on object change history: diffs and snapshots.
@@ -96,7 +96,7 @@ released on 2015-04-20<br/>
 
 * [#36](https://github.com/javers/javers/issues/36) Javers Query Language.
   New fluent API for querying JaversRepository.
-  New query types: by class, by property and more, See [JQL](/documentation/repository-examples/#jql).
+  New query types: by class, by property and more, See [JQL examples](/documentation/jql-examples/).
 * [#98](https://github.com/javers/javers/issues/98) Track changes in collection. Tracking VO changes while looking at master Entity.
 * [#118](https://github.com/javers/javers/issues/118) API to get change history for a given property.
 * [#128](https://github.com/javers/javers/issues/128) Changes of a set of entities.

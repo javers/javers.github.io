@@ -54,19 +54,25 @@
         <li><a href="#commit-changes">Commit changes</a></li>
         <li><a href="#read-snapshots-history">Read snapshots history</a></li>
         <li><a href="#read-changes-history">Read changes history</a></li>
-        <li><a href="#jql">Javers Query Language</a></li>
-
-        <li><a href="#instance-id-query">&nbsp; &nbsp;Querying for Entity</a></li>
-        <li><a href="#by-value-object-query">&nbsp; &nbsp;Querying for ValueObject</a></li>
-        <li><a href="#by-class-query">&nbsp; &nbsp;Querying by Class</a></li>
-
-        <li><a href="#property-filter">&nbsp; &nbsp;Property filter</a></li>
-        <li><a href="#limit-filter">&nbsp; &nbsp;Limit filter</a></li>
-        <li><a href="#new-object-filter">&nbsp; &nbsp;NewObject changes filter</a></li>
-
         <li><a href="#change-log">Change log</a></li>
         <li><a href="#json-type-adapter">JSON TypeAdapter</a></li>
     </ul>
+</section>
+
+<section>
+    <a {% if currentSubPage == jql-examples' %}class='active'{% endif %} href="/documentation/jql-examples">
+    Examples &mdash; JQL
+    </a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'jql-examples' %} hidden {% endif %}">
+        <li><a href="#instance-id-query">Querying for Entity</a></li>
+        <li><a href="#by-value-object-query">Querying for ValueObject</a></li>
+        <li><a href="#by-class-query">Querying by Class</a></li>
+
+        <li><a href="#property-filter">Property filter</a></li>
+        <li><a href="#limit-filter">Limit filter</a></li>
+        <li><a href="#new-object-filter">NewObject changes filter</a></li>
+    </ul>
+
 </section>
 
 <section>
