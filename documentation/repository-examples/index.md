@@ -49,7 +49,7 @@ Person is a typical Entity
 (see [domain-model-mapping](/documentation/domain-configuration/#entity) for Entity definition).
 JaVers uses [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
 for identifying and querying Entities.
-In this case, it’s expressed as `InstanceIdDTO.instanceId("bob", Person.class)`.
+In this case, it’s expressed as `instanceId("bob", Person.class)`.
 
 `Person.class:`
 
@@ -82,14 +82,14 @@ package org.javers.core.examples;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Change;
+import org.javers.core.diff.changetype.NewObject;
 import org.javers.core.diff.changetype.ValueChange;
 import org.javers.core.examples.model.Person;
 import org.javers.core.metamodel.object.CdoSnapshot;
-import org.javers.core.metamodel.object.InstanceIdDTO;
+import org.javers.repository.jql.QueryBuilder;
 import org.junit.Test;
 import java.util.List;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.javers.core.metamodel.object.InstanceIdDTO.instanceId;
 
 public class BasicCommitExample {
     @Test
@@ -111,14 +111,14 @@ public class BasicCommitExample {
         javers.commit("user", robert);
 
         // when:
-        List<CdoSnapshot> snapshots =
-            javers.getStateHistory(InstanceIdDTO.instanceId("bob", Person.class),10);
+        List<CdoSnapshot> snapshots = javers.findSnapshots(
+            QueryBuilder.byInstanceId("bob", Person.class).build());
 
         // then:
         // there should be two Snapshots with Bob's state
         assertThat(snapshots).hasSize(2);
     }
-    ... //
+}
 ```
 
 <h2 id="read-snapshots-history">Read snapshots history</h2>
@@ -128,8 +128,8 @@ Having some commits saved in JaversRepository, we can fetch the list of Robert�
 and check how Robert looked like in the past:
 
 ```java
-List<CdoSnapshot> snapshots =
-    javers.getStateHistory(InstanceIdDTO.instanceId("bob", Person.class),10);
+List<CdoSnapshot> snapshots = javers.findSnapshots(
+    QueryBuilder.byInstanceId("bob", Person.class).build());
 ```
 
 **What’s important** <br/>
@@ -162,9 +162,9 @@ public class BasicCommitExample {
         javers.commit("user", robert);
 
         // when:
-        // list state history — snapshots
-        List<CdoSnapshot> snapshots =
-            javers.getStateHistory(instanceId("bob", Person.class), 5);
+        // list state history - last 10 snapshots
+        List<CdoSnapshot> snapshots = javers.findSnapshots(
+            QueryBuilder.byInstanceId("bob", Person.class).limit(10).build());
 
         // then:
         // there should be two Snapshots with Bob’s state
@@ -174,8 +174,7 @@ public class BasicCommitExample {
         assertThat(oldState.getPropertyValue("name")).isEqualTo("Robert Martin");
         assertThat(newState.getPropertyValue("name")).isEqualTo("Robert C.");
     }
-
-    ... //
+}
 ```
 
 <h2 id="read-changes-history">Read changes history</h2>
@@ -232,22 +231,21 @@ public class BasicCommitExample {
 
         // when:
         // list change history
-        List<Change> changes =
-            javers.getChangeHistory(InstanceIdDTO.instanceId("bob", Person.class), 5);
+        List<Change> changes = javers.findChanges(
+            QueryBuilder.byInstanceId("bob", Person.class).build());
 
         // then:
         // there should be one ValueChange with Bob's firstName
-        // and one NewObject change for Bob's initial commit
-        assertThat(changes).hasSize(2);
+        assertThat(changes).hasSize(1);
         ValueChange change = (ValueChange) changes.get(0);
         assertThat(change.getProperty().getName()).isEqualTo("name");
         assertThat(change.getLeft()).isEqualTo("Robert Martin");
         assertThat(change.getRight()).isEqualTo("Robert C.");
-        assertThat(changes.get(1)).isInstanceOf(NewObject.class);
     }
-
-    ... //
+}
 ```
+
+See [Examples — JQL](/documentation/jql-examples/) chapter for more query examples. 
 
 <h2 id="change-log">Change log</h2>
 In this example we show how to create a change log &mdash;
@@ -267,25 +265,31 @@ gets two trainees assigned as subordinates.
 Our goal is to print Bob’s detailed change log with dates,
 commit authors, and change flow, like this:
 
-    commit 3.0, author:hr.manager, 2015-01-03 19:49:36
-      changed object: org.javers.core.examples.model.Employee/Bob
-        list changed on 'subordinates' property: [
-        (0).added:'org.javers.core.examples.model.Employee/Trainee One',
-        (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
-    commit 2.0, author:hr.director, 2015-01-03 19:49:36
-      changed object: org.javers.core.examples.model.Employee/Bob
-        value changed on 'position' property: 'Scrum master' -> 'Team Lead'
-        value changed on 'salary' property: '9000' -> '11000'
-    commit 1.0, author:hr.manager, 2015-01-03 19:49:35
-        new object: org.javers.core.examples.model.Employee/Bob
+```
+commit 3.0, author: hr.manager, 2015-04-16 22:16:50
+  changed object: org.javers.core.examples.model.Employee/Bob
+    list changed on 'subordinates' property: [(0).added:'org.javers.core.examples.model.Employee/Trainee One', (1).added:'org.javers.core.examples.model.Employee/Trainee Two']
+commit 2.0, author: hr.director, 2015-04-16 22:16:50
+  changed object: org.javers.core.examples.model.Employee/Bob
+    value changed on 'position' property: 'Scrum master' -> 'Team Lead'
+    value changed on 'salary' property: '9000' -> '11000'
+commit 1.0, author: hr.manager, 2015-04-16 22:16:50
+  changed object: org.javers.core.examples.model.Employee/Bob
+    value changed on 'name' property: 'null' -> 'Bob'
+    value changed on 'position' property: 'null' -> 'Scrum master'
+    value changed on 'salary' property: '0' -> '9000'
+```
 
 We use text format here for brevity but ChangeProcessor API
 is suitable for creating a change log in any format.
 
 To print this nice change log, just call
 
-    List<Change> changes = javers.getChangeHistory(InstanceIdDTO.instanceId("Bob", Employee.class),5);
-    String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
+```java
+List<Change> changes = javers.findChanges(
+    QueryBuilder.byInstanceId("Bob", Employee.class).build());
+String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
+```    
 
 **What’s important** <br/>
 You can think of ChangeProcessor as a `callback` based approach.
@@ -301,7 +305,6 @@ but of course, you can provide a custom implementation to meet your change log r
 ChangeProcessor can also be used for processing changes calculated by ad-hoc diff,
 but it shines when used for changes fetched from JaversRepository.
 
-
 The full example is shown below.
 
 <tt>ChangeLogExample.class :</tt>
@@ -314,9 +317,8 @@ import org.javers.core.JaversBuilder;
 import org.javers.core.changelog.SimpleTextChangeLog;
 import org.javers.core.diff.Change;
 import org.javers.core.examples.model.Employee;
-import org.javers.core.metamodel.object.InstanceIdDTO;
+import org.javers.repository.jql.QueryBuilder;
 import org.junit.Test;
-
 import java.util.List;
 
 public class ChangeLogExample {
@@ -337,8 +339,8 @@ public class ChangeLogExample {
     javers.commit("hr.manager", bob);
 
     // when:
-    List<Change> changes =
-       javers.getChangeHistory(InstanceIdDTO.instanceId("Bob", Employee.class),5);
+    List<Change> changes = javers.findChanges(
+        QueryBuilder.byInstanceId("Bob", Employee.class).build());
     String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
 
     // then:

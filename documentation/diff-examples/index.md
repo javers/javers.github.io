@@ -99,7 +99,8 @@ public class BasicEntityDiffExample {
 
     assertThat(diff.getChanges()).hasSize(1);
     assertThat(change.getProperty().getName()).isEqualTo("name");
-    assertThat(change.getAffectedGlobalId().value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
+    assertThat(change.getAffectedGlobalId()
+        .value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
     assertThat(change.getLeft()).isEqualTo("Tommy Smart");
     assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
 

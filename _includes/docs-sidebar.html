@@ -60,6 +60,22 @@
 </section>
 
 <section>
+    <a {% if currentSubPage == jql-examples' %}class='active'{% endif %} href="/documentation/jql-examples">
+    Examples &mdash; JQL
+    </a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'jql-examples' %} hidden {% endif %}">
+        <li><a href="#instance-id-query">Querying for Entity</a></li>
+        <li><a href="#by-value-object-query">Querying for ValueObject</a></li>
+        <li><a href="#by-class-query">Querying by Class</a></li>
+
+        <li><a href="#property-filter">Property filter</a></li>
+        <li><a href="#limit-filter">Limit filter</a></li>
+        <li><a href="#new-object-filter">NewObject changes filter</a></li>
+    </ul>
+
+</section>
+
+<section>
     <a {% if currentSubPage == 'domain-configuration' %}class='active'{% endif %}
        href="/documentation/domain-configuration">Configuration &mdash; Domain</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'domain-configuration' %} hidden {% endif %}">
