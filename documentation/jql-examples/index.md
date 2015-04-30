@@ -6,6 +6,21 @@ submenu: jql-examples
 
 # JQL (JaVers Query Language) examples 
 
+All examples are runnable.
+Checkout our github repository:
+
+```
+git clone https://github.com/javers/javers.git
+cd javers
+```
+
+Run examples as unit tests:
+
+```
+gradlew javers-core:example -Dtest.single=JqlExample
+```
+
+## Overview
 JQL (JaVers Query Language) is a simple, fluent API
 which allows you to query JaversRepository for changes of a given class, object or property.
 
