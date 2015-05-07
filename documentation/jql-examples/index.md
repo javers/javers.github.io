@@ -30,10 +30,10 @@ used by concrete JaversRepository implementations (like SQL, MongoDB).
 **The case** <br/> 
 In this example we show all types of JQL queries.
 This time, we use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
-as it’s far more readable for data-driven test than Java.
+as these are far more readable for data-driven test than Java.
 
 Groovy is a nice, dynamic language, runnable on JVM
-and Spock is our tool of choice for TDD. We really like it so it would be a chance to
+and Spock is our tool of choice for TDD. We really like it so this is also a chance to
 encourage you to switch from JUnit to Spock.
 
 **What’s important** <br/> 
@@ -47,12 +47,12 @@ and for snapshots use
 Both methods understand the same JQL API,
 so you can use the same query object to get changes and snapshots views.
 
-**Big Picture** <br/>
+**The Big Picture** <br/>
 There are three types of queries: 
 
 * query for [Entity](#instance-id-query) changes by Instance Id,
 * query for [ValueObject](#by-value-object-query) changes,
-* query for any object changes [by its class](#by-class-query).
+* query for any object changes [by class of object](#by-class-query).
 
 For each query you can add one or more optional filters:
 
@@ -62,11 +62,11 @@ For each query you can add one or more optional filters:
 
 Let’s see how to query for changes.
  
-<h2 id="instance-id-query">Querying for Entity changes by instance Id</h2>
-This query selects changes done on concrete [Entity](/documentation/domain-configuration/#entity) instance.
-Query accepts two mandatory parameters:
+<h2 id="instance-id-query">Querying for Entity changes by Instance Id</h2>
+This query selects changes made on concrete [Entity](/documentation/domain-configuration/#entity) instance.
+The query accepts two mandatory parameters:
  
-* `Object localId` &mdash; expected instance Id, 
+* `Object localId` &mdash; expected Instance Id, 
 * `Class entityClass` &mdash; expected Entity class.
 
 Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types. 
@@ -97,13 +97,13 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h2 id="by-value-object-query">Querying for ValueObject changes</h2>
-This query select changes done on a concrete [ValueObject](/documentation/domain-configuration/#value-object)
+This query selects changes made on a concrete [ValueObject](/documentation/domain-configuration/#value-object)
 (so a ValueObject owned by a concrete Entity instance)
-or changes done on all ValueObjects owned by any instance of a given Entity.
+or changes made on all ValueObjects owned by any instance of a given Entity.
 
 When querying for ValueObjects you should keep in mind that ValueObjects,
-by definition don’t have their own identifiers. We identify them by providing
-owning Entity instance Id and a property name.
+by definition, don’t have their own identifiers. We identify them by providing
+the owning Entity Instance Id and a property name.
 So in this case, the property name serves as a sort of path.
 
 Let’s see how it works:
@@ -149,15 +149,15 @@ commit 5.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#p
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-<h2 id="by-class-query">Querying for any object changes by its class</h2>
+<h2 id="by-class-query">Querying for any object changes by class of object</h2>
 This query is a kind of shotgun approach. The only mandatory parameter is a class.
-It selects objects regardless of its JaversType and
-can be used for: Entities, ValueObjects and UnboundedValueObjects. 
+It selects objects regardless of theirs JaversType and
+can be used for Entities, ValueObjects and UnboundedValueObjects. 
 
-This query is useful for selecting UnboundedValueObjects (ValueObjects without owning Entity)
-and also for ValueObjects when we don’t care about owning Entity and path.
+This query is useful for selecting UnboundedValueObjects (ValueObjects without an owning Entity)
+and also for ValueObjects when we don’t care about the owning Entity and path.
 
-In the example, we show how to query for changes done on 
+In the example, we show how to query for changes made on 
 ValueObjects owned by two different Entities.
 
 ```groovy
@@ -188,10 +188,10 @@ commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummy
 
 <h2 id="property-filter">Property filter</h2>
 When querying for changes, you can pass a property name to filter a query result
-to changes done on a concrete property.
+to changes made on a concrete property.
 
 In the example, we show how to query for Employee’s salary changes,
-while ignoring changes done on other properties.
+while ignoring changes made on other properties.
 
 ```groovy
 def "should query for Entity changes by instance Id with property filter"() {
@@ -219,12 +219,12 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h2 id="limit-filter">Limit filter</h2>
-Limit filter is the optional parameter for all queries, default value is 100.
+Limit filter is an optional parameter for all queries, its default value is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
 When querying for changes, limit `n` means: give me changes recorded for last `n` snapshots.
 
-In the example we set limit to 3 so only last 3 Bob’s snapshots are being compared,
+In the example we set limit to 3 so only Bob’s last 3 snapshots are being compared,
 which means 4 changes (two changes between fourth and third commit and two changes between third and second commit). 
 
 ```groovy
@@ -257,11 +257,11 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h2 id="new-object-filter">NewObject changes filter</h2>
-This filter affects changes query only, by default is disabled.
+This filter only affects queries for changes, by default it’s disabled.
 When enabled, a query produces additional changes for initial snapshots.
-Initial snapshot is taken when an object is committed to JaversRepository for the first time.
+An initial snapshot is taken when an object is committed to JaversRepository for the first time.
 
-With this filter, you can query for an initial state of an object.
+With this filter, you can query for the initial state of an object.
 It’s represented as a NewObject change, followed by a list of property changes from null to something.
 
 Let’s see how it works in the example below.
