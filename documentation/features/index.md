@@ -91,6 +91,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.1
+released on //TBA<br/>
+* [#127](https://github.com/javers/javers/issues/127) 
+  Implemented tolerant comparing strategy for ValueObjects when one has more properties than another.
+  For example, now you can compare `Bicycle` with `Mountenbike extends Bicycle`.
+ 
 ### 1.2.0 JQL
 released on 2015-04-20<br/>
 
