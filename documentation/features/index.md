@@ -93,6 +93,7 @@ with minimal mapping configuration effort
 
 ### 1.2.1
 released on 2015-05-18<br/>
+
 * [#127](https://github.com/javers/javers/issues/127) 
   Implemented tolerant comparing strategy for ValueObjects when one has more properties than another.
   For example, now you can compare `Bicycle` with `Mountenbike extends Bicycle`.
