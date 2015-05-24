@@ -37,14 +37,16 @@ just provide a working Mongo client.
 
 ```java
 import org.javers.repository.mongo.MongoRepository;
-import com.mongodb.DB;
-...//
+import com.mongodb.MongoClient
+import com.mongodb.client.MongoDatabase
+
+... //
 
 //preferably, use the same database connection
 //as you are using for your primary database
-DB database = new Mongo("localhost").getDB("test");
+MongoDatabase mongoDb = new MongoClient( "localhost" ).getDatabase("test");
 
-MongoRepository mongoRepo = new MongoRepository(database);
+MongoRepository mongoRepo = new MongoRepository(mongoDb);
 Javers javers = JaversBuilder.javers().registerJaversRepository(mongoRepo).build();
 ```
 
@@ -55,6 +57,8 @@ JaVers creates two collections in MongoDB:
 
 * `jv_head_id` — one document with the last CommitId,
 * `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
+
+JaVers uses MongoDB Java Driver v 3.0 so which is compatible with MongoDB versions: 2.4, 2.6 and 3.0. 
 
 <h2 id="sql-databases">SQL databases</h2>
 JaVers is meant to be as lightweight and versatile as possible.

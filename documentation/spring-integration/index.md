@@ -52,8 +52,8 @@ For example, if you’re using MongoDB, setup JaVers as follows:
     }
 
     @Bean
-    public DB mongoDB(){
-        return new Fongo("test").getMongo().getDB("test");
+    public MongoDatabase mongoDB() {
+        return new Fongo("test").getDatabase("test");
     }
 ```
 
@@ -183,8 +183,8 @@ public class JaversSpringMongoApplicationConfig {
      * MongoDB setup
      */
     @Bean
-    public DB mongoDB(){
-        return new Fongo("test").getMongo().getDB("test");
+    public MongoDatabase mongoDB() {
+        return new Fongo("test").getDatabase("test");
     }
 
     /**

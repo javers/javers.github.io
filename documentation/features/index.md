@@ -91,6 +91,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.5
+released on 2015-05-24<br/>
+
+* [#146](https://github.com/javers/javers/issues/146)
+  [#156](https://github.com/javers/javers/issues/156)
+  MongoDB Java Driver updated to 3.0. Thanks to that, JaVers is compatible with MongoDB versions: 2.4, 2.6 and 3.0.
+
 ### 1.2.1
 released on 2015-05-18<br/>
 
