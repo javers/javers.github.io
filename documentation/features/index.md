@@ -91,6 +91,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.6
+released on 2015-05-27<br/>
+
+* [#157](https://github.com/javers/javers/issues/157)
+  [Dieler](https://github.com/Dieler) fixed JsonIOExcpetion when trying to deserialize property with nested generic type
+
 ### 1.2.5
 released on 2015-05-24<br/>
 
