@@ -94,7 +94,7 @@ with minimal mapping configuration effort
 ### 1.2.7
 released on 2015-05-29<br/>
 
-* Fixed problem with build 1.2.6, which wasn't build from the master branch
+* Fixed problem with build 1.2.6, which wasn't built from the master branch
 
 ### 1.2.6
 released on 2015-05-26<br/>
