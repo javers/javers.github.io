@@ -91,6 +91,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.8
+released on 2015-05-31<br/>
+
+* [#142](https://github.com/javers/javers/issues/142)
+  Fixed bug when mapping Entity hierarchies with custom idProperty. 
+
 ### 1.2.7
 released on 2015-05-29<br/>
 
