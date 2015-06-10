@@ -91,6 +91,11 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.9
+released on 2015-06-10<br/>
+
+* Pretty-print feature: `javers.getTypeMapping(Clazz.class).prettyPrint()` describes given user's class in the context of JaVers domain model mapping. 
+
 ### 1.2.8
 released on 2015-05-31<br/>
 

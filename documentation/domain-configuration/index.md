@@ -153,6 +153,10 @@ Mapping hints:
   as it has the highest priority.
 * For an Entity, a type of its Id-property is mapped as Value by default.
 * If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
+* If you are not sure how JaVers maps your class, check effective mapping using
+  [`getTypeMapping(Class<?>)`]({{ site.javadoc_url }}org/javers/core/Javers.html#getTypeMapping-java.lang.Class-) method.
+  Once you have JaversType for your class, you can pretty-print it: 
+  `System.out.println( javers.getTypeMapping(YourClass.class).prettyPrint() );`
 
 <h3 id="supported-annotations">Supported annotations</h3>
 
