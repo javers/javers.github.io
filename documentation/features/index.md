@@ -91,6 +91,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.10
+released on 2015-06-12<br/>
+
+* [#172](https://github.com/javers/javers/issues/172) Fixed bug when registering more than one CustomPropertyComparator 
+* [#167](https://github.com/javers/javers/issues/167) Fixed bug in Levenshtein algorithm (comparing lists of Entities)
+
 ### 1.2.9
 released on 2015-06-10<br/>
 
