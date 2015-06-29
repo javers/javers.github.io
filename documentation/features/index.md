@@ -91,6 +91,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.2.11
+released on 2015-06-30<br/>
+
+* Added `On Access Hook`
+* [#172](https://github.com/javers/javers/issues/91) Hibernate support enabled using `On Access Hook` feature
+
 ### 1.2.10
 released on 2015-06-12<br/>
 

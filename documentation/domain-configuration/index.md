@@ -15,16 +15,16 @@ You can start with zero config and give JaVers a chance to infer all the facts a
 
 Take a look how JaVers deals with your data. If it’s fine, let the defaults work for you.
 Add more configuration when you want to change the default behavior.
- 
+
 There are two logical areas of the the configuration,
 [domain model mapping](/documentation/domain-configuration#domain-model-mapping)
-and 
+and
 [repository setup](/documentation/repository-configuration).
 Proper mapping is important for both JaVers features, the object diff and the data audit (JaversRepository).
 
 The object diff algorithm is the core of JaVers. When two objects are compared, JaVers needs to know what
 type they are. We distinguish between the following types: `Entities`, `ValueObjects`, `Values`, `Containers` and `Primitives`.
-Each type has a different comparing style. 
+Each type has a different comparing style.
 
 JaVers can infer the type of your classes, but if it goes wrong, the diff result might be strange.
 In this case you should tune the type mapping.
@@ -155,7 +155,7 @@ Mapping hints:
 * If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
 * If you are not sure how JaVers maps your class, check effective mapping using
   [`getTypeMapping(Class<?>)`]({{ site.javadoc_url }}org/javers/core/Javers.html#getTypeMapping-java.lang.Class-) method.
-  Once you have JaversType for your class, you can pretty-print it: 
+  Once you have JaversType for your class, you can pretty-print it:
   `System.out.println( javers.getTypeMapping(YourClass.class).prettyPrint() );`
 
 <h3 id="supported-annotations">Supported annotations</h3>
@@ -375,3 +375,19 @@ JaversBuildert.javers()
         .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
         .build();
 ```
+
+<h2 id="hooks">Hooks</h2>
+
+Hooks are a way to interact with your objects during JaVers processing. We provide hooks such as:
+
+<h3 id="hooks-on-access">On Access Hook</h3>
+
+Hook will fire just before JaVers tryies to access your domain object. You can use it for example to unproxy/initialize an instance before processing.
+
+To add your hook to javers simply do this using `withObjectAccessHook` method.
+
+```java
+JaversBuilder.javers().withObjectAccessHook(new MyObjectAccessHook()).build()
+```
+
+***see hibernate-configuration for extended example***

@@ -88,6 +88,8 @@
         <li><a href="#entity-id-property">&nbsp; &nbsp; Entity Id</a></li>
         <li><a href="#property-mapping-style">&nbsp; &nbsp; Property mapping style</a></li>
         <li><a href="#ignoring-things">&nbsp; &nbsp; Ignoring things</a></li>
+        <li><a href="#hooks">Hooks</a></li>
+        <li><a href="#hooks-on-access">&nbsp; &nbsp; On Access Hook</a></li>
     </ul>
 </section>
 
@@ -115,6 +117,14 @@
     </ul>
 </section>
 
+<section>
+    <a {% if currentSubPage == 'hibernate-configuration' %}class='active'{% endif %} href="/documentation/hibernate-configuration">
+    Configuration &mdash; Hibernate
+    </a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'hibernate-configuration' %} hidden {% endif %}">
+        <li><a href="#hibernate-unproxy-hook">Hibernate Unproxy Hook</a></li>
+    </ul>
+</section>
 
 <section>
     <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">Spring integration</a>
