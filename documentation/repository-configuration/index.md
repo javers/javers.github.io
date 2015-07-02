@@ -31,6 +31,7 @@ Currently, JaVers supports **MongoDB**, **H2**, **PostgreSQL** and **MySQL**.
 Support for Oracle and MS SQL is scheduled for JaVers 1.3 release.
 
 <h2 id="mongodb-configuration">MongoDB</h2>
+**Dependency**<br/>
 If you’re using MongoDB, choose `MongoRepository`.
 
 Add `javers-persistence-mongo` module to your classpath:
@@ -43,6 +44,7 @@ Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-persistence-mongo|{{site.javers_current_version}}|jar)
  for snippets to other build tools.
 
+**Usage**<br/>
 The idea of configuring MongoRepository is simple,
 just provide a working Mongo client.
 
@@ -72,16 +74,17 @@ JaVers creates two collections in MongoDB:
 JaVers uses MongoDB Java Driver v 3.0 so which is compatible with MongoDB versions: 2.4, 2.6 and 3.0. 
 
 <h2 id="sql-databases">SQL databases</h2>
-
+**Dependency**<br/>
 Add `javers-persistence-sql` module to your classpath:
 
 ```groovy
 compile 'org.javers:javers-persistence-sql:{{site.javers_current_version}}'
 ```
-
 Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-persistence-sql|{{site.javers_current_version}}|jar)
  for snippets to other build tools.
+
+<h3>Overview</h3>
 
 JaVers is meant to be as lightweight and versatile as possible.
 That’s why we use [PolyJDBC](http://polyjdbc.org/), which
@@ -137,7 +140,7 @@ Choose this, if you’re using Spring/JPA/Hibernate stack (see [JPA Transaction 
 If you’re not using any kind of transaction manager, implement a ConnectionProvider to return
 the current connection (thread-safely).
 
-**Schema**<br/>
+<h3>Schema</h3>
 JaVers creates four tables in SQL database:
 
 *  `jv_cdo_class` — domain object class names,

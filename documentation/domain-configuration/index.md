@@ -376,18 +376,21 @@ JaversBuildert.javers()
         .build();
 ```
 
-<h2 id="hooks">Hooks</h2>
+<h2 id="hooks">Object Hooks</h2>
 
-Hooks are a way to interact with your objects during JaVers processing. We provide hooks such as:
+Hooks are a way to interact with your objects during JaVers processing.
+Currently, JaVers provides the object-access hook:
 
-<h3 id="hooks-on-access">On Access Hook</h3>
+<h3 id="hooks-on-access">Object-access Hook</h3>
 
-Hook will fire just before JaVers tryies to access your domain object. You can use it for example to unproxy/initialize an instance before processing.
+This hook is called just before JaVers tries to access your domain object.
+You can use it for example to initialize an object before processing.
 
-To add your hook to javers simply do this using `withObjectAccessHook` method.
+To add object-access hook to JaVers instance use `withObjectAccessHook()` method.
 
 ```java
 JaversBuilder.javers().withObjectAccessHook(new MyObjectAccessHook()).build()
 ```
 
-***see hibernate-configuration for extended example***
+JaVers comes with Hibernate Unproxy implementation of object-access hook,
+see [hibernate integration](/documentation/hibernate-integration). 

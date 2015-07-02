@@ -88,8 +88,7 @@
         <li><a href="#entity-id-property">&nbsp; &nbsp; Entity Id</a></li>
         <li><a href="#property-mapping-style">&nbsp; &nbsp; Property mapping style</a></li>
         <li><a href="#ignoring-things">&nbsp; &nbsp; Ignoring things</a></li>
-        <li><a href="#hooks">Hooks</a></li>
-        <li><a href="#hooks-on-access">&nbsp; &nbsp; On Access Hook</a></li>
+        <li><a href="#hooks">Object hooks</a></li>
     </ul>
 </section>
 
@@ -118,21 +117,21 @@
 </section>
 
 <section>
-    <a {% if currentSubPage == 'hibernate-configuration' %}class='active'{% endif %} href="/documentation/hibernate-configuration">
-    Configuration &mdash; Hibernate
-    </a>
-    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'hibernate-configuration' %} hidden {% endif %}">
-        <li><a href="#hibernate-unproxy-hook">Hibernate Unproxy Hook</a></li>
-    </ul>
-</section>
-
-<section>
-    <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">Spring integration</a>
+    <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">
+    Spring integration</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'spring-integration' %} hidden {% endif %}">
         <li><a href="#auto-audit-aspect">Auto-audit aspect</a></li>
         <li><a href="#auto-audit-example">&nbsp; &nbsp; Auto-audit example with MongoDB</a></li>
         <li><a href="#jpa-transaction-manager-integration">JPA Transaction Manager integration</a></li>
         <li><a href="#spring-jpa-example">&nbsp; &nbsp; Spring JPA example</a></li>
+    </ul>
+</section>
+
+<section>
+    <a {% if currentSubPage == 'hibernate-integration' %}class='active'{% endif %} href="/documentation/hibernate-integration">
+    Hibernate integration</a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'hibernate-integration' %} hidden {% endif %}">
+        <li><a href="#hibernate-unproxy-hook">Hibernate Unproxy Hook</a></li>
     </ul>
 </section>
 
