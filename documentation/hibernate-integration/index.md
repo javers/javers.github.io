@@ -17,15 +17,13 @@ Check
 
 <h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
 
-`javers-hibernate` provides you a HibernateUnproxyObjectAccessHook class that uses `Object Access Hook` as a way for JaVers to unproxy/initialize your hibernate
-object just before processing it by JaVers. 
+JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
+and initialize your Hibernate entities just before processing them by JaVers diff algorithm. 
 
-To enable HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `withObjectAccessHook` builder method
+To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `withObjectAccessHook()` builder method:
 
 ```java
-JaversBuilder.javers()
-.withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
-.build()
+JaversBuilder.javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
 ```
 
-Feel free to provide your own implementation of `Object Access Hook` for better control of your unproxing process. 
+Feel free to provide your own implementation of `object-access` hook if you need better control of unproxing process. 
