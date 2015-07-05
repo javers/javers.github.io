@@ -74,8 +74,8 @@ who made it and what was the value before and after.
 
 JaversRepository is designed to be easily implemented for any kind of database.
 At the moment we provide **MongoDB** implementation and
-**SQL** implementation for the folowing dialects: MySQL, PostgreSQL and H2.
-Support for MS SQL and Oracle dialects will be  provided soon.
+**SQL** implementation for the folowing dialects: MySQL, PostgreSQL, H2, 
+Oracle and Microsoft SQL Server.<br/>
 See [repository configuratoin](/documentation/repository-configuration/).
 
 If you are using another database, for example Cassandra, you are encouraged to implement
@@ -90,6 +90,12 @@ with minimal mapping configuration effort
 
 
 <h2 id="release-notes">Release notes</h2>
+
+### 1.3.0
+released on ... <br/>
+
+* [#100](https://github.com/javers/javers/issues/100) MS SQL support in JaversSQLRepository
+* Oracle support
 
 ### 1.2.11
 released on 2015-06-30<br/>

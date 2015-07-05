@@ -26,9 +26,8 @@ but for production environment you need something real.
 <h2 id="choose-javers-repository">Choose JaversRepository</h2>
 
 First, choose proper JaversRepository implementation.
-Currently, JaVers supports **MongoDB**, **H2**, **PostgreSQL** and **MySQL**.
-
-Support for Oracle and MS SQL is scheduled for JaVers 1.3 release.
+Currently, JaVers supports the following databases: **MongoDB**, **H2**, **PostgreSQL**, **MySQL**,
+**Oracle** and **Microsoft SQL Server**.
 
 <h2 id="mongodb-configuration">MongoDB</h2>
 **Dependency**<br/>
@@ -90,8 +89,7 @@ JaVers is meant to be as lightweight and versatile as possible.
 That’s why we use [PolyJDBC](http://polyjdbc.org/), which
 is an abstraction layer over various SQL dialects.
 
-PolyJDBC is a relatively young project. For now, it supports **H2**, **PostgreSQL** and **MySQL**.
-Other databases will be added soon.
+PolyJDBC supports the following databases: **H2**, **PostgreSQL**, **MySQL** **Oracle** and **Microsoft SQL Server**.
 
 For testing, you can setup `JaversSqlRepository` as follows:
 
@@ -118,8 +116,51 @@ JaversSqlRepository sqlRepository = SqlRepositoryBuilder
 Javers javers = JaversBuilder.javers().registerJaversRepository(sqlRepository).build();
 ```
 
-As you can see, to setup JaversSqlRepository you need to provide two things: an SQL dialect name
-and a `ConnectionProvider` implementation.
+To setup JaversSqlRepository you need to provide three things: an SQL dialect name,
+a `ConnectionProvider` implementation and a JDBC driver on your classpath.
+
+In the following table, there is a summary of all supported SQL databases,
+dialect names and JDBC driver versions.
+
+These versions are only a suggestion, we use them in JaVers integration tests. 
+You should provide a proper JDBC driver version on your classpath, which works bests for you.
+Probably it would be the same version
+which you already use for your main database. 
+
+<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
+<tr>
+    <th>Database name</th>
+    <th>DialectName</th>
+    <th>JDBC driver</th>
+</tr>
+    <td>PostgreSQL</td>
+    <td>POSTGRES</td>
+    <td><a href="http://search.maven.org/#artifactdetails|org.postgresql|postgresql|9.4-1201-jdbc41|jar">
+        org.postgresql:postgresql:9.4-1201-jdbc41</a></td>
+<tr>
+</tr>
+    <td>MySQL</td>
+    <td>MYSQL</td>
+    <td><a href="http://search.maven.org/#artifactdetails|mysql|mysql-connector-java|5.1.36|jar">
+        mysql:mysql-connector-java:5.1.36</a></td>
+<tr>
+</tr>
+    <td>H2</td>
+    <td>H2</td>
+    <td><a href="http://search.maven.org/#artifactdetails|com.h2database|h2|1.4.187|jar">
+        com.h2database:h2:1.4.187</a></td>
+<tr>
+</tr>
+    <td>Oracle</td>
+    <td>ORACLE</td>
+    <td>ojdbc6.jar, xdb6.jar</td>
+<tr>
+</tr>
+    <td>Microsoft SQL Server</td>
+    <td>MSSQL</td>
+    <td>sqljdbc4.jar</td>
+<tr>
+</table>
 
 <h3 id="connection-provider">ConnectionProvider</h3>
 ConnectionProvider serves as the source of live JDBC connections for your JaversSQLRepository.
