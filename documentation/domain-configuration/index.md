@@ -371,7 +371,7 @@ or
 , for example:
 
 ```java
-JaversBuildert.javers()
+JaversBuilder.javers()
         .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
         .build();
 ```
