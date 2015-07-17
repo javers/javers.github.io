@@ -92,10 +92,10 @@ with minimal mapping configuration effort
 <h2 id="release-notes">Release notes</h2>
 
 ### 1.3.0
-released on ... <br/>
+released on 2015-07-17 <br/>
 
 * [#100](https://github.com/javers/javers/issues/100) MS SQL support in JaversSQLRepository
-* Oracle support
+* Oracle support in JaversSQLRepository
 
 ### 1.2.11
 released on 2015-06-30<br/>
