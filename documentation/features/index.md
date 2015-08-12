@@ -91,6 +91,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.3
+released on 2015-08-12 <br/>
+
+* Javers-hibernate module merged to javers-spring.
+* [#186](https://github.com/javers/javers/issues/186) fixed another concurrency issue in CommitSequenceGenerator
+
 ### 1.3.2
 released on 2015-08-09 <br/>
 

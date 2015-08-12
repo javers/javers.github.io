@@ -220,7 +220,7 @@ public class JaversSpringMongoApplicationConfig {
 }
 ```
 
-<h2 id="jpa-transaction-manager-integration">JPA Transaction Manager integration</h2>
+<h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
 Transaction management is the important issue for applications backed by SQL databases.
 Generally, all SQL statements executed by `JaversSQLRepository`
 should be executed in the context of the current application's transaction
@@ -229,17 +229,22 @@ should be executed in the context of the current application's transaction
 Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
 and JaVers’ approach to transaction management.
 
-### JaVers transactional instance as a Spring bean
-First, you need to register exactly one **transactional** JaVers instance in your Application Context.
+<h3 id="spring-configuration-for-transactional-javers">Spring configuration for SQL</h3>
+**First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
 Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
 
-Second, you need register a transactional ConnectionProvider.
-If you’re using JPA with Hibernate, choose `JpaHibernateConnectionProvider`
-which is Persistence Context aware and plays along with JpaTransactionManager.
+**Second**, you need to register a transactional ConnectionProvider.
+If you’re using JPA with **Hibernate**, choose `JpaHibernateConnectionProvider` implementation
+which is Persistence Context aware and plays along with Spring JpaTransactionManager.
 
-See below for the complete example of the Application Context.
+**Third**, if you are using Hibernate, you need to deal with lazy-loading proxies.
+Hibernate silently wraps them around your Entities loaded from database.
+We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
+It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
 
-<h3 id="spring-jpa-example">Spring JPA example</h3>
+See below for the complete example of the Spring configuration.
+
+<h3 id="spring-jpa-example">Spring JPA Hibernate example</h3>
 
 Here is a working example of Spring Application Context
 with all JaVers beans, JPA, Hibernate, Spring Data and Spring TransactionManager.
@@ -271,6 +276,7 @@ public class JaversSpringJpaApplicationConfig {
 
         return TransactionalJaversBuilder
                 .javers()
+                .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
                 .registerJaversRepository(sqlRepository)
                 .build();
     }
@@ -361,3 +367,17 @@ public class JaversSpringJpaApplicationConfig {
     //.. EOF Spring-JPA-Hibernate setup ..
 }
 ```
+
+<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
+
+JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
+and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
+
+To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
+
+```java
+TransactionalJaversBuilder
+    .javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
+```
+
+Feel free to provide your own implementation of `object-access` hook if you need better control over unproxing process. 
