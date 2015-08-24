@@ -91,6 +91,11 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.4
+released on 2015-08-24 <br/>
+
+* [#190](https://github.com/javers/javers/issues/190) fixed bug in ManagedClassFactory, Id property can be registered even if it has @Transient annotation
+
 ### 1.3.3
 released on 2015-08-12 <br/>
 
