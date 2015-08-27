@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Features Overview
+title: Features Overview
 submenu: features
 ---
-
-# Features #
 
 JaVers is designed as a framework for **auditing changes** in your object-oriented data.
 

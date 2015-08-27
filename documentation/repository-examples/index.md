@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Repository examples
+title: Repository examples
 submenu: repository-examples
 ---
-
-# Repository examples
 
 All examples are runnable.
 Checkout our github repository:

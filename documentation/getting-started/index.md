@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Getting started
+title: Getting started
 submenu: getting-started
 ---
-
-# Getting started
 
 <h2 id="get-javers">Get JaVers</h2>
 

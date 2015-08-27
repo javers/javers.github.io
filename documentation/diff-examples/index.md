@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Examples
+title:  Diff Examples
 submenu: diff-examples
 ---
-
-# Diff examples
 
 All examples are runnable.
 Checkout our github repository:

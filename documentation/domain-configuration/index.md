@@ -1,11 +1,9 @@
 ---
 layout: docs
-title: JaVers Documentation — Domain Configuration
+title: Domain Configuration
 redirect_from: "/documentation/configuration/"
 submenu: domain-configuration
 ---
-
-# Domain Configuration
 
 None of us like to configure tools but don’t worry — JaVers knows it and
 does the hard work to minimize the configuration efforts on your side.

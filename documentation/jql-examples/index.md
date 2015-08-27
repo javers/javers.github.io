@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — JQL (JaVers Query Language) examples 
+title: JQL (JaVers Query Language) examples 
 submenu: jql-examples
 ---
-
-# JQL (JaVers Query Language) examples 
 
 All examples are runnable.
 Checkout our github repository:

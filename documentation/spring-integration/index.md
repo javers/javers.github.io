@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Spring integration
+title: Spring integration
 submenu: spring-integration
 ---
-
-# Spring integration
 
 Our main idea at JaVers is that our library should be very easy to use.
 So we made JaVers compatible with Spring Framework.

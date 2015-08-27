@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% assign titleSuffix = " — JaVers Documentation" %}
     {% include head.html %}
 </head>
 <body class="page" data-spy="scroll" data-target="#sidebar">
@@ -9,7 +10,8 @@
 <section>
     <div id="content" class="container">
         <div class="row">
-            <div id="main" class="col-md-8">
+            <div id="main" class="col-md-8" itemscope itemtype="http://schema.org/TechArticle">
+                <h1 itemprop="headline">{{ page.title }}</h1>
                 {{ content }}
             </div>
             <div id="sidebar" class="col-md-4 visible-md visible-lg">

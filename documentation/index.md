@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Introduction
+title: Overview
 submenu: introduction
 ---
-
-# Overview
 
 <h2 id="what-is-javers">What is JaVers</h2>
 JaVers is a lightweight java library for **auditing** changes in your data.

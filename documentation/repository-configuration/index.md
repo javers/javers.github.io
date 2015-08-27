@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: JaVers Documentation — JaVers Repository Configuration
+title: JaVers Repository Configuration
 submenu: repository-configuration
 ---
-
-# JaVers Repository Configuration
 
 If you’re going to use JaVers as a data audit framework you should configure `JaversRepository`.
 

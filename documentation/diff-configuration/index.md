@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: JaVers Documentation — Diff Configuration
+title: Diff Configuration
 submenu: diff-configuration
 ---
-
-# Diff Configuration
 
 JaVers’ diff algorithm has a pluggable construction.
 It consists of the core comparators suite and optionally, [custom comparators](#custom-comparators).

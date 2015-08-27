@@ -1,10 +1,8 @@
 ---
 layout: docs
-title: Documentation — Javers Internals
+title: Javers Internals
 submenu: javers-internals
 ---
-
-# Javers Internals
 
 <h2 name="type-mapper">TypeMapper and the type inferring algorithm</h2>
 JaVers use lazy approach to type mapping so types are resolved only for classes spotted in runtime.
