@@ -11,8 +11,15 @@
     <div id="content" class="container">
         <div class="row">
             <div id="main" class="col-md-8" itemscope itemtype="http://schema.org/TechArticle">
+                <meta itemprop="datePublished" content="2015-08-27T00:00:00+00:00"/>
+                <meta itemprop="image" content="{{ site.url }}/img/logotype.png">
+
                 <h1 itemprop="headline">{{ page.title }}</h1>
+
+                <div itemprop="articleBody">
                 {{ content }}
+                </div>
+
             </div>
             <div id="sidebar" class="col-md-4 visible-md visible-lg">
                 <div data-spy="affix" data-offset-top="50" data-offset-bottom="50">
