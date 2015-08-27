@@ -1,7 +1,7 @@
 ---
 layout: main
 title: JaVers &mdash; Object auditing and diff framework for Java
-description: Using JaVers you can forget about the troublesome data versioning. Let the changes in your data be managed by JaVers.
+description: Witth JaVers you can forget about troublesome data versioning. Let the changes in your data be managed by JaVers.
 ---
 <header class="container-fluid hero-container">
     <div class="hero">
@@ -61,16 +61,18 @@ description: Using JaVers you can forget about the troublesome data versioning. 
                 <h2>Features</h2>
                 <h3>With version {{site.javers_current_version}} you can:</h3>
                 <ul>
-                    <li><p><a href="/documentation/diff-examples/">Compare</a> complex object structures using <code>javers.compare()</code>.</p></li>
-                    <li><p><a href="/documentation/repository-examples/#commit-changes">Commit</a> changes performed on your domain objects with a single
-                        <code>javers.commit()</code> call.</p></li>
+                    <li><p><a href="/documentation/diff-examples/">Compare</a> complex object structures using <code>javers.compare(Object oldVersion, Object currentVersion)</code></p></li>
+
+                    <li><p><a href="/documentation/repository-examples/#commit-changes">Commit</a> changes performed on your domain objects calling
+                        <code>javers.commit(String author, Object currentVersion)</code></p></li>
+
                     <li><p>Take advantage of the <a href="/documentation/spring-integration/#auto-audit-aspect">auto-audit annotation</a>
                          for Spring Data Repositories.</p></li>
 
                     <li><p><a href="/documentation/repository-configuration/#choose-javers-repository">
                         Persist</a> data change history in <b>MongoDB</b>, <b>PostgreSQL</b>, <b>MySQL</b>, <b>Oracle</b> or
                         <b>Microsoft SQL Server</b>.</p></li>
-                    <li><p>Track every change off object fields as well as relations changes.</p></li>
+                    <li><p>Track every change of object fields as well as relations changes.</p></li>
 
                     <li><p>Use <a href="/documentation/jql-examples/">Javers Query Language</a>
                         to easily query for changes of a given class, object or property.</p></li>
@@ -89,7 +91,7 @@ description: Using JaVers you can forget about the troublesome data versioning. 
                     Check out our cool Demo webapp based on <code>spring-boot</code>. Launch it from command
                     line using provided
                     <code>Gradle</code> wrapper.
-                    Requiremets: <code>MongoDB</code> (running mongod at localhost) and Java8.
+                    Requiremets: <code>MongoDB</code> (running mongod at localhost).
                 </p>
 
                 <p class="console">
