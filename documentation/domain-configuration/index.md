@@ -1,7 +1,6 @@
 ---
 layout: docs
 title: Domain Configuration
-redirect_from: "/documentation/configuration/"
 submenu: domain-configuration
 ---
 
