@@ -205,6 +205,8 @@ There are two kinds of property level annotations.
   So when you use `@Id`, the class level `@Entity` is optional.
 * `Ignore` annotation, to mark a property as ignored by the diff engine.
 
+The same like for Class level annotations, JaVers ignores package names and cares only about simple class names.
+
 <table class="table" width="100%" style='font-family: monospace;'>
 <tr>
     <th>Ignore</th>
@@ -220,11 +222,15 @@ There are two kinds of property level annotations.
 </tr>
 <tr>
     <td>@*.Transient</td>
-    <td>@*.Id</td>
+    <td>@javax.persistence.EmbeddedId</td>
 </tr>
 <tr>
     <td>@*.DiffIgnore</td>
+    <td>@*.Id</td>
+</tr>
+<tr>
     <td></td>
+    <td>@*.EmbeddedId</td>
 </tr>
 </table>
 
@@ -232,13 +238,12 @@ There are two kinds of property level annotations.
 Entity `Id` has a special role in JaVers. It identifies an Entity instance.
 You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
 
-The *JaversType* of Id can be *Primitive* or *Value*
-so one of the types with atomic values, compared by `equals()`.
-We discourage the use of `ValueObject` here as it has multiple values.
+The *JaversType* of an Id class is mapped automatically
+to *Primitive* if it’s a Java primitive type, otherwise it’s mapped to `Value`. 
 
-This rule is expressed in the JaVers type inferring algorithm.
-If an Entity Id is not Primitive, JaVers maps it as *Value* by default.
-
+JaVers doesn’t distinct between JPA `@Id` and `@EmbeddedId` annotations,
+so you can use them interchangeably.  
+ 
 Consider the following Entity mapping example:
 
 ```java
@@ -262,9 +267,8 @@ public class MongoStoredEntity {
 
 With zero config, JaVers maps:
 
-- `MongoStoredEntity` class as `Entity`,
-  since `@Id` and `@Entity` annotations are scanned (JaVers only cares about the annotation class name, not package name).
-- `ObjectId` class as `Value`, since it’s the type of the Id-property and it’s not Primitive.
+- `MongoStoredEntity` class to `Entity`, since `@Id` and `@Entity` annotations are present,
+- `ObjectId` class as `Value`, since it’s the type of the Id-property and it’s not a Primitive.
 
 So far so good. This mapping is OK for calculating diffs.
 Nevertheless, if you plan to use `JaversRepository`,
