@@ -89,22 +89,38 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.8
+released on 2015-09-21 <br/>
+
+* [#126](https://github.com/javers/javers/issues/126)
+ Added support for Java 8 `java.util.Optional` and types from Java 8 Date and Time API
+ (like `java.time.LocalDateTime`).
+ JaVers can still run on JDK 7.  
+* [#197](https://github.com/javers/javers/issues/197)
+ Added JSON prettyPrint switch &mdash; `JaversBuilder.withPrettyPrint(boolean prettyPrint)`
+* [#199](https://github.com/javers/javers/issues/199)
+Added support for comparing top-level Arrays, i.e.:
+`javers.compare(new int[]{1}, new int[]{1,2})`.
+Contributed by [Derek Miller](https://github.com/dmmiller612).
+
 ### 1.3.5
 released on 2015-09-15 <br/>
 
 * [#195](https://github.com/javers/javers/issues/195)
- added support for JPA @EmbeddedId annotation.
+ Added support for JPA @EmbeddedId annotation.
 
 ### 1.3.4
 released on 2015-08-24 <br/>
 
-* [#190](https://github.com/javers/javers/issues/190) fixed bug in ManagedClassFactory, Id property can be registered even if it has @Transient annotation
+* [#190](https://github.com/javers/javers/issues/190) 
+ Fixed bug in ManagedClassFactory, Id property can be registered even if it has @Transient annotation.
 
 ### 1.3.3
 released on 2015-08-12 <br/>
 
 * Javers-hibernate module merged to javers-spring.
-* [#186](https://github.com/javers/javers/issues/186) fixed another concurrency issue in CommitSequenceGenerator
+* [#186](https://github.com/javers/javers/issues/186) 
+  Fixed another concurrency issue in CommitSequenceGenerator.
 
 ### 1.3.2
 released on 2015-08-09 <br/>
