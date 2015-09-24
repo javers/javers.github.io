@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.9
+released on 2015-09-24 <br/>
+
+* [#205](https://github.com/javers/javers/issues/205)
+ Fixed `AFFECTED_CDO_IS_NOT_AVAILABLE JaVers runtime error` when serializing `Changes` to JSON using Jackson.
+
 ### 1.3.8
 released on 2015-09-21 <br/>
 
