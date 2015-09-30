@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.10
+released on 2015-09-30 <br/>
+
+* [#206](https://github.com/javers/javers/issues/206)
+ Fixed NPE when reading ValueObject changes from SQL repository.
+ It was caused by error in serializing ValueObjectId to JSON.
+
 ### 1.3.9
 released on 2015-09-24 <br/>
 
