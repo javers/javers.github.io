@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.11
+released on 2015-10-01 <br/>
+
+* [#213](https://github.com/javers/javers/issues/213)
+ Fixed bug in calculating changed properties list in `CdoSnapshot.getChanged()`
+ for nullified values.
+
 ### 1.3.10
 released on 2015-09-30 <br/>
 
