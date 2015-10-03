@@ -89,6 +89,14 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.12
+released on 2015-10-03 <br/>
+
+* [#208](https://github.com/javers/javers/issues/208)
+ Added support for legacy date types: `java.util.Date`, `java.sql.Date`, `java.sql.Timestamp` and `java.sql.Time`.
+ Added milliseconds to JSON datetime format.
+ All local datetimes are now serialized using ISO format `yyyy-MM-dd'T'HH:mm:ss.SSS`.   
+
 ### 1.3.11
 released on 2015-10-01 <br/>
 
