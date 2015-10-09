@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.13
+released on 2015-10-09 <br/>
+
+* [#207](https://github.com/javers/javers/issues/207)
+ Fixed bug in serialization ValueObject arrays.
+ Fixed bug in comparing deserialized primitive arrays.
+
 ### 1.3.12
 released on 2015-10-03 <br/>
 
