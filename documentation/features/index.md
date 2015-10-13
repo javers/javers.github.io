@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.14
+released on 2015-10-13 <br/>
+
+* [#218](https://github.com/javers/javers/issues/218)
+ Fixed concurrency issue in TypeMapper which caused ClassCastExceptions, i.e.:
+  java.lang.ClassCastException: com.example.MyObject cannot be cast to org.javers.core.metamodel.object.GlobalId
+
 ### 1.3.13
 released on 2015-10-09 <br/>
 
