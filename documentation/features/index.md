@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.16
+released on 2015-10-14 <br/>
+
+* [#221](https://github.com/javers/javers/issues/221)
+ Fixed `JaversException.CANT_SAVE_ALREADY_PERSISTED_COMMIT` thrown when concurrent writes
+ happened to hit JaversSqlRepository.
+
 ### 1.3.15
 released on 2015-10-13 <br/>
 
