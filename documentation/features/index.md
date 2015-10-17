@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.17
+released on 2015-10-17 <br/>
+
+* [#224](https://github.com/javers/javers/issues/224)
+ Fixed bug in `org.javers.common.collections.Optional.equals()`
+ which caused strange ClassCastException.
+
 ### 1.3.16
 released on 2015-10-14 <br/>
 
