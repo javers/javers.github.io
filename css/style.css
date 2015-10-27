@@ -18,7 +18,7 @@ code {
     padding-right: 0;
     color: #111;
     font-size: 1em;
-    white-space: pre;
+    white-space: pre-wrap;
     word-wrap: normal;
     overflow: auto;
 }
