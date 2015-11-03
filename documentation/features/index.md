@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.18
+released on 2015-11-04 <br/>
+
+* [#244](https://github.com/javers/javers/pull/244)
+ Added support for upper-bounded wildcard types, like `List<? extends Something>`.
+ Contributed by [dbevacqua](https://github.com/dbevacqua).
+
 ### 1.3.17
 released on 2015-10-17 <br/>
 
