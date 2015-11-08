@@ -89,6 +89,16 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.20
+released on 2015-11-08 <br/>
+
+* [#177](https://github.com/javers/javers/pull/177)
+  Added long-awaited `javers.compareCollections()` feature.
+  See [compare top-level collections](/documentation/diff-examples/#compare-collections) example.
+
+* [#240](https://github.com/javers/javers/pull/240)
+  Fixed NPE in `LevenshteinListChangeAppender`.
+
 ### 1.3.18
 released on 2015-11-04 <br/>
 

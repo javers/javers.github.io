@@ -18,6 +18,7 @@ Run examples as unit tests:
 gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
 gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
 gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
+gradlew javers-core:example -Dtest.single=ComparingTopLevelCollectionExample
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
@@ -300,13 +301,9 @@ package org.javers.core.examples;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
-import org.javers.core.diff.changetype.NewObject;
-import org.javers.core.diff.changetype.ObjectRemoved;
-import org.javers.core.diff.changetype.ReferenceChange;
-import org.javers.core.diff.changetype.ValueChange;
+import org.javers.core.diff.changetype.*;
 import org.javers.core.examples.model.Employee;
 import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class EmployeeHierarchiesDiffExample {
@@ -402,7 +399,7 @@ public class EmployeeHierarchiesDiffExample {
 
   /** {@link NewObject} example, large structure */
   @Test
-  public void shouldDetectFiredForLargeDepthStructure() {
+  public void shouldDetectFiredInLargeDepthStructure() {
     //given
     Javers javers = JaversBuilder.javers().build();
 
@@ -463,4 +460,88 @@ Diff:
    globalId:'org.javers.core.examples.model.Employee/Manager One',
    property:'subordinates',
    containerChanges:[(0).removed:'org.javers.core.examples.model.Employee/Great Developer']}
+```
+
+<h2 id="compare-collections">Compare top-level collections</h2>
+
+JaVers can compare arbitrary complex structures of objects,
+including collections passed as a top-level handles.
+
+If you want to compare top-level collections with simple items, like Primitives or Values
+(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping),
+you can use standard `javers.compare(Object, Object)` method.
+Collection items will be compared using `equals()`, resulting in a flat list of Changes.
+
+But when you need to compare top-level collections with complex items,
+like Entities or ValueObjects, use `javers.compareCollections(Collection, Collection, Class)`.
+This method builds object graphs and compares them deeply,
+using `itemClass` as a hint about collection items type.
+
+**The case**<br/>
+When collections are properties of some domain object, for example:
+
+```
+public class Boss {
+    @Id private String name;
+
+    private final List<Person> subordinates = new ArrayList<>();
+}
+```
+
+JaVers uses Reflection and captures `Person` as the item type of `subordinates` collection.
+
+But when collections are passed as a top-level references, for example:
+
+```
+Diff diff = javers.compare(oldList, newList);
+```
+
+due to type erasure, there is no way to statically determine a type of collection items.
+
+Luckily, `compareCollections()` comes to the rescue
+and gives you exactly the same diff result for top-level collections as if they were object properties.
+
+<tt>[ComparingTopLevelCollectionExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java)</tt>:
+
+```java
+package org.javers.core.examples;
+
+import org.javers.common.collections.Lists;
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Diff;
+import org.javers.core.diff.changetype.ValueChange;
+import org.javers.core.examples.model.Person;
+import org.junit.Test;
+import java.util.List;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+/**
+ * @author bartosz.walacik
+ */
+public class ComparingTopLevelCollectionExample {
+
+  @Test
+  public void shouldDeeplyCompareTwoTopLevelCollections() {
+    //given
+    Javers javers = JaversBuilder.javers().build();
+
+    List<Person> oldList = Lists.asList( new Person("tommy", "Tommy Smart") );
+    List<Person> newList = Lists.asList( new Person("tommy", "Tommy C. Smart") );
+
+    //when
+    Diff diff = javers.compareCollections(oldList, newList, Person.class);
+
+    //then
+    //there should be one change of type {@link ValueChange}
+    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
+
+    assertThat(diff.getChanges()).hasSize(1);
+    assertThat(change.getProperty().getName()).isEqualTo("name");
+    assertThat(change.getLeft()).isEqualTo("Tommy Smart");
+    assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
+
+    System.out.println(diff);
+  }
+}
 ```
