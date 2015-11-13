@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.21
+released on 2015-11-13 <br/>
+
+* [#247](https://github.com/javers/javers/pull/247)
+  Fixed bug while querying for a ValueObject stored as a Map value.
+
 ### 1.3.20
 released on 2015-11-08 <br/>
 
