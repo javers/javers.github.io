@@ -89,6 +89,10 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.4.0
+//TODO
+breaking changes ValueObjectId. no more VO class in JSON
+
 ### 1.3.21
 released on 2015-11-13 <br/>
 
