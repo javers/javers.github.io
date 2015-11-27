@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.3.22
+released on 2015-11-27 <br/>
+
+* [#250](https://github.com/javers/javers/pull/250)
+  Added missing mapping for `CharSequence`.
+
 ### 1.3.21
 released on 2015-11-13 <br/>
 
