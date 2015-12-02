@@ -59,6 +59,10 @@ code {
     color: white;
 }
 
+.navbar-javers .navbar-brand img {
+    height: 28px;
+}
+
 .logo-version:active {
    color:black;
 }
