@@ -93,68 +93,75 @@ code {
     margin: 0 0 5px;
 }
 
-.hero .repositories {
-    padding-top: 50px;
+.feature h2 {
+    font-size: 24px;
+    color: #ee6c21;
+    -moz-transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
 }
 
-.hero .repositories span {
-    padding: 15px;
+.feature:hover h2 {
+    color: #000;
 }
 
-.hero .repositories a {
-    position: relative;
-    display: inline-block;
-    padding: 15px;
-    border-radius: 10px;
-    border: #fff solid 4px;
-    max-width: 210px;
-    font-size: 1.6em;
-    text-transform: uppercase;
-    line-height: 20px;
-    color: #e7e7df;
+.icon-container {
+    display: table;
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    -moz-transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
 }
 
-.hero .repositories a:hover {
-    text-decoration: none;
+.feature .icon-container {
+    border: 3px solid #ee6c21;
+    color: #ee6c21;
 }
 
-.hero .repositories a.maven:hover {
-    background-color: #d96521;
-    border: #ee6c21 solid 4px;
+.feature:hover .icon-container {
+    border-color: #ee6c21;
+    background-color: #ee6c21;
+    color: #000;
 }
 
-.hero .repositories a.github:hover {
-    background-color: #3e7ab5;
-    border: #4183c4 solid 4px;
+.icon-container .icon {
+    font-size: 48px;
+    vertical-align: middle;
+    text-align: center;
+    display: table-cell;
 }
 
-.hero .repositories a img {
-    position: absolute;
+.social {
+    text-align: center;
 }
 
-.hero .repositories a.maven {
-    padding-left: 80px;
-    text-align: right;
+.social .icon-container {
+    border: 3px solid #000;
+    color: #000;
 }
 
-.hero .repositories a.github {
-    padding-right: 80px;
-    text-align: left;
+.social:hover .icon-container {
+    border: 3px solid #ee6c21;
+    color: #ee6c21;
 }
 
-.hero .repositories a.maven img {
-    left: -15px;
-    top: 10px;
+.social h2 {
+    font-size: 18px;
+    color: #000;
 }
 
-.hero .repositories a.github img {
-    right: -15px;
-    top: 5px;
+.social h3 {
+    font-size: 16px;
+    color: #ee6c21
 }
 
-.hero .repositories a small {
-    color: #e7e7df;
-    font-size: 0.6em;
+.white-container {
+    padding: 20px 0;
 }
 
 h3.black-header {
@@ -198,21 +205,8 @@ h3.black-header {
 
 .grey-container {
     background-color: #f0f4f7;
-    padding-bottom: 15px;
-}
-
-.grey-container h2 {
-    font-weight: 400;
-    margin-bottom: 0;
-    text-transform: uppercase;
-}
-
-.grey-container h3 {
-    color: #444;
-    font-weight: 300;
-    line-height: 10px;
-    text-transform: uppercase;
-    margin-top: 5px;
+    padding-bottom: 40px;
+    padding-top: 40px;
 }
 
 .console {
@@ -427,15 +421,6 @@ body.page section #sidebar section ul li.active a {
         padding: 10px;
     }
 
-    .grey-container h2 {
-        font-size: 1.2em;
-    }
-
-    .grey-container h3 {
-        font-size: 1.2em;
-        line-height: 1.2em;
-    }
-
     .console {
         font-size: 0.6em;
         padding: 20px;
@@ -462,14 +447,6 @@ body.page section #sidebar section ul li.active a {
         padding: 10px;
     }
 
-    .grey-container h2 {
-        font-size: 1.9em;
-    }
-
-    .grey-container h3 {
-        font-size: 0.9em;
-    }
-
 }
 
 /* Large devices (large desktops, 1200px and down) */
@@ -489,15 +466,6 @@ body.page section #sidebar section ul li.active a {
     h3.black-header {
         font-size: 1.5em;
         padding: 15px;
-    }
-
-    .grey-container h2 {
-        font-size: 2.4em;
-    }
-
-    .grey-container h3 {
-        font-size: 1.2em;
-        line-height: 1.2em;
     }
 
 }
