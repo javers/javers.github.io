@@ -6,7 +6,7 @@ body {
 }
 
 p {
-   color: #222;
+    color: #222;
 }
 
 a, a:hover, a:active {
@@ -34,8 +34,8 @@ code {
 }
 
 .navbar-javers .navbar-nav > li.active > a {
-     border-bottom: solid 2px #ea4d1a;
-     background: transparent;
+    border-bottom: solid 2px #ea4d1a;
+    background: transparent;
 }
 
 .navbar-javers .navbar-nav > li.active > a:hover,
@@ -64,13 +64,13 @@ code {
 }
 
 .logo-version:active {
-   color:black;
+    color: black;
 }
 
 .logo-version {
     margin-top: 17px;
-    font-size:1.6em;
-    float:right;
+    font-size: 1.6em;
+    float: right;
     text-decoration: none;
 }
 
@@ -275,6 +275,11 @@ footer p {
 
 footer p img {
     padding: 5px;
+    height: 28px;
+}
+
+#team {
+    padding:10px;
 }
 
 body.page section header {
@@ -335,7 +340,6 @@ body.page section #sidebar section {
     padding-right: 0px;
 }
 
-
 body.page section #sidebar section a {
     font-size: 1.5em;
     font-weight: 300;
@@ -343,9 +347,10 @@ body.page section #sidebar section a {
     padding-left: 15px;
     padding-right: 0px;
 }
+
 body.page section #sidebar section a.active {
     border-left: solid 2px #ea4d1a;
-    padding-left:13px;
+    padding-left: 13px;
 }
 
 body.page section #sidebar section a:hover {
@@ -369,16 +374,16 @@ body.page section #sidebar section ul li a {
     margin: 0px;
 }
 
-body.page section #sidebar section ul li a:hover{
+body.page section #sidebar section ul li a:hover {
     background: transparent;
     color: #ee6c21;
     text-decoration: none;
 }
-body.page section #sidebar section ul li.active a{
-    border-left: 2px solid  #ee6c21;
+
+body.page section #sidebar section ul li.active a {
+    border-left: 2px solid #ee6c21;
     padding-left: 23px;
 }
-
 
 /* Small devices (tablets, 768px and down) */
 @media (max-width: 767px) {
@@ -495,4 +500,20 @@ body.page section #sidebar section ul li.active a{
         line-height: 1.2em;
     }
 
+}
+
+li.github-user {
+    display: inline-block;
+}
+
+li.github-user img {
+    width: 96px;
+    border-radius: 50%;
+    margin: 12px;
+    display: block;
+}
+
+li.github-user a {
+    display: block;
+    text-align: center;
 }
