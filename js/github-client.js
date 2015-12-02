@@ -18,7 +18,7 @@ repo.contributors(function (err, data) {
 
 function render_people(people, selector) {
     function render_author(author) {
-        return $("<div/>").append([
+        return $("<li/>").append([
             $('<img />', {"src": author.avatar_url}),
             $('<a />', {"href": author.html_url}).append(author.login)
         ]);
