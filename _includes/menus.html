@@ -20,10 +20,11 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-                <li {% if current[1] == 'documentation/features-overview' %}class='active'{% endif %}>
+                <li {% if page.url == '/documentation/features/' %}class='active'{% endif %}>
                     <a href="/documentation/features">Features</a>
                 </li>
-                <li {% if current[1] == 'documentation' %}class='active'{% endif %}>
+
+                <li {% if page.url == '/documentation/' %}class='active'{% endif %}>
                     <a href="/documentation">Documentation</a>
                     <ul class="visible-xs">
                         <li><a href="/documentation/">Overview</a></li>
@@ -39,6 +40,11 @@
                         <li><a href="/documentation/javers-internals">JaVers internals</a></li>
                     </ul>
                 </li>
+
+                <li {% if page.url == '/documentation/features/#release-notes/' %}class='active'{% endif %}>
+                    <a href="/documentation/features/#release-notes">Release notes</a>
+                </li>
+
                 <li><a href="{{site.javadoc_url}}index.html">Javadoc</a></li>
             </ul>
         </div>
