@@ -93,6 +93,10 @@ code {
     margin: 0 0 5px;
 }
 
+.feature a {
+    text-decoration: none;
+}
+
 .feature h2 {
     font-size: 24px;
     color: #ee6c21;
