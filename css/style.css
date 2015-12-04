@@ -159,6 +159,10 @@ code {
     color: #000;
 }
 
+.social h2 span {
+    color: #ee6c21;
+}
+
 .social h3 {
     font-size: 16px;
     color: #ee6c21
