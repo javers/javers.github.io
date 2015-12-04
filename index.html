@@ -10,98 +10,152 @@ description: Witth JaVers you can forget about troublesome data versioning. Let 
         <p>Using <strong>JaVers</strong> you can forget about the troublesome data versioning</p>
 
         <p>Let the changes in your data be managed by JaVers</p>
-
-        <div class="repositories hidden-xs">
-            <a href="http://search.maven.org/#artifactdetails|org.javers|javers-core|{{site.javers_current_version}}|jar" class="maven">
-                maven
-                <small>central</small>
-                <img src="img/maven_logo.png"/>
-            </a>
-            &nbsp;&nbsp;
-            <a href="https://github.com/javers/javers" class="github">
-                github
-                <small>repository</small>
-                <img src="img/github_logo.png"/>
-            </a>
-        </div>
-
     </div>
 </header>
 
 <h3 class="black-header">Why Javers?</h3>
 
 <section id="why-javers" class="container-fluid">
-    <div class="row">
-        <div class="col-xs-4 col-md-4">
-            <span>
-                <img src="img/icon_paper_plane.svg" alt="lightweight and versatile"/>
-            </span>
-            <h4>lightweight<br/>and versatile java lib</h4>
+    <div class="container white-container">
+        <div class="row">
+            <div class="feature col-md-4 col-sm-6">
+                <a href="/documentation/diff-examples/">
+                    <div class="icon-container">
+                        <span class="icon octicon octicon-git-compare"></span>
+                    </div>
+                    <h2>Compare</h2>
+                </a>
+                Compare complex object structures
+            </div>
+
+            <div class="feature col-md-4 col-sm-6">
+                <a href="/documentation/repository-examples/">
+                    <div class="icon-container">
+                        <span class="icon octicon octicon-git-pull-request"></span>
+                    </div>
+                    <h2>Commit</h2>
+                </a>
+                Commit changes performed on your domain objects
+            </div>
+            <div class="feature col-md-4 col-sm-6">
+                <a href="/documentation/spring-integration/#auto-audit-aspect">
+                    <div class="icon-container">
+                        <span class="icon fa fa-at"></span>
+                    </div>
+                    <h2>Auto-audit annotations</h2>
+                </a>
+                Take advantage of the auto-audit annotation for Spring Data Repositories
+            </div>
+            <div class="feature col-md-4 col-sm-6">
+                <a href="/documentation/repository-configuration/">
+                    <div class="icon-container">
+                        <span class="icon octicon octicon-repo"></span>
+                    </div>
+                    <h2>Persist</h2>
+                </a>
+                Persist data change history in <b>MongoDB</b>, <b>PostgreSQL</b>, <b>MySQL</b>, <b>Oracle</b> or
+                <b>Microsoft SQL Server</b>
+            </div>
+            <div class="feature col-md-4 col-sm-6">
+                <a href="/documentation/diff-examples/#compare-graphs">
+                    <div class="icon-container">
+                        <span class="icon octicon octicon-diff"></span>
+                    </div>
+                    <h2>Track changes</h2>
+                </a>
+                Track every change of object fields as well as relations changes
+            </div>
+            <div class="feature col-md-4 col-sm-6">
+                <a href="/documentation/jql-examples/">
+                    <div class="icon-container">
+                        <span class="icon octicon octicon-book"></span>
+                    </div>
+                    <h2>Javers Query Language</h2>
+                </a>
+                Use Javers Query Language
+                to easily query for changes of a given class, object or property
+            </div>
         </div>
-        <div class="col-xs-4 col-md-4">
-            <span>
-                <img src="img/icon_gears.svg" alt="easy configuration"/>
-            </span>
-            <h4><a href="/documentation/configuration">easy<br/>configuration</a></h4>
-        </div>
-        <div class="col-xs-4 col-md-4">
-            <span>
-                <img src="img/icon_plug.svg" alt="open source"/>
-            </span>
-            <h4><a href="https://github.com/javers/javers/issues/">
-                open for extension<br/>and contributors</a></h4>
+        <div class="row">
+            <div class="feature col-md-6 col-sm-6">
+                <a href="/documentation/repository-examples/#read-snapshots-history">
+                    <div class="icon-container">
+                        <span class="icon octicon octicon-mirror"></span>
+                    </div>
+                    <h2>Two views</h2>
+                </a>
+                Browse data change history in two views &mdash;
+                <a href="/documentation/repository-examples/#read-changes-history">diffs</a> and
+                <a href="/documentation/repository-examples/#read-snapshots-history">snapshots</a>
+            </div>
+            <div class="feature col-md-6 col-sm-6">
+                <a href="documentation/getting-started/">
+                    <div class="icon-container">
+                        <span class="icon fa fa-rocket"></span>
+                    </div>
+                    <h2>One, two, three, go!</h2>
+                </a>
+                <a href="documentation/getting-started/">Quick start</a>
+                and easy <a href="/documentation/domain-configuration">configuration</a>
+            </div>
         </div>
     </div>
 </section>
 
+<h3 class="black-header">Community</h3>
+
 <section class="grey-container">
     <div class="container">
         <div class="row">
-            <div id="features" class="col-md-6">
-                <h2>Features</h2>
-                <h3>With version {{site.javers_current_version}} you can:</h3>
-                <ul>
-                    <li><p><a href="/documentation/diff-examples/">Compare</a> complex object structures using <code>javers.compare(Object oldVersion, Object currentVersion)</code></p></li>
 
-                    <li><p><a href="/documentation/repository-examples/#commit-changes">Commit</a> changes performed on your domain objects calling
-                        <code>javers.commit(String author, Object currentVersion)</code></p></li>
-
-                    <li><p>Take advantage of the <a href="/documentation/spring-integration/#auto-audit-aspect">auto-audit annotation</a>
-                         for Spring Data Repositories.</p></li>
-
-                    <li><p><a href="/documentation/repository-configuration/#choose-javers-repository">
-                        Persist</a> data change history in <b>MongoDB</b>, <b>PostgreSQL</b>, <b>MySQL</b>, <b>Oracle</b> or
-                        <b>Microsoft SQL Server</b>.</p></li>
-                    <li><p>Track every change of object fields as well as relations changes.</p></li>
-
-                    <li><p>Use <a href="/documentation/jql-examples/">Javers Query Language</a>
-                        to easily query for changes of a given class, object or property.</p></li>
-
-                    <li><p>Browse data change history in two views &mdash;
-                        <a href="/documentation/repository-examples/#read-changes-history">diffs</a> and
-                        <a href="/documentation/repository-examples/#read-snapshots-history">snapshots</a>.</p></li>
-                </ul>
-            </div>
-            <div id="demo-app" class="col-md-6">
-                <h2>Demo app</h2>
-
-                <h3>Test it out in a few seconds</h3>
-
-                <p>
-                    Check out our cool Demo webapp based on <code>spring-boot</code>. Launch it from command
-                    line using provided
-                    <code>Gradle</code> wrapper.
-                    Requiremets: <code>MongoDB</code> (running mongod at localhost).
-                </p>
-
-                <p class="console">
-                    git clone https://github.com/javers/javers-demo.git
-                    <br/>
-                    ./gradlew bootRun
-                </p>
-
-                <p>In a few seconds, app should be up & ready at <code>http://localhost:8080</code></p>
-            </div>
+            <a href="http://stackoverflow.com/questions/tagged/javers?sort=newest">
+                <div class="social col-md-2 col-sm-6">
+                    <div class="icon-container">
+                        <span class="icon fa fa-stack-overflow"></span>
+                    </div>
+                    <h2>Ask a question at<br><span>StackOverflow</span></h2>
+                </div>
+            </a>
+            <a href="https://github.com/javers/javers">
+                <div class="social col-md-2 col-sm-6">
+                    <div class="icon-container">
+                        <span class="icon fa fa-github"></span>
+                    </div>
+                    <h2>Contribute at<br><span>Github</span></h2>
+                </div>
+            </a>
+            <a href="https://github.com/javers/javers/issues">
+                <div class="social col-md-2 col-sm-6">
+                    <div class="icon-container">
+                        <span class="icon fa fa-bug"></span>
+                    </div>
+                    <h2>Report a Bug at<br><span>GitHub Issues</span></h2>
+                </div>
+            </a>
+            <a href="http://search.maven.org/#artifactdetails|org.javers|javers-core|{{site.javers_current_version}}|jar">
+                <div class="social col-md-2 col-sm-6">
+                    <div class="icon-container">
+                        <span class="icon fa fa-cloud-download"></span>
+                    </div>
+                    <h2>Download from<br><span>The Central</span></h2>
+                </div>
+            </a>
+            <a href="https://gitter.im/javers/javers">
+                <div class="social col-md-2 col-sm-6">
+                    <div class="icon-container">
+                        <span class="icon fa fa-comments"></span>
+                    </div>
+                    <h2>Chat with us at<br><span>Gitter</span></h2>
+                </div>
+            </a>
+            <a href="https://twitter.com/javers_org">
+                <div class="social col-md-2 col-sm-6">
+                    <div class="icon-container">
+                        <span class="icon fa fa-twitter"></span>
+                    </div>
+                    <h2>Follow us on<br><span>Twitter</span></h2>
+                </div>
+            </a>
         </div>
     </div>
 </section>
@@ -109,48 +163,11 @@ description: Witth JaVers you can forget about troublesome data versioning. Let 
 <section class="dark">
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
-                <h2>Upcoming releases</h2>
-                See our plans for
-                <a href="https://github.com/javers/javers/milestones">upcoming releases</a>
-
-                <h2>Release notes</h2>
-                See <a href="documentation/features/#release-notes">release notes</a>
-
-                <h2>Report an issue</h2>
-                Found a bug? Documentation is unclear?<br/>
-                <a href="https://github.com/javers/javers/issues/">Report an issue</a></p>
-            </div>
-            <div id="team" class="col-md-4">
-                <h2>Project team</h2>
-                <ul class="list-unstyled">
-                    <li style="margin-bottom: 12px">
-                        <img alt="Bartosz Walacik Gravatar"
-                             src="http://www.gravatar.com/avatar/09d370c8f5e6c5caf365a31f1f2128fc" class="profile-img"/>
-                        <strong>Bartosz Walacik</strong>&nbsp;
-                        <small>owner</small>
-                        <a href="https://twitter.com/BartoszWalacik" title="Bartosz Walaciak">@BartoszWalacik</a>
-                    </li>
-                    <li>
-                        <img alt="Paweł Szymczyk Gravatar"
-                             src="http://www.gravatar.com/avatar/c81d83fdbe3a8ea5f5fef874a2272094" class="profile-img"/>
-                        <strong>Paweł Szymczyk</strong>&nbsp;
-                        <small>committer</small>
-                        <a href="https://twitter.com/pawelszymczyk">@pawelszymczyk</a>
-                    </li>
-                    <li>
-                        <img alt="Bartosz Gałek Gravatar"
-                             src="http://www.gravatar.com/avatar/cb50c20f3cf5ff15832969b9f646438b" class="profile-img"/>
-                        <strong>Bartosz Gałek</strong>&nbsp;
-                        <small>committer</small>
-                        <a href="https://twitter.com/bartoszgalek" title="Bartosz Gałek">@bartoszgalek</a>
-                    </li>
-                </ul>
-
-                <h2>Contact</h2>
-                Join our <a href="https://gitter.im/javers/javers">chat room</a> at Gitter
-                <br/>
-                or <a href="mailto:bartek@javers.org" target="_top">mail us</a>
+            <div id="team" class="col-md-8">
+                <h2>Core team</h2>
+                    <ul id="github-team" class="list-unstyled"></ul>
+                <h2>Contributors</h2>
+                    <ul id="github-contributors" class="list-unstyled"></ul>
             </div>
             <div class="col-md-4">
                 <br/>
@@ -163,3 +180,6 @@ description: Witth JaVers you can forget about troublesome data versioning. Let 
         </div>
     </div>
 </section>
+
+<script src="js/github.js"></script>
+<script src="js/github-client.js"></script>
