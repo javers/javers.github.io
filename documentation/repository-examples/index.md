@@ -236,7 +236,7 @@ public class BasicCommitExample {
         // there should be one ValueChange with Bob's firstName
         assertThat(changes).hasSize(1);
         ValueChange change = (ValueChange) changes.get(0);
-        assertThat(change.getProperty().getName()).isEqualTo("name");
+        assertThat(change.getPropertyName()).isEqualTo("name");
         assertThat(change.getLeft()).isEqualTo("Robert Martin");
         assertThat(change.getRight()).isEqualTo("Robert C.");
     }
@@ -470,7 +470,7 @@ public class JsonTypeAdapterExample {
         Diff diff = javers.compare(entity1, entity2);
 
         //then
-        String json = javers.toJson(diff);
+        String json = javers.getJsonConverter().toJson(diff);
         Assertions.assertThat(json).contains(id.toString());
 
         System.out.println(json);

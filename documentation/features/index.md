@@ -91,7 +91,10 @@ with minimal mapping configuration effort
 
 ### 1.4.0
 //TODO
-breaking changes ValueObjectId. no more VO class in JSON
+breaking changes:
+
+* most of @Deprecated API removed
+* slight API changes in few places
 
 ### 1.3.22
 released on 2015-11-27 <br/>
