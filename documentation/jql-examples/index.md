@@ -15,7 +15,8 @@ cd javers
 Run examples as unit tests:
 
 ```
-gradlew javers-core:example -Dtest.single=JqlExample
+./gradlew javers-core:example -Dtest.single=JqlExample
+./gradlew javers-core:example -Dtest.single=RefactoringExample
 ```
 
 ## Overview
@@ -28,7 +29,7 @@ used by concrete JaversRepository implementations (like SQL, MongoDB).
 **The case** <br/> 
 In this example we show all types of JQL queries.
 This time, we use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
-as these are far more readable for data-driven test than Java.
+as these languages are far more readable for BDD-style tests than Java.
 
 Groovy is a nice, dynamic language, runnable on JVM
 and Spock is our tool of choice for TDD. We really like it so this is also a chance to
@@ -45,20 +46,26 @@ and for snapshots use
 Both methods understand the same JQL API,
 so you can use the same query object to get changes and snapshots views.
 
-**The Big Picture** <br/>
+**Table of Contents** <br/>
 There are three types of queries: 
 
 * query for [Entity](#instance-id-query) changes by Instance Id,
 * query for [ValueObject](#by-value-object-query) changes,
 * query for any object changes [by class of object](#by-class-query).
 
-For each query you can add one or more optional filters:
+Queries can have one or more optional [filters](#query-filters):
 
 * [property](#property-filter) filter,
 * [limit](#limit-filter) filter, 
 * [NewObject changes](#new-object-filter) filter.
 
-Let’s see how to query for changes.
+JQL can adapt when you refactor your domain classes:
+
+* refactoring [Entities](#entity-refactoring) with `@TypeName`,
+* free refactoring of [ValueObjects](#value-object-refactoring). 
+
+
+Let’s see how to run simple query for changes.
  
 <h2 id="instance-id-query">Querying for Entity changes by Instance Id</h2>
 This query selects changes made on concrete [Entity](/documentation/domain-configuration/#entity) instance.
@@ -74,9 +81,9 @@ def "should query for Entity changes by instance Id"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary:1200) )
-    javers.commit( "author", new Employee(name:"john",age:25) )
+    javers.commit("author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit("author", new Employee(name:"bob", age:31, salary:1200) )
+    javers.commit("author", new Employee(name:"john",age:25) )
 
     when:
     def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
@@ -111,10 +118,10 @@ def "should query for ValueObject changes by owning Entity instance and class"()
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob",  postalAddress:  new Address(city:"Paris")))
-    javers.commit( "author", new Employee(name:"bob",  primaryAddress: new Address(city:"London")))
-    javers.commit( "author", new Employee(name:"bob",  primaryAddress: new Address(city:"Paris")))
-    javers.commit( "author", new Employee(name:"lucy", primaryAddress: new Address(city:"New York")))
+    javers.commit("author", new Employee(name:"bob",  postalAddress:  new Address(city:"Paris")))
+    javers.commit("author", new Employee(name:"bob",  primaryAddress: new Address(city:"London")))
+    javers.commit("author", new Employee(name:"bob",  primaryAddress: new Address(city:"Paris")))
+    javers.commit("author", new Employee(name:"lucy", primaryAddress: new Address(city:"New York")))
 
     when: "query for ValueObject changes by owning Entity instance Id"
     def changes = javers
@@ -163,13 +170,13 @@ def "should query for Object changes by its class"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "London")))
-    javers.commit( "author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "Paris")))
-    javers.commit( "author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "New York")))
-    javers.commit( "author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "Washington")))
+    javers.commit("author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "London")))
+    javers.commit("author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "Paris")))
+    javers.commit("author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "New York")))
+    javers.commit("author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "Washington")))
 
     when:
-    def changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build())
+    def changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build() )
 
     then:
     printChanges(changes)
@@ -184,7 +191,11 @@ commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueOb
 commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummyAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-<h2 id="property-filter">Property filter</h2>
+<h2 id="query-filters">Query filters</h2>
+For each query you can add one or more optional filters:
+Property, Limit and NewObject changes filter. 
+
+<h3 id="property-filter">Property filter</h3>
 When querying for changes, you can pass a property name to filter a query result
 to changes made on a concrete property.
 
@@ -216,7 +227,7 @@ query result:
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
-<h2 id="limit-filter">Limit filter</h2>
+<h3 id="limit-filter">Limit filter</h3>
 Limit filter is an optional parameter for all queries, its default value is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
@@ -254,7 +265,7 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
-<h2 id="new-object-filter">NewObject changes filter</h2>
+<h3 id="new-object-filter">NewObject changes filter</h3>
 This filter only affects queries for changes, by default it’s disabled.
 When enabled, a query produces additional changes for initial snapshots.
 An initial snapshot is taken when an object is committed to JaversRepository for the first time.
@@ -294,3 +305,263 @@ commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 1.0: NewObject{globalId:'org.javers.core.examples.model.Employee/bob'}
 ```
  
+<h2 id="entity-refactoring">Refactoring Entities with @TypeName</h2>
+ 
+Mature persistence frameworks allows to refactor your domain classes
+without loosing a connection between old (possibly removed)
+and new Class versions. For exampe,
+JPA allows to specify `@Entity` name, Spring Data uses `@TypeAlias` 
+for that. 
+
+JaVers has
+[`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
+annotation and uses its value as a Class identifier,
+instead of fully qualified Class name.
+
+**What’s important**<br/>
+We encourage to use @TypeName annotation for all of your Entities, it would make your
+life easier in case of refactoring.
+
+When Entity has @TypeName, you can rename it or move to another package safely.
+Without it, refactoring may break your queries.
+
+**The simple case** <br/>
+Let’s consider refactoring of `Person` Entity.
+After persisting some commits in JaversRepository, we decided to change the class name.
+Moreover, renamed class
+has some property added and another removed. Second commit is persisted,
+using new class definition: `PersonRefactored`. 
+
+```java
+package org.javers.core.examples;
+
+import org.javers.core.metamodel.annotation.Id;
+import org.javers.core.metamodel.annotation.TypeName;
+
+@TypeName("Person")
+class Person {
+    @Id
+    private int id;
+
+    private String name;
+
+    private Address address;
+}
+```
+ 
+```java
+package org.javers.core.examples;
+
+import org.javers.core.metamodel.annotation.Id;
+import org.javers.core.metamodel.annotation.TypeName;
+
+@TypeName("Person")
+class PersonRefactored {
+    @Id
+    private int id;
+
+    private String name;
+
+    private String city;
+}
+```
+
+Thanks to `@TypeName` annotation which was engaged from the very beginning,
+our JQL just works. See the following Spock test:
+ 
+```groovy
+def '''should allow Entity class name change
+       when both old and new class use @TypeName annotation'''()
+{
+    given:
+    def javers = JaversBuilder.javers().build()
+    javers.commit('author', new Person(id:1, name:'Bob'))
+
+    when: '''Refactoring happens here, Person.class is removed,
+             new PersonRefactored.class appears'''
+    javers.commit('author', new PersonRefactored(id:1, name:'Uncle Bob', city:'London'))
+
+    def changes =
+        javers.findChanges( QueryBuilder.byInstanceId(1,PersonRefactored.class).build() )
+
+    then: 'one ValueChange is expected'
+    assert changes.size() == 1
+    with(changes[0]){
+        assert left == 'Bob'
+        assert right == 'Uncle Bob'
+        assert affectedGlobalId.value() == 'Person/1'
+    }
+    println changes[0]
+}
+```
+ 
+As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
+objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
+
+**I forgot about @TypeName case** <br/> 
+What if I forgot about @TypeName, my objects are already persisted
+in JaversRepository (with fully-qualified class name hardcoded in GlobalId)
+and I need to refactor now?
+
+There are two possible solutions, first is elegant but requires more work,
+second is quick but somehow dirty.
+
+* Add @TypeName with target name to a new class and update (manually)
+a database which underlies your JaversRepository.
+* Add @TypeName to the new class with name copied from old class fully-qualified name.
+
+Let’s see how the second approach works.
+
+```java
+package org.javers.core.examples;
+
+import org.javers.core.metamodel.annotation.Id;
+
+class PersonSimple {
+    @Id
+    private int id;
+
+    private String name;
+}
+
+```
+
+```java
+package org.javers.core.examples;
+
+import org.javers.core.metamodel.annotation.Id;
+import org.javers.core.metamodel.annotation.TypeName;
+
+@TypeName("org.javers.core.examples.PersonSimple")
+class PersonRetrofitted {
+    @Id
+    private int id;
+
+    private String name;
+}
+```
+
+And the Spock test:
+ 
+```groovy
+def '''should allow Entity class name change
+       when old class forgot to use @TypeName annotation'''()
+{
+  given:
+  def javers = JaversBuilder.javers().build()
+  javers.commit('author', new PersonSimple(id:1, name:'Bob'))
+
+  when:
+  javers.commit('author', new PersonRetrofitted(id:1, name:'Uncle Bob'))
+
+  def changes =
+      javers.findChanges( QueryBuilder.byInstanceId(1,PersonRetrofitted.class).build() )
+
+  then: 'one ValueChange is expected'
+  assert changes.size() == 1
+  with(changes[0]){
+      assert left == 'Bob'
+      assert right == 'Uncle Bob'
+      assert affectedGlobalId.value() == 'org.javers.core.examples.PersonSimple/1'
+  }
+  println changes[0]
+}
+```
+
+In this case, `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
+— `'org.javers.core.examples.PersonSimple/1'`.
+They match but, well, it’s not very nice to have deprecated names in new code.
+ 
+<h2 id="value-object-refactoring">Free ValueObjects refactoring</h2>
+
+In most cases you don’t have to use @TypeName for ValueObjects,
+most of JQL queries will just work after refactoring.
+Although, we still recommend to add @TypeName.
+For example, querying by ValueObject class, relies on it.   
+  
+JaVers treats ValueObjects as property containers and doesn’t care much about their classes.
+This approach is known us Duck Typing, and is widely adopted by dynamic languages like Groovy.
+
+**The case** <br/>
+Let’s consider refactoring of Person’s address,
+which happend to be a ValueObject.
+We want to change its type from `EmailAddress` to `HomeAddress`, 
+
+For the sake of brevity, we use abstract Address class 
+in Person definition (owner Entity), so we don’t need to change it after type of Address is altered.
+
+```java
+package org.javers.core.examples;
+
+abstract class Address {
+    private boolean verified;
+
+    Address(boolean verified) {
+        this.verified = verified;
+    }
+}
+```
+
+```java
+package org.javers.core.examples;
+
+class EmailAddress extends Address {
+    private String email;
+
+    EmailAddress(String email, boolean verified) {
+        super(verified);
+        this.email = email;
+    }
+```
+
+```java
+package org.javers.core.examples;
+
+class HomeAddress extends Address {
+    private String city;
+    private String street;
+
+    HomeAddress(String city, String street, boolean verified) {
+        super(verified);
+        this.city = city;
+        this.street = street;
+    }
+}
+```
+
+Person class is the same like in [Entity refactoring](#entity-refactoring) example.
+
+First version of Person is persisted with `EmailAddress` and then,
+another two versions are persisted with `HomeAddress` as the type.
+
+```groovy
+def 'should be very relaxed about ValueObject types'(){
+  given:
+  def javers = JaversBuilder.javers().build()
+  javers.commit('author', new Person(1,new EmailAddress('me@example.com', false)))
+  javers.commit('author', new Person(1,new HomeAddress ('London','Green 50', true)))
+  javers.commit('author', new Person(1,new HomeAddress ('London','Green 55', true)))
+
+  when:
+  def changes =
+      javers.findChanges( QueryBuilder.byValueObjectId(1, Person.class, 'address').build() )
+
+  then: 'three ValueChanges are expected'
+  assert changes.size() == 3
+  assert changes.collect{ it.propertyName }.containsAll( ['street','verified','email'] )
+  
+  changes.each { println it }
+}
+```
+
+Test output:
+
+```text
+ValueChange{globalId:'Person/1#address', property:'street', oldVal:'Green 50', newVal:'Green 55'}
+ValueChange{globalId:'Person/1#address', property:'email', oldVal:'me@example.com', newVal:''}
+ValueChange{globalId:'Person/1#address', property:'verified', oldVal:'false', newVal:'true'}
+```
+
+As you can see, all three versions of address ValueObject share the same GlobalId
+— `'Person/1#address'`. Properties are matched by name, and their values are compared,
+without paying much attentions to actual Address class.

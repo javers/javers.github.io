@@ -15,9 +15,9 @@ cd javers
 Run examples as unit tests:
 
 ```
-gradlew javers-core:example -Dtest.single=BasicCommitExample
-gradlew javers-core:example -Dtest.single=ChangeLogExample
-gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
+./gradlew javers-core:example -Dtest.single=BasicCommitExample
+./gradlew javers-core:example -Dtest.single=ChangeLogExample
+./gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
 ```
 
 <h2 id="commit-changes">Commit changes</h2>
@@ -174,6 +174,8 @@ public class BasicCommitExample {
     }
 }
 ```
+
+See [Examples — JQL](/documentation/jql-examples/) chapter for more query examples. 
 
 <h2 id="read-changes-history">Read changes history</h2>
 

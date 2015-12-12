@@ -89,12 +89,27 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
-### 1.4.0
-//TODO
-breaking changes:
+### 1.4.0-RC2
+released on 2015-12-11 <br/>
 
-* most of @Deprecated API removed
-* slight API changes in few places
+* Added @TypeName annotation and support for domain classes refactoring, 
+  see 
+  [Entity refactoring](/documentation/jql-examples/#entity-refactoring) example.
+  Fixed issues:
+  [#178](https://github.com/javers/javers/issues/178),
+  [#232](https://github.com/javers/javers/issues/232).
+* [#192](https://github.com/javers/javers/issues/192)
+  Fixed bug in persisting large numbers in MongoDB.
+
+**Breaking changes:**
+
+* Most of `@Deprecated` API removed.
+* Slight API changes in few places.
+* `GlobalId` is now decoupled from `ManagedType`,
+  reference from globalId to concrete managedType is replaced with `typeName` String field.
+* `PropertyChange` is now decoupled from `Property`,
+  reference from propertyChange to concrete property is replaced with `propertyName` String field.
+* Visibility of `ManagedClass` is reduced to `package private`.  
 
 ### 1.3.22
 released on 2015-11-27 <br/>

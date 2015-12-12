@@ -15,10 +15,10 @@ cd javers
 Run examples as unit tests:
 
 ```
-gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
-gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
-gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
-gradlew javers-core:example -Dtest.single=ComparingTopLevelCollectionExample
+./gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
+./gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
+./gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
+./gradlew javers-core:example -Dtest.single=ComparingTopLevelCollectionExample
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
