@@ -142,7 +142,9 @@ Mapping hints:
 * JaVers automatically scans JPA annotations
   and maps classes with `@Entity` annotation as Entities
   and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,
-  your mapping is probably already done.
+  your mapping is probably almost done.
+* Use [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
+  annotation for Entities, it gives you freedom of class names refactoring. 
 * In some cases, annotations could be misleading for JaVers.
   For example [Morphia](https://github.com/mongodb/morphia) framework uses `@Entity` annotation for each persistent class
   (even for ValueObjects). This could cause incorrect JaVers mapping.
@@ -153,14 +155,14 @@ Mapping hints:
 * If you are not sure how JaVers maps your class, check effective mapping using
   [`getTypeMapping(Class<?>)`]({{ site.javadoc_url }}org/javers/core/Javers.html#getTypeMapping-java.lang.Class-) method.
   Once you have JaversType for your class, you can pretty-print it:
-  `System.out.println( javers.getTypeMapping(YourClass.class).prettyPrint() );`
+  `println( javers.getTypeMapping(YourClass.class).prettyPrint() )`
 
 <h3 id="supported-annotations">Supported annotations</h3>
 
-JaVers annotations support is based on two sets, JPA and JaVers.
+JaVers supports two sets of annotations, JPA and JaVers native.
 
 **Class level annotations**<br/>
-In the table below, there are JaVers types (headers) resulting from annotations (cells).
+In the table below, there are JaVers types (table headers) resulting from annotations (cells).
 As you can see, the trick is that JaVers ignores package names and cares only about simple class names.
 So you can use any annotation set as long as the annotation names match JPA or JaVers names.
 
@@ -195,6 +197,15 @@ So you can use any annotation set as long as the annotation names match JPA or J
     <td></td>
 <tr>
 </table>
+
+**TypeName annotation**<br/>
+[`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
+is a special JaVers class level annotation.
+Use it for naming Entities and ValueObjects.
+
+We recommended to use @TypeName for all Entities.
+Without that, Javers uses fully-qualified class names 
+in GlobalIds, which hinders refactoring.  
 
 <span id="property-level-annotations">**Property level annotations**</span>
 <br/>

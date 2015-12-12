@@ -15,10 +15,10 @@ cd javers
 Run examples as unit tests:
 
 ```
-gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
-gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
-gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
-gradlew javers-core:example -Dtest.single=ComparingTopLevelCollectionExample
+./gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
+./gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
+./gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
+./gradlew javers-core:example -Dtest.single=ComparingTopLevelCollectionExample
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
@@ -97,7 +97,7 @@ public class BasicEntityDiffExample {
     ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
     assertThat(diff.getChanges()).hasSize(1);
-    assertThat(change.getProperty().getName()).isEqualTo("name");
+    assertThat(change.getPropertyName()).isEqualTo("name");
     assertThat(change.getAffectedGlobalId()
         .value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
     assertThat(change.getLeft()).isEqualTo("Tommy Smart");
@@ -197,7 +197,7 @@ public class BasicValueObjectDiffExample {
     assertThat(diff.getChanges()).hasSize(1);
     assertThat(change.getAffectedGlobalId().value())
               .isEqualTo("org.javers.core.examples.model.Address/");
-    assertThat(change.getProperty().getName()).isEqualTo("street");
+    assertThat(change.getPropertyName()).isEqualTo("street");
     assertThat(change.getLeft()).isEqualTo("5th Avenue");
     assertThat(change.getRight()).isEqualTo("6th Avenue");
 
@@ -331,7 +331,7 @@ public class EmployeeHierarchiesDiffExample {
     ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
 
     assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-    assertThat(change.getProperty().getName()).isEqualTo("salary");
+    assertThat(change.getPropertyName()).isEqualTo("salary");
     assertThat(change.getLeft()).isEqualTo(10000);
     assertThat(change.getRight()).isEqualTo(20000);
 
@@ -391,8 +391,8 @@ public class EmployeeHierarchiesDiffExample {
     ReferenceChange change = diff.getChangesByType(ReferenceChange.class).get(0);
 
     assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-    assertThat(change.getLeft().getCdoId()).isEqualTo("Manager One");
-    assertThat(change.getRight().getCdoId()).isEqualTo("Manager Second");
+    assertThat(change.getLeft().value()).endsWith("Manager One");
+    assertThat(change.getRight().value()).endsWith("Manager Second");
 
     System.out.println(diff);
   }
@@ -537,7 +537,7 @@ public class ComparingTopLevelCollectionExample {
     ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
     assertThat(diff.getChanges()).hasSize(1);
-    assertThat(change.getProperty().getName()).isEqualTo("name");
+    assertThat(change.getPropertyName()).isEqualTo("name");
     assertThat(change.getLeft()).isEqualTo("Tommy Smart");
     assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
 

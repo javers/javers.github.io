@@ -15,9 +15,9 @@ cd javers
 Run examples as unit tests:
 
 ```
-gradlew javers-core:example -Dtest.single=BasicCommitExample
-gradlew javers-core:example -Dtest.single=ChangeLogExample
-gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
+./gradlew javers-core:example -Dtest.single=BasicCommitExample
+./gradlew javers-core:example -Dtest.single=ChangeLogExample
+./gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
 ```
 
 <h2 id="commit-changes">Commit changes</h2>
@@ -175,6 +175,8 @@ public class BasicCommitExample {
 }
 ```
 
+See [Examples — JQL](/documentation/jql-examples/) chapter for more query examples. 
+
 <h2 id="read-changes-history">Read changes history</h2>
 
 Once we have some commits saved in `JaversRepository`, we can fetch the list of
@@ -236,7 +238,7 @@ public class BasicCommitExample {
         // there should be one ValueChange with Bob's firstName
         assertThat(changes).hasSize(1);
         ValueChange change = (ValueChange) changes.get(0);
-        assertThat(change.getProperty().getName()).isEqualTo("name");
+        assertThat(change.getPropertyName()).isEqualTo("name");
         assertThat(change.getLeft()).isEqualTo("Robert Martin");
         assertThat(change.getRight()).isEqualTo("Robert C.");
     }
@@ -470,7 +472,7 @@ public class JsonTypeAdapterExample {
         Diff diff = javers.compare(entity1, entity2);
 
         //then
-        String json = javers.toJson(diff);
+        String json = javers.getJsonConverter().toJson(diff);
         Assertions.assertThat(json).contains(id.toString());
 
         System.out.println(json);
