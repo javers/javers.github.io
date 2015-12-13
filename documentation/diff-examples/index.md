@@ -480,7 +480,7 @@ using `itemClass` as a hint about collection items type.
 **The case**<br/>
 When collections are properties of some domain object, for example:
 
-```
+```java
 public class Boss {
     @Id private String name;
 
@@ -492,7 +492,7 @@ JaVers uses Reflection and captures `Person` as the item type of `subordinates` 
 
 But when collections are passed as a top-level references, for example:
 
-```
+```java
 Diff diff = javers.compare(oldList, newList);
 ```
 
