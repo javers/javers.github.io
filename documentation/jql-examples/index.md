@@ -319,18 +319,20 @@ annotation and uses its value as a Class identifier,
 instead of fully qualified Class name.
 
 **What’s important**<br/>
-We encourage to use @TypeName annotation for all of your Entities, it would make your
+We encourage using @TypeName annotation for all Entities, it would make your
 life easier in case of refactoring.
 
-When Entity has @TypeName, you can rename it or move to another package safely.
+When Entity has @TypeName, you can rename it or move it to another package safely.
 Without it, refactoring may break your queries.
 
 **The simple case** <br/>
 Let’s consider refactoring of `Person` Entity.
 After persisting some commits in JaversRepository, we decided to change the class name.
 Moreover, renamed class
-has some property added and another removed. Second commit is persisted,
+has some properties added/removed. Second commit is persisted,
 using new class definition: `PersonRefactored`. 
+
+`Person.class`:
 
 ```java
 package org.javers.core.examples;
@@ -348,6 +350,8 @@ class Person {
     private Address address;
 }
 ```
+
+`PersonRefactored.class`:
  
 ```java
 package org.javers.core.examples;
@@ -400,17 +404,20 @@ objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
 **I forgot about @TypeName case** <br/> 
 What if I forgot about @TypeName, my objects are already persisted
-in JaversRepository (with fully-qualified class name hardcoded in GlobalId)
+in JaversRepository
 and I need to refactor now?
 
 There are two possible solutions, first is elegant but requires more work,
 second is quick but somehow dirty.
 
-* Add @TypeName with target name to a new class and update (manually)
+* Add @TypeName with a target name to a new class and update (manually)
 a database which underlies your JaversRepository.
-* Add @TypeName to the new class with name copied from old class fully-qualified name.
+* Add @TypeName to a new class, set typeName as a copy of an old class fully-qualified name.
 
 Let’s see how the second approach works.
+
+
+Old class:
 
 ```java
 package org.javers.core.examples;
@@ -425,6 +432,8 @@ class PersonSimple {
 }
 
 ```
+
+New class:
 
 ```java
 package org.javers.core.examples;
@@ -487,8 +496,10 @@ Let’s consider refactoring of Person’s address,
 which happend to be a ValueObject.
 We want to change its type from `EmailAddress` to `HomeAddress`, 
 
-For the sake of brevity, we use abstract Address class 
+For the sake of brevity, we use abstract `Address` class 
 in Person definition (owner Entity), so we don’t need to change it after type of Address is altered.
+
+Abstract `Address.class`:
 
 ```java
 package org.javers.core.examples;
@@ -502,6 +513,8 @@ abstract class Address {
 }
 ```
 
+`EmailAddress.class`
+
 ```java
 package org.javers.core.examples;
 
@@ -513,6 +526,8 @@ class EmailAddress extends Address {
         this.email = email;
     }
 ```
+
+`HomeAddress.class`
 
 ```java
 package org.javers.core.examples;
@@ -529,10 +544,10 @@ class HomeAddress extends Address {
 }
 ```
 
-Person class is the same like in [Entity refactoring](#entity-refactoring) example.
+Person class is the same like in the [Entity refactoring](#entity-refactoring) example.
 
 First version of Person is persisted with `EmailAddress` and then,
-another two versions are persisted with `HomeAddress` as the type.
+another two versions are persisted with `HomeAddress` as the type:
 
 ```groovy
 def 'should be very relaxed about ValueObject types'(){
@@ -564,4 +579,4 @@ ValueChange{globalId:'Person/1#address', property:'verified', oldVal:'false', ne
 
 As you can see, all three versions of address ValueObject share the same GlobalId
 — `'Person/1#address'`. Properties are matched by name, and their values are compared,
-without paying much attentions to actual Address class.
+without paying much attentions to the actual Address class.
