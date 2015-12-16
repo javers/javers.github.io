@@ -89,8 +89,8 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
-### 1.4.0-RC2
-released on 2015-12-11 <br/>
+### 1.4.0
+released on 2015-12-18 <br/>
 
 * Added @TypeName annotation and support for domain classes refactoring, 
   see 
@@ -98,8 +98,12 @@ released on 2015-12-11 <br/>
   Fixed issues:
   [#178](https://github.com/javers/javers/issues/178),
   [#232](https://github.com/javers/javers/issues/232).
+* [#203](https://github.com/javers/javers/issues/203)
+  Added Javers Mongo Spring Boot starter compatible with Spring Data MongoDB starter.
+  See //TODO ...
 * [#192](https://github.com/javers/javers/issues/192)
-  Fixed bug in persisting large numbers in MongoDB.
+  Fixed bug in persisting large numbers in MongoDB.  
+* [#188](https://github.com/javers/javers/pull/188) Diff is now `Serializable`.  
 
 **Breaking changes:**
 
@@ -109,7 +113,7 @@ released on 2015-12-11 <br/>
   reference from globalId to concrete managedType is replaced with `typeName` String field.
 * `PropertyChange` is now decoupled from `Property`,
   reference from propertyChange to concrete property is replaced with `propertyName` String field.
-* Visibility of `ManagedClass` is reduced to `package private`.  
+* Visibility of `ManagedClass` is reduced to `package private`. 
 
 ### 1.3.22
 released on 2015-11-27 <br/>
