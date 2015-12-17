@@ -4,78 +4,83 @@ title: Spring Boot integration
 submenu: spring-boot-integration
 ---
 
-Spring Boot becomes a ubiquitous standard in enterprise applications world. With this aim in mind we made auto configuration classes that
-makes your life easier.
+[Spring Boot](http://projects.spring.io/spring-boot/)
+becomes a standard in the world of Java enterprise applications.
+
+Our Spring Boot starters simplifies integrating
+JaVers with your application. All required JaVers beans are 
+created and auto-configured to use application’s database.  
+
+There are two starters compatible with Sping Data and 
+common persistence stacks:
+
+* [`javers-spring-boot-starter-mongo`]
+ (#mongodb-auto-configuration) compatible with [`spring-boot-starter-data-mongodb`]
+(https://spring.io/guides/gs/accessing-data-mongodb/),
+* `javers-spring-boot-starter-sql` compatible with [`spring-boot-starter-data-jpa`]
+(https://spring.io/guides/gs/accessing-data-jpa/),
 
 
-<h2 id="javers-configuration-properties">Javers configuration</h2>
+<h2 id="javers-configuration-properties">JaVers configuration</h2>
 
-You can use [Spring Boot externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
-feature and configure Javers by properties files, YAML files, environment variables or command-line arguments
+Use [Spring Boot externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
+and configure JaVers the same way like your application (typically by YAML property files).
 
-Properties space: **javers**
+Here is an `application.yml` file example
+with the full list of JaVers properties and their default values.
 
-<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
-<tr>
-    <th>Property</th>
-    <th>Description</th>
-    <th>Default value</th>
-</tr>
-    <td>algorithm</td>
-    <td><a href="http://javers.org/documentation/diff-configuration/#simple-vs-levenshtein">Simple vs Levenshtein algorithm</a></td>
-    <td>simple</td>
-<tr>
-</tr>
-    <td>mappingStyle</td>
-    <td><a href="http://javers.org/documentation/domain-configuration/#property-mapping-style">Bean vs field property mapping style</a></td>
-    <td>field</td>
-<tr>
-</tr>
-    <td>newObjectSnapshot</td>
-    <td><a href="http://javers.org/javadoc_1.3.0/org/javers/core/JaversBuilder.html#withNewObjectsSnapshot-boolean-">Generates additional 'Snapshots' of new objects</a></td>
-    <td>false</td>
-<tr>
-</tr>
-    <td>prettyPrint</td>
-    <td><a href="http://javers.org/javadoc_1.3.0/org/javers/core/JaversBuilder.html#withPrettyPrint-boolean-">Choose between JSON pretty or concise printing style</a></td>
-    <td>true</td>
-<tr>
-</tr>
-    <td>typeSafeValues</td>
-    <td><a href="http://javers.org/javadoc_1.3.0/org/javers/core/JaversBuilder.html#withTypeSafeValues-boolean-">Switch on when you need a type safe serialization for heterogeneous collections like List, List<Object></a></td>
-    <td>false</td>
-<tr>
-</table>
+```
+javers:
+  databaseName: javers_db
+  mappingStyle: FIELD
+  algorithm: BEAN
+  prettyPrint: true
+  typeSafeValues: false
+  newObjectSnapshot: false
+```  
 
+See [JaversBuilder javadoc]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html)
+for properties documentation. Each property
+(except of `databaseName`) has a corresponding `with*()` method.
 
 <h2 id="mongodb-auto-configuration">MongoDB auto-configuration</h2>
-### Usage ###
 
-First add javers-spring-boot-starter-mongo module to your classpath:
+### Dependency ###
+Add `javers-spring-boot-starter-mongo` module to your classpath.
 
 ```groovy
 compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
 ```
-Check
-[Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
-for snippets to other build tools.
 
-### Import configuration ###
+Check [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
+for other build tools snippets.
 
-Next you have to indicate [JaversMongoAutoConfiguration]() to import into your application
+### AutoConfiguration ###
+
+Import `JaversMongoAutoConfiguration` into your Spring application:
 
 ```java
+import org.javers.spring.boot.mongo.JaversMongoAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Import(JaversMongoAutoConfiguration.class)
 public class JaversSpringBootMongoConfiguration {
-
-...
+   ...
+}
 
 ```
 
 ### Setup MongoDB ###
+JaVers depends on `MongoClient` bean, typically created by `spring-boot-starter-data-mongodb`.
 
+Set `javers.databaseName` property to choose a database name for JaversRepository. 
+
+For now, database name is defaulted to `javers_db`. 
+In the next JaVers version, database name would be
+taken from `spring.data.mongodb.database` property (application’s main database).
+
+/*
 Keep in mind that [JaversMongoAutoConfiguration]() autowired interface to access database
 ([MongoDatabase](http://api.mongodb.org/java/current/com/mongodb/client/MongoDatabase.html)) so you should have this object in your
 application container.
@@ -87,6 +92,7 @@ MongoDatabase mongoDatabase() {
     return new MongoClient().getDatabase("test");
 }
 ```
+*/
 
 ### Register AuthorProvider bean
 

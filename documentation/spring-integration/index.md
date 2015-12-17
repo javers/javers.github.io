@@ -12,16 +12,17 @@ So we made JaVers compatible with Spring Framework.
 * [annotations](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
 * [integration](#jpa-transaction-manager-integration) with Spring JpaTransactionManager for SQL databases.
 
-## Usage
+### Dependency ###
 
-First add `javers-spring` module to your classpath:
+Add `javers-spring` module to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
+
 Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
- for snippets to other build tools.
+for other build tools snippets.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>
 The JaVers auto-audit aspect is based on Spring AOP and frees you

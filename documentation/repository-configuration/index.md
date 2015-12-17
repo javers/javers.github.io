@@ -39,7 +39,7 @@ compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 
 Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-persistence-mongo|{{site.javers_current_version}}|jar)
- for snippets to other build tools.
+for other build tools snippets.
 
 **Usage**<br/>
 The idea of configuring MongoRepository is simple,
@@ -79,7 +79,7 @@ compile 'org.javers:javers-persistence-sql:{{site.javers_current_version}}'
 ```
 Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-persistence-sql|{{site.javers_current_version}}|jar)
- for snippets to other build tools.
+for other build tools snippets.
 
 <h3>Overview</h3>
 
