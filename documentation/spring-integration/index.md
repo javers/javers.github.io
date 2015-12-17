@@ -378,4 +378,4 @@ TransactionalJaversBuilder
     .javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
 ```
 
-Feel free to provide your own implementation of `object-access` hook if you need better control over unproxing process. 
+Feel free to provide your own implementation of `object-access` hook if you need better control over unproxing process.
