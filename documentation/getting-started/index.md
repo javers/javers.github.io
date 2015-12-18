@@ -7,10 +7,17 @@ submenu: getting-started
 <h2 id="get-javers">Get JaVers</h2>
 
 To get JaVers, add <code>javers-core</code>
-to your project dependencies and (optionally) add proper dependency on <code>javers-repository</code>.
+to your project dependencies and (optionally) choose proper  
+<code>javers-repository</code> module.
 
 ### javers-core
-For maven: 
+Gradle: 
+
+```groovy
+compile 'org.javers:javers-core:{{site.javers_current_version}}'
+```   
+
+Maven: 
 
 ```xml
 <dependency>
@@ -20,16 +27,19 @@ For maven:
 </dependency>
 ```
 
-For gradle: 
-
-```groovy
-compile 'org.javers:javers-core:{{site.javers_current_version}}'
-```   
 If you’re going to use JaVers as an object diff tool, this is the only dependency you need.
         
 ### javers-repository
 If you are going to use JaVers as a data audit framework, choose the proper repository implementation.
 For example, if you’re using MongoDb add:
+
+Gradle: 
+
+```groovy
+compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
+```
+
+Maven:
 
 ```xml
 <dependency>
@@ -37,12 +47,6 @@ For example, if you’re using MongoDb add:
     <artifactId>javers-persistence-mongo</artifactId>
     <version>{{site.javers_current_version}}</version>
 </dependency>
-```
-
-For gradle: 
-
-```groovy
-compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
 <h2 id="create-javers-instance">Create a JaVers instance</h2>

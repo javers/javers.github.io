@@ -12,16 +12,17 @@ So we made JaVers compatible with Spring Framework.
 * [annotations](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
 * [integration](#jpa-transaction-manager-integration) with Spring JpaTransactionManager for SQL databases.
 
-## Usage
+### Dependency ###
 
-First add `javers-spring` module to your classpath:
+Add `javers-spring` module to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
+
 Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
- for snippets to other build tools.
+for other build tools snippets.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>
 The JaVers auto-audit aspect is based on Spring AOP and frees you
@@ -79,7 +80,7 @@ are automatically saved to JaversRepository.
 In the case where an argument is the `Iterable` instance,
 JaVers iterates over it and saves each element separately.
 
-### Register AuthorProvider bean
+<h3 id="author-provider-bean">Register AuthorProvider bean</h3>
 
 Every JaVers commit (data change) should be connected to its author, i.e. the
 user who made the change.
@@ -96,7 +97,9 @@ package org.javers.spring.auditable;
 
 /**
  * Implementation has to be thread-safe and has to provide
- * an author (typically a user login), bounded to current user session.
+ * an author (typically a user login), to current user session.
+ *
+ * See {@link SpringSecurityAuthorProvider} - implementation for Spring Security
  */
 public interface AuthorProvider {
     String provide();
@@ -378,4 +381,4 @@ TransactionalJaversBuilder
     .javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
 ```
 
-Feel free to provide your own implementation of `object-access` hook if you need better control over unproxing process. 
+Feel free to provide your own implementation of `object-access` hook if you need better control over unproxing process.
