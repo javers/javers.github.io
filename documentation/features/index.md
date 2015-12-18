@@ -98,9 +98,6 @@ released on 2015-12-18 <br/>
   Fixed issues:
   [#178](https://github.com/javers/javers/issues/178),
   [#232](https://github.com/javers/javers/issues/232).
-* [#203](https://github.com/javers/javers/issues/203)
-  Added Javers Mongo Spring Boot starter compatible with Spring Data MongoDB starter.
-  See //TODO ...
 * [#192](https://github.com/javers/javers/issues/192)
   Fixed bug in persisting large numbers in MongoDB.  
 * [#188](https://github.com/javers/javers/pull/188) Diff is now `Serializable`.  

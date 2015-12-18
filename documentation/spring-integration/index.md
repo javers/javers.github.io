@@ -80,7 +80,7 @@ are automatically saved to JaversRepository.
 In the case where an argument is the `Iterable` instance,
 JaVers iterates over it and saves each element separately.
 
-### Register AuthorProvider bean
+<h3 id="author-provider-bean">Register AuthorProvider bean</h3>
 
 Every JaVers commit (data change) should be connected to its author, i.e. the
 user who made the change.
@@ -97,7 +97,9 @@ package org.javers.spring.auditable;
 
 /**
  * Implementation has to be thread-safe and has to provide
- * an author (typically a user login), bounded to current user session.
+ * an author (typically a user login), to current user session.
+ *
+ * See {@link SpringSecurityAuthorProvider} - implementation for Spring Security
  */
 public interface AuthorProvider {
     String provide();
