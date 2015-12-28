@@ -307,30 +307,30 @@ commit 1.0: NewObject{globalId:'org.javers.core.examples.model.Employee/bob'}
  
 <h2 id="entity-refactoring">Refactoring Entities with @TypeName</h2>
  
-Mature persistence frameworks allows to refactor your domain classes
-without loosing a connection between old (possibly removed)
-and new Class versions. For exampe,
-JPA allows to specify `@Entity` name, Spring Data uses `@TypeAlias` 
-for that. 
+Mature persistence frameworks allow you to refactor your domain classes
+without losing a connection between old (possibly removed)
+and new Class versions. For example,
+JPA allows you to specify `@Entity` name
+and Spring Data uses `@TypeAlias` annotation.
 
 JaVers has
 [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
-annotation and uses its value as a Class identifier,
-instead of fully qualified Class name.
+annotation and uses its value as a Class identifier
+instead of a fully-qualified Class name.
 
 **What’s important**<br/>
-We encourage using @TypeName annotation for all Entities, it would make your
+We encourage you to use @TypeName annotation for all Entities &mdash; it will make your
 life easier in case of refactoring.
 
-When Entity has @TypeName, you can rename it or move it to another package safely.
+When an Entity has @TypeName, you can rename it or move it to another package safely.
 Without it, refactoring may break your queries.
 
-**The simple case** <br/>
-Let’s consider refactoring of `Person` Entity.
-After persisting some commits in JaversRepository, we decided to change the class name.
-Moreover, renamed class
-has some properties added/removed. Second commit is persisted,
-using new class definition: `PersonRefactored`. 
+**Simple example** <br/>
+Let’s consider the refactoring of a `Person` Entity.
+After persisting some commits in JaversRepository, we decide to change the class name.
+Moreover, the renamed class
+has some properties added/removed. The second commit is persisted,
+using the new class definition: `PersonRefactored`. 
 
 `Person.class`:
 
@@ -370,7 +370,7 @@ class PersonRefactored {
 }
 ```
 
-Thanks to `@TypeName` annotation which was engaged from the very beginning,
+As `@TypeName` annotation was engaged from the very beginning,
 our JQL just works. See the following Spock test:
  
 ```groovy
@@ -402,19 +402,19 @@ def '''should allow Entity class name change
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
 objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
-**I forgot about @TypeName case** <br/> 
-What if I forgot about @TypeName, my objects are already persisted
+**I forgot about @TypeName example** <br/> 
+What if I forgot to use @TypeName, but my objects are already persisted
 in JaversRepository
 and I need to refactor now?
 
-There are two possible solutions, first is elegant but requires more work,
-second is quick but somehow dirty.
+There are two possible solutions. The first is elegant but requires more work,
+the second is quick but somewhat dirty.
 
 * Add @TypeName with a target name to a new class and update (manually)
 a database which underlies your JaversRepository.
-* Add @TypeName to a new class, set typeName as a copy of an old class fully-qualified name.
+* Add @TypeName to a new class and set typeName as a copy of an old class’ fully-qualified name.
 
-Let’s see how the second approach works.
+Let’s see how the second approach works:
 
 
 Old class:
@@ -483,21 +483,21 @@ They match but, well, it’s not very nice to have deprecated names in new code.
  
 <h2 id="value-object-refactoring">Free ValueObjects refactoring</h2>
 
-In most cases you don’t have to use @TypeName for ValueObjects,
-most of JQL queries will just work after refactoring.
-Although, we still recommend to add @TypeName.
-For example, querying by ValueObject class, relies on it.   
+In most cases you don’t have to use @TypeName for ValueObjects.
+Most JQL queries will just work after refactoring.
+However, we still recommend to adding @TypeName.
+For example, querying by ValueObject class relies on it.   
   
 JaVers treats ValueObjects as property containers and doesn’t care much about their classes.
 This approach is known us Duck Typing, and is widely adopted by dynamic languages like Groovy.
 
-**The case** <br/>
-Let’s consider refactoring of Person’s address,
-which happend to be a ValueObject.
+**Example** <br/>
+Let’s consider the refactoring of Person’s address,
+which happened to be a ValueObject.
 We want to change its type from `EmailAddress` to `HomeAddress`, 
 
-For the sake of brevity, we use abstract `Address` class 
-in Person definition (owner Entity), so we don’t need to change it after type of Address is altered.
+For the sake of brevity, we use the abstract `Address` class 
+in the Person definition (owner Entity), so we don’t need to change it after the type of Address is altered.
 
 Abstract `Address.class`:
 
@@ -544,9 +544,9 @@ class HomeAddress extends Address {
 }
 ```
 
-Person class is the same like in the [Entity refactoring](#entity-refactoring) example.
+The Person class is the same like in the [Refactoring Entities](#entity-refactoring) example.
 
-First version of Person is persisted with `EmailAddress` and then,
+The first version of Person is persisted with `EmailAddress` and then
 another two versions are persisted with `HomeAddress` as the type:
 
 ```groovy
@@ -577,6 +577,6 @@ ValueChange{globalId:'Person/1#address', property:'email', oldVal:'me@example.co
 ValueChange{globalId:'Person/1#address', property:'verified', oldVal:'false', newVal:'true'}
 ```
 
-As you can see, all three versions of address ValueObject share the same GlobalId
+As you can see, all three versions of the ValueObject address share the same GlobalId
 — `'Person/1#address'`. Properties are matched by name, and their values are compared,
-without paying much attentions to the actual Address class.
+without paying much attention to the actual Address class.

@@ -465,20 +465,20 @@ Diff:
 <h2 id="compare-collections">Compare top-level collections</h2>
 
 JaVers can compare arbitrary complex structures of objects,
-including collections passed as a top-level handles.
+including collections passed as top-level handles.
 
-If you want to compare top-level collections with simple items, like Primitives or Values
+If you want to compare top-level collections with simple items like Primitives or Values
 (see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping),
-you can use standard `javers.compare(Object, Object)` method.
+you can use the standard `javers.compare(Object, Object)` method.
 Collection items will be compared using `equals()`, resulting in a flat list of Changes.
 
 But when you need to compare top-level collections with complex items,
 like Entities or ValueObjects, use `javers.compareCollections(Collection, Collection, Class)`.
 This method builds object graphs and compares them deeply,
-using `itemClass` as a hint about collection items type.
+using `itemClass` as a hint about the items type.
 
 **The case**<br/>
-When collections are properties of some domain object, for example:
+When collections are properties of a domain object, for example:
 
 ```java
 public class Boss {
@@ -488,20 +488,20 @@ public class Boss {
 }
 ```
 
-JaVers uses Reflection and captures `Person` as the item type of `subordinates` collection.
+JaVers uses Reflection and captures `Person` as the item type in the `subordinates` collection.
 
-But when collections are passed as a top-level references, for example:
+But when collections are passed as top-level references, for example:
 
 ```java
 Diff diff = javers.compare(oldList, newList);
 ```
 
-due to type erasure, there is no way to statically determine a type of collection items.
+due to type erasure, there is no way to statically determine the type of items stored in collections.
 
 Luckily, `compareCollections()` comes to the rescue
 and gives you exactly the same diff result for top-level collections as if they were object properties.
 
-<tt>[ComparingTopLevelCollectionExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java)</tt>:
+<tt>[ComparingTopLevelCollectionExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java)</tt>
 
 ```java
 package org.javers.core.examples;
