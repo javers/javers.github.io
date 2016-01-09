@@ -1,4 +1,4 @@
-var team_logins = ['bgalek', 'bartoszwalacik', 'pawelszymczyk'];
+var team_logins = ['bgalek', 'bartoszwalacik', 'pawelszymczyk', 'mwesolowski'];
 
 var github = new Github({
     token: "2e71e2e2d92110c943fe135749d986b8401c64cb",
