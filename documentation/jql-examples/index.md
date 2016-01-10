@@ -57,6 +57,7 @@ Queries can have one or more optional [filters](#query-filters):
 
 * [property](#property-filter),
 * [limit](#limit-filter), 
+* [skip](#skip-filter),
 * [commitDate](#commit-date-filter), 
 * [newObject changes](#new-object-filter).
 
@@ -267,6 +268,44 @@ commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```
+
+<h3 id="skip-filter">Skip filter</h3>
+Optional parameter for all queries, default skip is 0.
+When querying for snapshots, it defines the offset of the first result that Javers should return.
+When querying for changes, skip n means: omit changes recorded for last n snapshots and return the previous ones.
+Skip and limit parameters can be useful for implementing results pagination.
+
+In the example we set skip to 1 so only Bob’s first 3 snapshots are being compared, which means 4 changes
+(two changes between third and second commit and two changes between second and first commit).
+
+```groovy
+def "should query for changes with skip filter"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new Employee(name:"bob", age:29, salary: 900) )
+    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary: 1100) )
+    javers.commit( "author", new Employee(name:"bob", age:32, salary: 1200) )
+
+    when:
+    def changes = javers
+        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 4
+}
+```
+
+query result:
+
+```text
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1000'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'29', newVal:'30'}
 ```
 
 <h3 id="commit-date-filter">CommitDate filter</h3>
