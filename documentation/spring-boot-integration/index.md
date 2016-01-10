@@ -4,28 +4,34 @@ title: Spring Boot integration
 submenu: spring-boot-integration
 ---
 
-<font color="red">
-**INCUBATING**
-Spring Boot starters are incubating and will be released with JaVers 1.4.1. 
-</font>
-
-
 [Spring Boot](http://projects.spring.io/spring-boot/)
 becomes a standard in the world of Java enterprise applications.
 
 Our Spring Boot starters simplifies integrating
 JaVers with your application. All required JaVers beans are 
-created and auto-configured to use application’s database.  
+created and auto-configured with reasonable defaults.
 
 There are two starters compatible with Sping Data and 
 common persistence stacks:
 
-* [`javers-spring-boot-starter-mongo`]
- (#mongodb-auto-configuration) compatible with [`spring-boot-starter-data-mongodb`]
-(https://spring.io/guides/gs/accessing-data-mongodb/),
-* `javers-spring-boot-starter-sql` compatible with [`spring-boot-starter-data-jpa`]
-(https://spring.io/guides/gs/accessing-data-jpa/),
+* **JaVers Spring Boot starter for MongoDB** compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/),
+* <font color="red">**INCUBATING**</font>
+**JaVers Spring Boot starter for SQL** compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/),
 
+<h2 id="get-javers-starters">Get JaVers Spring Boot starter</h2>
+
+### MongoDB starter ###
+Add JaVers MongoDB and Spring Data MongoDB starters to your classpath:
+
+```groovy
+compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
+compile 'org.springframework.boot:spring-boot-starter-data-mongodb:' + SPRING_BOOT_VERSION   
+```
+### SQL starter ###
+<font color="red">**INCUBATING**</font>
+
+Check [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
+for other build tools snippets.
 
 <h2 id="javers-configuration-properties">JaVers Core configuration</h2>
 
@@ -34,6 +40,7 @@ and configure JaVers the same way like your application (typically by YAML prope
 
 Here is an `application.yml` file example
 with the full list of JaVers properties and their default values.
+If these defaults are OK for you, don’t add anything to your application configuration.
 
 ```
 javers:
@@ -48,57 +55,116 @@ See [JaversBuilder javadoc]({{ site.javadoc_url }}org/javers/core/JaversBuilder.
 for properties documentation.
 Each property has a corresponding `with*()` method.
 
-<h2 id="mongodb-auto-configuration">MongoDB auto-configuration</h2>
+<h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
+Thanks to Spring Boot magic, starters available on the classpath are automatically picked up
+and launched. 
 
-### Dependency ###
-Add JaVers MongoDB and Spring Data MongoDB starters to your classpath:
+See the complete list of JaVers beans, added to your Spring ApplicationContext:
 
-```groovy
-compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
-compile 'org.springframework.boot:spring-boot-starter-data-mongodb:' + SPRING_BOOT_VERSION   
-```
-
-Check [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
-for other build tools snippets.
-
-### AutoConfiguration ###
-
-Import `JaversMongoAutoConfiguration` into your Spring application:
-
-```java
-import org.javers.spring.boot.mongo.JaversMongoAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-@Import(JaversMongoAutoConfiguration.class)
-public class JaversSpringBootMongoConfiguration {
-   ...
-}
-
-```
+* for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
+* <font color="red">**INCUBATING**</font> for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
 
 ### AuthorProvider bean
 
 Default [AuthorProvider](/documentation/spring-integration/#author-provider-bean) 
-implementation is provided in JaVers starter.
+implementation is created by JaVers starter.
 It returns `"unknown"` name.
 
 If you are using [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect)
 (`@JaversSpringDataAuditable` or `@JaversAuditable`),
 consider implementing AuthorProvider bean. It should return a current user login.
 
-### Setup MongoDB ###
-JaVers depends on `MongoClient` bean, created by `spring-boot-starter-data-mongodb`.
+<h2 id="starter-repository-configuration">JaVersRepository configuration</h2>
+JaVers starters relies on Spring Data starters.
+Proper JaversRepository implementation is created and configured to reuse an application’s database configuration
+  (managed by Spring Data starters).
+  
+<h2 id="starter-boot">Boot it!</h2>
 
-Set `javers.databaseName` property to choose a database name for JaversRepository.
-For example, in `application.yml`:
+Once you have added JaVers starter to the classpath, you can use all JaVers features.
+
+Use [auto-audit](/documentation/spring-integration/#auto-audit-aspect) annotation to mark 
+CRUD repositories as audited.
+
+For example:
+
+```java
+import org.javers.spring.annotation.JaversSpringDataAuditable
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.javers.organization.structure.domain.Person;
+
+@JaversSpringDataAuditable
+public interface PersonRepository extends MongoRepository<Person, String> {
+}
+```
+
+All changes made on `Person` Entity will be committed to JaVersRepository.
+
+Then run the [JQL](/documentation/jql-examples/) query to list these changes.
+
+Example REST controller:
+
+```java
+
+package org.javers.organization.structure.audit;
+
+import org.javers.core.Javers;
+import org.javers.core.diff.Change;
+import org.javers.core.json.JsonConverter;
+import org.javers.organization.structure.domain.Person;
+import org.javers.repository.jql.QueryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
+@RestController
+@RequestMapping(value = "/audit")
+public class AuditController {
+
+    private final Javers javers;
+
+    @Autowired
+    public AuditController(Javers javers) {
+        this.javers = javers;
+    }
+
+    @RequestMapping("/person")
+    public String getPersonChanges() {
+        QueryBuilder jqlQuery = QueryBuilder.byClass(Person.class);
+
+        List<Change> changes = javers.findChanges(jqlQuery.build());
+
+        return javers.getJsonConverter().toJson(changes);
+    }
+}
+```
+
+<h2 id="starter-demo-app">Demo application</h2>
+We crated a demo application based on Spring Boot.
+It manages Organization Structure domain.
+User can change salaries and positions of Employees and move them in Structure.
+All changes are audited and easy to browse.
+   
+Check out how easy is to add JaVers audit to the Spring Boot application.
+
+Clone it from github:
 
 ```
-javers:
-  databaseName: test
-```  
+git clone https://github.com/javers/organization-structure.git
+```
 
-For now, database name is defaulted to `javers_db`. 
-In JaVers 1.4.1, database name would be
-taken from `spring.data.mongodb.database` property (application’s main database).
+Run it,
+
+```
+cd organization-structure
+./gradlew bootRun
+```
+
+and check it out on [localhost:8080](http://localhost:8080).
+
+
+
+
+
 
