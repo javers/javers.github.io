@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.4.2
+released on 2016-01-15 <br/>
+
+* [#243](https://github.com/javers/javers/issues/243) New JQL filters by createDate `from()` and `to()`. 
+  See [CommitDate filter example](/documentation/jql-examples/#commit-date-filter).
+
 ### 1.4.1
 released on 2016-01-08 <br/>
 
