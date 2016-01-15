@@ -55,9 +55,10 @@ There are three types of queries:
 
 Queries can have one or more optional [filters](#query-filters):
 
-* [property](#property-filter) filter,
-* [limit](#limit-filter) filter, 
-* [NewObject changes](#new-object-filter) filter.
+* [property](#property-filter),
+* [limit](#limit-filter), 
+* [commitDate](#commit-date-filter), 
+* [newObject changes](#new-object-filter).
 
 JQL can adapt when you refactor your domain classes:
 
@@ -193,11 +194,14 @@ commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummy
 
 <h2 id="query-filters">Query filters</h2>
 For each query you can add one or more optional filters:
-Property, Limit and NewObject changes filter. 
+[property](#property-filter),
+[limit](#limit-filter), 
+[commitDate](#commit-date-filter) and  
+[newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Property filter</h3>
-When querying for changes, you can pass a property name to filter a query result
-to changes made on a concrete property.
+Optional parameter for all queries.
+Use it to filter query results to changes made on a concrete property.
 
 In the example, we show how to query for Employee’s salary changes,
 while ignoring changes made on other properties.
@@ -228,7 +232,7 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
-Limit filter is an optional parameter for all queries, its default value is 100.
+Optional parameter for all queries, default limit is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
 When querying for changes, limit `n` means: give me changes recorded for last `n` snapshots.
@@ -265,6 +269,69 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
+<h3 id="commit-date-filter">CommitDate filter</h3>
+Optional parameter for all queries.
+It allows time range filtering by `commitDate` (Snapshot creation timestamp).
+
+This example requires some trick to simulate time flow.
+We use `FakeDateProvider`, which is stubbed to provide concrete dates as `now()`.   
+Bob is committed six times in one year intervals.
+Then we query for changes done in three years period.
+
+```groovy
+def "should query for changes with commitDate filter"(){
+  given:
+  def fakeDateProvider = new FakeDateProvider()
+  def javers = JaversBuilder.javers().withDateTimeProvider(fakeDateProvider).build()
+
+  (0..5).each{ i ->
+      def now = new LocalDate(2015+i,01,1)
+      fakeDateProvider.set( now )
+      def bob = new Employee(name:"bob", age:20+i)
+      javers.commit("author", bob)
+      println "comitting bob on $now"
+  }
+
+  when:
+  def changes = javers
+          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
+          .from(new LocalDate(2016,01,1))
+          .to  (new LocalDate(2018,01,1)).build() )
+
+  then:
+  assert changes.size() == 2
+
+  println "found changes:"
+  changes.each {
+      println "commitDate: "+ it.commitMetadata.get().commitDate+" "+it
+  }
+}
+```
+
+output:
+
+```text
+comitting bob on 2015-01-01
+comitting bob on 2016-01-01
+comitting bob on 2017-01-01
+comitting bob on 2018-01-01
+comitting bob on 2019-01-01
+comitting bob on 2020-01-01
+found changes:
+commitDate: 2018-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'22', newVal:'23'}
+commitDate: 2017-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'21', newVal:'22'}
+
+```
+
+One can ask why change made on 2016-01-01 is not selected.
+It’s not a bug, both `from()` and `to()` filters works inclusively
+(like `between` in SQL).
+Explanation is simple, JaversRepository stores only Snapshots.
+Changes are calculated on the fly, as a diff between subsequent Snapshots
+fetched from the repository.
+We have three Snapshots committed between 2016-01-01 and 2018-01-01
+so only two changes are returned.
+
 <h3 id="new-object-filter">NewObject changes filter</h3>
 This filter only affects queries for changes, by default it’s disabled.
 When enabled, a query produces additional changes for initial snapshots.
@@ -273,7 +340,7 @@ An initial snapshot is taken when an object is committed to JaversRepository for
 With this filter, you can query for the initial state of an object.
 It’s represented as a NewObject change, followed by a list of property changes from null to something.
 
-Let’s see how it works in the example below.
+Let’s see how it works in the example:
 
 ```groovy
 def "should query for changes with NewObject filter"() {

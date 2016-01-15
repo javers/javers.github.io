@@ -14,12 +14,14 @@ So we made JaVers compatible with Spring Framework.
 
 ### Dependency ###
 
-Add `javers-spring` module to your classpath:
+If you are using [Spring Boot](http://projects.spring.io/spring-boot/),
+simplify JaVers setup with our starters, see [Spring Boot integration](http://localhost:4000/documentation/spring-boot-integration/).
+
+If you are not using Spring Boot, add `javers-spring` module to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
-
 Check
 [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
 for other build tools snippets.
