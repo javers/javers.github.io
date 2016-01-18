@@ -197,6 +197,7 @@ commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummy
 For each query you can add one or more optional filters:
 [property](#property-filter),
 [limit](#limit-filter), 
+[skip](#skip-filter), 
 [commitDate](#commit-date-filter) and  
 [newObject changes](#new-object-filter) filter.
 
@@ -271,12 +272,15 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
-Optional parameter for all queries, default skip is 0.
-When querying for snapshots, it defines the offset of the first result that Javers should return.
-When querying for changes, skip n means: omit changes recorded for last n snapshots and return the previous ones.
-Skip and limit parameters can be useful for implementing results pagination.
+Optional parameter for all queries (default skip is 0).
+When querying for snapshots, it defines the offset of the first result that JaVers should return.
 
-In the example we set skip to 1 so only Bob’s first 3 snapshots are being compared, which means 4 changes
+When querying for changes, skip means exactly the same:
+omit changes recorded in last snapshots and return the previous ones.
+Skip and limit parameters can be useful for implementing pagination.
+
+In the example we set skip to 1 so only Bob’s first 3 snapshots are being compared,
+which means four changes
 (two changes between third and second commit and two changes between second and first commit).
 
 ```groovy

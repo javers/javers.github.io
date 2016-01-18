@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.4.3
+released on 2016-01-18 <br/>
+
+* [#179](https://github.com/javers/javers/issues/179)
+New JQL `skip()` filter, useful for pagination.
+See [Skip filter example](/documentation/jql-examples/#skip-filter).
+
 ### 1.4.2
 released on 2016-01-15 <br/>
 
