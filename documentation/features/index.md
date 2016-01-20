@@ -89,6 +89,32 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+
+### 1.4.4
+released on 2016-01-20 <br/>
+
+* [#286](https://github.com/javers/javers/issues/286)
+  New properties in `ReferenceChange`: 
+  [`getLeftObject()`]({{ site.javadoc_url }}org/javers/core/diff/changetype/ReferenceChange.html#getLeftObject--)
+  and 
+  [`getRightObject()`]({{ site.javadoc_url }}org/javers/core/diff/changetype/ReferenceChange.html#getRightObject--).
+
+* [#294](https://github.com/javers/javers/pull/294)
+  Added version number to Snapshot metadata:
+  [`CdoSnapshot.getVersion()`]({{ site.javadoc_url }}org/javers/core/metamodel/object/CdoSnapshot.html#getVersion--).
+  
+  <font color="red">Warning!</font>
+  All snapshots persisted in JaversRepository before release  1.4.4 have version 0.
+  If it isn't OK for you, run DB update manually.
+  
+  For SQL database:
+  
+  ```sql
+  UPDATE jv_snapshot s SET version = (
+  SELECT COUNT(*) + 1 FROM jv_snapshot s2
+  WHERE s.global_id_fk = s2.global_id_fk and s2.snapshot_pk < s.snapshot_pk)
+  ```
+
 ### 1.4.3
 released on 2016-01-18 <br/>
 

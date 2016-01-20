@@ -31,4 +31,5 @@ org.javers.core.snapshot
 org.javers.java8support
 org.javers.mongosupport
 org.javers.repository.api
+org.javers.repository.inmemory
 org.javers.repository.jql
