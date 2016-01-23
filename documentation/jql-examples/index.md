@@ -58,7 +58,8 @@ Queries can have one or more optional [filters](#query-filters):
 * [property](#property-filter),
 * [limit](#limit-filter), 
 * [skip](#skip-filter),
-* [commitDate](#commit-date-filter), 
+* [commitDate](#commit-date-filter),
+* [commitId](#commit-id-filter),
 * [newObject changes](#new-object-filter).
 
 JQL can adapt when you refactor your domain classes:
@@ -374,6 +375,49 @@ Changes are calculated on the fly, as a diff between subsequent Snapshots
 fetched from the repository.
 We have three Snapshots committed between 2016-01-01 and 2018-01-01
 so only two changes are returned.
+
+<h3 id="commit-id-filter">CommitId filter</h3>
+Optional filter which by default is disabled. It allows finding snapshots persisted
+on a specific commit having a given id. The commit id can be supplied as an instance of
+CommitId or BigDecimal. On the other hand using this filter when querying for changes
+makes no sense because the result will always be empty.
+
+In the example we commit three subsequent versions of Employee and then retrieve
+snapshots from the second commit.
+
+```groovy
+def "should query for snapshots with commitId filter"(){
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new Employee(name:"bob", age:29, salary: 900) )
+    def secondCommit =
+        javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary: 1100) )
+
+    when:
+    def snapshots = javers
+        .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
+        .withCommitId(secondCommit.id).build() )
+
+    then:
+    assert snapshots.size() == 1
+
+    println "found snapshots:"
+    snapshots.each {
+        println "commit ${it.commitMetadata.id}: ${it} (" +
+            "age: ${it.getPropertyValue('age')}, " +
+            "salary: ${it.getPropertyValue('salary')})"
+    }
+}
+```
+
+query result:
+
+```text
+found snapshots:
+commit 2.0: org.javers.core.examples.model.Employee/bob (age: 30, salary: 1000)
+```
 
 <h3 id="new-object-filter">NewObject changes filter</h3>
 This filter only affects queries for changes, by default it’s disabled.
