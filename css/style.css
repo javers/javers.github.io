@@ -369,6 +369,16 @@ body.page section #sidebar section ul {
     line-height: 1.8em;
 }
 
+body.page section #sidebar section li {
+    line-height: 160%;
+}
+
+body.page section #sidebar section li.nested {
+    line-height: 140%;
+    font-size:1em;
+    padding-left: 15px;
+}
+
 body.page section #sidebar section ul li a {
     font-size: 1.1em;
     color: #333;

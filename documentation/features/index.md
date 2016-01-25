@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.4.5
+released on 2016-01-25 <br/>
+
+* [#309](https://github.com/javers/javers/issues/309)
+New JQL `commitId()` filter for snapshot queries.
+See [CommitId filter example](/documentation/jql-examples/#commit-id-filter).
 
 ### 1.4.4
 released on 2016-01-20 <br/>

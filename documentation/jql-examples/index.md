@@ -58,7 +58,8 @@ Queries can have one or more optional [filters](#query-filters):
 * [property](#property-filter),
 * [limit](#limit-filter), 
 * [skip](#skip-filter),
-* [commitDate](#commit-date-filter), 
+* [commitDate](#commit-date-filter),
+* [commitId](#commit-id-filter),
 * [newObject changes](#new-object-filter).
 
 JQL can adapt when you refactor your domain classes:
@@ -198,7 +199,8 @@ For each query you can add one or more optional filters:
 [property](#property-filter),
 [limit](#limit-filter), 
 [skip](#skip-filter), 
-[commitDate](#commit-date-filter) and  
+[commitDate](#commit-date-filter),
+[commitId](#commit-id-filter) and  
 [newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Property filter</h3>
@@ -374,6 +376,47 @@ Changes are calculated on the fly, as a diff between subsequent Snapshots
 fetched from the repository.
 We have three Snapshots committed between 2016-01-01 and 2018-01-01
 so only two changes are returned.
+
+<h3 id="commit-id-filter">CommitId filter</h3>
+Optional filter which makes sense only when querying for snapshots.
+It allows finding snapshots persisted within a particular commit.
+The commit id can be supplied as an `CommitId` instance or `BigDecimal`.
+
+In the example we commit three subsequent versions of Employee and then 
+we retrieve the snapshot from the second commit only.
+
+```groovy
+def "should query for snapshots with commitId filter"(){
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "author", new Employee(name:"bob", age:29, salary:900) )
+    def secondCommit = javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary:1100) )
+
+    when:
+    def snapshots = javers
+        .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
+        .withCommitId(secondCommit.id).build() )
+
+    then:
+    assert snapshots.size() == 1
+
+    println "found snapshot:"
+    with (snapshots[0]) {
+        println "commit ${commitMetadata.id}: $globalId (" +
+            "age: ${getPropertyValue('age')}, " +
+            "salary: ${getPropertyValue('salary')})"
+    }
+}
+```
+
+query result:
+
+```text
+found snapshots:
+commit 2.0: org.javers.core.examples.model.Employee/bob (age: 30, salary: 1000)
+```
 
 <h3 id="new-object-filter">NewObject changes filter</h3>
 This filter only affects queries for changes, by default it’s disabled.
