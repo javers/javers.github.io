@@ -199,7 +199,8 @@ For each query you can add one or more optional filters:
 [property](#property-filter),
 [limit](#limit-filter), 
 [skip](#skip-filter), 
-[commitDate](#commit-date-filter) and  
+[commitDate](#commit-date-filter),
+[commitId](#commit-id-filter) and  
 [newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Property filter</h3>
@@ -377,23 +378,21 @@ We have three Snapshots committed between 2016-01-01 and 2018-01-01
 so only two changes are returned.
 
 <h3 id="commit-id-filter">CommitId filter</h3>
-Optional filter which by default is disabled. It allows finding snapshots persisted
-on a specific commit having a given id. The commit id can be supplied as an instance of
-CommitId or BigDecimal. On the other hand using this filter when querying for changes
-makes no sense because the result will always be empty.
+Optional filter which makes sense only when querying for snapshots.
+It allows finding snapshots persisted within a particular commit.
+The commit id can be supplied as an `CommitId` instance or `BigDecimal`.
 
-In the example we commit three subsequent versions of Employee and then retrieve
-snapshots from the second commit.
+In the example we commit three subsequent versions of Employee and then 
+we retrieve the snapshot from the second commit only.
 
 ```groovy
 def "should query for snapshots with commitId filter"(){
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:29, salary: 900) )
-    def secondCommit =
-        javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary: 1100) )
+    javers.commit( "author", new Employee(name:"bob", age:29, salary:900) )
+    def secondCommit = javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit( "author", new Employee(name:"bob", age:31, salary:1100) )
 
     when:
     def snapshots = javers
@@ -403,11 +402,11 @@ def "should query for snapshots with commitId filter"(){
     then:
     assert snapshots.size() == 1
 
-    println "found snapshots:"
-    snapshots.each {
-        println "commit ${it.commitMetadata.id}: ${it} (" +
-            "age: ${it.getPropertyValue('age')}, " +
-            "salary: ${it.getPropertyValue('salary')})"
+    println "found snapshot:"
+    with (snapshots[0]) {
+        println "commit ${commitMetadata.id}: $globalId (" +
+            "age: ${getPropertyValue('age')}, " +
+            "salary: ${getPropertyValue('salary')})"
     }
 }
 ```
