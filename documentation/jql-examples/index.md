@@ -414,7 +414,7 @@ def "should query for snapshots with commitId filter"(){
 query result:
 
 ```text
-found snapshots:
+found snapshot:
 commit 2.0: org.javers.core.examples.model.Employee/bob (age: 30, salary: 1000)
 ```
 
