@@ -60,6 +60,7 @@ Queries can have one or more optional [filters](#query-filters):
 * [skip](#skip-filter),
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
+* [snapshot version](#version-filter),
 * [newObject changes](#new-object-filter).
 
 JQL can adapt when you refactor your domain classes:
@@ -200,7 +201,8 @@ For each query you can add one or more optional filters:
 [limit](#limit-filter), 
 [skip](#skip-filter), 
 [commitDate](#commit-date-filter),
-[commitId](#commit-id-filter) and  
+[commitId](#commit-id-filter),  
+[snapshot version](#version-filter) and 
 [newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Property filter</h3>
@@ -382,32 +384,30 @@ Optional filter which makes sense only when querying for snapshots.
 It allows finding snapshots persisted within a particular commit.
 The commit id can be supplied as an `CommitId` instance or `BigDecimal`.
 
-In the example we commit three subsequent versions of Employee and then 
-we retrieve the snapshot from the second commit only.
+In the example we commit three subsequent versions of two Employees
+and then we retrieve the snapshot from the third commit only.
 
 ```groovy
 def "should query for snapshots with commitId filter"(){
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:29, salary:900) )
-    def secondCommit = javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary:1100) )
+    (1..3).each {
+        javers.commit("author", new Employee(name: "john",age: 20+it))
+        javers.commit("author", new Employee(name: "bob", age: 20+it, salary: 900 + it*100))
+    }
 
     when:
     def snapshots = javers
         .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
-        .withCommitId(secondCommit.id).build() )
+        .withCommitId(CommitId.valueOf(4)).build() )
 
     then:
     assert snapshots.size() == 1
+    assert snapshots[0].getPropertyValue("age") == 22
 
     println "found snapshot:"
-    with (snapshots[0]) {
-        println "commit ${commitMetadata.id}: $globalId (" +
-            "age: ${getPropertyValue('age')}, " +
-            "salary: ${getPropertyValue('salary')})"
-    }
+    println snapshots[0]
 }
 ```
 
@@ -415,7 +415,50 @@ query result:
 
 ```text
 found snapshot:
-commit 2.0: org.javers.core.examples.model.Employee/bob (age: 30, salary: 1000)
+Snapshot{commit:4.0, id:org.javers.core.examples.model.Employee/bob, version:2, (age:22, name:bob, salary:1100, subordinates:[])}
+```
+
+<h3 id="version-filter">Snapshot version filter</h3>
+Version filter is similar to [CommitId filter](#commit-id-filter). It makes sense only for
+snapshot queries.
+
+Snapshot version is local for each object stored in JaversRepository
+(as opposed to CommitId, which is the global identifier).
+When an object is committed for the first time, it has version 1.
+In the next commit it gets version 2 and so on.
+   
+In the example we commit five versions of two Employees: `john` and `bob`.
+Then then we retrieve the fourth version of `bob`.
+
+```groovy
+def "should query for snapshots with version filter"(){
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    (1..5).each {
+        javers.commit("author", new Employee(name: "john",age: 20+it))
+        javers.commit("author", new Employee(name: "bob", age: 20+it, salary: 900 + it*100))
+    }
+
+    when:
+    def snapshots = javers
+            .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
+            .withVersion(4).build() )
+
+    then:
+    assert snapshots.size() == 1
+    assert snapshots[0].getPropertyValue("age") == 24
+
+    println "found snapshot:"
+    println snapshots[0]
+}
+```
+
+query result:
+
+```text
+found snapshot:
+Snapshot{commit:8.0, id:org.javers.core.examples.model.Employee/bob, version:4, (age:24, name:bob, salary:1300, subordinates:[])}
 ```
 
 <h3 id="new-object-filter">NewObject changes filter</h3>
