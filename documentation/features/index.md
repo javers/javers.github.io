@@ -89,11 +89,19 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.4.7
+released on 2016-01-29 <br/>
+
+* [#322](https://github.com/javers/javers/issues/322)
+New JQL `withVersion()` filter for snapshot queries.
+See [Snapshot filter example](/documentation/jql-examples/#version-filter).
+
+
 ### 1.4.5
 released on 2016-01-25 <br/>
 
 * [#309](https://github.com/javers/javers/issues/309)
-New JQL `commitId()` filter for snapshot queries.
+New JQL `withCommitId()` filter for snapshot queries.
 See [CommitId filter example](/documentation/jql-examples/#commit-id-filter).
 
 ### 1.4.4
