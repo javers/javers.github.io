@@ -94,7 +94,7 @@ released on 2016-01-29 <br/>
 
 * [#322](https://github.com/javers/javers/issues/322)
 New JQL `withVersion()` filter for snapshot queries.
-See [Snapshot filter example](/documentation/jql-examples/#version-filter).
+See [Snapshot version filter example](/documentation/jql-examples/#version-filter).
 
 
 ### 1.4.5
