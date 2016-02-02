@@ -89,6 +89,22 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+
+### 1.4.10
+released on 2016-02-02 <br/>
+
+* [#325](https://github.com/javers/javers/issues/325)
+Fixed bug in persisting commitDate in SQL repository
+
+* [#249](https://github.com/javers/javers/issues/249)
+Fixed bug in JSON deserialization of Id property with Type tokens
+
+* [#192](https://github.com/javers/javers/issues/192)
+Added support for well-known Java util types: `UUID`, `File` and `Currency`.
+
+* [#16](https://github.com/polyjdbc/polyjdbc/issues/16)
+Fixed bug in PolyJDBC sequence generating algorithm
+
 ### 1.4.7
 released on 2016-01-29 <br/>
 
