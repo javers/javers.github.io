@@ -23,6 +23,10 @@ code {
     overflow: auto;
 }
 
+§pre code {
+    font-size: 12px;
+}
+
 .highlight pre {
     font-size: 0.8em;
 }

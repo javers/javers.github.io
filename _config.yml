@@ -2,11 +2,10 @@ gems:
   - jekyll-sitemap
 
 # Build settings
-markdown: redcarpet
 kramdown:
     input: GFM
     coderay_line_numbers: nil
-
+    hard_wrap: false
 
 #Site content configuration
 javadoc_url: /javadoc_1.4.0/
