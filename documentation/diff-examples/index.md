@@ -17,8 +17,7 @@ Run examples as unit tests:
 ```
 ./gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
 ./gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
-./gradlew javers-core:example -Dtest.single=EmployeeHierarchiesDiffExample
-./gradlew javers-core:example -Dtest.single=ComparingTopLevelCollectionExample
+...
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
@@ -545,3 +544,63 @@ public class ComparingTopLevelCollectionExample {
   }
 }
 ```
+
+<h2 id="groovy-diff-example">Groovy diff example</h2>
+
+In JaVers we love [Groovy](http://www.groovy-lang.org/) language.
+From the very beginning of JaVers project we use [Spock framework](http://docs.spockframework.org)
+for writing tests.
+Recently, Groovy gains momentum as the full-blown application language.
+One of Groovy’s killer features is excellent interoperability with Java.
+Looking from the other side, modern Java frameworks should be Groovy friendly. 
+
+As you know, all Java classes extends `Object` class.
+All Groovy classes extends [GroovyObject](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GroovyObject.html),
+that’s how Groovy implements it’s metaprogramming features. 
+
+Good news, JaVers is fully compatible with Groovy!
+Simply, you can compare and commit Groovy objects
+in the same way as plain Java objects.
+Let’s see how it works.
+
+
+<tt>[GroovyDiffExample.groovy](http://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/GroovyDiffExample.groovy)</tt>
+
+```groovy
+package org.javers.core.examples
+
+import groovy.transform.TupleConstructor
+import org.javers.core.JaversBuilder
+import org.javers.core.metamodel.annotation.Id
+import spock.lang.Specification
+
+class GroovyDiffExample extends Specification {
+
+    @TupleConstructor
+    class Person {
+        @Id login
+        String lastName
+    }
+
+    def "should calculate diff for GroovyObjects"(){
+      given:
+      def javers = JaversBuilder.javers().build()
+
+      when:
+      def diff = javers.compare(
+          new Person('bob','Uncle'),
+          new Person('bob','Martin')
+      )
+
+      then:
+      diff.changes.size() == 1
+      diff.changes[0].left == 'Uncle'
+      diff.changes[0].right == 'Martin'
+    }
+}
+```
+
+No special JaVers configuration is required for Groovy.
+In the example we use `FIELD` (default) mapping style.
+Since Groovy generates getters and setters on the fly, you
+can also use `BEAN` mapping style without adding boilerplate code to domain classes.
