@@ -23,7 +23,7 @@ code {
     overflow: auto;
 }
 
-§pre code {
+pre code {
     font-size: 12px;
 }
 
