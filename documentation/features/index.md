@@ -89,6 +89,22 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+## 14.4.11
+released on 2016-02-?? <br/>
+
+* [#333](https://github.com/javers/javers/issues/333)
+GroovyObjects support. Now JaVers can be used in Groovy applications.
+See [Groovy diff example](/documentation/diff-examples/#groovy-diff-example)
+
+* `@DiffIgnore` can be used on class level
+(for example, GroovyObjects support is implemented by
+ignoring all properties with `groovy.lang.MetaClass` type).
+See ...
+
+* [#211](https://github.com/javers/javers/issues/211)
+New annotation `@ShallowReference` added.
+It can be used as the alternative way to limit the user object graph depth.
+See ...
 
 ### 1.4.10
 released on 2016-02-02 <br/>
@@ -100,7 +116,7 @@ Fixed bug in persisting commitDate in SQL repository
 Fixed bug in JSON deserialization of Id property with Type tokens
 
 * [#192](https://github.com/javers/javers/issues/192)
-Added support for well-known Java util types: `UUID`, `File` and `Currency`.
+Added support for well-known Java util types: `UUID`, `File` and `Currency`
 
 * [#16](https://github.com/polyjdbc/polyjdbc/issues/16)
 Fixed bug in PolyJDBC sequence generating algorithm

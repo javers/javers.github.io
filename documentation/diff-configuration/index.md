@@ -142,22 +142,22 @@ All you have to do is implement the
 [CustomPropertyComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomPropertyComparator.html)
 interface:
 
- ```java
- /**
-  * @param <T> custom type, e.g. Multimap
-  * @param <C> concrete type of PropertyChange returned by a comparator
-  */
- public interface CustomPropertyComparator<T, C extends PropertyChange> {
-     /**
-      * @param left left (or old) property value
-      * @param right right (or current) property value
-      * @param affectedId Id of domain object being compared
-      * @param property property being compared
-      * @return should return null if compared objects have no differences
-      */
-     C compare(T left, T right, GlobalId affectedId, Property property);
- }
- ```
+```java
+/**
+ * @param <T> custom type, e.g. Multimap
+ * @param <C> concrete type of PropertyChange returned by a comparator
+ */
+public interface CustomPropertyComparator<T, C extends PropertyChange> {
+    /**
+     * @param left left (or old) property value
+     * @param right right (or current) property value
+     * @param affectedId Id of domain object being compared
+     * @param property property being compared
+     * @return should return null if compared objects have no differences
+     */
+    C compare(T left, T right, GlobalId affectedId, Property property);
+}
+```
 
 and register it with
  [`JaversBuilder.registerCustomComparator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerCustomComparator-org.javers.core.diff.custom.CustomPropertyComparator-java.lang.Class-).
@@ -200,7 +200,9 @@ For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecim
  *     .registerCustomComparator(new CustomBigDecimalComparator(2), BigDecimal).build();
  * </pre>
  */
-public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange>{
+public class CustomBigDecimalComparator
+    implements CustomPropertyComparator<BigDecimal, ValueChange>
+{
     private int significantDecimalPlaces;
 
     public CustomBigDecimalComparator(int significantDecimalPlaces) {

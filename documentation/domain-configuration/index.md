@@ -59,8 +59,8 @@ should be compared property-by-property or using equals().
 ### JaVers Types
 The JaVers type system is based on `Entity` and `ValueObjects` notions, following Eric Evans
 Domain Driven Design terminology (DDD).
-Furthermore, it uses *Value*, *Primitive* and *Container* notions.
-The last two types are JaVers internals and can’t be mapped by the user.
+Furthermore, JaVers uses *Value*, *Primitive* and *Container* notions.
+The last two types are JaVers internals and can’t be mapped by a user.
 
 To make long story short, JaVers needs to know
 the [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html)
@@ -79,10 +79,10 @@ Each Entity instance has a global identifier called
 [`InstanceId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html).
 It consists of a class name and an ID value.
 
-**Comparing strategy** for Entity references is based on ID and
-for the Entity state is property-by-property.
+**Comparing strategy** for Entity references is based on InstanceId and
+for Entity state is property-by-property.
 
-The Entity can contain ValueObjects, References, Containers, Values and Primitives.
+Entity can contain ValueObjects, Entity references, Containers, Values and Primitives.
 
 **For example** Entities are: Person, Company.
 
@@ -90,15 +90,15 @@ The Entity can contain ValueObjects, References, Containers, Values and Primitiv
 JaVers [`ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
 It’s a complex value holder with a list of mutable properties but without a unique identifier.
-It can’t be dereferenced.
 
-The ValueObject instance has a ‘best effort’ global identifier called
+ValueObject instances has a ‘best effort’ global identifier called
 [`ValueObjectId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
-It consists of a class name and a path in the object graph.
+It consists of the owning Entity InstanceId and
+the path in a object subtree.
 
-**Comparing strategy** for the ValueObject state is property-by-property.
+**Comparing strategy** for ValueObjects is property-by-property.
 
-In a strict DDD approach, ValueObject can’t exist independently and has to be bound to an Entity instance
+**ProTip:** In a strict DDD approach, ValueObject can’t exist independently and has to be bound to an Entity instance
 (as a part of an Aggregate). JaVers is not so radical and supports both embedded and dangling ValueObjects.
 So in JaVers, ValueObject is just an Entity without identity.
 
@@ -108,12 +108,12 @@ So in JaVers, ValueObject is just an Entity without identity.
 JaVers [`Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
 is a simple (scalar) value holder.
 
-**Comparing strategy** for a Value state is based on the `equals()` method.
+**Comparing strategy** for Values is based on the `equals()` method.
 So it’s highly important to implement it properly by comparing the underlying state.
 
 **For example** Values are: BigDecimal, LocalDate.
 
-For Values it’s advisable to customize the JSON serialization by implementing *Type Adapters*
+For Values it’s advisable to customize JSON serialization by implementing *Type Adapters*
 (see [custom json serialization](#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
@@ -134,7 +134,7 @@ There are three ways to map a class:
    If a class is not mapped (by method 1 or 2),
    JaVers maps this class the in same way as its nearest supertype (superclass or interface).
 
-Mapping hints:
+Mapping **ProTips**:
 
 * First, try to map high level abstract classes or interfaces.
   For example, if all of your Entities extend some abstract class,
@@ -152,19 +152,22 @@ Mapping hints:
   as it has the highest priority.
 * For an Entity, a type of its Id-property is mapped as Value by default.
 * If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
+* JaVers compares objects deeply. It can cause performance problems for large object graphs.
+  Use `@ShallowReference` and `@DiffIgnore` to [ignoring things](#ignoring-things).
 * If you are not sure how JaVers maps your class, check effective mapping using
   [`getTypeMapping(Class<?>)`]({{ site.javadoc_url }}org/javers/core/Javers.html#getTypeMapping-java.lang.Class-) method.
   Once you have JaversType for your class, you can pretty-print it:
-  `println( javers.getTypeMapping(YourClass.class).prettyPrint() )`
+  `println( javers.getTypeMapping(YourClass.class).prettyPrint() )`   
 
-<h3 id="supported-annotations">Supported annotations</h3>
+<h2 id="supported-annotations">Supported annotations</h2>
 
 JaVers supports two sets of annotations, JPA and JaVers native.
 
-**Class level annotations**<br/>
+**ProTip:** JaVers ignores package names and cares only about simple class names.
+So you can use any annotation as long as its name matches one of the JPA or JaVers names.
+
+<h3>Class level annotations</h3>
 In the table below, there are JaVers types (table headers) resulting from annotations (cells).
-As you can see, the trick is that JaVers ignores package names and cares only about simple class names.
-So you can use any annotation set as long as the annotation names match JPA or JaVers names.
 
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
 <tr>
@@ -172,30 +175,31 @@ So you can use any annotation set as long as the annotation names match JPA or J
     <th>ValueObject</th>
     <th>Value</th>
 </tr>
+<tr>
     <td>@javax.persistence.<wbr>Entity</td>
     <td>@javax.persistence.<wbr>Embeddable</td>
     <td>@org.javers.core<wbr>.metamodel.annotation.<wbr>Value</td>
-<tr>
 </tr>
+<tr>
     <td>@org.javers.core.<wbr>metamodel.annotation.<wbr>Entity</td>
     <td>@org.javers.core.<wbr>metamodel.annotation.<wbr>ValueObject</td>
     <td>@*.Value</td>
-<tr>
 </tr>
+<tr>
     <td>@javax.persistence.<wbr>MappedSuperclass </td>
     <td>@*.Embeddable</td>
     <td></td>
-<tr>
 </tr>
+<tr>
     <td>@*.Entity </td>
     <td>@*.ValueObject </td>
     <td></td>
-<tr>
 </tr>
+<tr>
     <td>@*.MappedSuperclass </td>
     <td></td>
     <td></td>
-<tr>
+</tr>
 </table>
 
 **TypeName annotation**<br/>
@@ -207,8 +211,7 @@ We recommended to use @TypeName for all Entities.
 Without that, Javers uses fully-qualified class names 
 in GlobalIds, which hinders refactoring.  
 
-<span id="property-level-annotations">**Property level annotations**</span>
-<br/>
+<h3 id="property-level-annotations">Property level annotations</h3>
 There are two kinds of property level annotations.
 
 * `Id` annotation, to mark the Id-property of an Entity class.
@@ -245,7 +248,7 @@ The same like for Class level annotations, JaVers ignores package names and care
 </tr>
 </table>
 
-<h3 id="entity-id-property">Entity Id</h3>
+<h2 id="entity-id-property">Entity Id</h2>
 Entity `Id` has a special role in JaVers. It identifies an Entity instance.
 You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
 
@@ -286,7 +289,7 @@ Nevertheless, if you plan to use `JaversRepository`,
 consider providing custom JSON `TypeAdapters`
 for your each of your `Value` types, especially Id types like `ObjectId` (see [JSON TypeAdapters](#json-type-adapters)).
 
-<h3 id="property-mapping-style">Property mapping style</h3>
+<h2 id="property-mapping-style">Property mapping style</h2>
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
 FIELD style is the default one. We recommend not changing it, as it’s suitable in most cases.
 
@@ -332,7 +335,7 @@ Javers javers = JaversBuilder
 
 In both styles, access modifiers are not important, it could be private ;)
 
-<h3 id="ignoring-things">Ignoring things</h3>
+<h2 id="ignoring-things">Ignoring things</h2>
 
 The ideal domain model contains only business relevant data and no technical clutter.
 Such a model is compact and neat. All domain objects and their properties are important and worth being persisted.
@@ -349,7 +352,7 @@ Sometimes ignoring certain properties can dramatically improve performance.
 Imagine that you have a technical property updated every time an object is touched
 by some external system, for example:
 
-```
+```java
 public class User {
    ...
    private Timestamp lastSyncWithDWH; //updated daily to currentdate, when object is exported to DWH
