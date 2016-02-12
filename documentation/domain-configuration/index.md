@@ -188,7 +188,7 @@ There are six Class level annotations in JaVers:
   declares given class as totally ignored by JaVers. 
   All properties with ignored type are ignored.
   Think about class level @DiffIgnore as the global version of property level @DiffIgnore.<br/>
-  Use it for **limiting depth** of object graphs to compare.
+  Use it for **limiting depth** of object graphs to compare (see [ignoring things](#ignoring-things)). 
 
 * [`@ShallowReference`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ShallowReference.html)
   &mdash;
@@ -325,7 +325,7 @@ In the real world, domain objects often contain various kind of noisy properties
 such as dynamic proxies (like Hibernate lazy loading proxies), duplicated data, technical flags,
 auto-generated data and so on.
 
-It is important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
+It’s important to exclude these things from the JaVers mapping, simply to save the storage and CPU.
 This can be done by marking them as ignored.
 Ignored properties are omitted by both the JaVers diff algorithm and JaversRepository.
 
@@ -336,7 +336,8 @@ by some external system, for example:
 ```java
 public class User {
    ...
-   private Timestamp lastSyncWithDWH; //updated daily to currentdate, when object is exported to DWH
+   // updated daily to currentdate, when object is exported to DWH
+   private Timestamp lastSyncWithDWH; 
    ...
 }
 ```
@@ -356,20 +357,27 @@ check JaVers log messages with commit statistics, e.g.
 If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
 
 **How to configure ignored properties**<br/>
-There are two ways to do this. First, you can use `@Transient` or `@DiffIgnore`
-[property annotations](#property-level-annotations) (this is the recommended way).
+There are few ways to do this.
 
-Second, if you are not willing to use annotations, register your classes
-using
-[`JaversBuilder.registerEntity(EntityDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-org.javers.core.metamodel.clazz.EntityDefinition-)
-or
-[`JaversBuilder.registerValueObject(ValueObjectDefinition)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-org.javers.core.metamodel.clazz.ValueObjectDefinition-)
-, for example:
+If you want to locally ignore concrete properties use the `@DiffIgnore` annotation
+(see [property annotations](#property-level-annotations)).
+
+You can also ignore properties globally, by type.
+There are two class level annotation for this:
+`@DiffIgnore` and `@ShallowReference` (see [class annotations](#class-level-annotations)).<br/>
+The former is stronger and means *I don’t care, just ignore all properties with this type*.<br/>
+The latter is less radical and means *Do shallow diff, bother me only when referenced Id is changed*.
+
+Annotations are recommended way for managing domain objects mapping,
+but you if you are not willing to use them,
+map your classes in `JaversBuilder`.
+
+For example:
 
 ```java
 JaversBuilder.javers()
-        .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
-        .build();
+    .registerEntity(new EntityDefinition(User.class, "someId", Arrays.asList("lastSyncWithDWH")))
+    .build();
 ```
 
 <h2 id="hooks">Object Hooks</h2>
