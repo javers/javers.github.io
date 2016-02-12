@@ -122,17 +122,18 @@ and make sure that JaVers has got it. So what should you do?
 
 There are three ways to map a class:
 
-1. explicitly, with the JaversBuilder methods :
+1. Explicitly, with the JaversBuilder methods :
     * [`registerEntity(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-),
       `@ID` annotation points to *Id-property*
     * [`registerEntity(Class<?> entityClass, String idPropertyName)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerEntity-java.lang.Class-java.lang.String-), Id-property given by name
     * [`registerValueObject(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueObject-java.lang.Class-)
     * [`registerValue(Class<?>)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValue-java.lang.Class-)
-1. implicitly, with annotations (JPA, JaVers or others, see [table below](#supported-annotations))
-1. implicitly, using a *type inferring algorithm* based on a class inheritance hierarchy.
+1. Explicitly, with JaVers or JPA annotations, 
+   see [class level annotations](#class-level-annotations)
+1. Implicitly, using the *type inferring algorithm* based on the class inheritance hierarchy.
    JaVers **propagates** the class mapping down to the inheritance hierarchy.
    If a class is not mapped (by method 1 or 2),
-   JaVers maps this class the in same way as its nearest supertype (superclass or interface).
+   JaVers maps this class the in same way as its nearest supertype (superclass or interface)
 
 Mapping **ProTips**:
 
@@ -161,95 +162,75 @@ Mapping **ProTips**:
 
 <h2 id="supported-annotations">Supported annotations</h2>
 
-JaVers supports two sets of annotations, JPA and JaVers native.
+JaVers supports two sets of annotations: JaVers native (recommended) and JPA to some extent.
 
 **ProTip:** JaVers ignores package names and cares only about simple class names.
 So you can use any annotation as long as its name matches one of the JPA or JaVers names.
 
-<h3>Class level annotations</h3>
-In the table below, there are JaVers types (table headers) resulting from annotations (cells).
+<h3 id="class-level-annotations">Class level annotations</h3>
 
-<table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
-<tr>
-    <th>Entity</th>
-    <th>ValueObject</th>
-    <th>Value</th>
-</tr>
-<tr>
-    <td>@javax.persistence.<wbr>Entity</td>
-    <td>@javax.persistence.<wbr>Embeddable</td>
-    <td>@org.javers.core<wbr>.metamodel.annotation.<wbr>Value</td>
-</tr>
-<tr>
-    <td>@org.javers.core.<wbr>metamodel.annotation.<wbr>Entity</td>
-    <td>@org.javers.core.<wbr>metamodel.annotation.<wbr>ValueObject</td>
-    <td>@*.Value</td>
-</tr>
-<tr>
-    <td>@javax.persistence.<wbr>MappedSuperclass </td>
-    <td>@*.Embeddable</td>
-    <td></td>
-</tr>
-<tr>
-    <td>@*.Entity </td>
-    <td>@*.ValueObject </td>
-    <td></td>
-</tr>
-<tr>
-    <td>@*.MappedSuperclass </td>
-    <td></td>
-    <td></td>
-</tr>
-</table>
+There are six Class level annotations in JaVers:
 
-**TypeName annotation**<br/>
-[`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
-is a special JaVers class level annotation.
-Use it for naming Entities and ValueObjects.
+* [`@Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Entity.html)
+  &mdash;
+  declares given class (and all its subclasses) as the [Entity](#entity) type.
+   
+* [`@ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ValueObject.html)
+  &mdash;
+  declares given class (and all its subclasses) as the [ValueObject](#value-object) type.
+  
+* [`@Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Value.html)
+  &mdash;
+  declares given class (and all its subclasses) as the [Value](#ValueType) type.
+  
+* [`@DiffIgnore`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/DiffIgnore.html)
+  &mdash;
+  declares given class as totally ignored by JaVers. 
+  All properties with ignored type are ignored.
+  Think about class level @DiffIgnore as the global version of property level @DiffIgnore.<br/>
+  Use it for **limiting depth** of object graphs to compare.
 
-We recommended to use @TypeName for all Entities.
-Without that, Javers uses fully-qualified class names 
-in GlobalIds, which hinders refactoring.  
+* [`@ShallowReference`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ShallowReference.html)
+  &mdash;
+  declares given class as the ShallowReference type.
+  It’s a tricky variant of the Entity type with all properties except Id ignored.
+  Use it as the less radical alternative to @DiffIgnore. 
+  
+* [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
+  &mdash;
+  is a convenient way for naming Entities and ValueObjects.
+  We recommend to declare a name for all Entities.
+  Without that, Javers uses fully-qualified class names 
+  in GlobalIds, which hinders refactoring.  
+
+Three **JPA** Class level annotations are interpreted as synonyms to JaVers annotations:
+
+* `@javax.persistence.Entity` and `@javax.persistence.MappedSuperclass`
+  are synonyms to JaVers `@Entity`,
+* `@javax.persistence.Embeddable` is the synonym to `@ValueObject`.
 
 <h3 id="property-level-annotations">Property level annotations</h3>
-There are two kinds of property level annotations.
 
-* `Id` annotation, to mark the Id-property of an Entity class.
-  Furthermore, Id annotation maps the owning class as an Entity.
-  So when you use `@Id`, the class level `@Entity` is optional.
-* `Ignore` annotation, to mark a property as ignored by the diff engine.
+There are two property level annotations:
 
-The same like for Class level annotations, JaVers ignores package names and cares only about simple class names.
+* [`@Id`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Id.html)
+  &mdash; 
+  declares the [Id-property](#entity-id-property) of an Entity. 
+ 
+* [`@DiffIgnore`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/DiffIgnore.html)
+  &mdash;
+  declares a property as ignored by the diff engine.
 
-<table class="table" width="100%" style='font-family: monospace;'>
-<tr>
-    <th>Ignore</th>
-    <th>Id</th>
-</tr>
-<tr>
-    <td>@javax.persistence.<wbr>Transient</td>
-    <td>@javax.persistence.<wbr>Id</td>
-</tr>
-<tr>
-    <td>@org.javers.core.<wbr>metamodel.<wbr>annotation.DiffIgnore</td>
-    <td>@org.javers.core.<wbr>metamodel.<wbr>annotation.Id</td>
-</tr>
-<tr>
-    <td>@*.Transient</td>
-    <td>@javax.persistence.EmbeddedId</td>
-</tr>
-<tr>
-    <td>@*.DiffIgnore</td>
-    <td>@*.Id</td>
-</tr>
-<tr>
-    <td></td>
-    <td>@*.EmbeddedId</td>
-</tr>
-</table>
+**ProTip**: when property level @Id is found in a class, JaVers maps it automatically
+as Entity. So when you use @Id, class level @Entity is optional.
+
+Two **JPA** property level annotations are interpreted as synonyms to JaVers annotations:
+
+* `@javax.persistence.Id` is the synonym to JaVers `@Id`,
+* `@javax.persistence.Transient` is the synonym to `@DiffIgnore`.
 
 <h2 id="entity-id-property">Entity Id</h2>
-Entity `Id` has a special role in JaVers. It identifies an Entity instance.
+Entity Id has a special role in JaVers. It identifies an Entity instance.
 You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
 
 The *JaversType* of an Id class is mapped automatically
