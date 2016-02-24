@@ -169,45 +169,45 @@ So you can use any annotation as long as its name matches one of the JPA or JaVe
 
 <h3 id="class-level-annotations">Class level annotations</h3>
 
-There are six Class level annotations in JaVers:
+There are six class level annotations in JaVers:
 
 * [`@Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Entity.html)
   &mdash;
-  declares given class (and all its subclasses) as the [Entity](#entity) type.
+  declares a given class (and all its subclasses) as the [Entity](#entity) type.
    
 * [`@ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ValueObject.html)
   &mdash;
-  declares given class (and all its subclasses) as the [ValueObject](#value-object) type.
+  declares a given class (and all its subclasses) as the [ValueObject](#value-object) type.
   
 * [`@Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Value.html)
   &mdash;
-  declares given class (and all its subclasses) as the [Value](#ValueType) type.
+  declares a given class (and all its subclasses) as the [Value](#ValueType) type.
   
 * [`@DiffIgnore`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/DiffIgnore.html)
   &mdash;
-  declares given class as totally ignored by JaVers. 
+  declares a given class as totally ignored by JaVers. 
   All properties with ignored type are ignored.
   Think about class level @DiffIgnore as the global version of property level @DiffIgnore.<br/>
   Use it for **limiting depth** of object graphs to compare (see [ignoring things](#ignoring-things)). 
 
 * [`@ShallowReference`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ShallowReference.html)
   &mdash;
-  declares given class as the ShallowReference type.
+  declares a given class as the ShallowReference type.
   It’s a tricky variant of the Entity type with all properties except Id ignored.
   Use it as the less radical alternative to @DiffIgnore. 
   
 * [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
   &mdash;
-  is a convenient way for naming Entities and ValueObjects.
-  We recommend to declare a name for all Entities.
+  a convenient way to name Entities and ValueObjects.
+  We recommend to declaring a name for all Entities.
   Without that, Javers uses fully-qualified class names 
   in GlobalIds, which hinders refactoring.  
 
-Three **JPA** Class level annotations are interpreted as synonyms to JaVers annotations:
+Three **JPA** Class level annotations are interpreted as synonyms of JaVers annotations:
 
 * `@javax.persistence.Entity` and `@javax.persistence.MappedSuperclass`
   are synonyms to JaVers `@Entity`,
-* `@javax.persistence.Embeddable` is the synonym to `@ValueObject`.
+* `@javax.persistence.Embeddable` is the synonym of `@ValueObject`.
 
 <h3 id="property-level-annotations">Property level annotations</h3>
 
@@ -224,10 +224,10 @@ There are two property level annotations:
 **ProTip**: when property level @Id is found in a class, JaVers maps it automatically
 as Entity. So when you use @Id, class level @Entity is optional.
 
-Two **JPA** property level annotations are interpreted as synonyms to JaVers annotations:
+Two **JPA** property level annotations are interpreted as synonyms of JaVers annotations:
 
-* `@javax.persistence.Id` is the synonym to JaVers `@Id`,
-* `@javax.persistence.Transient` is the synonym to `@DiffIgnore`.
+* `@javax.persistence.Id` is the synonym of JaVers `@Id`,
+* `@javax.persistence.Transient` is the synonym of `@DiffIgnore`.
 
 <h2 id="entity-id-property">Entity Id</h2>
 Entity Id has a special role in JaVers. It identifies an Entity instance.
@@ -357,20 +357,19 @@ check JaVers log messages with commit statistics, e.g.
 If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
 
 **How to configure ignored properties**<br/>
-There are few ways to do this.
+There are a few ways to do this.
 
-If you want to locally ignore concrete properties use the `@DiffIgnore` annotation
+If you want to locally ignore concrete properties, use the `@DiffIgnore` annotation
 (see [property annotations](#property-level-annotations)).
 
 You can also ignore properties globally, by type.
-There are two class level annotation for this:
+There are two class level annotations for this:
 `@DiffIgnore` and `@ShallowReference` (see [class annotations](#class-level-annotations)).<br/>
 The former is stronger and means *I don’t care, just ignore all properties with this type*.<br/>
 The latter is less radical and means *Do shallow diff, bother me only when referenced Id is changed*.
 
-Annotations are recommended way for managing domain objects mapping,
-but you if you are not willing to use them,
-map your classes in `JaversBuilder`.
+Annotations are the recommended way for managing domain objects mapping,
+but if you’re not willing to use them, map your classes in `JaversBuilder`.
 
 For example:
 

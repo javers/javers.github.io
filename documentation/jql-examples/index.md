@@ -276,14 +276,14 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
-Optional parameter for all queries (default skip is 0).
+This is an optional parameter for all queries (the default skip is 0).
 When querying for snapshots, it defines the offset of the first result that JaVers should return.
 
 When querying for changes, skip means exactly the same:
-omit changes recorded in last snapshots and return the previous ones.
+omit changes recorded in the last snapshots and return the previous ones.
 Skip and limit parameters can be useful for implementing pagination.
 
-In the example we set skip to 1 so only Bob’s first 3 snapshots are being compared,
+In the example we set skip to 1 so only Bob’s first three snapshots are being compared,
 which means four changes
 (two changes between third and second commit and two changes between second and first commit).
 
@@ -317,13 +317,13 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h3 id="commit-date-filter">CommitDate filter</h3>
-Optional parameter for all queries.
+This is an optional parameter for all queries.
 It allows time range filtering by `commitDate` (Snapshot creation timestamp).
 
-This example requires some trick to simulate time flow.
+This example requires a trick to simulate time flow.
 We use `FakeDateProvider`, which is stubbed to provide concrete dates as `now()`.   
-Bob is committed six times in one year intervals.
-Then we query for changes done in three years period.
+Bob is committed six times in one-year intervals.
+Then we query for changes made over a three-years period.
 
 ```groovy
 def "should query for changes with commitDate filter"(){
@@ -370,19 +370,19 @@ commitDate: 2017-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.exampl
 
 ```
 
-One can ask why change made on 2016-01-01 is not selected.
-It’s not a bug, both `from()` and `to()` filters works inclusively
+One could ask why the change made on 2016-01-01 is not selected.
+It’s not a bug &mdash; both `from()` and `to()` filters work inclusively
 (like `between` in SQL).
-Explanation is simple, JaversRepository stores only Snapshots.
-Changes are calculated on the fly, as a diff between subsequent Snapshots
+The explanation is simple &mdash; JaversRepository stores only snapshots.
+Changes are calculated on the fly, as a diff between subsequent snapshots
 fetched from the repository.
-We have three Snapshots committed between 2016-01-01 and 2018-01-01
+We have three snapshots committed between 2016-01-01 and 2018-01-01
 so only two changes are returned.
 
 <h3 id="commit-id-filter">CommitId filter</h3>
-Optional filter which makes sense only when querying for snapshots.
-It allows finding snapshots persisted within a particular commit.
-The commit id can be supplied as an `CommitId` instance or `BigDecimal`.
+This is an optional filter which makes sense only when querying for snapshots.
+It makes it possible to find snapshots persisted within a particular commit.
+The commit id can be supplied as a `CommitId` instance or `BigDecimal`.
 
 In the example we commit three subsequent versions of two Employees
 and then we retrieve the snapshot from the third commit only.
@@ -419,10 +419,10 @@ Snapshot{commit:4.0, id:org.javers.core.examples.model.Employee/bob, version:2, 
 ```
 
 <h3 id="version-filter">Snapshot version filter</h3>
-Version filter is similar to [CommitId filter](#commit-id-filter). It makes sense only for
+Version filter is similar to the [CommitId filter](#commit-id-filter). It makes sense only for
 snapshot queries.
 
-Snapshot version is local for each object stored in JaversRepository
+The Snapshot version is local for each object stored in the JaversRepository
 (as opposed to CommitId, which is the global identifier).
 When an object is committed for the first time, it has version 1.
 In the next commit it gets version 2 and so on.
