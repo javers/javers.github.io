@@ -5,18 +5,19 @@ submenu: spring-boot-integration
 ---
 
 [Spring Boot](http://projects.spring.io/spring-boot/)
-becomes a standard in the world of Java enterprise applications.
+has become a standard in the world of Java enterprise applications.
 
-Our Spring Boot starters simplifies integrating
+Our Spring Boot starters simplify integrating
 JaVers with your application. All required JaVers beans are 
 created and auto-configured with reasonable defaults.
 
-There are two starters compatible with Sping Data and 
+There are two starters compatible with Spring Data and 
 common persistence stacks:
 
-* **JaVers Spring Boot starter for MongoDB** compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/),
-* <font color="red">**INCUBATING**</font>
-**JaVers Spring Boot starter for SQL** compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/),
+* **JaVers Spring Boot starter for MongoDB**,
+  compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
+* <font color="red">**INCUBATING**</font> **JaVers Spring Boot starter for SQL**,
+  compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
 <h2 id="get-javers-starters">Get JaVers Spring Boot starter</h2>
 
@@ -31,12 +32,12 @@ compile 'org.springframework.boot:spring-boot-starter-data-mongodb:' + SPRING_BO
 <font color="red">**INCUBATING**</font>
 
 Check [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
-for other build tools snippets.
+for other build tool snippets.
 
 <h2 id="javers-configuration-properties">JaVers Core configuration</h2>
 
 Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
-and configure JaVers the same way like your application (typically by YAML property files).
+and configure JaVers in the same way as your application (typically by YAML property files).
 
 Here is an `application.yml` file example
 with the full list of JaVers properties and their default values.
@@ -59,7 +60,7 @@ Each property has a corresponding `with*()` method.
 Thanks to Spring Boot magic, starters available on the classpath are automatically picked up
 and launched. 
 
-See the complete list of JaVers beans, added to your Spring ApplicationContext:
+See the complete list of JaVers beans added to your Spring ApplicationContext:
 
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
 * <font color="red">**INCUBATING**</font> for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
@@ -70,18 +71,18 @@ Default [AuthorProvider](/documentation/spring-integration/#author-provider-bean
 implementation is created by JaVers starter.
 It returns `"unknown"` name.
 
-If you are using [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect)
+If you’re using [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect)
 (`@JaversSpringDataAuditable` or `@JaversAuditable`),
-consider implementing AuthorProvider bean. It should return a current user login.
+consider implementing the AuthorProvider bean. It should return a current user login.
 
 <h2 id="starter-repository-configuration">JaVersRepository configuration</h2>
-JaVers starters relies on Spring Data starters.
+JaVers starters rely on Spring Data starters.
 Proper JaversRepository implementation is created and configured to reuse an application’s database configuration
   (managed by Spring Data starters).
   
 <h2 id="starter-boot">Boot it!</h2>
 
-Once you have added JaVers starter to the classpath, you can use all JaVers features.
+Once you’ve added the JaVers starter to the classpath, you can use all JaVers features.
 
 Use [auto-audit](/documentation/spring-integration/#auto-audit-aspect) annotation to mark 
 CRUD repositories as audited.
@@ -98,11 +99,11 @@ public interface PersonRepository extends MongoRepository<Person, String> {
 }
 ```
 
-All changes made on `Person` Entity will be committed to JaVersRepository.
+All changes made to `Person` Entity will be committed to JaVersRepository.
 
 Then run the [JQL](/documentation/jql-examples/) query to list these changes.
 
-Example REST controller:
+REST controller example:
 
 ```java
 
@@ -141,12 +142,12 @@ public class AuditController {
 ```
 
 <h2 id="starter-demo-app">Demo application</h2>
-We crated a demo application based on Spring Boot.
-It manages Organization Structure domain.
-User can change salaries and positions of Employees and move them in Structure.
+We created a demo application based on Spring Boot.
+It manages the Organization Structure domain.
+The User can change salaries and positions of Employees and move them in the Structure.
 All changes are audited and easy to browse.
    
-Check out how easy is to add JaVers audit to the Spring Boot application.
+Check out how easy it is to add the JaVers audit to the Spring Boot application.
 
 Clone it from github:
 
@@ -154,7 +155,7 @@ Clone it from github:
 git clone https://github.com/javers/organization-structure.git
 ```
 
-Run it,
+Run it
 
 ```
 cd organization-structure
