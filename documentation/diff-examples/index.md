@@ -547,21 +547,20 @@ public class ComparingTopLevelCollectionExample {
 
 <h2 id="groovy-diff-example">Groovy diff example</h2>
 
-In JaVers we love [Groovy](http://www.groovy-lang.org/) language.
-From the very beginning of JaVers project we use [Spock framework](http://docs.spockframework.org)
+In JaVers we love the [Groovy](http://www.groovy-lang.org/) language.
+From the very beginning of the JaVers project we used the [Spock framework](http://docs.spockframework.org)
 for writing tests.
-Recently, Groovy gains momentum as the full-blown application language.
+Recently, Groovy has started gaining momentum as a full-blown application language.
 One of Groovy’s killer features is excellent interoperability with Java.
 Looking from the other side, modern Java frameworks should be Groovy friendly. 
 
-As you know, all Java classes extends `Object` class.
+As you know, all Java classes extends the `Object` class.
 All Groovy classes extends [GroovyObject](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GroovyObject.html),
-that’s how Groovy implements it’s metaprogramming features. 
+that’s how Groovy implements its metaprogramming features. 
 
 Good news, JaVers is fully compatible with Groovy!
-Simply, you can compare and commit Groovy objects
-in the same way as plain Java objects.
-Let’s see how it works.
+You can compare and commit Groovy objects in the same way as plain Java objects.
+Let’s see how it works:
 
 
 <tt>[GroovyDiffExample.groovy](http://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/GroovyDiffExample.groovy)</tt>
@@ -601,6 +600,6 @@ class GroovyDiffExample extends Specification {
 ```
 
 No special JaVers configuration is required for Groovy.
-In the example we use `FIELD` (default) mapping style.
+In the example we use the `FIELD` (default) mapping style.
 Since Groovy generates getters and setters on the fly, you
-can also use `BEAN` mapping style without adding boilerplate code to domain classes.
+can also use the `BEAN` mapping style without adding boilerplate code to domain classes.
