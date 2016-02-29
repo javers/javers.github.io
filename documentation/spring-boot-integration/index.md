@@ -16,7 +16,7 @@ common persistence stacks:
 
 * **JaVers Spring Boot starter for MongoDB**,
   compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
-* <font color="red">**INCUBATING**</font> **JaVers Spring Boot starter for SQL**,
+* **JaVers Spring Boot starter for SQL**,
   compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
 <h2 id="get-javers-starters">Get JaVers Spring Boot starter</h2>
@@ -28,8 +28,14 @@ Add JaVers MongoDB and Spring Data MongoDB starters to your classpath:
 compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
 compile 'org.springframework.boot:spring-boot-starter-data-mongodb:' + SPRING_BOOT_VERSION   
 ```
+
 ### SQL starter ###
-<font color="red">**INCUBATING**</font>
+Add JaVers SQL and Spring Data MongoDB starters to your classpath:
+
+```groovy
+compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
+compile 'org.springframework.boot:spring-boot-starter-data-jpa:' + SPRING_BOOT_VERSION   
+```
 
 Check [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
 for other build tool snippets.
@@ -63,7 +69,7 @@ and launched.
 See the complete list of JaVers beans added to your Spring ApplicationContext:
 
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
-* <font color="red">**INCUBATING**</font> for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
+* for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
 
 ### AuthorProvider bean
 
@@ -71,11 +77,10 @@ Default [AuthorProvider](/documentation/spring-integration/#author-provider-bean
 implementation is created by JaVers starter.
 It returns `"unknown"` name.
 
-If you’re using [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect)
-(`@JaversSpringDataAuditable` or `@JaversAuditable`),
+If you’re using [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect),
 consider implementing the AuthorProvider bean. It should return a current user login.
 
-<h2 id="starter-repository-configuration">JaVersRepository configuration</h2>
+<h2 id="starter-repository-configuration">JaversRepository configuration</h2>
 JaVers starters rely on Spring Data starters.
 Proper JaversRepository implementation is created and configured to reuse an application’s database configuration
   (managed by Spring Data starters).
@@ -84,10 +89,15 @@ Proper JaversRepository implementation is created and configured to reuse an app
 
 Once you’ve added the JaVers starter to the classpath, you can use all JaVers features.
 
-Use [auto-audit](/documentation/spring-integration/#auto-audit-aspect) annotation to mark 
-CRUD repositories as audited.
+<h3 id="boot-Auto-audit">Auto-audit aspect annotations</h3>
 
-For example:
+JaVers [auto-audit](/documentation/spring-integration/#auto-audit-aspect)
+aspect is based on annotations: `@JaversSpringDataAuditable` and `@JaversAuditable`.
+
+Basically, choose Entities you want to be audited by JaVers and
+add `@JaversSpringDataAuditable` to corresponding Spring Data CRUD repositories.
+
+For example, if you want to audit the Person Entity, annotate `PersonRepository`:
 
 ```java
 import org.javers.spring.annotation.JaversSpringDataAuditable
@@ -99,26 +109,67 @@ public interface PersonRepository extends MongoRepository<Person, String> {
 }
 ```
 
-All changes made to `Person` Entity will be committed to JaVersRepository.
+and all changes made to Person objects will be committed to JaVersRepository.
 
-Then run the [JQL](/documentation/jql-examples/) query to list these changes.
+If you aren’t using Spring Data repositories,
+annotate all data-changing methods with `@JaversAuditable`.
+
+For example:
+
+```java
+@Repository
+class UserRepository {
+    @JaversAuditable
+    public void save(User user) {
+        ...//
+    }
+
+    public User find(String login) {
+        ...//
+    }
+}
+```    
+
+
+<h3 id="boot-manual-commis">Manual commis</h3>
+If you need more fine-grained control over JaVers commits,
+use JaVers instance directly (which is available as a Spring bean).
+
+For example, this service commits changes made to a fired 
+Person but only in Friday:
+
+```java
+@Service
+class PersonService {
+    private final Javers javers;
+    private final PersonRepository personRepository;
+
+    @Autowired
+    public PersonService(Javers javers, PersonRepository personRepository) {
+        this.javers = javers;
+        this.personRepository = personRepository;
+    }
+    
+    public void fire(Person person) {
+        person.fire();
+        personRepository.save(person);
+
+        if (LocalDate.now().getDayOfWeek() == DayOfWeek.FRIDAY){
+            javers.commit("author", person);
+        }
+    }
+}
+```
+
+<h3 id="boot-querying">Querying JaversRepository</h3>
+
+When your objects are persisted in JaversRepository
+use [JQL](/documentation/jql-examples/) to query for snapshots and changes.
+
 
 REST controller example:
 
 ```java
-
-package org.javers.organization.structure.audit;
-
-import org.javers.core.Javers;
-import org.javers.core.diff.Change;
-import org.javers.core.json.JsonConverter;
-import org.javers.organization.structure.domain.Person;
-import org.javers.repository.jql.QueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/audit")
 public class AuditController {
@@ -159,10 +210,10 @@ Run it
 
 ```
 cd organization-structure
-./gradlew bootRun
+./gradlew organization-structure-sql:bootRun
 ```
 
-and check it out on [localhost:8080](http://localhost:8080).
+and check it out on [localhost:8080/view/person](http://localhost:8080/view/person).
 
 
 

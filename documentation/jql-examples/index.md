@@ -381,7 +381,7 @@ so only two changes are returned.
 
 <h3 id="commit-id-filter">CommitId filter</h3>
 This is an optional filter which makes sense only when querying for snapshots.
-It makes it possible to find snapshots persisted within a particular commit.
+It lets you to find snapshots persisted within a particular commit.
 The commit id can be supplied as a `CommitId` instance or `BigDecimal`.
 
 In the example we commit three subsequent versions of two Employees

@@ -114,14 +114,14 @@ If you’re using Spring Data, just annotate every Repository you want to audit
 with class-level `@JaversSpringDataAuditable`, for example:
 
 ```java
-    import org.javers.spring.data.JaversSpringDataAuditable
-    import org.springframework.data.repository.CrudRepository
-    import org.springframework.stereotype.Repository
+import org.javers.spring.data.JaversSpringDataAuditable
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
-    @Repository
-    @JaversSpringDataAuditable
-    interface UserRepository extends CrudRepository<User, String> {
-    }
+@Repository
+@JaversSpringDataAuditable
+interface UserRepository extends CrudRepository<User, String> {
+}
 ```
 
 From now, all objects passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
@@ -134,17 +134,17 @@ annotate all data-changing methods you want to audit with `@JaversAuditable`.
 For example:
 
 ```java
-    class UserRepository {
-
-        @JaversAuditable
-        public void save(User user) {
-            ...//
-        }
-
-        public User find(String login) {
-            ...//
-        }
+@Repository
+class UserRepository {
+    @JaversAuditable
+    public void save(User user) {
+        ...//
     }
+
+    public User find(String login) {
+        ...//
+    }
+}
 ```
 
 In fact, you can use this method-level annotation for advising any bean in your application.

@@ -89,13 +89,22 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
-## 14.4.12
+### 1.5.0
+released on 2016-02-28 <br/>
+
+* New JaVers Spring Boot starter for SQL and Spring Data 
+  &mdash; `javers-spring-boot-starter-sql`.
+  See [Spring Boot integration](/documentation/spring-boot-integration/).
+  
+* Starting from this version we use [SemVer](http://semver.org/) scheme for JaVers version numbers.  
+
+### 1.4.12
 released on 2016-02-25 <br/>
 
 * [#341](https://github.com/javers/javers/issues/341)
 Fixed bug TyeMapper &mdash; infinite loop for certain Type cycles in user classes.
 
-## 14.4.11
+### 1.4.11
 released on 2016-02-12 <br/>
 
 * [#333](https://github.com/javers/javers/issues/333)
