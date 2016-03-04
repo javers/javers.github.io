@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.5.1
+released on 2016-03-04 <br/>
+
+* [#344](https://github.com/javers/javers/issues/344)
+Fixed bug in Spring Boot starter for SQL. Dialect autodetection now works properly. 
+
 ### 1.5.0
 released on 2016-02-28 <br/>
 
