@@ -135,7 +135,13 @@ There are three ways to map a class:
    If a class is not mapped (by method 1 or 2),
    JaVers maps this class the in same way as its nearest supertype (superclass or interface)
 
-Mapping **ProTips**:
+**Priorities** <br/>
+JaversBuilder `register...()` methods have a higher priority 
+then annotations &mdash; JaVers ignores type annotations when a class is already
+registered in JaversBuilder.
+Type inferring algorithm has the lowest priority.
+
+**Mapping ProTips**
 
 * First, try to map high level abstract classes or interfaces.
   For example, if all of your Entities extend some abstract class,
