@@ -89,6 +89,14 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+
+### 1.6.0
+released on 2016-03-16 <br/>
+
+* [#191](https://github.com/javers/javers/issues/191)
+Added support for sets of ValueObjects, SET_OF_VO_DIFF_NOT_IMPLEMENTED exception should
+not appear anymore.
+
 ### 1.5.1
 released on 2016-03-04 <br/>
 
