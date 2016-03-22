@@ -131,33 +131,34 @@ which you already use for your main database.
     <th>DialectName</th>
     <th>JDBC driver</th>
 </tr>
+<tr>
     <td>PostgreSQL</td>
     <td>POSTGRES</td>
     <td><a href="http://search.maven.org/#artifactdetails|org.postgresql|postgresql|9.4-1201-jdbc41|jar">
         org.postgresql:postgresql:9.4-1201-jdbc41</a></td>
-<tr>
 </tr>
+<tr>
     <td>MySQL</td>
     <td>MYSQL</td>
     <td><a href="http://search.maven.org/#artifactdetails|mysql|mysql-connector-java|5.1.36|jar">
         mysql:mysql-connector-java:5.1.36</a></td>
-<tr>
 </tr>
+<tr>
     <td>H2</td>
     <td>H2</td>
     <td><a href="http://search.maven.org/#artifactdetails|com.h2database|h2|1.4.187|jar">
         com.h2database:h2:1.4.187</a></td>
-<tr>
 </tr>
+<tr>
     <td>Oracle</td>
     <td>ORACLE</td>
     <td>ojdbc6.jar, xdb6.jar</td>
-<tr>
 </tr>
+<tr>
     <td>Microsoft SQL Server</td>
     <td>MSSQL</td>
     <td>sqljdbc4.jar</td>
-<tr>
+</tr>
 </table>
 
 <h3 id="connection-provider">ConnectionProvider</h3>
