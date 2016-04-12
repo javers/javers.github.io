@@ -90,6 +90,15 @@ with minimal mapping configuration effort
 <h2 id="release-notes">Release notes</h2>
 
 
+### 1.6.1
+released on 2016-04-12 <br/>
+
+* [#353](https://github.com/javers/javers/issues/353)
+Fixed misleading error message for raw Collections fields.
+
+* [#18](https://github.com/polyjdbc/polyjdbc/pull/18)
+Fixed resource leak in PolyJDBC, resulting in ORA-01000: maximum open cursors exceeded (Oracle).
+
 ### 1.6.0
 released on 2016-03-16 <br/>
 
