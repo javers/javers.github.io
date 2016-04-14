@@ -89,6 +89,14 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.6.2
+released on 2016-04-13 <br/>
+
+* [#355](https://github.com/javers/javers/issues/355)
+Fixed exception handling in JaversAuditableRepositoryAspect.
+
+* [#216](https://github.com/javers/javers/issues/216)
+JQL - added basic support for nested ValuObjects queries.
 
 ### 1.6.1
 released on 2016-04-12 <br/>
