@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.6.3
+released on 2016-04-17 <br/>
+
+* [#361](https://github.com/javers/javers/issues/361)
+Fixed bug in schema migration for MsSql Server.
+
 ### 1.6.2
 released on 2016-04-13 <br/>
 
