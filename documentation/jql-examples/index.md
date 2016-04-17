@@ -213,74 +213,75 @@ In the example, we show how to query for Employee’s salary changes,
 while ignoring changes made on other properties.
 
 ```groovy
-def "should query for Entity changes by instance Id with property filter"() {
+def "should query for changes (and snapshots) with property filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary:1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary:1200) )
+    javers.commit("author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit("author", new Employee(name:"bob", age:31, salary:1100) )
+    javers.commit("author", new Employee(name:"bob", age:31, salary:1200) )
 
     when:
-    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
-       .andProperty("salary").build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class)
+            .andProperty("salary").build()
+    def changes = javers.findChanges(query)
 
     then:
     printChanges(changes)
-    assert changes.size() == 1
+    assert changes.size() == 2
+    assert javers.findSnapshots(query).size() == 3
 }
 ```
 
 query result:
 
 ```
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+changes:
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
 Optional parameter for all queries, default limit is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
-When querying for changes, limit `n` means: give me changes recorded for last `n` snapshots.
 
-In the example we set limit to 3 so only Bob’s last 3 snapshots are being compared,
-which means 4 changes (two changes between fourth and third commit and two changes between third and second commit). 
+In the example we set limit to 2 so only Bob’s last 2 snapshots are taken into account,
+which means 2 (of 3) changes in the result list.
 
 ```groovy
-def "should query for changes with limit filter"() {
+def "should query for changes (and snapshots) with limit filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:29) )
-    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary: 1100) )
-    javers.commit( "author", new Employee(name:"bob", age:32, salary: 1200) )
+    javers.commit( "author", new Employee(name:"bob", salary: 900) )
+    javers.commit( "author", new Employee(name:"bob", salary: 1000) )
+    javers.commit( "author", new Employee(name:"bob", salary: 1100) )
+    javers.commit( "author", new Employee(name:"bob", salary: 1200) )
 
     when:
-    def changes = javers
-        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).limit(3).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).limit(2).build()
+    def changes = javers.findChanges(query)
 
     then:
     printChanges(changes)
-    assert changes.size() == 4
+    assert changes.size() == 2
+    assert javers.findSnapshots(query).size() == 2
 }
 ```
 
 query result:
 
 ```text
+changes:
 commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
-commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
-commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
 This is an optional parameter for all queries (the default skip is 0).
-When querying for snapshots, it defines the offset of the first result that JaVers should return.
+It defines the offset of the first (most recent) snapshot that JaVers should fetch from a repository.
 
-When querying for changes, skip means exactly the same:
-omit changes recorded in the last snapshots and return the previous ones.
 Skip and limit parameters can be useful for implementing pagination.
 
 In the example we set skip to 1 so only Bob’s first three snapshots are being compared,
@@ -288,7 +289,7 @@ which means four changes
 (two changes between third and second commit and two changes between second and first commit).
 
 ```groovy
-def "should query for changes with skip filter"() {
+def "should query for changes (and snapshots) with skip filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
@@ -298,12 +299,13 @@ def "should query for changes with skip filter"() {
     javers.commit( "author", new Employee(name:"bob", age:32, salary: 1200) )
 
     when:
-    def changes = javers
-        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build()
+    def changes = javers.findChanges( query )
 
     then:
     printChanges(changes)
     assert changes.size() == 4
+    assert javers.findSnapshots(query).size() == 3
 }
 ```
 
