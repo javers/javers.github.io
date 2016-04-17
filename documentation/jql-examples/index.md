@@ -328,7 +328,7 @@ Bob is committed six times in one-year intervals.
 Then we query for changes made over a three-years period.
 
 ```groovy
-def "should query for changes with commitDate filter"(){
+def "should query for changes (and snapshots) with commitDate filter"(){
   given:
   def fakeDateProvider = new FakeDateProvider()
   def javers = JaversBuilder.javers().withDateTimeProvider(fakeDateProvider).build()
@@ -342,13 +342,14 @@ def "should query for changes with commitDate filter"(){
   }
 
   when:
-  def changes = javers
-          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
+  def query = QueryBuilder.byInstanceId("bob", Employee.class)
           .from(new LocalDate(2016,01,1))
-          .to  (new LocalDate(2018,01,1)).build() )
+          .to  (new LocalDate(2018,01,1)).build()
+  def changes = javers.findChanges( query )
 
   then:
-  assert changes.size() == 2
+  assert changes.size() == 3
+  assert javers.findSnapshots(query).size() == 3
 
   println "found changes:"
   changes.each {
@@ -369,17 +370,8 @@ comitting bob on 2020-01-01
 found changes:
 commitDate: 2018-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'22', newVal:'23'}
 commitDate: 2017-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'21', newVal:'22'}
-
+commitDate: 2016-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'20', newVal:'21'}
 ```
-
-One could ask why the change made on 2016-01-01 is not selected.
-It’s not a bug &mdash; both `from()` and `to()` filters work inclusively
-(like `between` in SQL).
-The explanation is simple &mdash; JaversRepository stores only snapshots.
-Changes are calculated on the fly, as a diff between subsequent snapshots
-fetched from the repository.
-We have three snapshots committed between 2016-01-01 and 2018-01-01
-so only two changes are returned.
 
 <h3 id="commit-id-filter">CommitId filter</h3>
 This is an optional filter which makes sense only when querying for snapshots.
