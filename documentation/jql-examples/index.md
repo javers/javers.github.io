@@ -319,7 +319,7 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h3 id="commit-date-filter">CommitDate filter</h3>
-This is an optional parameter for all queries.
+CommitDate filter is an optional parameter for all queries.
 It allows time range filtering by `commitDate` (Snapshot creation timestamp).
 
 This example requires a trick to simulate time flow.
@@ -374,42 +374,44 @@ commitDate: 2016-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.exampl
 ```
 
 <h3 id="commit-id-filter">CommitId filter</h3>
-This is an optional filter which makes sense only when querying for snapshots.
-It lets you to find snapshots persisted within a particular commit.
+CommitId filter is an optional parameter for all queries.
+It lets you to find changes (or snapshots) persisted within a particular commit.
 The commit id can be supplied as a `CommitId` instance or `BigDecimal`.
 
 In the example we commit three subsequent versions of two Employees
-and then we retrieve the snapshot from the third commit only.
+and then we retrieve the changes done in the third commit only.
+Note that CommitId is global in the JaversRepository context
+(as opposed to [version](#version-filter)).
 
 ```groovy
-def "should query for snapshots with commitId filter"(){
+def "should query for changes (and snapshots) with commitId filter"(){
     given:
     def javers = JaversBuilder.javers().build()
 
     (1..3).each {
-        javers.commit("author", new Employee(name: "john",age: 20+it))
-        javers.commit("author", new Employee(name: "bob", age: 20+it, salary: 900 + it*100))
+        javers.commit("author", new Employee(name:"john", age:20+it))
+        javers.commit("author", new Employee(name:"bob",  age:20+it))
     }
 
     when:
-    def snapshots = javers
-        .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
-        .withCommitId(CommitId.valueOf(4)).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class )
+            .withCommitId( CommitId.valueOf(4) ).build()
+    def changes = javers.findChanges(query)
 
     then:
-    assert snapshots.size() == 1
-    assert snapshots[0].getPropertyValue("age") == 22
-
-    println "found snapshot:"
-    println snapshots[0]
+    printChanges(changes)
+    assert changes.size() == 1
+    assert changes[0].left == 21
+    assert changes[0].right == 22
+    assert javers.findSnapshots(query).size() == 1
 }
 ```
 
 query result:
 
 ```text
-found snapshot:
-Snapshot{commit:4.0, id:org.javers.core.examples.model.Employee/bob, version:2, (age:22, name:bob, salary:1100, subordinates:[])}
+changes:
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'21', newVal:'22'}
 ```
 
 <h3 id="version-filter">Snapshot version filter</h3>
