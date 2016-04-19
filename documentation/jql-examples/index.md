@@ -415,8 +415,8 @@ commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 ```
 
 <h3 id="version-filter">Snapshot version filter</h3>
-Version filter is similar to the [CommitId filter](#commit-id-filter). It makes sense only for
-snapshot queries.
+Version filter is similar to the [CommitId filter](#commit-id-filter),
+it lets you to find changes (or snapshots) for a concrete object version.
 
 The Snapshot version is local for each object stored in the JaversRepository
 (as opposed to CommitId, which is the global identifier).
@@ -427,34 +427,33 @@ In the example we commit five versions of two Employees: `john` and `bob`.
 Then then we retrieve the fourth version of `bob`.
 
 ```groovy
-def "should query for snapshots with version filter"(){
+def "should query for changes (and snapshots) with version filter"(){
     given:
     def javers = JaversBuilder.javers().build()
 
     (1..5).each {
         javers.commit("author", new Employee(name: "john",age: 20+it))
-        javers.commit("author", new Employee(name: "bob", age: 20+it, salary: 900 + it*100))
+        javers.commit("author", new Employee(name: "bob", age: 20+it))
     }
 
     when:
-    def snapshots = javers
-            .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
-            .withVersion(4).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).withVersion(4).build()
+    def changes = javers.findChanges( query )
 
     then:
-    assert snapshots.size() == 1
-    assert snapshots[0].getPropertyValue("age") == 24
-
-    println "found snapshot:"
-    println snapshots[0]
+    printChanges(changes)
+    assert changes.size() == 1
+    assert changes[0].left == 23
+    assert changes[0].right == 24
+    assert javers.findSnapshots(query).size() == 1
 }
 ```
 
 query result:
 
 ```text
-found snapshot:
-Snapshot{commit:8.0, id:org.javers.core.examples.model.Employee/bob, version:4, (age:24, name:bob, salary:1300, subordinates:[])}
+changes:
+commit 8.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'23', newVal:'24'}
 ```
 
 <h3 id="new-object-filter">NewObject changes filter</h3>
