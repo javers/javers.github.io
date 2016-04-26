@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.6.4
+released on 2016-04-26 <br/>
+
+* [#362](https://github.com/javers/javers/issues/362)
+Default behaviour for non-parametrized Collections instead of throwing 
+JaversException: GENERIC_TYPE_NOT_PARAMETRIZED.
+
 ### 1.6.3
 released on 2016-04-17 <br/>
 
