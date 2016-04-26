@@ -69,7 +69,7 @@ for each of your classes spotted in runtime (see [mapping configuration](#mappin
 Let’s examine these three fundamental types more closely.
 
 <h3 id="entity">Entity</h3>
-JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)</a>
+JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)
 has exactly the same semantic as DDD Entity or JPA Entity.
 
 Usually, each Entity instance represents a concrete physical object.
