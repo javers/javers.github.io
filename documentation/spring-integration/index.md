@@ -90,21 +90,31 @@ Please don’t confuse JaVers commit (a bunch of data changes)
 with the SQL commit command (finalizing an SQL transaction).
 
 You need to register an implementation of the `AuthorProvider` interface,
-which returns a current user login.
+which should return a current user name.
 
-Here’s the contract:
+JaVers comes with `SpringSecurityAuthorProvider` &mdash; 
+suitable implementation when using Spring Security:
 
 ```java
 package org.javers.spring.auditable;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 /**
- * Implementation has to be thread-safe and has to provide
- * an author (typically a user login), to current user session.
- *
- * See {@link SpringSecurityAuthorProvider} - implementation for Spring Security
+ * Returns a current user name from Spring Security context
  */
-public interface AuthorProvider {
-    String provide();
+public class SpringSecurityAuthorProvider implements AuthorProvider {
+    @Override
+    public String provide() {
+        Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null) {
+            return "unauthenticated";
+        }
+
+        return auth.getName();
+    }
 }
 ```
 
@@ -203,22 +213,14 @@ public class JaversSpringMongoApplicationConfig {
     }
 
     /**
-     * Required by Repository auto-audit aspect. <br/><br/>
+     * Required by auto-audit aspect. <br/><br/>
      *
-     * Returns mock implementation for testing.
-     * <br/>
-     * Provide real implementation,
-     * when using Spring Security you can use
-     * {@link org.javers.spring.auditable.SpringSecurityAuthorProvider}.
+     * Creates {@link SpringSecurityAuthorProvider} instance,
+     * suitable when using Spring Security
      */
     @Bean
     public AuthorProvider authorProvider() {
-        return new AuthorProvider() {
-            @Override
-            public String provide() {
-                return "unknown";
-            }
-        };
+        return new SpringSecurityAuthorProvider();
     }
 }
 ```
@@ -297,22 +299,14 @@ public class JaversSpringJpaApplicationConfig {
     }
 
     /**
-     * Required by Repository auto-audit aspect. <br/><br/>
+     * Required by auto-audit aspect. <br/><br/>
      *
-     * Returns mock implementation for testing.
-     * <br/>
-     * Provide real implementation,
-     * when using Spring Security you can use
-     * {@link org.javers.spring.auditable.SpringSecurityAuthorProvider}.
+     * Creates {@link SpringSecurityAuthorProvider} instance,
+     * suitable when using Spring Security
      */
     @Bean
     public AuthorProvider authorProvider() {
-        return new AuthorProvider() {
-            @Override
-            public String provide() {
-                return "unknown";
-            }
-        };
+        return new SpringSecurityAuthorProvider();
     }
 
     /**
