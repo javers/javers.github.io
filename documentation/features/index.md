@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 1.6.7
+released on 2016-05-06 <br/>
+
+* [#368](https://github.com/javers/javers/pull/368)
+Improvements in Spring Boot starters. `SpringSecurityAuthorProvider` bean 
+is created by default when SpringSecurity is detected on classpath.
+
 ### 1.6.4
 released on 2016-04-26 <br/>
 
