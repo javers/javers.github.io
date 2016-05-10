@@ -89,6 +89,47 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### <font color="red">2.0.0.RC</font>
+released on 2016-05-?? <br/>
+
+JaVers 2.0 comes with major improvements and new features in JQL:
+
+**Unified semantics of changes and snapshot queries** <br/>
+In JaVers 2.0, change queries work in the same way as snapshot queries
+and change queries accept all filters.
+
+For example, in JaVers 1.x, this change query:  
+
+```
+javers.findChanges(QueryBuilder.byInstanceId(Person.class,1).withVersion(5).build());
+```
+
+returns empty list, which is not very useful.
+
+In JaVers 2.0 this query returns changes introduced by the selected snapshot,
+so changes between versions 4 and 5 of a given object.
+
+JaVers implements change queries on the top of snapshot queries.
+Change sets are recalculated as a difference between subsequent pairs of snapshots fetched from 
+a JaversRepository.
+In 1.x, only explicitly selected snapshots are involved in the recalculation algorithm.
+In 2.0, for each snapshot selected by a user query, JaVers implicitly fetches *previous* snapshot (if needed).
+Thanks to that, change queries are far more useful and they work as you could expect.
+
+**New features**<br/>
+
+* Commit properties
+// TODO
+
+* Query by author
+// TODO
+
+**Breaking changes**<br/>
+// TDOD
+
+**SQL Schema migration**<br/>
+// TODO
+
 ### 1.6.7
 released on 2016-05-06 <br/>
 
