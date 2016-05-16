@@ -124,11 +124,27 @@ Thanks to that, change queries are far more useful and they work as you could ex
 * Query by author
 // TODO
 
-**Breaking changes**<br/>
-// TDOD
+* Query by any object
+// TODO
 
 **SQL Schema migration**<br/>
-// TODO
+
+JaVers 2.0 comes with the new database schema for SQL repository:
+
+* table `jv_cdo_class` is no longer used
+* new column `jv_global_id.type_name`
+* new column `jv_snapshot.managed_name`
+* new table `jv_commit_property`
+
+JaVers automatically launches a data migration script when old schema is detected.
+Data from `jv_cdo_class` are copied to new columns (`jv_global_id.type_name` and `jv_snapshot.managed_name`).
+It should take a few seconds for medium size tables but for very large tables it could be time consuming.
+
+**Breaking changes**<br/>
+The only one breaking change is new semantics of changes query which is actually an improvement.
+
+If you are using SQL repository, and your `jv_snapshot` table is large (millions of records),
+run JaVers 2.0 on your test environment for the first time and check if data migrations is done correctly.
 
 ### 1.6.7
 released on 2016-05-06 <br/>
