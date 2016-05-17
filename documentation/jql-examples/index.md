@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: JQL (JaVers Query Language) examples 
+title: JQL (JaVers Query Language) examples
 submenu: jql-examples
 ---
 
@@ -25,8 +25,8 @@ which allows you to query JaversRepository for changes of a given class, object 
 
 It’s not such a powerful language like SQL because it’s a kind of abstraction over native languages
 used by concrete JaversRepository implementations (like SQL, MongoDB).
- 
-**The case** <br/> 
+
+**The case** <br/>
 In this example we show all types of JQL queries.
 This time, we use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
 as these languages are far more readable for BDD-style tests than Java.
@@ -35,28 +35,29 @@ Groovy is a nice, dynamic language, runnable on JVM
 and Spock is our tool of choice for TDD. We really like it so this is also a chance to
 encourage you to switch from JUnit to Spock.
 
-**What’s important** <br/> 
+**What’s important** <br/>
 Data history can be fetched from JaversRepository in two views — changes and snapshots.
 
 For changes use
 [javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
-and for snapshots use 
+and for snapshots use
 [javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
 
 Both methods understand the same JQL API,
 so you can use the same query object to get changes and snapshots views.
 
 **Table of Contents** <br/>
-There are three types of queries: 
+There are three types of queries:
 
 * query for [Entity](#instance-id-query) changes by Instance Id,
 * query for [ValueObject](#by-value-object-query) changes,
-* query for any object changes [by class of object](#by-class-query).
+* query for any object changes [by class of object](#by-class-query),
+* query for [any domain object](#any-domain-object-query) changes.
 
 Queries can have one or more optional [filters](#query-filters):
 
 * [property](#property-filter),
-* [limit](#limit-filter), 
+* [limit](#limit-filter),
 * [skip](#skip-filter),
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
@@ -66,19 +67,19 @@ Queries can have one or more optional [filters](#query-filters):
 JQL can adapt when you refactor your domain classes:
 
 * refactoring [Entities](#entity-refactoring) with `@TypeName`,
-* free refactoring of [ValueObjects](#value-object-refactoring). 
+* free refactoring of [ValueObjects](#value-object-refactoring).
 
 
 Let’s see how to run simple query for changes.
- 
+
 <h2 id="instance-id-query">Querying for Entity changes by Instance Id</h2>
 This query selects changes made on concrete [Entity](/documentation/domain-configuration/#entity) instance.
 The query accepts two mandatory parameters:
- 
-* `Object localId` &mdash; expected Instance Id, 
+
+* `Object localId` &mdash; expected Instance Id,
 * `Class entityClass` &mdash; expected Entity class.
 
-Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types. 
+Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types.
 
 ```groovy
 def "should query for Entity changes by instance Id"() {
@@ -96,7 +97,7 @@ def "should query for Entity changes by instance Id"() {
     printChanges(changes)
     assert changes.size() == 2
 }
-```    
+```
 
 query result:
 
@@ -159,14 +160,14 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#pr
 ```
 
 <h2 id="by-class-query">Querying for any object changes by class of object</h2>
-This query is a kind of shotgun approach. The only mandatory parameter is a class.
+The only mandatory parameter of this query is a class.
 It selects objects regardless of theirs JaversType and
-can be used for Entities, ValueObjects and UnboundedValueObjects. 
+can be used for Entities, ValueObjects and UnboundedValueObjects.
 
 This query is useful for selecting UnboundedValueObjects (ValueObjects without an owning Entity)
 and also for ValueObjects when we don’t care about the owning Entity and path.
 
-In the example, we show how to query for changes made on 
+In the example, we show how to query for changes made on
 ValueObjects owned by two different Entities.
 
 ```groovy
@@ -195,14 +196,50 @@ commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueOb
 commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummyAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
+<h2 id="any-domain-object-query">Querying for any domain object changes</h2>
+This query is a kind of shotgun approach. It accepts no parameters.
+It selects all objects regardless of theirs JaversType or class.
+
+The query is useful for selecting any snapshots or changes that were created
+by a given author or have some other common properties set during commit.
+
+In the example, we show how to query for changes made on any domain object.
+
+```groovy
+def "should query for any domain object changes"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit("author", new Employee(name:"bob", age:30) )
+    javers.commit("author", new Employee(name:"bob", age:31) )
+    javers.commit("author", new DummyUserDetails(id:1, someValue:"old") )
+    javers.commit("author", new DummyUserDetails(id:1, someValue:"new") )
+
+    when:
+    def changes = javers.findChanges( QueryBuilder.anyDomainObject().build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+}
+```
+
+query result:
+
+```
+commit 4.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1', property:'someValue', oldVal:'old', newVal:'new'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```
+
 <h2 id="query-filters">Query filters</h2>
 For each query you can add one or more optional filters:
 [property](#property-filter),
-[limit](#limit-filter), 
-[skip](#skip-filter), 
+[limit](#limit-filter),
+[skip](#skip-filter),
+[author](#author-filter),
 [commitDate](#commit-date-filter),
-[commitId](#commit-id-filter),  
-[snapshot version](#version-filter) and 
+[commitId](#commit-id-filter),
+[snapshot version](#version-filter) and
 [newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Property filter</h3>
@@ -318,12 +355,49 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'29', newVal:'30'}
 ```
 
+<h3 id="author-filter">Author filter</h3>
+Author filter is an optional parameter for all queries.
+It allows you to find changes (or snapshots) persisted by a particular author.
+
+In the example snapshots are committed alternately by Jim and Pam.
+Then we retrieve only the changes introduced by Pam.
+
+```groovy
+def "should query for changes (and snapshots) with author filter"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "Jim", new Employee(name:"bob", age:29, salary: 900) )
+    javers.commit( "Pam", new Employee(name:"bob", age:30, salary: 1000) )
+    javers.commit( "Jim", new Employee(name:"bob", age:31, salary: 1100) )
+    javers.commit( "Pam", new Employee(name:"bob", age:32, salary: 1200) )
+
+    when:
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).byAuthor("Pam").build()
+    def changes = javers.findChanges( query )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 4
+    assert javers.findSnapshots(query).size() == 2
+}
+```
+
+query result:
+
+```text
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1000'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'29', newVal:'30'}
+```
+
 <h3 id="commit-date-filter">CommitDate filter</h3>
 CommitDate filter is an optional parameter for all queries.
 It allows time range filtering by `commitDate` (Snapshot creation timestamp).
 
 This example requires a trick to simulate time flow.
-We use `FakeDateProvider`, which is stubbed to provide concrete dates as `now()`.   
+We use `FakeDateProvider`, which is stubbed to provide concrete dates as `now()`.
 Bob is committed six times in one-year intervals.
 Then we query for changes made over a three-years period.
 
@@ -422,7 +496,7 @@ The Snapshot version is local for each object stored in the JaversRepository
 (as opposed to CommitId, which is the global identifier).
 When an object is committed for the first time, it has version 1.
 In the next commit it gets version 2 and so on.
-   
+
 In the example we commit five versions of two Employees: `john` and `bob`.
 Then then we retrieve the fourth version of `bob`.
 
@@ -495,9 +569,9 @@ commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'0', newVal:'30'}
 commit 1.0: NewObject{globalId:'org.javers.core.examples.model.Employee/bob'}
 ```
- 
+
 <h2 id="entity-refactoring">Refactoring Entities with @TypeName</h2>
- 
+
 Mature persistence frameworks allow you to refactor your domain classes
 without losing a connection between old (possibly removed)
 and new Class versions. For example,
@@ -521,7 +595,7 @@ Let’s consider the refactoring of a `Person` Entity.
 After persisting some commits in JaversRepository, we decide to change the class name.
 Moreover, the renamed class
 has some properties added/removed. The second commit is persisted,
-using the new class definition: `PersonRefactored`. 
+using the new class definition: `PersonRefactored`.
 
 `Person.class`:
 
@@ -543,7 +617,7 @@ class Person {
 ```
 
 `PersonRefactored.class`:
- 
+
 ```java
 package org.javers.core.examples;
 
@@ -563,7 +637,7 @@ class PersonRefactored {
 
 As `@TypeName` annotation was engaged from the very beginning,
 our JQL just works. See the following Spock test:
- 
+
 ```groovy
 def '''should allow Entity class name change
        when both old and new class use @TypeName annotation'''()
@@ -589,11 +663,11 @@ def '''should allow Entity class name change
     println changes[0]
 }
 ```
- 
+
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
 objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
-**I forgot about @TypeName example** <br/> 
+**I forgot about @TypeName example** <br/>
 What if I forgot to use @TypeName, but my objects are already persisted
 in JaversRepository
 and I need to refactor now?
@@ -642,7 +716,7 @@ class PersonRetrofitted {
 ```
 
 And the Spock test:
- 
+
 ```groovy
 def '''should allow Entity class name change
        when old class forgot to use @TypeName annotation'''()
@@ -671,23 +745,23 @@ def '''should allow Entity class name change
 In this case, `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
 — `'org.javers.core.examples.PersonSimple/1'`.
 They match but, well, it’s not very nice to have deprecated names in new code.
- 
+
 <h2 id="value-object-refactoring">Free ValueObjects refactoring</h2>
 
 In most cases you don’t have to use @TypeName for ValueObjects.
 Most JQL queries will just work after refactoring.
 However, we still recommend to adding @TypeName.
-For example, querying by ValueObject class relies on it.   
-  
+For example, querying by ValueObject class relies on it.
+
 JaVers treats ValueObjects as property containers and doesn’t care much about their classes.
 This approach is known us Duck Typing, and is widely adopted by dynamic languages like Groovy.
 
 **Example** <br/>
 Let’s consider the refactoring of Person’s address,
 which happened to be a ValueObject.
-We want to change its type from `EmailAddress` to `HomeAddress`, 
+We want to change its type from `EmailAddress` to `HomeAddress`,
 
-For the sake of brevity, we use the abstract `Address` class 
+For the sake of brevity, we use the abstract `Address` class
 in the Person definition (owner Entity), so we don’t need to change it after the type of Address is altered.
 
 Abstract `Address.class`:
@@ -755,7 +829,7 @@ def 'should be very relaxed about ValueObject types'(){
   then: 'three ValueChanges are expected'
   assert changes.size() == 3
   assert changes.collect{ it.propertyName }.containsAll( ['street','verified','email'] )
-  
+
   changes.each { println it }
 }
 ```
