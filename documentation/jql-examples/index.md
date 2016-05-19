@@ -237,6 +237,7 @@ For each query you can add one or more optional filters:
 [limit](#limit-filter),
 [skip](#skip-filter),
 [author](#author-filter),
+[commitProperty](#commit-property-filter),
 [commitDate](#commit-date-filter),
 [commitId](#commit-id-filter),
 [snapshot version](#version-filter) and
@@ -390,6 +391,52 @@ commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1000'}
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'29', newVal:'30'}
+```
+
+<h3 id="commit-property-filter">CommitProperty filter</h3>
+Commit property filter is an optional parameter for all queries.
+It allows you to find changes (or snapshots) persisted with a given commit property.
+Single query can specify more than one commit property. In this case all
+these properties must match with persisted commit properties.
+
+In the example snapshots are committed with two properties: tenant and event.
+Then we retrieve only the changes concerning promotions within ACME company.
+
+```groovy
+def "should query for changes (and snapshots) with commit property filters"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    def bob = new Employee(name: "bob", age: 29, position: "Assistant", salary: 900)
+    javers.commit( "author", bob, ["tenant": "ACME", "event": "hire"] )
+    bob = new Employee(name: "bob", age: 30, position: "Assistant", salary: 900)
+    javers.commit( "author", bob, ["tenant": "ACME", "event": "birthday"] )
+    bob = new Employee(name: "bob", age: 30, position: "Specialist", salary: 1600)
+    javers.commit( "author", bob, ["tenant": "ACME", "event": "promotion"] )
+
+    def pam = new Employee(name: "pam", age: 27, position: "Secretary", salary: 1300)
+    javers.commit( "author", pam, ["tenant": "Dunder Mifflin", "event": "hire"] )
+    pam = new Employee(name: "pam", age: 27, position: "Saleswoman", salary: 1700)
+    javers.commit( "author", pam, ["tenant": "Dunder Mifflin", "event": "promotion"] )
+
+    when:
+    def query = QueryBuilder.anyDomainObject()
+        .withCommitProperty("tenant", "ACME")
+        .withCommitProperty("event", "promotion").build()
+    def changes = javers.findChanges( query )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+    assert javers.findSnapshots(query).size() == 1
+}
+```
+
+query result:
+
+```text
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'position', oldVal:'Assistant', newVal:'Specialist'}
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1600'}
 ```
 
 <h3 id="commit-date-filter">CommitDate filter</h3>

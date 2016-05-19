@@ -125,8 +125,9 @@ See [Any domain object query example](/documentation/jql-examples/#any-domain-ob
 New JQL `author()` filter.
 See [Author filter example](/documentation/jql-examples/#author-filter).
 
-* Commit properties
-// TODO
+* [#305](https://github.com/javers/javers/issues/305)
+New JQL `commitProperty()` filter.
+See [Commit property filter example](/documentation/jql-examples/#commit-property-filter).
 
 **SQL Schema migration**<br/>
 
