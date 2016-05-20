@@ -56,9 +56,11 @@ There are three types of queries:
 
 Queries can have one or more optional [filters](#query-filters):
 
-* [property](#property-filter),
+* [changed property](#property-filter),
 * [limit](#limit-filter),
 * [skip](#skip-filter),
+* [author](#author-filter),
+* [commitProperty](#commit-property-filter),
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
 * [snapshot version](#version-filter),
@@ -233,7 +235,7 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 
 <h2 id="query-filters">Query filters</h2>
 For each query you can add one or more optional filters:
-[property](#property-filter),
+[changed property](#property-filter),
 [limit](#limit-filter),
 [skip](#skip-filter),
 [author](#author-filter),
@@ -243,7 +245,7 @@ For each query you can add one or more optional filters:
 [snapshot version](#version-filter) and
 [newObject changes](#new-object-filter) filter.
 
-<h3 id="property-filter">Property filter</h3>
+<h3 id="property-filter">Changed property filter</h3>
 Optional parameter for all queries.
 Use it to filter query results to changes made on a concrete property.
 

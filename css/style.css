@@ -375,19 +375,24 @@ body.page section #sidebar section ul {
 
 body.page section #sidebar section li {
     line-height: 160%;
+    padding-left: 10px;
 }
 
 body.page section #sidebar section li.nested {
     line-height: 140%;
     font-size:1em;
-    padding-left: 15px;
+    padding-left: 35px;
+}
+
+body.page section #sidebar section li.nested a {
+    display: inline;
+    padding-left: 3px;
 }
 
 body.page section #sidebar section ul li a {
     font-size: 1.1em;
     color: #333;
     font-weight: 300;
-    padding-left: 25px;
     padding-right: 0px;
     padding-top: 0px;
     padding-bottom: 0px;
@@ -400,9 +405,13 @@ body.page section #sidebar section ul li a:hover {
     text-decoration: none;
 }
 
-body.page section #sidebar section ul li.active a {
+body.page section #sidebar section ul li.active {
     border-left: 2px solid #ee6c21;
-    padding-left: 23px;
+    padding-left: 8px;
+}
+body.page section #sidebar section ul li.nested.active {
+    border-left: 2px solid #ee6c21;
+    padding-left: 33px;
 }
 
 /* Small devices (tablets, 768px and down) */

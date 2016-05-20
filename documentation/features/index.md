@@ -92,7 +92,7 @@ with minimal mapping configuration effort
 ### <font color="red">2.0.0.RC</font>
 released on 2016-05-?? <br/>
 
-JaVers 2.0 comes with major improvements and new features in JQL:
+JaVers 2.0 comes with major improvements and new features in JQL.
 
 **Unified semantics of changes and snapshot queries** <br/>
 In JaVers 2.0, change queries work in the same way as snapshot queries
@@ -119,15 +119,15 @@ Thanks to that, change queries are far more useful and they work as you could ex
 **New features**<br/>
 
 * New query for any domain object.
-See [Any domain object query example](/documentation/jql-examples/#any-domain-object-query).
+See [any domain object query example](/documentation/jql-examples/#any-domain-object-query).
 
 * [#334](https://github.com/javers/javers/issues/334)
 New JQL `author()` filter.
-See [Author filter example](/documentation/jql-examples/#author-filter).
+See [author filter example](/documentation/jql-examples/#author-filter).
 
 * [#305](https://github.com/javers/javers/issues/305)
 New JQL `commitProperty()` filter.
-See [Commit property filter example](/documentation/jql-examples/#commit-property-filter).
+See [commit property filter example](/documentation/jql-examples/#commit-property-filter).
 
 **SQL Schema migration**<br/>
 
