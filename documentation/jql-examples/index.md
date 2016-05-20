@@ -199,7 +199,7 @@ commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummy
 ```
 
 <h2 id="any-domain-object-query">Querying for any domain object changes</h2>
-This query is a kind of shotgun approach. It accepts no parameters.
+This query is a kind of a shotgun approach. It accepts no parameters.
 It selects all objects regardless of theirs JaversType or class.
 
 The query is useful for selecting any snapshots or changes that were created
@@ -362,8 +362,8 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 Author filter is an optional parameter for all queries.
 It allows you to find changes (or snapshots) persisted by a particular author.
 
-In the example snapshots are committed alternately by Jim and Pam.
-Then we retrieve only the changes introduced by Pam.
+In the example, objects are committed by turns by Jim and Pam.
+Then we retrieve only the changes committed by Pam.
 
 ```groovy
 def "should query for changes (and snapshots) with author filter"() {
@@ -398,27 +398,28 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 <h3 id="commit-property-filter">CommitProperty filter</h3>
 Commit property filter is an optional parameter for all queries.
 It allows you to find changes (or snapshots) persisted with a given commit property.
-Single query can specify more than one commit property. In this case all
-these properties must match with persisted commit properties.
+Single query can specify more than one commit property.
+In this case, each given commit property must match with a persisted one.
 
-In the example snapshots are committed with two properties: tenant and event.
-Then we retrieve only the changes concerning promotions within ACME company.
+In the example, objects are committed with two properties: `tenant` and `event`.
+Then we retrieve only the changes concerning promotions within the ACME tenant.
 
 ```groovy
 def "should query for changes (and snapshots) with commit property filters"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    def bob = new Employee(name: "bob", age: 29, position: "Assistant", salary: 900)
+    def bob = new Employee(name: "bob", position: "Assistant", salary: 900)
     javers.commit( "author", bob, ["tenant": "ACME", "event": "hire"] )
-    bob = new Employee(name: "bob", age: 30, position: "Assistant", salary: 900)
     javers.commit( "author", bob, ["tenant": "ACME", "event": "birthday"] )
-    bob = new Employee(name: "bob", age: 30, position: "Specialist", salary: 1600)
+    bob.position = "Specialist"
+    bob.salary = 1600
     javers.commit( "author", bob, ["tenant": "ACME", "event": "promotion"] )
 
-    def pam = new Employee(name: "pam", age: 27, position: "Secretary", salary: 1300)
+    def pam = new Employee(name: "pam", position: "Secretary", salary: 1300)
     javers.commit( "author", pam, ["tenant": "Dunder Mifflin", "event": "hire"] )
-    pam = new Employee(name: "pam", age: 27, position: "Saleswoman", salary: 1700)
+    bob.position = "Saleswoman"
+    bob.salary = 1700
     javers.commit( "author", pam, ["tenant": "Dunder Mifflin", "event": "promotion"] )
 
     when:
