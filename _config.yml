@@ -8,8 +8,8 @@ kramdown:
     hard_wrap: false
 
 #Site content configuration
-javadoc_url: /javadoc_1.6/
-javers_current_version: "1.6.7"
+javadoc_url: /javadoc_2.0/
+javers_current_version: "2.0.0-RC"
 
 url: "http://javers.org"
 

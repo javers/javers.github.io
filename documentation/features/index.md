@@ -23,10 +23,10 @@ JaVers object diff is the easiest way to deeply compare two object graphs.
 
 **How to use it?**
 
-* Create a JaVers instance (see [getting started](/documentation/getting-started/#create-javers-instance)) and  
+* Create a JaVers instance (see [getting started](/documentation/getting-started/#create-javers-instance)) and
   use [`javers.compare()`]({{ site.javadoc_url }}org/javers/core/Javers.html#compare-java.lang.Object-java.lang.Object-)
   to compare two object graphs.
-   
+
 * As the result, you get list of atomic *Changes*.
   There are several types of Changes: ValueChange, ReferenceChange, ListChange and so on (see the inheritance hierarchy of
   [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html) class to get the complete list).
@@ -45,11 +45,11 @@ who made it and what was the value before and after.
 * Configure and build a
   JaVers instance (see [configuration](/documentation/domain-configuration)).
 
-* Integrate JaVers with your system by applying 
+* Integrate JaVers with your system by applying
   the [`javers.commit()`]({{ site.javadoc_url }}org/javers/core/Javers.html#commit-java.lang.String-java.lang.Object-)
-  function in every place where 
+  function in every place where
   important data (domain objects) are being created and modified by application users.
-  
+
 * You don’t need to commit every object. JaVers navigates through the object graph, starting from
   the object passed to
   `javers.commit()` and deeply compares the whole structure with the previous version stored in JaversRepository.
@@ -59,10 +59,10 @@ who made it and what was the value before and after.
 * If you are using Spring Data, annotate your Repositories with @JaversSpringDataAuditable
   and take advantage of the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
 
-* Once your domain objects are being managed by JaVers, you can query 
-  JaversRepository (see [JQL examples](/documentation/jql-examples/)) 
+* Once your domain objects are being managed by JaVers, you can query
+  JaversRepository (see [JQL examples](/documentation/jql-examples/))
   for objects change history.
-  
+
 * JaVers provides two views on object change history: diffs and snapshots.
   Use [javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
   and [javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
@@ -72,7 +72,7 @@ who made it and what was the value before and after.
 
 JaversRepository is designed to be easily implemented for any kind of database.
 At the moment we provide **MongoDB** implementation and
-**SQL** implementation for the folowing dialects: MySQL, PostgreSQL, H2, 
+**SQL** implementation for the folowing dialects: MySQL, PostgreSQL, H2,
 Oracle and Microsoft SQL Server.<br/>
 See [repository configuratoin](/documentation/repository-configuration/).
 
@@ -81,7 +81,7 @@ the JaversRepository interface and contribute it to JaVers project.
 
 <h2 id="json-serialization">JSON serialization</h2>
 JaVers has a well-designed and customizable JSON serialization and deserialization module, based on
-[`GSON`](https://code.google.com/p/google-gson/) and Java reflection. 
+[`GSON`](https://code.google.com/p/google-gson/) and Java reflection.
 Your data are split into chunks (atomic changes) and persisted in a database as JSON
 with minimal mapping configuration effort
 (see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization)).
@@ -89,18 +89,77 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### <font color="red">2.0.0.RC</font>
+released on 2016-05-22 <br/>
+
+JaVers 2.0 comes with major improvements and new features in JQL.
+
+**Unified semantics of changes and snapshot queries** <br/>
+In JaVers 2.0, change queries work in the same way as snapshot queries
+and change queries accept all filters.
+
+For example, in JaVers 1.x, this change query:
+
+```
+javers.findChanges(QueryBuilder.byInstanceId(Person.class,1).withVersion(5).build());
+```
+
+returns empty list, which is not very useful.
+
+In JaVers 2.0 this query returns changes introduced by the selected snapshot,
+so changes between versions 4 and 5 of a given object.
+
+JaVers implements change queries on the top of snapshot queries.
+Change sets are recalculated as a difference between subsequent pairs of snapshots fetched from
+a JaversRepository.
+In 1.x, only explicitly selected snapshots are involved in the recalculation algorithm.
+In 2.0, for each snapshot selected by a user query, JaVers implicitly fetches *previous* snapshot (if needed).
+Thanks to that, change queries are far more useful and they work as you could expect.
+
+**New features**<br/>
+
+* New query for any domain object.
+See [any domain object query example](/documentation/jql-examples/#any-domain-object-query).
+
+* [#334](https://github.com/javers/javers/issues/334)
+New JQL `author()` filter.
+See [author filter example](/documentation/jql-examples/#author-filter).
+
+* [#305](https://github.com/javers/javers/issues/305)
+New JQL `commitProperty()` filter.
+See [commit property filter example](/documentation/jql-examples/#commit-property-filter).
+
+**SQL Schema migration**<br/>
+
+JaVers 2.0 comes with the new database schema for SQL repository:
+
+* table `jv_cdo_class` is no longer used
+* new column `jv_global_id.type_name`
+* new column `jv_snapshot.managed_name`
+* new table `jv_commit_property`
+
+JaVers automatically launches a data migration script when old schema is detected.
+Data from `jv_cdo_class` are copied to new columns (`jv_global_id.type_name` and `jv_snapshot.managed_name`).
+It should take a few seconds for medium size tables but for very large tables it could be time consuming.
+
+**Breaking changes**<br/>
+The only one breaking change is new semantics of changes query which is actually an improvement.
+
+If you are using SQL repository, and your `jv_snapshot` table is large (millions of records),
+run JaVers 2.0 on your test environment for the first time and check if data migrations is done correctly.
+
 ### 1.6.7
 released on 2016-05-06 <br/>
 
 * [#368](https://github.com/javers/javers/pull/368)
-Improvements in Spring Boot starters. `SpringSecurityAuthorProvider` bean 
+Improvements in Spring Boot starters. `SpringSecurityAuthorProvider` bean
 is created by default when SpringSecurity is detected on classpath.
 
 ### 1.6.4
 released on 2016-04-26 <br/>
 
 * [#362](https://github.com/javers/javers/issues/362)
-Default behaviour for non-parametrized Collections instead of throwing 
+Default behaviour for non-parametrized Collections instead of throwing
 JaversException: GENERIC_TYPE_NOT_PARAMETRIZED.
 
 ### 1.6.3
@@ -138,16 +197,16 @@ not appear anymore.
 released on 2016-03-04 <br/>
 
 * [#344](https://github.com/javers/javers/issues/344)
-Fixed bug in Spring Boot starter for SQL. Dialect autodetection now works properly. 
+Fixed bug in Spring Boot starter for SQL. Dialect autodetection now works properly.
 
 ### 1.5.0
 released on 2016-02-28 <br/>
 
-* New JaVers Spring Boot starter for SQL and Spring Data 
+* New JaVers Spring Boot starter for SQL and Spring Data
   &mdash; `javers-spring-boot-starter-sql`.
   See [Spring Boot integration](/documentation/spring-boot-integration/).
-  
-* Starting from this version we use [SemVer](http://semver.org/) scheme for JaVers version numbers.  
+
+* Starting from this version we use [SemVer](http://semver.org/) scheme for JaVers version numbers.
 
 ### 1.4.12
 released on 2016-02-25 <br/>
@@ -206,21 +265,21 @@ See [CommitId filter example](/documentation/jql-examples/#commit-id-filter).
 released on 2016-01-20 <br/>
 
 * [#286](https://github.com/javers/javers/issues/286)
-  New properties in `ReferenceChange`: 
+  New properties in `ReferenceChange`:
   [`getLeftObject()`]({{ site.javadoc_url }}org/javers/core/diff/changetype/ReferenceChange.html#getLeftObject--)
-  and 
+  and
   [`getRightObject()`]({{ site.javadoc_url }}org/javers/core/diff/changetype/ReferenceChange.html#getRightObject--).
 
 * [#294](https://github.com/javers/javers/pull/294)
   Added version number to Snapshot metadata:
   [`CdoSnapshot.getVersion()`]({{ site.javadoc_url }}org/javers/core/metamodel/object/CdoSnapshot.html#getVersion--).
-  
+
   <font color="red">Warning!</font>
   All snapshots persisted in JaversRepository before release  1.4.4 have version 0.
   If it isn't OK for you, run DB update manually.
-  
+
   For SQL database:
-  
+
   ```sql
   UPDATE jv_snapshot s SET version = (
   SELECT COUNT(*) + 1 FROM jv_snapshot s2
@@ -237,7 +296,7 @@ See [Skip filter example](/documentation/jql-examples/#skip-filter).
 ### 1.4.2
 released on 2016-01-15 <br/>
 
-* [#243](https://github.com/javers/javers/issues/243) New JQL filters by createDate `from()` and `to()`. 
+* [#243](https://github.com/javers/javers/issues/243) New JQL filters by createDate `from()` and `to()`.
   See [CommitDate filter example](/documentation/jql-examples/#commit-date-filter).
 
 ### 1.4.1
@@ -249,15 +308,15 @@ released on 2016-01-08 <br/>
 ### 1.4.0
 released on 2015-12-18 <br/>
 
-* Added @TypeName annotation and support for domain classes refactoring, 
-  see 
+* Added @TypeName annotation and support for domain classes refactoring,
+  see
   [Entity refactoring](/documentation/jql-examples/#entity-refactoring) example.
   Fixed issues:
   [#178](https://github.com/javers/javers/issues/178),
   [#232](https://github.com/javers/javers/issues/232).
 * [#192](https://github.com/javers/javers/issues/192)
-  Fixed bug in persisting large numbers in MongoDB.  
-* [#188](https://github.com/javers/javers/pull/188) Diff is now `Serializable`.  
+  Fixed bug in persisting large numbers in MongoDB.
+* [#188](https://github.com/javers/javers/pull/188) Diff is now `Serializable`.
 
 **Breaking changes:**
 
@@ -267,7 +326,7 @@ released on 2015-12-18 <br/>
   reference from globalId to concrete managedType is replaced with `typeName` String field.
 * `PropertyChange` is now decoupled from `Property`,
   reference from propertyChange to concrete property is replaced with `propertyName` String field.
-* Visibility of `ManagedClass` is reduced to `package private`. 
+* Visibility of `ManagedClass` is reduced to `package private`.
 
 ### 1.3.22
 released on 2015-11-27 <br/>
@@ -337,7 +396,7 @@ released on 2015-10-03 <br/>
 * [#208](https://github.com/javers/javers/issues/208)
  Added support for legacy date types: `java.util.Date`, `java.sql.Date`, `java.sql.Timestamp` and `java.sql.Time`.
  Added milliseconds to JSON datetime format.
- All local datetimes are now serialized using ISO format `yyyy-MM-dd'T'HH:mm:ss.SSS`.   
+ All local datetimes are now serialized using ISO format `yyyy-MM-dd'T'HH:mm:ss.SSS`.
 
 ### 1.3.11
 released on 2015-10-01 <br/>
@@ -365,7 +424,7 @@ released on 2015-09-21 <br/>
 * [#126](https://github.com/javers/javers/issues/126)
  Added support for Java 8 `java.util.Optional` and types from Java 8 Date and Time API
  (like `java.time.LocalDateTime`).
- JaVers can still run on JDK 7.  
+ JaVers can still run on JDK 7.
 * [#197](https://github.com/javers/javers/issues/197)
  Added JSON prettyPrint switch &mdash; `JaversBuilder.withPrettyPrint(boolean prettyPrint)`
 * [#199](https://github.com/javers/javers/issues/199)
@@ -382,14 +441,14 @@ released on 2015-09-15 <br/>
 ### 1.3.4
 released on 2015-08-24 <br/>
 
-* [#190](https://github.com/javers/javers/issues/190) 
+* [#190](https://github.com/javers/javers/issues/190)
  Fixed bug in ManagedClassFactory, Id property can be registered even if it has @Transient annotation.
 
 ### 1.3.3
 released on 2015-08-12 <br/>
 
 * Javers-hibernate module merged to javers-spring.
-* [#186](https://github.com/javers/javers/issues/186) 
+* [#186](https://github.com/javers/javers/issues/186)
   Fixed another concurrency issue in CommitSequenceGenerator.
 
 ### 1.3.2
@@ -417,19 +476,19 @@ released on 2015-06-30<br/>
 ### 1.2.10
 released on 2015-06-12<br/>
 
-* [#172](https://github.com/javers/javers/issues/172) Fixed bug when registering more than one CustomPropertyComparator 
+* [#172](https://github.com/javers/javers/issues/172) Fixed bug when registering more than one CustomPropertyComparator
 * [#167](https://github.com/javers/javers/issues/167) Fixed bug in Levenshtein algorithm (comparing lists of Entities)
 
 ### 1.2.9
 released on 2015-06-10<br/>
 
-* Pretty-print feature: `javers.getTypeMapping(Clazz.class).prettyPrint()` describes given user's class in the context of JaVers domain model mapping. 
+* Pretty-print feature: `javers.getTypeMapping(Clazz.class).prettyPrint()` describes given user's class in the context of JaVers domain model mapping.
 
 ### 1.2.8
 released on 2015-05-31<br/>
 
 * [#142](https://github.com/javers/javers/issues/142)
-  Fixed bug when mapping Entity hierarchies with custom idProperty. 
+  Fixed bug when mapping Entity hierarchies with custom idProperty.
 
 ### 1.2.7
 released on 2015-05-29<br/>
@@ -453,10 +512,10 @@ released on 2015-05-24<br/>
 ### 1.2.1
 released on 2015-05-18<br/>
 
-* [#127](https://github.com/javers/javers/issues/127) 
+* [#127](https://github.com/javers/javers/issues/127)
   Implemented tolerant comparing strategy for ValueObjects when one has more properties than another.
   For example, now you can compare `Bicycle` with `Mountenbike extends Bicycle`.
- 
+
 ### 1.2.0 JQL
 released on 2015-04-20<br/>
 

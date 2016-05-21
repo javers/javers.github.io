@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: JQL (JaVers Query Language) examples 
+title: JQL (JaVers Query Language) examples
 submenu: jql-examples
 ---
 
@@ -25,8 +25,8 @@ which allows you to query JaversRepository for changes of a given class, object 
 
 It’s not such a powerful language like SQL because it’s a kind of abstraction over native languages
 used by concrete JaversRepository implementations (like SQL, MongoDB).
- 
-**The case** <br/> 
+
+**The case** <br/>
 In this example we show all types of JQL queries.
 This time, we use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
 as these languages are far more readable for BDD-style tests than Java.
@@ -35,29 +35,32 @@ Groovy is a nice, dynamic language, runnable on JVM
 and Spock is our tool of choice for TDD. We really like it so this is also a chance to
 encourage you to switch from JUnit to Spock.
 
-**What’s important** <br/> 
+**What’s important** <br/>
 Data history can be fetched from JaversRepository in two views — changes and snapshots.
 
 For changes use
 [javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
-and for snapshots use 
+and for snapshots use
 [javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
 
 Both methods understand the same JQL API,
 so you can use the same query object to get changes and snapshots views.
 
 **Table of Contents** <br/>
-There are three types of queries: 
+There are three types of queries:
 
 * query for [Entity](#instance-id-query) changes by Instance Id,
 * query for [ValueObject](#by-value-object-query) changes,
-* query for any object changes [by class of object](#by-class-query).
+* query for any object changes [by class of object](#by-class-query),
+* query for [any domain object](#any-domain-object-query) changes.
 
 Queries can have one or more optional [filters](#query-filters):
 
-* [property](#property-filter),
-* [limit](#limit-filter), 
+* [changed property](#property-filter),
+* [limit](#limit-filter),
 * [skip](#skip-filter),
+* [author](#author-filter),
+* [commitProperty](#commit-property-filter),
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
 * [snapshot version](#version-filter),
@@ -66,19 +69,19 @@ Queries can have one or more optional [filters](#query-filters):
 JQL can adapt when you refactor your domain classes:
 
 * refactoring [Entities](#entity-refactoring) with `@TypeName`,
-* free refactoring of [ValueObjects](#value-object-refactoring). 
+* free refactoring of [ValueObjects](#value-object-refactoring).
 
 
 Let’s see how to run simple query for changes.
- 
+
 <h2 id="instance-id-query">Querying for Entity changes by Instance Id</h2>
 This query selects changes made on concrete [Entity](/documentation/domain-configuration/#entity) instance.
 The query accepts two mandatory parameters:
- 
-* `Object localId` &mdash; expected Instance Id, 
+
+* `Object localId` &mdash; expected Instance Id,
 * `Class entityClass` &mdash; expected Entity class.
 
-Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types. 
+Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types.
 
 ```groovy
 def "should query for Entity changes by instance Id"() {
@@ -96,7 +99,7 @@ def "should query for Entity changes by instance Id"() {
     printChanges(changes)
     assert changes.size() == 2
 }
-```    
+```
 
 query result:
 
@@ -159,14 +162,14 @@ commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#pr
 ```
 
 <h2 id="by-class-query">Querying for any object changes by class of object</h2>
-This query is a kind of shotgun approach. The only mandatory parameter is a class.
+The only mandatory parameter of this query is a class.
 It selects objects regardless of theirs JaversType and
-can be used for Entities, ValueObjects and UnboundedValueObjects. 
+can be used for Entities, ValueObjects and UnboundedValueObjects.
 
 This query is useful for selecting UnboundedValueObjects (ValueObjects without an owning Entity)
 and also for ValueObjects when we don’t care about the owning Entity and path.
 
-In the example, we show how to query for changes made on 
+In the example, we show how to query for changes made on
 ValueObjects owned by two different Entities.
 
 ```groovy
@@ -195,17 +198,54 @@ commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueOb
 commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummyAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
+<h2 id="any-domain-object-query">Querying for any domain object changes</h2>
+This query is a kind of a shotgun approach. It accepts no parameters.
+It selects all objects regardless of theirs JaversType or class.
+
+The query is useful for selecting any snapshots or changes that were created
+by a given author or have some other common properties set during commit.
+
+In the example, we show how to query for changes made on any domain object.
+
+```groovy
+def "should query for any domain object changes"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit("author", new Employee(name:"bob", age:30) )
+    javers.commit("author", new Employee(name:"bob", age:31) )
+    javers.commit("author", new DummyUserDetails(id:1, someValue:"old") )
+    javers.commit("author", new DummyUserDetails(id:1, someValue:"new") )
+
+    when:
+    def changes = javers.findChanges( QueryBuilder.anyDomainObject().build() )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+}
+```
+
+query result:
+
+```
+commit 4.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1', property:'someValue', oldVal:'old', newVal:'new'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```
+
 <h2 id="query-filters">Query filters</h2>
 For each query you can add one or more optional filters:
-[property](#property-filter),
-[limit](#limit-filter), 
-[skip](#skip-filter), 
+[changed property](#property-filter),
+[limit](#limit-filter),
+[skip](#skip-filter),
+[author](#author-filter),
+[commitProperty](#commit-property-filter),
 [commitDate](#commit-date-filter),
-[commitId](#commit-id-filter),  
-[snapshot version](#version-filter) and 
+[commitId](#commit-id-filter),
+[snapshot version](#version-filter) and
 [newObject changes](#new-object-filter) filter.
 
-<h3 id="property-filter">Property filter</h3>
+<h3 id="property-filter">Changed property filter</h3>
 Optional parameter for all queries.
 Use it to filter query results to changes made on a concrete property.
 
@@ -213,74 +253,75 @@ In the example, we show how to query for Employee’s salary changes,
 while ignoring changes made on other properties.
 
 ```groovy
-def "should query for Entity changes by instance Id with property filter"() {
+def "should query for changes (and snapshots) with property filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:30, salary:1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary:1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary:1200) )
+    javers.commit("author", new Employee(name:"bob", age:30, salary:1000) )
+    javers.commit("author", new Employee(name:"bob", age:31, salary:1100) )
+    javers.commit("author", new Employee(name:"bob", age:31, salary:1200) )
 
     when:
-    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
-       .andProperty("salary").build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class)
+            .andProperty("salary").build()
+    def changes = javers.findChanges(query)
 
     then:
     printChanges(changes)
-    assert changes.size() == 1
+    assert changes.size() == 2
+    assert javers.findSnapshots(query).size() == 3
 }
 ```
 
 query result:
 
 ```
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+changes:
+commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
 Optional parameter for all queries, default limit is 100.
 It simply limits the number of snapshots to be read from JaversRepository.
 Always choose reasonable limits to improve performance of your queries and to save server heap size.
-When querying for changes, limit `n` means: give me changes recorded for last `n` snapshots.
 
-In the example we set limit to 3 so only Bob’s last 3 snapshots are being compared,
-which means 4 changes (two changes between fourth and third commit and two changes between third and second commit). 
+In the example we set limit to 2 so only Bob’s last 2 snapshots are taken into account,
+which means 2 (of 3) changes in the result list.
 
 ```groovy
-def "should query for changes with limit filter"() {
+def "should query for changes (and snapshots) with limit filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:29) )
-    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "author", new Employee(name:"bob", age:31, salary: 1100) )
-    javers.commit( "author", new Employee(name:"bob", age:32, salary: 1200) )
+    javers.commit( "author", new Employee(name:"bob", salary: 900) )
+    javers.commit( "author", new Employee(name:"bob", salary: 1000) )
+    javers.commit( "author", new Employee(name:"bob", salary: 1100) )
+    javers.commit( "author", new Employee(name:"bob", salary: 1200) )
 
     when:
-    def changes = javers
-        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).limit(3).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).limit(2).build()
+    def changes = javers.findChanges(query)
 
     then:
     printChanges(changes)
-    assert changes.size() == 4
+    assert changes.size() == 2
+    assert javers.findSnapshots(query).size() == 2
 }
 ```
 
 query result:
 
 ```text
+changes:
 commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
-commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1100'}
-commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
 This is an optional parameter for all queries (the default skip is 0).
-When querying for snapshots, it defines the offset of the first result that JaVers should return.
+It defines the offset of the first (most recent) snapshot that JaVers should fetch from a repository.
 
-When querying for changes, skip means exactly the same:
-omit changes recorded in the last snapshots and return the previous ones.
 Skip and limit parameters can be useful for implementing pagination.
 
 In the example we set skip to 1 so only Bob’s first three snapshots are being compared,
@@ -288,7 +329,7 @@ which means four changes
 (two changes between third and second commit and two changes between second and first commit).
 
 ```groovy
-def "should query for changes with skip filter"() {
+def "should query for changes (and snapshots) with skip filter"() {
     given:
     def javers = JaversBuilder.javers().build()
 
@@ -298,12 +339,13 @@ def "should query for changes with skip filter"() {
     javers.commit( "author", new Employee(name:"bob", age:32, salary: 1200) )
 
     when:
-    def changes = javers
-        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build()
+    def changes = javers.findChanges( query )
 
     then:
     printChanges(changes)
     assert changes.size() == 4
+    assert javers.findSnapshots(query).size() == 3
 }
 ```
 
@@ -316,17 +358,102 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'29', newVal:'30'}
 ```
 
+<h3 id="author-filter">Author filter</h3>
+Author filter is an optional parameter for all queries.
+It allows you to find changes (or snapshots) persisted by a particular author.
+
+In the example, objects are committed by turns by Jim and Pam.
+Then we retrieve only the changes committed by Pam.
+
+```groovy
+def "should query for changes (and snapshots) with author filter"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    javers.commit( "Jim", new Employee(name:"bob", age:29, salary: 900) )
+    javers.commit( "Pam", new Employee(name:"bob", age:30, salary: 1000) )
+    javers.commit( "Jim", new Employee(name:"bob", age:31, salary: 1100) )
+    javers.commit( "Pam", new Employee(name:"bob", age:32, salary: 1200) )
+
+    when:
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).byAuthor("Pam").build()
+    def changes = javers.findChanges( query )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 4
+    assert javers.findSnapshots(query).size() == 2
+}
+```
+
+query result:
+
+```text
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1100', newVal:'1200'}
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'31', newVal:'32'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1000'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'29', newVal:'30'}
+```
+
+<h3 id="commit-property-filter">CommitProperty filter</h3>
+Commit property filter is an optional parameter for all queries.
+It allows you to find changes (or snapshots) persisted with a given commit property.
+Single query can specify more than one commit property.
+In this case, each given commit property must match with a persisted one.
+
+In the example, objects are committed with two properties: `tenant` and `event`.
+Then we retrieve only the changes concerning promotions within the ACME tenant.
+
+```groovy
+def "should query for changes (and snapshots) with commit property filters"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    def bob = new Employee(name: "bob", position: "Assistant", salary: 900)
+    javers.commit( "author", bob, ["tenant": "ACME", "event": "birthday"] )
+    bob.position = "Specialist"
+    bob.salary = 1600
+    javers.commit( "author", bob, ["tenant": "ACME", "event": "promotion"] )
+
+    def pam = new Employee(name: "pam", position: "Secretary", salary: 1300)
+    javers.commit( "author", pam, ["tenant": "Dunder Mifflin", "event": "hire"] )
+    bob.position = "Saleswoman"
+    bob.salary = 1700
+    javers.commit( "author", pam, ["tenant": "Dunder Mifflin", "event": "promotion"] )
+
+    when:
+    def query = QueryBuilder.anyDomainObject()
+        .withCommitProperty("tenant", "ACME")
+        .withCommitProperty("event", "promotion").build()
+    def changes = javers.findChanges( query )
+
+    then:
+    printChanges(changes)
+    assert changes.size() == 2
+    assert javers.findSnapshots(query).size() == 1
+}
+```
+
+query result:
+
+```text
+changes:
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'position', oldVal:'Assistant', newVal:'Specialist'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1600'}
+
+```
+
 <h3 id="commit-date-filter">CommitDate filter</h3>
-This is an optional parameter for all queries.
+CommitDate filter is an optional parameter for all queries.
 It allows time range filtering by `commitDate` (Snapshot creation timestamp).
 
 This example requires a trick to simulate time flow.
-We use `FakeDateProvider`, which is stubbed to provide concrete dates as `now()`.   
+We use `FakeDateProvider`, which is stubbed to provide concrete dates as `now()`.
 Bob is committed six times in one-year intervals.
 Then we query for changes made over a three-years period.
 
 ```groovy
-def "should query for changes with commitDate filter"(){
+def "should query for changes (and snapshots) with commitDate filter"(){
   given:
   def fakeDateProvider = new FakeDateProvider()
   def javers = JaversBuilder.javers().withDateTimeProvider(fakeDateProvider).build()
@@ -340,13 +467,14 @@ def "should query for changes with commitDate filter"(){
   }
 
   when:
-  def changes = javers
-          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
+  def query = QueryBuilder.byInstanceId("bob", Employee.class)
           .from(new LocalDate(2016,01,1))
-          .to  (new LocalDate(2018,01,1)).build() )
+          .to  (new LocalDate(2018,01,1)).build()
+  def changes = javers.findChanges( query )
 
   then:
-  assert changes.size() == 2
+  assert changes.size() == 3
+  assert javers.findSnapshots(query).size() == 3
 
   println "found changes:"
   changes.each {
@@ -367,98 +495,90 @@ comitting bob on 2020-01-01
 found changes:
 commitDate: 2018-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'22', newVal:'23'}
 commitDate: 2017-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'21', newVal:'22'}
-
+commitDate: 2016-01-01T00:00:00.000 ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'20', newVal:'21'}
 ```
 
-One could ask why the change made on 2016-01-01 is not selected.
-It’s not a bug &mdash; both `from()` and `to()` filters work inclusively
-(like `between` in SQL).
-The explanation is simple &mdash; JaversRepository stores only snapshots.
-Changes are calculated on the fly, as a diff between subsequent snapshots
-fetched from the repository.
-We have three snapshots committed between 2016-01-01 and 2018-01-01
-so only two changes are returned.
-
 <h3 id="commit-id-filter">CommitId filter</h3>
-This is an optional filter which makes sense only when querying for snapshots.
-It lets you to find snapshots persisted within a particular commit.
+CommitId filter is an optional parameter for all queries.
+It lets you to find changes (or snapshots) persisted within a particular commit.
 The commit id can be supplied as a `CommitId` instance or `BigDecimal`.
 
 In the example we commit three subsequent versions of two Employees
-and then we retrieve the snapshot from the third commit only.
+and then we retrieve the changes done in the third commit only.
+Note that CommitId is global in the JaversRepository context
+(as opposed to [version](#version-filter)).
 
 ```groovy
-def "should query for snapshots with commitId filter"(){
+def "should query for changes (and snapshots) with commitId filter"(){
     given:
     def javers = JaversBuilder.javers().build()
 
     (1..3).each {
-        javers.commit("author", new Employee(name: "john",age: 20+it))
-        javers.commit("author", new Employee(name: "bob", age: 20+it, salary: 900 + it*100))
+        javers.commit("author", new Employee(name:"john", age:20+it))
+        javers.commit("author", new Employee(name:"bob",  age:20+it))
     }
 
     when:
-    def snapshots = javers
-        .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
-        .withCommitId(CommitId.valueOf(4)).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class )
+            .withCommitId( CommitId.valueOf(4) ).build()
+    def changes = javers.findChanges(query)
 
     then:
-    assert snapshots.size() == 1
-    assert snapshots[0].getPropertyValue("age") == 22
-
-    println "found snapshot:"
-    println snapshots[0]
+    printChanges(changes)
+    assert changes.size() == 1
+    assert changes[0].left == 21
+    assert changes[0].right == 22
+    assert javers.findSnapshots(query).size() == 1
 }
 ```
 
 query result:
 
 ```text
-found snapshot:
-Snapshot{commit:4.0, id:org.javers.core.examples.model.Employee/bob, version:2, (age:22, name:bob, salary:1100, subordinates:[])}
+changes:
+commit 4.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'21', newVal:'22'}
 ```
 
 <h3 id="version-filter">Snapshot version filter</h3>
-Version filter is similar to the [CommitId filter](#commit-id-filter). It makes sense only for
-snapshot queries.
+Version filter is similar to the [CommitId filter](#commit-id-filter),
+it lets you to find changes (or snapshots) for a concrete object version.
 
 The Snapshot version is local for each object stored in the JaversRepository
 (as opposed to CommitId, which is the global identifier).
 When an object is committed for the first time, it has version 1.
 In the next commit it gets version 2 and so on.
-   
+
 In the example we commit five versions of two Employees: `john` and `bob`.
 Then then we retrieve the fourth version of `bob`.
 
 ```groovy
-def "should query for snapshots with version filter"(){
+def "should query for changes (and snapshots) with version filter"(){
     given:
     def javers = JaversBuilder.javers().build()
 
     (1..5).each {
         javers.commit("author", new Employee(name: "john",age: 20+it))
-        javers.commit("author", new Employee(name: "bob", age: 20+it, salary: 900 + it*100))
+        javers.commit("author", new Employee(name: "bob", age: 20+it))
     }
 
     when:
-    def snapshots = javers
-            .findSnapshots( QueryBuilder.byInstanceId("bob", Employee.class)
-            .withVersion(4).build() )
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).withVersion(4).build()
+    def changes = javers.findChanges( query )
 
     then:
-    assert snapshots.size() == 1
-    assert snapshots[0].getPropertyValue("age") == 24
-
-    println "found snapshot:"
-    println snapshots[0]
+    printChanges(changes)
+    assert changes.size() == 1
+    assert changes[0].left == 23
+    assert changes[0].right == 24
+    assert javers.findSnapshots(query).size() == 1
 }
 ```
 
 query result:
 
 ```text
-found snapshot:
-Snapshot{commit:8.0, id:org.javers.core.examples.model.Employee/bob, version:4, (age:24, name:bob, salary:1300, subordinates:[])}
+changes:
+commit 8.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'23', newVal:'24'}
 ```
 
 <h3 id="new-object-filter">NewObject changes filter</h3>
@@ -500,9 +620,9 @@ commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 1.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'0', newVal:'30'}
 commit 1.0: NewObject{globalId:'org.javers.core.examples.model.Employee/bob'}
 ```
- 
+
 <h2 id="entity-refactoring">Refactoring Entities with @TypeName</h2>
- 
+
 Mature persistence frameworks allow you to refactor your domain classes
 without losing a connection between old (possibly removed)
 and new Class versions. For example,
@@ -526,7 +646,7 @@ Let’s consider the refactoring of a `Person` Entity.
 After persisting some commits in JaversRepository, we decide to change the class name.
 Moreover, the renamed class
 has some properties added/removed. The second commit is persisted,
-using the new class definition: `PersonRefactored`. 
+using the new class definition: `PersonRefactored`.
 
 `Person.class`:
 
@@ -548,7 +668,7 @@ class Person {
 ```
 
 `PersonRefactored.class`:
- 
+
 ```java
 package org.javers.core.examples;
 
@@ -568,7 +688,7 @@ class PersonRefactored {
 
 As `@TypeName` annotation was engaged from the very beginning,
 our JQL just works. See the following Spock test:
- 
+
 ```groovy
 def '''should allow Entity class name change
        when both old and new class use @TypeName annotation'''()
@@ -594,11 +714,11 @@ def '''should allow Entity class name change
     println changes[0]
 }
 ```
- 
+
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
 objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
-**I forgot about @TypeName example** <br/> 
+**I forgot about @TypeName example** <br/>
 What if I forgot to use @TypeName, but my objects are already persisted
 in JaversRepository
 and I need to refactor now?
@@ -647,7 +767,7 @@ class PersonRetrofitted {
 ```
 
 And the Spock test:
- 
+
 ```groovy
 def '''should allow Entity class name change
        when old class forgot to use @TypeName annotation'''()
@@ -676,23 +796,23 @@ def '''should allow Entity class name change
 In this case, `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
 — `'org.javers.core.examples.PersonSimple/1'`.
 They match but, well, it’s not very nice to have deprecated names in new code.
- 
+
 <h2 id="value-object-refactoring">Free ValueObjects refactoring</h2>
 
 In most cases you don’t have to use @TypeName for ValueObjects.
 Most JQL queries will just work after refactoring.
 However, we still recommend to adding @TypeName.
-For example, querying by ValueObject class relies on it.   
-  
+For example, querying by ValueObject class relies on it.
+
 JaVers treats ValueObjects as property containers and doesn’t care much about their classes.
 This approach is known us Duck Typing, and is widely adopted by dynamic languages like Groovy.
 
 **Example** <br/>
 Let’s consider the refactoring of Person’s address,
 which happened to be a ValueObject.
-We want to change its type from `EmailAddress` to `HomeAddress`, 
+We want to change its type from `EmailAddress` to `HomeAddress`,
 
-For the sake of brevity, we use the abstract `Address` class 
+For the sake of brevity, we use the abstract `Address` class
 in the Person definition (owner Entity), so we don’t need to change it after the type of Address is altered.
 
 Abstract `Address.class`:
@@ -760,7 +880,7 @@ def 'should be very relaxed about ValueObject types'(){
   then: 'three ValueChanges are expected'
   assert changes.size() == 3
   assert changes.collect{ it.propertyName }.containsAll( ['street','verified','email'] )
-  
+
   changes.each { println it }
 }
 ```
