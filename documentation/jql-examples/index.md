@@ -410,7 +410,6 @@ def "should query for changes (and snapshots) with commit property filters"() {
     def javers = JaversBuilder.javers().build()
 
     def bob = new Employee(name: "bob", position: "Assistant", salary: 900)
-    javers.commit( "author", bob, ["tenant": "ACME", "event": "hire"] )
     javers.commit( "author", bob, ["tenant": "ACME", "event": "birthday"] )
     bob.position = "Specialist"
     bob.salary = 1600
@@ -438,8 +437,10 @@ def "should query for changes (and snapshots) with commit property filters"() {
 query result:
 
 ```text
-commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'position', oldVal:'Assistant', newVal:'Specialist'}
-commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1600'}
+changes:
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'position', oldVal:'Assistant', newVal:'Specialist'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'900', newVal:'1600'}
+
 ```
 
 <h3 id="commit-date-filter">CommitDate filter</h3>
