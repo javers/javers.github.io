@@ -89,7 +89,11 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
-### <font color="red">2.0.0.RC</font>
+### <font color="red">2.0.0-RC1</font>
+
+* Bug fixing in query by commit properties on MongoDB.
+
+### 2.0.0-RC
 released on 2016-05-22 <br/>
 
 JaVers 2.0 comes with major improvements and new features in JQL.
