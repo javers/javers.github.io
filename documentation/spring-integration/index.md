@@ -10,12 +10,12 @@ So we made JaVers compatible with Spring Framework.
 `javers-spring` module provides the following features:
 
 * [annotations](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
-* [integration](#jpa-transaction-manager-integration) with Spring JpaTransactionManager for SQL databases.
+* [integration](#jpa-entity-manager-integration) with JPA EntityManager for SQL databases.
 
 ### Dependency ###
 
 If you are using [Spring Boot](http://projects.spring.io/spring-boot/),
-simplify JaVers setup with our starters, see [Spring Boot integration](http://localhost:4000/documentation/spring-boot-integration/).
+simplify JaVers setup with our starters, see [Spring Boot integration](/documentation/spring-boot-integration/).
 
 If you are not using Spring Boot, add `javers-spring` module to your classpath:
 
