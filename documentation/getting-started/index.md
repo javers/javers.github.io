@@ -64,3 +64,25 @@ Good enough to start.
 
 Later on, you would probably need to refine the [configuration](/documentation/domain-configuration)
 and introduce some basic facts about your domain model to JaVers.
+
+<h2 id="getting-started-diff">Object diff</h2>
+Use the `compare()` method to calculate a diff for two arbitrary complex domain objects:
+
+```java
+Person tommyOld = new Person("tommy", "Tommy Smart");
+Person tommyNew = new Person("tommy", "Tommy C. Smart");
+
+Diff diff = javers.compare(tommyOld, tommyNew);
+```
+
+See more [diff examples](/documentation/diff-examples/).
+
+<h2 id="getting-started-audit">Object audit</h2>
+Use the `commit()` method to persist changes done on domain objects
+in [JaversRepository](/documentation/repository-configuration/):
+
+```java
+Person robert = new Person("bob", "Robert Martin");
+javers.commit("user", robert);
+```
+See more [audit examples](/documentation/repository-examples/).
