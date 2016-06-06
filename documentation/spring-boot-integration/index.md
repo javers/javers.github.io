@@ -71,14 +71,24 @@ See the complete list of JaVers beans added to your Spring ApplicationContext:
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
 * for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
 
-### AuthorProvider bean
+### AuthorProvider and CommitPropertiesProvider beans
+These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
+For both, default implementations are created by JaVers starter:
 
-Default [AuthorProvider](/documentation/spring-integration/#author-provider-bean) 
-implementation is created by JaVers starter.
-It returns `"unknown"` name.
+* For AuthorProvider &mdash;
+if JaVers detects Spring Security on your classpath,
+[`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
+is created.
+Otherwise, JaVers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
+which returns `"unknown"` author.
+* For CommitPropertiesProvider &mdash;
+[`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java) which returns an empty Map.
 
-If you’re using [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect),
-consider implementing the AuthorProvider bean. It should return a current user login.
+Register your own beans **only** if you need to override these defaults.
+
+See documentation of [AuthorProvider](/documentation/spring-integration/#author-provider-bean)
+and [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean)
+for more details.
 
 <h2 id="starter-repository-configuration">JaversRepository configuration</h2>
 JaVers starters rely on Spring Data starters.

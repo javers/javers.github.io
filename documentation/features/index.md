@@ -89,7 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
-### <font color="red">2.0.0-RC1</font>
+### <font color="red">2.0.0-RC2</font>
+released on 2016-06-7 <br/>
+
+* [#375](https://github.com/javers/javers/issues/375) Added support for commit properties in auto-audit aspect.
+See [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean).
+
+### 2.0.0-RC1
 
 * Bug fixing in query by commit properties on MongoDB.
 
