@@ -32,6 +32,8 @@
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'getting-started' %} hidden {% endif %}">
         <li><a href="#get-javers">Get JaVers</a></li>
         <li><a href="#create-javers-instance">Create JaVers instance</a></li>
+        <li class="nested"><a href="#getting-started-diff">Object diff</a></li>
+        <li class="nested"><a href="#getting-started-audit">Object audit</a></li>
     </ul>
 </section>
 
@@ -66,12 +68,15 @@
     Examples &mdash; JQL
     </a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'jql-examples' %} hidden {% endif %}">
-        <li><a href="#instance-id-query">Querying for Entity</a></li>
-        <li><a href="#by-value-object-query">Querying for ValueObject</a></li>
-        <li><a href="#by-class-query">Querying by Class</a></li>
-        <li><a href="#any-domain-object-query">Querying for any domain object</a></li>
+        <li><a href="#query-overview">Querying for:</a></li>
+        <li class="nested">
+            <a href="#instance-id-query">Entity</a>,
+            <a href="#by-value-object-query">ValueObject</a>,
+            <a href="#by-class-query">Class</a>,
+            <a href="#any-domain-object-query">any object</a>
+        </li>
 
-        <li><a href="#query-filters">Query filters</a></li>
+        <li><a href="#query-filters">Query filters:</a></li>
         <li class="nested"><a href="#property-filter">Changed Property</a></li>
         <li class="nested">
             <a href="#limit-filter">Limit</a>,
@@ -137,12 +142,26 @@
     <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">
     Spring integration</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'spring-integration' %} hidden {% endif %}">
-        <li><a href="#auto-audit-aspect">Auto-audit aspect</a></li>
-        <li><a href="#auto-audit-example">&nbsp; &nbsp; Auto-audit example with MongoDB</a></li>
+        <li><a href="#auto-audit-aspect">Auto-audit</a></li>
+
+        <li class="nested">beans:
+            <a href="#javers-instance-as-a-bean">JaVers</a>,
+            <a href="#javers-auditable-repository-aspect">JaversAuditableRepository,</a>
+            <a href="#author-provider-bean">AuthorProvider</a>,
+            <a href="#commit-properties-provider-bean">CommitPropertiesProvider</a>
+        </li>
+        <li class="nested">annotations:
+            <a href="#at-javers-spring-data-auditable">@JaversSpringDataAuditable</a>
+            <a href="#at-javers-auditable">@JaversAuditable</a>
+        </li>
+
+
         <li><a href="#jpa-entity-manager-integration">JPA EntityManager integration</a></li>
         <li><a href="#spring-configuration-for-transactional-javers">&nbsp; &nbsp;Spring configuration for SQL</a></li>
-        <li><a href="#spring-jpa-example">&nbsp; &nbsp;Spring JPA Hibernate example</a></li>
         <li><a href="#hibernate-unproxy-hook">&nbsp; &nbsp;Hibernate unproxy hook</a></li>
+
+        <li><a href="#spring-jpa-example">Configuration for JPA & Hibernate</a></li>
+        <li><a href="#auto-audit-example-mongo">Configuration example for MongoDB</a></li>
     </ul>
 </section>
 

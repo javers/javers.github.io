@@ -19,7 +19,8 @@ Run examples as unit tests:
 ./gradlew javers-core:example -Dtest.single=RefactoringExample
 ```
 
-## Overview
+<h2 id="query-overview">Overview</h2>
+
 JQL (JaVers Query Language) is a simple, fluent API
 which allows you to query JaversRepository for changes of a given class, object or property.
 

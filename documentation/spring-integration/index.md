@@ -37,7 +37,7 @@ JaVers can audit your data changes automatically — AWESOME!
 
 Below you can see which beans you need to register to use the auto-audit feature.
 
-### JaVers instance as a Spring bean
+<h3 id="javers-instance-as-a-bean">JaVers instance as a Spring bean</h3>
 
 You need to register exactly one JaVers instance in your Application Context.
 For example, if you’re using MongoDB, setup JaVers as follows:
@@ -67,9 +67,10 @@ This enables Spring `@AspectJ` support.
 For more info refer to Spring
 [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
 
-### Register JaversAuditableRepositoryAspect
+<h3 id="javers-auditable-repository-aspect">JaversAuditableRepository aspect</h3>
 
-Register `JaversAuditableRepositoryAspect`, which provides the auto-audit feature.
+Register [`JaversAuditableRepositoryAspect`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/aspect/JaversAuditableRepositoryAspect.java),
+which provides the auto-audit feature.
 It defines two pointcuts:
 
 * All `save(..)` and `delete(..)` methods within Spring Data `CrudRepository`
@@ -82,43 +83,69 @@ are automatically saved to JaversRepository.
 In the case where an argument is the `Iterable` instance,
 JaVers iterates over it and saves each element separately.
 
-<h3 id="author-provider-bean">Register AuthorProvider bean</h3>
+```java
+    @Bean
+    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
+        return new JaversAuditableRepositoryAspect(javers(), authorProvider(),
+            commitPropertiesProvider());
+    }
+```
+
+`JaversAuditableRepositoryAspect` requires one more bean &mdash;
+[`AuthorProvider`](#author-provider-bean) and optionally [`CommitPropertiesProvider`](#commit-properties-provider-bean) bean.
+
+<h3 id="author-provider-bean">AuthorProvider bean</h3>
 
 Every JaVers commit (data change) should be connected to its author, i.e. the
 user who made the change.
 Please don’t confuse JaVers commit (a bunch of data changes)
 with the SQL commit command (finalizing an SQL transaction).
 
-You need to register an implementation of the `AuthorProvider` interface,
-which should return a current user name.
-
-JaVers comes with `SpringSecurityAuthorProvider` &mdash; 
-suitable implementation when using Spring Security:
+You need to register an implementation of the
+[`AuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/AuthorProvider.java) interface,
+which should return a current user name, for example:
 
 ```java
-package org.javers.spring.auditable;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-/**
- * Returns a current user name from Spring Security context
- */
-public class SpringSecurityAuthorProvider implements AuthorProvider {
-    @Override
-    public String provide() {
-        Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth == null) {
-            return "unauthenticated";
-        }
-
-        return auth.getName();
+    @Bean
+    public AuthorProvider authorProvider() {
+        return new SpringSecurityAuthorProvider();
     }
-}
 ```
 
-### Annotate your Spring Data Repositories
+JaVers comes with [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
+&mdash;
+suitable implementation when using Spring Security.
+If you don’t care about commit author, use
+[`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java).
+
+<h3 id="commit-properties-provider-bean">CommitPropertiesProvider bean</h3>
+Every JaVers commit may have one or more commit properties, useful for querying
+(see [CommitProperty filter example](/documentation/jql-examples/#commit-property-filter)).
+
+In auto-audit, commit properties are supplied by an implementation of the
+[`CommitPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/CommitPropertiesProvider.java) interface,
+for example:
+
+```java
+    @Bean
+    public CommitPropertiesProvider commitPropertiesProvider() {
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provide() {
+                return ImmutableMap.of("key", "ok");
+            }
+        };
+    }
+```
+
+If you don’t use commit properties, simply use `JaversAuditableRepositoryAspect`
+constructor with two arguments.
+
+That's the last bean in your Application Context required to configure the auto-audit aspect.
+See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
+for [JPA & Hibernate](#spring-jpa-example)
+
+<h3 id="at-javers-spring-data-auditable">@JaversSpringDataAuditable for Spring Data Repositories</h3>
 
 If you’re using Spring Data, just annotate every Repository you want to audit
 with class-level `@JaversSpringDataAuditable`, for example:
@@ -136,7 +163,7 @@ interface UserRepository extends CrudRepository<User, String> {
 
 From now, all objects passed to `save()` and `delete()` methods will be automatically versioned by JaVers.
 
-### Annotate your ordinary Repositories
+<h3 id="at-javers-auditable">@JaversAuditable for ordinary Repositories</h3>
 
 If you're using ordinary Repositories (non Spring Data),
 annotate all data-changing methods you want to audit with `@JaversAuditable`.
@@ -162,69 +189,6 @@ It could be a Service, Repository or anything which modifies domain objects.
 
 From now, all objects passed to the annotated methods will be automatically versioned by JaVers.
 
-See below for the complete example of the Application Context.
-
-<h3 id="auto-audit-example">Auto-audit example with MongoDB</h3>
-
-Here is a working example of Spring Application Context
-with JaVers instance, JaVers auto-audit aspect and Spring Data MongoDB.
-
-```java
-package org.javers.spring.example;
-
-import ...
-
-@Configuration
-@ComponentScan(basePackages = "org.javers.spring.repository.mongo")
-@EnableAspectJAutoProxy
-@EnableMongoRepositories(basePackages = "org.javers.spring.repository.mongo")
-public class JaversSpringMongoApplicationConfig {
-
-    /**
-     * Creates JaVers instance backed by {@link MongoRepository}
-     */
-    @Bean
-    public Javers javers() {
-        MongoRepository javersMongoRepository = new MongoRepository(mongoDB());
-
-        return JaversBuilder.javers()
-                .registerJaversRepository(javersMongoRepository)
-                .build();
-    }
-
-    /**
-     * MongoDB setup
-     */
-    @Bean
-    public MongoDatabase mongoDB() {
-        return new Fongo("test").getDatabase("test");
-    }
-
-    /**
-     * Enables Repository auto-audit aspect. <br/>
-     *
-     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
-     * to annotate Spring Data Repositories
-     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
-     */
-    @Bean
-    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
-        return new JaversAuditableRepositoryAspect(javers(), authorProvider());
-    }
-
-    /**
-     * Required by auto-audit aspect. <br/><br/>
-     *
-     * Creates {@link SpringSecurityAuthorProvider} instance,
-     * suitable when using Spring Security
-     */
-    @Bean
-    public AuthorProvider authorProvider() {
-        return new SpringSecurityAuthorProvider();
-    }
-}
-```
-
 <h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
 Transaction management is the important issue for applications backed by SQL databases.
 Generally, all SQL statements executed by `JaversSQLRepository`
@@ -247,9 +211,23 @@ Hibernate silently wraps them around your Entities loaded from database.
 We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
 It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
 
-See below for the complete example of the Spring configuration.
+<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
 
-<h3 id="spring-jpa-example">Spring JPA Hibernate example</h3>
+JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
+and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
+
+To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
+
+```java
+TransactionalJaversBuilder
+    .javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
+```
+Feel free to provide your own implementation of `object-access` hook if you need better control over
+the unproxing process.
+
+See below for the full Spring configuration example [for JPA & Hibernate](#spring-jpa-example).
+
+<h2 id="spring-jpa-example">Spring configuration example for JPA & Hibernate</h2>
 
 Here is a working example of Spring Application Context
 with all JaVers beans, JPA, Hibernate, Spring Data and Spring TransactionManager.
@@ -295,7 +273,8 @@ public class JaversSpringJpaApplicationConfig {
      */
     @Bean
     public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
-        return new JaversAuditableRepositoryAspect(javers(), authorProvider());
+        return new JaversAuditableRepositoryAspect(javers(), authorProvider(),
+                commitPropertiesProvider());
     }
 
     /**
@@ -307,6 +286,19 @@ public class JaversSpringJpaApplicationConfig {
     @Bean
     public AuthorProvider authorProvider() {
         return new SpringSecurityAuthorProvider();
+    }
+
+    /**
+     * Optional for auto-audit aspect.
+     */
+    @Bean
+    public CommitPropertiesProvider commitPropertiesProvider() {
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provide() {
+                return ImmutableMap.of("key", "ok");
+            }
+        };
     }
 
     /**
@@ -365,16 +357,77 @@ public class JaversSpringJpaApplicationConfig {
 }
 ```
 
-<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
+<h2 id="auto-audit-example-mongo">Spring configuration example for MongoDB</h2>
 
-JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
-and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
-
-To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
+Here is a working example of Spring Application Context
+with JaVers instance, JaVers auto-audit aspect and Spring Data MongoDB.
 
 ```java
-TransactionalJaversBuilder
-    .javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
-```
+package org.javers.spring.example;
 
-Feel free to provide your own implementation of `object-access` hook if you need better control over unproxing process.
+import ...
+
+@Configuration
+@ComponentScan(basePackages = "org.javers.spring.repository.mongo")
+@EnableAspectJAutoProxy
+@EnableMongoRepositories(basePackages = "org.javers.spring.repository.mongo")
+public class JaversSpringMongoApplicationConfig {
+
+    /**
+     * Creates JaVers instance backed by {@link MongoRepository}
+     */
+    @Bean
+    public Javers javers() {
+        MongoRepository javersMongoRepository = new MongoRepository(mongoDB());
+
+        return JaversBuilder.javers()
+                .registerJaversRepository(javersMongoRepository)
+                .build();
+    }
+
+    /**
+     * MongoDB setup
+     */
+    @Bean
+    public MongoDatabase mongoDB() {
+        return new Fongo("test").getDatabase("test");
+    }
+
+    /**
+     * Enables Repository auto-audit aspect. <br/>
+     *
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate Spring Data Repositories
+     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
+     */
+    @Bean
+    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
+        return new JaversAuditableRepositoryAspect(javers(), authorProvider(),
+                commitPropertiesProvider());
+    }
+
+    /**
+     * Required by auto-audit aspect. <br/><br/>
+     *
+     * Creates {@link SpringSecurityAuthorProvider} instance,
+     * suitable when using Spring Security
+     */
+    @Bean
+    public AuthorProvider authorProvider() {
+        return new SpringSecurityAuthorProvider();
+    }
+
+    /**
+     * Optional for auto-audit aspect.
+     */
+    @Bean
+    public CommitPropertiesProvider commitPropertiesProvider() {
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provide() {
+                return ImmutableMap.of("key", "ok");
+            }
+        };
+    }
+}
+```
