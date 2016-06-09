@@ -89,18 +89,8 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
-### <font color="red">2.0.0-RC2</font>
-released on 2016-06-7 <br/>
-
-* [#375](https://github.com/javers/javers/issues/375) Added support for commit properties in auto-audit aspect.
-See [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean).
-
-### 2.0.0-RC1
-
-* Bug fixing in query by commit properties on MongoDB.
-
-### 2.0.0-RC
-released on 2016-05-22 <br/>
+### <font color="red">2.0.0</font>
+released on 2016-06-09 <br/>
 
 JaVers 2.0 comes with major improvements and new features in JQL.
 
@@ -138,6 +128,9 @@ See [author filter example](/documentation/jql-examples/#author-filter).
 * [#305](https://github.com/javers/javers/issues/305)
 New JQL `commitProperty()` filter.
 See [commit property filter example](/documentation/jql-examples/#commit-property-filter).
+
+* [#375](https://github.com/javers/javers/issues/375) Added support for commit properties in auto-audit aspect.
+See [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean).
 
 **SQL Schema migration**<br/>
 
