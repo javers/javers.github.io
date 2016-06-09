@@ -183,12 +183,12 @@ the current connection (thread-safely).
 <h3>Schema</h3>
 JaVers creates four tables in SQL database:
 
-*  `jv_cdo_class` — domain object class names,
 *  `jv_global_id` — domain object identifiers,
 *  `jv_commit` — JaVers commits metadata,
+*  `jv_commit_property` — commit properties,
 *  `jv_snapshot` — domain object snapshots.
 
-JaVers has a simple schema-create implementation.
+JaVers has a basic schema-create implementation.
 If a table is missing, JaVers simply creates it, together with a sequence and indexes.
 There’s no schema-update, so if you drop a column, index or sequence, it wouldn’t be recreated automatically.
 
