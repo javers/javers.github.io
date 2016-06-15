@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.0.1
+released on 2016-06-15 <br/>
+
+* [#384](https://github.com/javers/javers/issues/384) Value-based equals() and hashCode() implemented in concrete Change types
+* [#380](https://github.com/javers/javers/issues/380) Fixed CLASS_EXTRACTION_ERROR for non-concrete array types (like T[])
+
+
 ### <font color="red">2.0.0</font>
 released on 2016-06-09 <br/>
 
