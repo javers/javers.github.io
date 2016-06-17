@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.0.2
+released on 2016-06-17 <br/>
+
+* [#388](https://github.com/javers/javers/issues/388) Fixed ORA-00972 when creating the JaVers schema in Oracle 12c
+
+
 ### 2.0.1
 released on 2016-06-15 <br/>
 
