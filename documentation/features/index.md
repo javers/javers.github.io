@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.0.3
+released on 2016-06-29 <br/>
+
+* [#396](https://github.com/javers/javers/issues/396)
+Fixed javers-spring integration problem:
+cannot access its superclass org.javers.spring.jpa.JaversTransactionalDecorator.
+
 ### 2.0.2
 released on 2016-06-17 <br/>
 
