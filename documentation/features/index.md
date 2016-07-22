@@ -89,6 +89,15 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.0.4
+released on 2016-07-23 <br/>
+
+* [#407](https://github.com/javers/javers/pull/407)
+Fixed bug that causes PropertyChange.equals() to always return false.
+
+* [#394](https://github.com/javers/javers/issues/394)
+Error message enhancement.
+
 ### 2.0.3
 released on 2016-06-29 <br/>
 
