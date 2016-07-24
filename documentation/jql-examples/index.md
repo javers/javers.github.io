@@ -65,6 +65,7 @@ Queries can have one or more optional [filters](#query-filters):
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
 * [snapshot version](#version-filter),
+* [aggregate](#aggregate-filter),
 * [newObject changes](#new-object-filter).
 
 JQL can adapt when you refactor your domain classes:
@@ -162,7 +163,7 @@ commit 5.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#p
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-<h2 id="by-class-query">Querying for any object changes by class of object</h2>
+<h2 id="by-class-query">Querying for any object changes by object class</h2>
 The only mandatory parameter of this query is a class.
 It selects objects regardless of theirs JaversType and
 can be used for Entities, ValueObjects and UnboundedValueObjects.
@@ -243,7 +244,8 @@ For each query you can add one or more optional filters:
 [commitProperty](#commit-property-filter),
 [commitDate](#commit-date-filter),
 [commitId](#commit-id-filter),
-[snapshot version](#version-filter) and
+[snapshot version](#version-filter),
+[aggregate](#aggregate-filter) and
 [newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Changed property filter</h3>
@@ -581,6 +583,76 @@ query result:
 changes:
 commit 8.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'23', newVal:'24'}
 ```
+
+<h3 id="aggregate-filter">Aggregate filter</h3>
+
+When aggregate filter is enabled, all child ValueObjects owned by selected Entities
+are included in a query scope.
+In other words, changes (or snapshots) of a whole aggregates are selected.
+
+Aggregate filter can be used only for Entity queries:
+`byInstanceId()` and `byClass()`.
+
+Note that we are using <i>aggregate</i> term in the context of DDD.
+Please do not confuse it with SQL aggregate functions.
+In JQL, aggregate means: an **Entity with its child ValueObjects**.
+
+In the example we are creating an employee (Entity)
+with two addresses (ValueObjects).
+Then we are changing employee’s age and one of his addresses.
+Aggregate query is run and both age and address changes are selected.
+Since there are no other employees in our repository,
+`byInstanceId()` and `byClass()` queries return the same result.
+
+Let’s see how it works:
+
+```groovy
+def "should query for aggregate changes by Entity instance Id and class"(){
+  given:
+  def javers = JaversBuilder.javers().build()
+
+  def bob = new Employee(name:"bob", age:30, salary: 1000,
+          primaryAddress: new Address(city:"Paris"),
+          postalAddress: new Address(city:"Paris"))
+  javers.commit("author", bob)
+
+  bob.age = 31
+  bob.primaryAddress.city = "London"
+  javers.commit("author", bob)
+
+  when: "aggregate query by instance Id"
+  def query = QueryBuilder.byInstanceId("bob", Employee.class).aggregate().build()
+  def changes = javers.findChanges( query )
+
+  then:
+  printChanges(changes)
+  assert changes.size() == 2
+
+  when: "aggregate query by Entity class"
+  query = QueryBuilder.byClass(Employee.class).aggregate().build()
+  changes = javers.findChanges( query )
+
+  then:
+  printChanges(changes)
+  assert changes.size() == 2
+}
+```
+
+query result:
+
+```text
+changes:
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'Paris', newVal:'London'}
+changes:
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'Paris', newVal:'London'}
+```
+
+Results are similar
+when aggregate filter is applied to snapshot queries.
+Snapshots of **changed** child ValueObjects are returned together with
+owning Entity snapshot.
 
 <h3 id="new-object-filter">NewObject changes filter</h3>
 This filter only affects queries for changes, by default it’s disabled.
