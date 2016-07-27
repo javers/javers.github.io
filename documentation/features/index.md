@@ -90,7 +90,7 @@ with minimal mapping configuration effort
 <h2 id="release-notes">Release notes</h2>
 
 ### 2.1.0
-released on 2016-07-26 <br/>
+released on 2016-07-28 <br/>
 
 * [#220](https://github.com/javers/javers/pull/220) New aggregate filter in JQL.
 Now child ValueObjects can be selected when querying for Entity changes.
