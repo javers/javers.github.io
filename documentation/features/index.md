@@ -93,8 +93,8 @@ with minimal mapping configuration effort
 released on 2016-07-26 <br/>
 
 * [#220](https://github.com/javers/javers/pull/220) New aggregate filter in JQL.
-Now child ValueObject can be selected when querying for Entity changes.
-See [aggregate filter example](/documentation/jql-examples/#aggregate-filter).
+Now child ValueObjects can be selected when querying for Entity changes.
+See [childValueObjects filter example](/documentation/jql-examples/#child-value-objects-filter).
 
 ### 2.0.4
 released on 2016-07-23 <br/>

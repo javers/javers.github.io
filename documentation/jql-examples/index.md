@@ -65,7 +65,7 @@ Queries can have one or more optional [filters](#query-filters):
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
 * [snapshot version](#version-filter),
-* [aggregate](#aggregate-filter),
+* [childValueObjects](#child-value-objects-filter),
 * [newObject changes](#new-object-filter).
 
 JQL can adapt when you refactor your domain classes:
@@ -245,7 +245,7 @@ For each query you can add one or more optional filters:
 [commitDate](#commit-date-filter),
 [commitId](#commit-id-filter),
 [snapshot version](#version-filter),
-[aggregate](#aggregate-filter) and
+[childValueObjects](#child-value-objects-filter) and
 [newObject changes](#new-object-filter) filter.
 
 <h3 id="property-filter">Changed property filter</h3>
@@ -584,30 +584,25 @@ changes:
 commit 8.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'23', newVal:'24'}
 ```
 
-<h3 id="aggregate-filter">Aggregate filter</h3>
+<h3 id="child-value-objects-filter">ChildValueObjects filter</h3>
 
-When aggregate filter is enabled, all child ValueObjects owned by selected Entities
+When this filter is enabled, all child ValueObjects owned by selected Entities
 are included in a query scope.
-In other words, changes (or snapshots) of a whole aggregates are selected.
 
-Aggregate filter can be used only for Entity queries:
+ChildValueObjects filter can be used only for Entity queries:
 `byInstanceId()` and `byClass()`.
 
-Note that we are using <i>aggregate</i> term in the context of DDD.
-Please do not confuse it with SQL aggregate functions.
-In JQL, aggregate means: an **Entity with its child ValueObjects**.
-
 In the example we are creating an employee (Entity)
-with two addresses (ValueObjects).
+with two addresses (child ValueObjects).
 Then we are changing employee’s age and one of his addresses.
-Aggregate query is run and both age and address changes are selected.
+Query with childValueObjects filter is run and both age and address changes are selected.
 Since there are no other employees in our repository,
 `byInstanceId()` and `byClass()` queries return the same result.
 
 Let’s see how it works:
 
 ```groovy
-def "should query for aggregate changes by Entity instance Id and class"(){
+def "should query for changes made on Entity and its ValueObjects by InstanceId and Class"(){
   given:
   def javers = JaversBuilder.javers().build()
 
@@ -620,16 +615,16 @@ def "should query for aggregate changes by Entity instance Id and class"(){
   bob.primaryAddress.city = "London"
   javers.commit("author", bob)
 
-  when: "aggregate query by instance Id"
-  def query = QueryBuilder.byInstanceId("bob", Employee.class).aggregate().build()
+  when: "query by instance Id"
+  def query = QueryBuilder.byInstanceId("bob", Employee.class).withChildValueObjects().build()
   def changes = javers.findChanges( query )
 
   then:
   printChanges(changes)
   assert changes.size() == 2
 
-  when: "aggregate query by Entity class"
-  query = QueryBuilder.byClass(Employee.class).aggregate().build()
+  when: "query by Entity class"
+  query = QueryBuilder.byClass(Employee.class).withChildValueObjects().build()
   changes = javers.findChanges( query )
 
   then:
