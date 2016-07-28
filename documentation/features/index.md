@@ -89,6 +89,16 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.1.0
+released on 2016-07-28 <br/>
+
+* [#220](https://github.com/javers/javers/pull/220) New aggregate filter in JQL.
+Now child ValueObjects can be selected when querying for Entity changes.
+See [childValueObjects filter example](/documentation/jql-examples/#child-value-objects-filter).
+
+* [#408](https://github.com/javers/javers/pull/408)
+Added equals() and hashCode() in ContainerElementChange and EntryChange classes.
+
 ### 2.0.4
 released on 2016-07-23 <br/>
 
