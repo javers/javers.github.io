@@ -89,6 +89,13 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.1.1
+released on 2016-07-30 <br/>
+
+* [#395](https://github.com/javers/javers/issues/395)
+Spring Boot version bumped to 1.4.0-RELEASE, fixed MongoDB Driver version conflict
+between JaVers and spring-data-mongodb.
+
 ### 2.1.0
 released on 2016-07-28 <br/>
 
