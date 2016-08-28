@@ -89,6 +89,15 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.1.2
+released on 2016-08-28 <br/>
+
+* [#416](https://github.com/javers/javers/issues/416)
+Added map key dot replacement in MongoRepository.
+
+* [#415](https://github.com/javers/javers/pull/415)
+Key in `TypeMapperState.mappedTypes` changed from `Type` to `Type.toString()`.
+
 ### 2.1.1
 released on 2016-07-30 <br/>
 
