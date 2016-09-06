@@ -69,6 +69,13 @@ JaVers provides two aspects which manage the auto-audit feature:
   <br/>
   It defines the pointcut on any method annotated with the method-level `@JaversAuditable` annotation.
 
+```java
+    @Bean
+    public JaversAuditableAspect javersAuditableAspect() {
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+    }
+```
+
 * **`JaversSpringDataAuditableRepositoryAspect`**
   for Spring Data CRUD Repositories, enabled by `@JaversSpringDataAuditable`.
   <br/>
@@ -76,11 +83,6 @@ JaVers provides two aspects which manage the auto-audit feature:
   within all Spring Data CRUD Repositories annotated with the class-level `@JaversSpringDataAuditable` annotation.
 
 ```java
-    @Bean
-    public JaversAuditableAspect javersAuditableAspect() {
-        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
-    }
-
     @Bean
     public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
         return new JaversSpringDataAuditableRepositoryAspect(
