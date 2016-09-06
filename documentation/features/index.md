@@ -89,6 +89,28 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.2.1
+released on 2016-09-06 <br/>
+
+* [#417](https://github.com/javers/javers/issues/417)
+  Fixed dependency management in `javers-spring`.
+  Now `spring-data-commons` dependency is optional
+  and should be on an application's classpath only when you are using the `@JaversSpringDataAuditable` annotation.
+  <br/>
+  The aspect class `JaversAuditableRepositoryAspect` was removed and split into two aspects:
+  `JaversAuditableAspect` and `JaversSpringDataAuditableRepositoryAspect`.
+  <br/>
+  First one should be enabled when you are using `@JaversAuditable`.
+  Second one should be enabled when you are using `@JaversSpringDataAuditable`.
+  <br/>
+  If you are using `javers-spring-boot-starter-*`,
+  both aspects are enabled by default so you don’t have to change anything.
+  <br/>
+  See [auto-audit aspects documentaton](/documentation/spring-integration/#auto-audit-aspect).
+
+* [#425](https://github.com/javers/javers/pull/425)
+  Fixed some bugs in ShallowReference type handling.
+
 ### 2.1.2
 released on 2016-08-28 <br/>
 

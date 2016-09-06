@@ -9,7 +9,7 @@ So we made JaVers compatible with Spring Framework.
 
 `javers-spring` module provides the following features:
 
-* [annotations](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
+* [aspects](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
 * [integration](#jpa-entity-manager-integration) with JPA EntityManager for SQL databases.
 
 ### Dependency ###
@@ -27,11 +27,13 @@ Check
 for other build tools snippets.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>
-The JaVers auto-audit aspect is based on Spring AOP and frees you
+The JaVers auto-audit aspects are based on Spring AOP and frees you
 from calling `javers` methods in your data-changing Repositories.
 
-If you’re using Spring Data, annotate your CRUD Repositories with `@JaversSpringDataAuditable`.
-For ordinary Repositories, use `@JaversAuditable` annotation to mark all data-changing methods.
+If you’re using Spring Data, annotate your CRUD Repositories with
+[`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable).
+For ordinary Repositories,
+use [`@JaversAuditable`](#at-javers-auditable) to mark all data-changing methods.
 
 JaVers can audit your data changes automatically — AWESOME!
 
@@ -58,52 +60,60 @@ For example, if you’re using MongoDB, setup JaVers as follows:
     }
 ```
 
-### Enable @AspectJ support
+<h3 id="javers-auto-audit-aspects">Aspect beans</h3>
 
-JaVers registers an aspect which manages the auto-audit feature.
-Put `@EnableAspectJAutoProxy` annotation in your Spring configuration.
-This enables Spring `@AspectJ` support.
+JaVers provides two aspects which manage the auto-audit feature:
 
-For more info refer to Spring
-[@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
+* **`JaversAuditableAspect`**
+  for ordinary Repositories, enabled by `@JaversAuditable`.
+  <br/>
+  It defines the pointcut on any method annotated with the method-level `@JaversAuditable` annotation.
 
-<h3 id="javers-auditable-repository-aspect">JaversAuditableRepository aspect</h3>
-
-Register [`JaversAuditableRepositoryAspect`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/aspect/JaversAuditableRepositoryAspect.java),
-which provides the auto-audit feature.
-It defines two pointcuts:
-
-* All `save(..)` and `delete(..)` methods within Spring Data `CrudRepository`
-  with class-level `@JaversSpringDataAuditable` annotation.
-* Any method annotated with `@JaversAuditable`.
-
-After an advised method is executed, all of its **arguments**
-are automatically saved to JaversRepository.
-
-In the case where an argument is the `Iterable` instance,
-JaVers iterates over it and saves each element separately.
+* **`JaversSpringDataAuditableRepositoryAspect`**
+  for Spring Data CRUD Repositories, enabled by `@JaversSpringDataAuditable`.
+  <br/>
+  It defines the pointcut on all `save(..)` and `delete(..)` methods
+  within all Spring Data CRUD Repositories annotated with the class-level `@JaversSpringDataAuditable` annotation.
 
 ```java
     @Bean
-    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
-        return new JaversAuditableRepositoryAspect(javers(), authorProvider(),
-            commitPropertiesProvider());
+    public JaversAuditableAspect javersAuditableAspect() {
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
     }
-```
 
-`JaversAuditableRepositoryAspect` requires one more bean &mdash;
-[`AuthorProvider`](#author-provider-bean) and optionally [`CommitPropertiesProvider`](#commit-properties-provider-bean) bean.
+    @Bean
+    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
+        return new JaversSpringDataAuditableRepositoryAspect(
+                javers(), authorProvider(), commitPropertiesProvider());
+    }
+``` 
+
+After an advised method is executed, all of its **arguments**
+are automatically saved to JaversRepository. <br/>
+In the case where an argument is an `Iterable` instance,
+JaVers iterates over it and saves each element separately.
+
+Aspects require one more bean &mdash; [`AuthorProvider`](#author-provider-bean)
+and optionally [`CommitPropertiesProvider`](#commit-properties-provider-bean) bean.
+
+Note that both aspects are based on Spring `@AspectJ`.<br/>
+**Remember to enable** `@AspectJ` support by putting the `@EnableAspectJAutoProxy`
+annotation in your Spring configuration.
+
+For more info refer to 
+[Spring @AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
 
 <h3 id="author-provider-bean">AuthorProvider bean</h3>
 
-Every JaVers commit (data change) should be connected to its author, i.e. the
+Every JaVers commit (a data change) should be connected to its author, i.e. the
 user who made the change.
 Please don’t confuse JaVers commit (a bunch of data changes)
 with the SQL commit command (finalizing an SQL transaction).
 
 You need to register an implementation of the
 [`AuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/AuthorProvider.java) interface,
-which should return a current user name, for example:
+which should return a current user name. It’s required by auto-audit aspects. 
+For example:
 
 ```java
     @Bean
@@ -138,12 +148,14 @@ for example:
     }
 ```
 
-If you don’t use commit properties, simply use `JaversAuditableRepositoryAspect`
-constructor with two arguments.
+If you don’t use commit properties, simply skip `commitPropertiesProvider`
+in the aspect constructors.
 
-That's the last bean in your Application Context required to configure the auto-audit aspect.
+That’s the last bean in your Application Context required to configure auto-audit aspects.
 See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
 for [JPA & Hibernate](#spring-jpa-example)
+
+///TODO
 
 <h3 id="at-javers-spring-data-auditable">@JaversSpringDataAuditable for Spring Data Repositories</h3>
 
