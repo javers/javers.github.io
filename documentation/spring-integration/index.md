@@ -64,23 +64,11 @@ For example, if you’re using MongoDB, setup JaVers as follows:
 
 JaVers provides two aspects which manage the auto-audit feature:
 
-* **`JaversAuditableAspect`**
-  for ordinary Repositories, enabled by `@JaversAuditable`.
-  <br/>
-  It defines the pointcut on any method annotated with the method-level `@JaversAuditable` annotation.
-
-```java
-    @Bean
-    public JaversAuditableAspect javersAuditableAspect() {
-        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
-    }
-```
-
 * **`JaversSpringDataAuditableRepositoryAspect`**
-  for Spring Data CRUD Repositories, enabled by `@JaversSpringDataAuditable`.
+  for Spring Data CRUD Repositories, enabled by [`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable).
   <br/>
   It defines the pointcut on all `save(..)` and `delete(..)` methods
-  within all Spring Data CRUD Repositories annotated with the class-level `@JaversSpringDataAuditable` annotation.
+  within all Spring Data CRUD Repositories annotated with the class-level [`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable) annotation.
 
 ```java
     @Bean
@@ -88,7 +76,19 @@ JaVers provides two aspects which manage the auto-audit feature:
         return new JaversSpringDataAuditableRepositoryAspect(
                 javers(), authorProvider(), commitPropertiesProvider());
     }
-``` 
+```
+ 
+* **`JaversAuditableAspect`**
+  for ordinary Repositories, enabled by [`@JaversAuditable`](#at-javers-auditable).
+  <br/>
+  It defines the pointcut on any method annotated with the method-level [`@JaversAuditable`](#at-javers-auditable) annotation.
+
+```java
+    @Bean
+    public JaversAuditableAspect javersAuditableAspect() {
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+    }
+```
 
 After an advised method is executed, all of its **arguments**
 are automatically saved to JaversRepository. <br/>
@@ -153,16 +153,16 @@ for example:
 If you don’t use commit properties, simply skip `commitPropertiesProvider`
 in the aspect constructors.
 
-That’s the last bean in your Application Context required to configure auto-audit aspects.
+That’s the last bean in your Application Context required to run auto-audit aspects.
 See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
 for [JPA & Hibernate](#spring-jpa-example)
 
-///TODO
-
 <h3 id="at-javers-spring-data-auditable">@JaversSpringDataAuditable for Spring Data Repositories</h3>
 
-If you’re using Spring Data, just annotate every Repository you want to audit
-with class-level `@JaversSpringDataAuditable`, for example:
+If you’re using Spring Data, just annotate Repositories you want to audit
+with the class-level `@JaversSpringDataAuditable`.<br/>
+
+For example:
 
 ```java
 import org.javers.spring.data.JaversSpringDataAuditable
@@ -180,7 +180,7 @@ From now, all objects passed to `save()` and `delete()` methods will be automati
 <h3 id="at-javers-auditable">@JaversAuditable for ordinary Repositories</h3>
 
 If you're using ordinary Repositories (non Spring Data),
-annotate all data-changing methods you want to audit with `@JaversAuditable`.
+annotate all data-changing methods you want to audit with the method-level `@JaversAuditable`.
 
 For example:
 
@@ -279,16 +279,26 @@ public class JaversSpringJpaApplicationConfig {
     }
 
     /**
-     * Enables Repository auto-audit aspect. <br/>
+     * Enables auto-audit aspect for ordinary repositories.<br/>
      *
-     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
-     * to annotate Spring Data Repositories
-     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
+     * Use {@link org.javers.spring.annotation.JaversAuditable}
+     * to mark data writing methods that you want to audit.
      */
     @Bean
-    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
-        return new JaversAuditableRepositoryAspect(javers(), authorProvider(),
-                commitPropertiesProvider());
+    public JaversAuditableAspect javersAuditableAspect() {
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+    }
+
+    /**
+     * Enables auto-audit aspect for Spring Data repositories. <br/>
+     *
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate CrudRepositories you want to audit.
+     */
+    @Bean
+    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
+        return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
+            commitPropertiesProvider());
     }
 
     /**
@@ -408,16 +418,26 @@ public class JaversSpringMongoApplicationConfig {
     }
 
     /**
-     * Enables Repository auto-audit aspect. <br/>
+     * Enables auto-audit aspect for ordinary repositories.<br/>
      *
-     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
-     * to annotate Spring Data Repositories
-     * or {@link org.javers.spring.annotation.JaversAuditable} for ordinary Repositories.
+     * Use {@link org.javers.spring.annotation.JaversAuditable}
+     * to mark data writing methods that you want to audit.
      */
     @Bean
-    public JaversAuditableRepositoryAspect javersAuditableRepositoryAspect() {
-        return new JaversAuditableRepositoryAspect(javers(), authorProvider(),
-                commitPropertiesProvider());
+    public JaversAuditableAspect javersAuditableAspect() {
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+    }
+
+    /**
+     * Enables auto-audit aspect for Spring Data repositories. <br/>
+     *
+     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+     * to annotate CrudRepositories you want to audit.
+     */
+    @Bean
+    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
+        return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
+            commitPropertiesProvider());
     }
 
     /**
