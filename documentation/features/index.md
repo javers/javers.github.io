@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.2.2
+released on 2016-09-09 <br/>
+
+* [#430](https://github.com/javers/javers/pull/430)
+ Added `@ConditionalOnMissingBean` on javers bean.
+
 ### 2.2.1
 released on 2016-09-06 <br/>
 
