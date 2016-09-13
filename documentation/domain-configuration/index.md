@@ -402,4 +402,4 @@ JaversBuilder.javers().withObjectAccessHook(new MyObjectAccessHook()).build()
 ```
 
 JaVers comes with Hibernate Unproxy implementation of object-access hook,
-see [hibernate integration](/documentation/hibernate-integration). 
+see [hibernate integration](/documentation/spring-integration/#hibernate-unproxy-hook). 
