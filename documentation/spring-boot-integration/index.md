@@ -56,6 +56,7 @@ javers:
   prettyPrint: true
   typeSafeValues: false
   newObjectSnapshot: false
+  packagesToScan:
 ```  
 
 See [JaversBuilder javadoc]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html)

@@ -89,6 +89,16 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.3.0
+released on 2016-09-21 <br/>
+
+* [#263](https://github.com/javers/javers/issues/263) 
+ `@TypeName` annotation scanner implemented.
+  Now you can easily register your classes with the `@TypeName` annotation
+  in order to use them in all kinds of JQL queries<br/>
+  (without getting TYPE_NAME_NOT_FOUND exception). See
+  `JaversBuilder.withPackagesToScan(String packagesToScan)`.
+
 ### 2.2.2
 released on 2016-09-09 <br/>
 
