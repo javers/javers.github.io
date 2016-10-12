@@ -89,6 +89,12 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.4.0
+released on 2016-10-12 <br/>
+
+* [#398](https://github.com/javers/javers/pull/398)
+ [Ian Agius](https://github.com/ianagius) contributed a schema support for SQL databases.
+
 ### 2.3.0
 released on 2016-09-21 <br/>
 
