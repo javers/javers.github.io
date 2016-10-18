@@ -89,6 +89,11 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.4.1
+released on 2016-10-18 <br/>
+
+* [#441](https://github.com/javers/javers/issues/441) UUID added to list of well known ValueTypes.
+
 ### 2.4.0
 released on 2016-10-12 <br/>
 
