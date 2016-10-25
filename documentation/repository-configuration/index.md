@@ -1,7 +1,8 @@
 ---
-layout: docs
+layout: page
 title: JaVers Repository Configuration
 submenu: repository-configuration
+sidebar-url: docs-sidebar.html
 ---
 
 If you’re going to use JaVers as a data audit framework you should configure `JaversRepository`.

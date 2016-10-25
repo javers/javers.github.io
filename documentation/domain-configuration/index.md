@@ -1,7 +1,8 @@
 ---
-layout: docs
+layout: page
 title: Domain Configuration
 submenu: domain-configuration
+sidebar-url: docs-sidebar.html
 ---
 
 None of us like to configure tools but don’t worry — JaVers knows it and
