@@ -89,6 +89,17 @@ with minimal mapping configuration effort
 
 <h2 id="release-notes">Release notes</h2>
 
+### 2.5.0
+released on 2016-10-25 <br/>
+
+* [412](https://github.com/javers/javers/issues/412)
+  `@ShallowReference` annotation can now be used for properties.
+  
+* Empty snapshots for `@ShallowReference` Entities are no longer created.
+
+* [#443](https://github.com/javers/javers/pull/443)
+  Fix for Gson stackoverflow exception when using complex Value types (with circular references).
+
 ### 2.4.1
 released on 2016-10-18 <br/>
 
