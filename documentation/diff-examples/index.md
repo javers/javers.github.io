@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title:  Diff Examples
 submenu: diff-examples
-sidebar-url: docs-sidebar.html
 ---
 
 All examples are runnable.

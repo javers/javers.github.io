@@ -5,7 +5,7 @@
     {% include head.html %}
 </head>
 <body class="page" data-spy="scroll" data-target="#sidebar">
-{% include navbar.html %}
+{% include menus.html %}
 
 <section >
     <div id="content" class="container">
@@ -26,14 +26,11 @@
                 </div>
 
             </div>
-
-            {% if page.sidebar-url %}
             <div id="sidebar" class="col-md-4 visible-md visible-lg">
                 <div data-spy="affix" data-offset-top="50" data-offset-bottom="50">
-                    {% include {{ page.sidebar-url }} %}
+                    {% include docs-sidebar.html %}
                 </div>
             </div>
-            {% endif %}
         </div>
     </div>
 </section>

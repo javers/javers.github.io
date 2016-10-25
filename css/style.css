@@ -41,11 +41,6 @@ pre code {
     background: #1a1f25;
 }
 
-.navbar-inverse .navbar-nav > .open > a:hover,
-.navbar-inverse .navbar-nav > .open > a {
-    background: transparent;
-}
-
 .navbar-javers .navbar-nav > li.active > a {
     border-bottom: solid 2px #ea4d1a;
     background: transparent;

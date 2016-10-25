@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title: Overview
 submenu: introduction
-sidebar-url: docs-sidebar.html
 ---
 
 <h2 id="what-is-javers">What is JaVers</h2>

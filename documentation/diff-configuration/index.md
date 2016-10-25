@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title: Diff Configuration
 submenu: diff-configuration
-sidebar-url: docs-sidebar.html
 ---
 
 JaVers’ diff algorithm has a pluggable construction.

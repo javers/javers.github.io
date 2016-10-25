@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title: Spring integration
 submenu: spring-integration
-sidebar-url: docs-sidebar.html
 ---
 
 Our main idea at JaVers is that our library should be very easy to use.

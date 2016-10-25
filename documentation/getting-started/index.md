@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title: Getting started
 submenu: getting-started
-sidebar-url: docs-sidebar.html
 ---
 
 <h2 id="get-javers">Get JaVers</h2>

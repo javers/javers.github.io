@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title: JQL (JaVers Query Language) examples
 submenu: jql-examples
-sidebar-url: docs-sidebar.html
 ---
 
 All examples are runnable.

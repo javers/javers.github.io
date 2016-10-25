@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: docs
 title: Repository examples
 submenu: repository-examples
-sidebar-url: docs-sidebar.html
 ---
 
 All examples are runnable.
