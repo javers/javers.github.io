@@ -3,7 +3,7 @@
 
 
 <section>
-  <a {% if currentSubPage == 'index.html' %}class='active'{% endif %} href="/features">
+  <a {% if currentSubPage == null %}class='active'{% endif %} href="/features">
     Features overview
   </a>
   <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'features' %} hidden {% endif %}">
