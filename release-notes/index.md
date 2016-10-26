@@ -4,8 +4,6 @@ title: Release notes
 submenu: release-notes
 ---
 
-<h2 id="release-notes">Release notes</h2>
-
 ### 2.4.1
 released on 2016-10-18 <br/>
 
