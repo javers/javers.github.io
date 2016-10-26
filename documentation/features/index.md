@@ -90,9 +90,9 @@ with minimal mapping configuration effort
 <h2 id="release-notes">Release notes</h2>
 
 ### 2.5.0
-released on 2016-10-25 <br/>
+released on 2016-10-26 <br/>
 
-* [412](https://github.com/javers/javers/issues/412)
+* [#412](https://github.com/javers/javers/issues/412)
   `@ShallowReference` annotation can now be used for properties.
   
 * Empty snapshots for `@ShallowReference` Entities are no longer created.

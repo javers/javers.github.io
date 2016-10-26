@@ -231,7 +231,7 @@ There are three property level annotations:
     &mdash;
   declares a property as `ShallowReference`.
   Can be used only for Entity type properties.
-  All properties of a target Entity instance, instead of Id, are ignored.
+  All properties of a target Entity instance, except Id, are ignored.
   
 **ProTip**: when property level @Id is found in a class, JaVers maps it automatically
 as Entity. So when you use @Id, class level @Entity is optional.
