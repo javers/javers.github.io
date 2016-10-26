@@ -1,7 +1,8 @@
 ---
-layout: docs
+layout: page
 title: Spring Boot integration
 submenu: spring-boot-integration
+sidebar-url: docs-sidebar.html
 ---
 
 [Spring Boot](http://projects.spring.io/spring-boot/)

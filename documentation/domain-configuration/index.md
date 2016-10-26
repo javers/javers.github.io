@@ -1,7 +1,8 @@
 ---
-layout: docs
+layout: page
 title: Domain Configuration
 submenu: domain-configuration
+sidebar-url: docs-sidebar.html
 ---
 
 None of us like to configure tools but don’t worry — JaVers knows it and
@@ -232,7 +233,7 @@ There are three property level annotations:
   declares a property as `ShallowReference`.
   Can be used only for Entity type properties.
   All properties of a target Entity instance, except Id, are ignored.
-  
+
 **ProTip**: when property level @Id is found in a class, JaVers maps it automatically
 as Entity. So when you use @Id, class level @Entity is optional.
 
