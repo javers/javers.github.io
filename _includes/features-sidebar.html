@@ -3,8 +3,9 @@
 
 
 <section>
-  <a {% if currentSubPage == 'features' %}class='active'{% endif %} href="/features">
-  Features overview</a>
+  <a {% if currentSubPage == 'index.html' %}class='active'{% endif %} href="/features">
+    Features overview
+  </a>
   <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'features' %} hidden {% endif %}">
     <li><a href="#object-diff">Object diff</a></li>
     <li><a href="#javers-repository">Javers Repository</a></li>
