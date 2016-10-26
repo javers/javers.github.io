@@ -217,7 +217,7 @@ Three **JPA** Class level annotations are interpreted as synonyms of JaVers anno
 
 <h3 id="property-level-annotations">Property level annotations</h3>
 
-There are two property level annotations:
+There are three property level annotations:
 
 * [`@Id`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Id.html)
   &mdash; 
@@ -225,8 +225,14 @@ There are two property level annotations:
  
 * [`@DiffIgnore`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/DiffIgnore.html)
   &mdash;
-  declares a property as ignored by the diff engine.
+  declares a property as ignored by JaVers.
 
+* [`@ShallowReference`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ShallowReference.html)
+    &mdash;
+  declares a property as `ShallowReference`.
+  Can be used only for Entity type properties.
+  All properties of a target Entity instance, except Id, are ignored.
+  
 **ProTip**: when property level @Id is found in a class, JaVers maps it automatically
 as Entity. So when you use @Id, class level @Entity is optional.
 
@@ -365,7 +371,7 @@ If numbers looks suspicious, configure JaVers to ignore all business irrelevant 
 **How to configure ignored properties**<br/>
 There are a few ways to do this.
 
-If you want to locally ignore concrete properties, use the `@DiffIgnore` annotation
+If you want to locally ignore concrete properties, use `@DiffIgnore` or `@ShallowReference` annotations
 (see [property annotations](#property-level-annotations)).
 
 You can also ignore properties globally, by type.
