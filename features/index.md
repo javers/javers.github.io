@@ -3,6 +3,8 @@ layout: page
 title: Features Overview
 submenu: features
 sidebar-url: features-sidebar.html
+redirect_from:
+  - /documentation/features/
 ---
 
 JaVers is designed as a framework for **auditing changes** in your object-oriented data.
