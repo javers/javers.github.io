@@ -28,7 +28,7 @@ This example shows how to persist changes done on a domain object in `JaversRepo
 Then we show how to fetch the history of this object from the repository.
 
 **The case**<br/>
-We have the an object of `Person` class, which represents a person called Robert.
+We have an object of `Person` class, which represents a person called Robert.
 Our goal is to track changes done on the Robert object.
 Whenever the object is changed we want to save its state in JaversRepository.
 With JaVers, it can be done with a single `commit()` call:
@@ -288,7 +288,7 @@ To print this nice change log, just call
 
 ```java
 List<Change> changes = javers.findChanges(
-    QueryBuilder.byInstanceId("Bob", Employee.class).build());
+    QueryBuilder.byInstanceId("Bob", Employee.class).withNewObjectChanges(true).build());
 String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
 ```    
 
@@ -341,7 +341,7 @@ public class ChangeLogExample {
 
     // when:
     List<Change> changes = javers.findChanges(
-        QueryBuilder.byInstanceId("Bob", Employee.class).build());
+        QueryBuilder.byInstanceId("Bob", Employee.class).withNewObjectChanges(true).build());
     String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
 
     // then:
