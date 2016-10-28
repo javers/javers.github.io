@@ -274,11 +274,6 @@ commit 2.0, author: hr.director, 2015-04-16 22:16:50
   changed object: org.javers.core.examples.model.Employee/Bob
     value changed on 'position' property: 'Scrum master' -> 'Team Lead'
     value changed on 'salary' property: '9000' -> '11000'
-commit 1.0, author: hr.manager, 2015-04-16 22:16:50
-  changed object: org.javers.core.examples.model.Employee/Bob
-    value changed on 'name' property: 'null' -> 'Bob'
-    value changed on 'position' property: 'null' -> 'Scrum master'
-    value changed on 'salary' property: '0' -> '9000'
 ```
 
 We use text format here for brevity but ChangeProcessor API
@@ -288,7 +283,7 @@ To print this nice change log, just call
 
 ```java
 List<Change> changes = javers.findChanges(
-    QueryBuilder.byInstanceId("Bob", Employee.class).withNewObjectChanges(true).build());
+    QueryBuilder.byInstanceId("Bob", Employee.class).build());
 String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
 ```    
 
@@ -341,7 +336,7 @@ public class ChangeLogExample {
 
     // when:
     List<Change> changes = javers.findChanges(
-        QueryBuilder.byInstanceId("Bob", Employee.class).withNewObjectChanges(true).build());
+        QueryBuilder.byInstanceId("Bob", Employee.class).build());
     String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
 
     // then:
