@@ -58,11 +58,13 @@ javers:
   typeSafeValues: false
   newObjectSnapshot: false
   packagesToScan:
+  auditableAspectEnabled: true
+  springDataAuditableRepositoryAspectEnabled: true
 ```  
 
 See [JaversBuilder javadoc]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html)
 for properties documentation.
-Each property has a corresponding `with*()` method.
+Each `javers-core` property has a corresponding `with*()` method.
 
 <h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
 Thanks to Spring Boot magic, starters available on the classpath are automatically picked up
