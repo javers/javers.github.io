@@ -4,6 +4,27 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.6.0
+released on 2016-10-30 <br/>
+
+* [#411](https://github.com/javers/javers/issues/411)
+ New commitId generator for distributed applications.
+ Now you can use cluster-friendly `CommitIdGenerator#RANDOM`,
+ see [`withCommitIdGenerator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#withCommitIdGenerator-org.javers.core.CommitIdGenerator-)
+ 
+* [#209](https://github.com/javers/javers/issues/209) 
+ Added multi-class query &mdash; `QueryBuilder.byClass(Class... requiredClasses)`.
+       
+* [#435](https://github.com/javers/javers/issues/435)
+ Added flags for deactivating auto-audit aspects
+ in Spring Boot starters.
+       
+```
+javers:
+  auditableAspectEnabled: false
+  springDataAuditableRepositoryAspectEnabled: false
+```
+
 ### 2.5.0
 released on 2016-10-26 <br/>
 
