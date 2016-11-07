@@ -28,6 +28,10 @@ pre code {
     font-size: 12px;
 }
 
+.articleBody li {
+    word-wrap: break-word;
+}
+
 .highlight pre {
     font-size: 0.8em;
 }
