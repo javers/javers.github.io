@@ -104,7 +104,7 @@ released on 2016-06-29 <br/>
 
 * [#396](https://github.com/javers/javers/issues/396)
 Fixed javers-spring integration problem:
-cannot access its superclass org.javers.spring.jpa.JaversTransactionalDecorator.
+cannot access its superclass org.javers.spring.jpa.<wbr/>JaversTransactionalDecorator.
 
 ### 2.0.2
 released on 2016-06-17 <br/>
@@ -414,7 +414,7 @@ released on 2015-10-13 <br/>
 
 * [#218](https://github.com/javers/javers/issues/218)
  Fixed concurrency issue in TypeMapper which caused ClassCastExceptions, i.e.:
- java.lang.ClassCastException: com.example.MyObject cannot be cast to org.javers.core.metamodel.object.GlobalId
+ java.lang.ClassCastException: com.example.MyObject cannot be cast to org.javers.core.metamodel.object.<wbr/>GlobalId
 
 ### 1.3.13
 released on 2015-10-09 <br/>
@@ -459,7 +459,7 @@ released on 2015-09-21 <br/>
  (like `java.time.LocalDateTime`).
  JaVers can still run on JDK 7.
 * [#197](https://github.com/javers/javers/issues/197)
- Added JSON prettyPrint switch &mdash; `JaversBuilder.withPrettyPrint(boolean prettyPrint)`
+ Added JSON prettyPrint switch &mdash; `JaversBuilder.withPrettyPrint()`
 * [#199](https://github.com/javers/javers/issues/199)
 Added support for comparing top-level Arrays, i.e.:
 `javers.compare(new int[]{1}, new int[]{1,2})`.
