@@ -293,7 +293,7 @@ public class Employee {
 }
 ```
 
-<tt>[EmployeeHierarchiesDiffExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java)</tt>:
+<tt>[EmployeeHierarchiesDiffExample<wbr/>.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java)</tt>:
 
 ```java
 package org.javers.core.examples;
@@ -501,7 +501,7 @@ due to type erasure, there is no way to statically determine the type of items s
 Luckily, `compareCollections()` comes to the rescue
 and gives you exactly the same diff result for top-level collections as if they were object properties.
 
-<tt>[ComparingTopLevelCollectionExample.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java)</tt>
+<tt>[ComparingTopLevelCollectionExample<wbr/>.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java)</tt>
 
 ```java
 package org.javers.core.examples;
