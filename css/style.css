@@ -1,8 +1,13 @@
 /* Global styles */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 body {
     font-family: 'Oxygen', sans-serif;
     padding-top: 60px;
-    position: relative;
+    margin-bottom: 58px;
 }
 
 p {
@@ -284,6 +289,10 @@ section.dark ul#releases li {
 }
 
 footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 58px;
     background-color: #181d23;
     padding: 10px;
 }
