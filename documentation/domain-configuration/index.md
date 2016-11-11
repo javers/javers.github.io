@@ -193,15 +193,21 @@ There are six class level annotations in JaVers:
 * [`@DiffIgnore`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/DiffIgnore.html)
   &mdash;
   declares a given class as totally ignored by JaVers. 
-  All properties with ignored type are ignored.
-  Think about class level @DiffIgnore as the global version of property level @DiffIgnore.<br/>
-  Use it for **limiting depth** of object graphs to compare (see [ignoring things](#ignoring-things)). 
+  All properties with ignored type are ignored.<br/>
+  Use it for **limiting depth** of object graphs to compare. See [ignoring things](#ignoring-things). 
 
 * [`@ShallowReference`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ShallowReference.html)
   &mdash;
   declares a given class as the ShallowReference type.
-  It’s a tricky variant of the Entity type with all properties except Id ignored.
-  Use it as the less radical alternative to @DiffIgnore. 
+  It’s a tricky variant of the Entity type with all properties except Id ignored.<br/>
+  Use it as the less radical alternative to @DiffIgnore
+  for **limiting depth** of object graphs to compare. See [ignoring things](#ignoring-things). 
+  
+* [`@IgnoreDeclaredProperties`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/IgnoreDeclaredProperties.html)
+  &mdash;
+  use it to mark all properties **declared** in a given class as ignored by JaVers. <br/>
+  JaVers still tracks changes done on properties inherited from a superclass.
+  See [ignoring things](#ignoring-things). 
   
 * [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
   &mdash;
@@ -372,14 +378,20 @@ If numbers looks suspicious, configure JaVers to ignore all business irrelevant 
 **How to configure ignored properties**<br/>
 There are a few ways to do this.
 
-If you want to locally ignore concrete properties, use `@DiffIgnore` or `@ShallowReference` annotations
+If you want to locally ignore concrete properties,
+use property-level `@DiffIgnore` or `@ShallowReference`
 (see [property annotations](#property-level-annotations)).
 
 You can also ignore properties globally, by type.
-There are two class level annotations for this:
-`@DiffIgnore` and `@ShallowReference` (see [class annotations](#class-level-annotations)).<br/>
-The former is stronger and means *I don’t care, just ignore all properties with this type*.<br/>
-The latter is less radical and means *Do shallow diff, bother me only when referenced Id is changed*.
+There are three class-level annotations for this:
+`@DiffIgnore`, `@ShallowReference` and `@IgnoreDeclaredProperties`
+(see [class annotations](#class-level-annotations)).
+
+* `@DiffIgnore` is strongest and means *I don’t care, just ignore all objects with this type.*
+
+* `@ShallowReference` is moderate and means *Do shallow diff, bother me only when referenced Id is changed.*
+
+* `@IgnoreDeclaredProperties` is the least radical and means *Ignore all properties <b>declared</b> in this class but take care about all <b>inherited</b> properties.*
 
 Annotations are the recommended way for managing domain objects mapping,
 but if you’re not willing to use them, map your classes in `JaversBuilder`.

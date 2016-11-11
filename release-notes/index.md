@@ -4,6 +4,13 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.7.0
+released on 2016-11-10 <br/>
+
+* [#452](https://github.com/javers/javers/pull/452)
+ New `@IgnoreDeclaredProperties` annotation, 
+ see [class annotations](/documentation/domain-configuration#class-level-annotations).
+ 
 ### 2.6.0
 released on 2016-10-30 <br/>
 

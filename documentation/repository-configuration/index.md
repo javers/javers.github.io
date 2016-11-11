@@ -126,6 +126,7 @@ You should provide a proper JDBC driver version on your classpath, which works b
 Probably it would be the same version
 which you already use for your main database. 
 
+<div style="overflow:auto;">
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
 <tr>
     <th>Database name</th>
@@ -161,6 +162,7 @@ which you already use for your main database.
     <td>sqljdbc4.jar</td>
 </tr>
 </table>
+</div>
 
 <h3 id="connection-provider">ConnectionProvider</h3>
 ConnectionProvider serves as the source of live JDBC connections for your JaversSQLRepository.
