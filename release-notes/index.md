@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.7.1
+released on 2016-11-17 <br/>
+
+* [#457](https://github.com/javers/javers/issues/457)
+  Fixed problem with Bean Mapping Style due to Type Erasure.  
+
 ### 2.7.0
 released on 2016-11-10 <br/>
 
