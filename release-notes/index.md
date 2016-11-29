@@ -4,6 +4,18 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.7.2
+released on 2016-11-29 <br/>
+
+* [#467](https://github.com/javers/javers/issues/467)
+  Fixed bug in GlobalId PK cache in SQl Repository.
+  Now, when Spring Transaction Manager rolls back a transaction, 
+  the cache is automatically evicted.
+
+* [#462](https://github.com/javers/javers/issues/462)
+  Fixed problem with commit property column size in SQL databases. Max length increased from 200 to 600
+  characters.
+
 ### 2.7.1
 released on 2016-11-17 <br/>
 
