@@ -4,6 +4,39 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.8.0
+released on 2016-12-09 <br/>
+
+* [#476](https://github.com/javers/javers/issues/476)
+  Added support in `javers-spring` for multiple Spring Transaction Managers. <br/>
+  Since now, `transactionManager` bean should be explicitly provided 
+  when configuring `javers` bean:
+  
+```java
+    @Bean
+    public Javers javers(PlatformTransactionManager txManager) {
+        JaversSqlRepository sqlRepository = SqlRepositoryBuilder
+                .sqlRepository()
+                .withConnectionProvider(jpaConnectionProvider())
+                .withDialect(DialectName.H2)
+                .build();
+
+        return TransactionalJaversBuilder
+                .javers()
+                .withTxManager(txManager)
+                .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
+                .registerJaversRepository(sqlRepository)
+                .build();
+    }
+```
+
+  See full example of [Spring configuration](/documentation/spring-integration/#spring-jpa-example).
+  
+
+* [#461](https://github.com/javers/javers/issues/461)
+  Fix for `CANT_DELETE_OBJECT_NOT_FOUND` excepting throw from 
+  `@JaversSpringDataAuditable` aspect when deleted object not exists in JaversRepository. 
+
 ### 2.7.2
 released on 2016-11-29 <br/>
 

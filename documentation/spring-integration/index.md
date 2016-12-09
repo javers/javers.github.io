@@ -235,8 +235,11 @@ To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance u
 
 ```java
 TransactionalJaversBuilder
-    .javers().withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
+    .javers()
+    .withTxManager(txManager)
+    .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
 ```
+
 Feel free to provide your own implementation of `object-access` hook if you need better control over
 the unproxing process.
 
@@ -265,7 +268,7 @@ public class JaversSpringJpaApplicationConfig {
      * Creates JaVers instance with {@link JaversSqlRepository}
      */
     @Bean
-    public Javers javers() {
+    public Javers javers(PlatformTransactionManager txManager) {
         JaversSqlRepository sqlRepository = SqlRepositoryBuilder
                 .sqlRepository()
                 .withConnectionProvider(jpaConnectionProvider())
@@ -274,6 +277,7 @@ public class JaversSpringJpaApplicationConfig {
 
         return TransactionalJaversBuilder
                 .javers()
+                .withTxManager(txManager)
                 .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
                 .registerJaversRepository(sqlRepository)
                 .build();
