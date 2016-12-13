@@ -4,6 +4,13 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.8.1
+released on 2016-12-13 <br/>
+
+* [#475](https://github.com/javers/javers/issues/475)
+ Fixed concurrency issue in SQL sequence generator resulting in
+ SequenceLimitReachedException: [SEQUENCE_LIMIT_REACHED]
+
 ### 2.8.0
 released on 2016-12-09 <br/>
 
