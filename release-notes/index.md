@@ -4,6 +4,13 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.8.2
+released on 2017-01-03 <br/>
+
+* [#485](https://github.com/javers/javers/pull/485)
+ Fixed MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes
+ when creating indexes on MySQL. 
+
 ### 2.8.1
 released on 2016-12-13 <br/>
 
