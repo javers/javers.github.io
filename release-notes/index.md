@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.9.0
+released on 2017-01-14 <br/>
+
+* [#132](https://github.com/javers/javers/issues/132)
+ Implemented support for Guava's Multiset and Multimap.
+
 ### 2.8.2
 released on 2017-01-03 <br/>
 
