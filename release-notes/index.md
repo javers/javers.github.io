@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.9.1
+released on 2017-01-17 <br/>
+
+* [489](https://github.com/javers/javers/issues/489)
+ MongoRepository performance optimization.
+
 ### 2.9.0
 released on 2017-01-14 <br/>
 
