@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 2.9.2
+released on 2017-01-25 <br/>
+
+* [494](https://github.com/javers/javers/issues/494)
+ Fixed bug in MongoRepository introduced in 2.9.1 (IllegalArgumentException for Boolean JsonPrimitive).
+
 ### 2.9.1
 released on 2017-01-17 <br/>
 

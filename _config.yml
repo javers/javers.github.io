@@ -10,7 +10,7 @@ kramdown:
 
 #Site content configuration
 javadoc_url: /javadoc_2.0/
-javers_current_version: "2.9.1"
+javers_current_version: "2.9.2"
 
 url: "http://javers.org"
 
