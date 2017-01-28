@@ -4,7 +4,50 @@ title: Release notes
 submenu: release-notes
 ---
 
-### 2.9.2
+### <font color="red">3.0.0-RC &mdash; Java 8 release</font>
+released on 2017-01-28 <br/>
+
+**We rewrote whole JaVers' code base from Java 7 to 8.**<br/>
+  Now, JaVers is lighter, faster, and more friendly for Java 8 users.  
+  
+**Breaking changes**
+  
+* All javers-core classes like:
+ `Change`, `Commit`, or `CdoSnapshot` now use 
+ standard Java 8 types `java.util.Optional` and `java.time.LocalDateTime`.
+ 
+* The old good Joda Time is no longer used in javers-core but still supported in users’ objects.
+
+* JaVers’ `Optional` is removed.
+  
+* All `@Deprecated` methods in public API are removed.  
+  
+* **Since 3.0, JaVers is not runnable on Java 7 Runtime.**
+  If you still use Java 7, stay with {{site.javers_java7_version}} version,
+  which will be maintained for a while, but only for bug fixing.  
+
+Misc 
+
+* All JaVers’ dependencies are bumped to the latest versions:
+  
+```
+gson :                   2.8.0
+mongo-java-driver :      3.4.2
+picocontainer :          2.15
+fast-classpath-scanner : 2.0.13
+spring :                 4.3.6.RELEASE
+spring-boot :            1.4.4.RELEASE
+hibernate :              5.2.7.Final
+joda :                   2.9.7 (optional)
+guava :                  21.0  (optional)
+
+```  
+
+* SQL Repository schema migration scripts for JaVers 1.x are removed.
+  Upgrade from JaVers 1.x to 3.0 is still possible,
+  but first run 2.9.x to perform overdue SQL Repository schema migration.
+
+### 2.9.2 &mdash; the last version runnable on Java 7 Runtime
 released on 2017-01-25 <br/>
 
 * [494](https://github.com/javers/javers/issues/494)

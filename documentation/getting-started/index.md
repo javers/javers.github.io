@@ -50,6 +50,14 @@ Maven:
 </dependency>
 ```
 
+### Java 7 compatibility
+
+Since 3.0, JaVers is written in Java 8.
+If you still use Java 7, you can’t use the latest version.
+ 
+The last JaVers’ version compatible with Java 7 is {{site.javers_java7_version}}. 
+
+
 <h2 id="create-javers-instance">Create a JaVers instance</h2>
 Use JaversBuilder to create a JaVers instance:
 
