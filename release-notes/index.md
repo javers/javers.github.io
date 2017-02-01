@@ -4,8 +4,8 @@ title: Release notes
 submenu: release-notes
 ---
 
-### <font color="red">3.0.0-RC &mdash; Java 8 release</font>
-released on 2017-01-28 <br/>
+### <font color="red">3.0.0 &mdash; Java 8 release</font>
+released on 2017-02-01 <br/>
 
 **We rewrote whole JaVers' code base from Java 7 to 8.**<br/>
   Now, JaVers is lighter, faster, and more friendly for Java 8 users.  
@@ -46,6 +46,9 @@ guava :                  21.0  (optional)
 * SQL Repository schema migration scripts for JaVers 1.x are removed.
   Upgrade from JaVers 1.x to 3.0 is still possible,
   but first run 2.9.x to perform overdue SQL Repository schema migration.
+
+### 3.0.0-RC
+released on 2017-01-28 <br/>
 
 ### 2.9.2 &mdash; the last version runnable on Java 7 Runtime
 released on 2017-01-25 <br/>
