@@ -4,6 +4,16 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.0.2
+released on 2017-03-02 <br/>
+
+* [501](https://github.com/javers/javers/issues/501)
+ Fixed exception (Don't know how to extract Class from type)
+ for complex class hierarchies with generic type variables.
+ 
+* [499](https://github.com/javers/javers/issues/499) 
+ Fixed problem with hash collision for some method names. 
+
 ### <font color="red">3.0.0 &mdash; Java 8 release</font>
 released on 2017-02-01 <br/>
 

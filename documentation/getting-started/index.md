@@ -7,9 +7,9 @@ sidebar-url: docs-sidebar.html
 
 <h2 id="get-javers">Get JaVers</h2>
 
-To get JaVers, add <code>javers-core</code>
-to your project dependencies and (optionally) choose proper  
-<code>javers-repository</code> module.
+JaVers artifacts are published to [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.javers%22).
+To get JaVers, add `javers-core`
+to your project dependencies and (optionally) choose proper `javers-repository` module.
 
 ### javers-core
 Gradle: 
@@ -32,7 +32,7 @@ If you’re going to use JaVers as an object diff tool, this is the only depende
         
 ### javers-repository
 If you are going to use JaVers as a data audit framework, choose the proper repository implementation.
-For example, if you’re using MongoDb add:
+For example, if you’re using MongoDB add:
 
 Gradle: 
 
