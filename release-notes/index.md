@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.0.3
+released on 2017-03-05 <br/>
+
+* [507](https://github.com/javers/javers/issues/507)
+ BigInteger added to the list of well known Value types.
+
 ### 3.0.2
 released on 2017-03-02 <br/>
 
