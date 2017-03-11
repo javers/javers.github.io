@@ -252,8 +252,10 @@ Two **JPA** property level annotations are interpreted as synonyms of JaVers ann
 Entity Id has a special role in JaVers. It identifies an Entity instance.
 You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
 
-The *JaversType* of an Id class is mapped automatically
-to *Primitive* if it’s a Java primitive type, otherwise it’s mapped to `Value`. 
+The JaversType of an Id-property type is mapped automatically
+to [`Value`](#ValueType) if it’s an Object or 
+to [`Primitive`](#Primitive) if it’s a Java primitive
+. So &mdash; technically &mdash; you cant have a ValueObject type here. 
 
 JaVers doesn’t distinct between JPA `@Id` and `@EmbeddedId` annotations,
 so you can use them interchangeably.  
@@ -284,7 +286,40 @@ With zero config, JaVers maps:
 - `MongoStoredEntity` class to `Entity`, since `@Id` and `@Entity` annotations are present,
 - `ObjectId` class as `Value`, since it’s the type of the Id-property and it’s not a Primitive.
 
-So far so good. This mapping is OK for calculating diffs.
+**Object.equals()**<br/>
+In JaVers, each Value type should have proper `equals()` implementation 
+that compares underlying states.
+It it’s especially important for Id-properties.
+
+Well known Value types like `BigDecimal` or `LocalDate` have it already.
+**Remember** to implement `equals()` for all your Value types. For example:
+
+```groovy
+class MyEntity {
+    @EmbeddedId
+    MyEmbeddableId id
+    String value
+}
+
+class MyEmbeddableId {
+    String text
+    Long number
+
+    boolean equals(o) {
+        if (!(o instanceof MyEmbeddableId)) return false
+
+        MyEmbeddableId that = (MyEmbeddableId) o
+        return Objects.equals(text, that.text) &&
+               Objects.equals(number, that.number)
+    }
+
+    int hashCode() {
+        Objects.hash(text, number)
+    }
+}
+```
+
+**So far so good**. This mapping is OK for calculating diffs.
 Nevertheless, if you plan to use `JaversRepository`,
 consider providing custom JSON `TypeAdapters`
 for your each of your `Value` types, especially Id types like `ObjectId` (see [JSON TypeAdapters](#json-type-adapters)).
