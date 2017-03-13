@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.0.4
+released on 2017-03-14 <br/>
+
+* [505](https://github.com/javers/javers/issues/505)
+ Empty commits (with zero snapshots) are no longer persisted.
+ 
 ### 3.0.3
 released on 2017-03-05 <br/>
 
