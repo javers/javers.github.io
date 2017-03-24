@@ -4,6 +4,13 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.0.5
+released on 2017-03-24 <br/>
+
+* [524](https://github.com/javers/javers/pull/524)
+ Fixed version conflict between Hibernate and Spring Boot. Hibernate version downgraded 
+ to 5.0.11.Final
+
 ### 3.0.4
 released on 2017-03-14 <br/>
 
