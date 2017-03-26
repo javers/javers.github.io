@@ -9,8 +9,8 @@ kramdown:
     hard_wrap: false
 
 #Site content configuration
-javadoc_url: /javadoc_2.0/
-javers_current_version: "3.0.5"
+javadoc_url: /javadoc_3.x/
+javers_current_version: "3.1.0"
 
 javers_java7_version: "2.9.2"
 
