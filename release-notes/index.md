@@ -4,6 +4,16 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.1.0
+released on 2017-03-27 <br/>
+
+* [403](https://github.com/javers/javers/issues/403)
+ Added `@PropertyName` annotation.
+ Now, property names can be customized which means easier domain classes refactoring.
+
+* [27](https://github.com/polyjdbc/polyjdbc/issues/27)
+ Fixed resource leak in PolyJDBC.
+
 ### 3.0.5
 released on 2017-03-24 <br/>
 

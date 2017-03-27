@@ -212,9 +212,9 @@ There are six class level annotations in JaVers:
 * [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
   &mdash;
   a convenient way to name Entities and ValueObjects.
-  We recommend to declaring a name for all Entities.
-  Without that, Javers uses fully-qualified class names 
-  in GlobalIds, which hinders refactoring.  
+  We recommend using this annotation for all Entities and ValueObjects.
+  Otherwise, Javers uses fully-qualified class names 
+  in GlobalIds, which hinders refactoring classes committed to JaversRepository.  
 
 Three **JPA** Class level annotations are interpreted as synonyms of JaVers annotations:
 
@@ -239,6 +239,13 @@ There are three property level annotations:
   declares a property as `ShallowReference`.
   Can be used only for Entity type properties.
   All properties of a target Entity instance, except Id, are ignored.
+  
+* [`@PropertyName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/PropertyName.html)
+    &mdash; 
+   gives an arbitrary name to a property.
+   When not found, Javers infers a property name from a field or getter name.
+   `@PropertyName` could be useful when refactoring clases that are already
+   committed to JaversRepository.
 
 **ProTip**: when property level @Id is found in a class, JaVers maps it automatically
 as Entity. So when you use @Id, class level @Entity is optional.
