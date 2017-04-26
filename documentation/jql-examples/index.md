@@ -25,36 +25,37 @@ Run examples as unit tests:
 JQL (JaVers Query Language) is a simple, fluent API
 which allows you to query JaversRepository for changes of a given class, object or property.
 
-It’s not such a powerful language like SQL because it’s a kind of abstraction over native languages
+It’s not such a powerful language like SQL because it’s the abstraction over native languages
 used by concrete JaversRepository implementations (like SQL, MongoDB).
 
-**The case** <br/>
-In this example we show all types of JQL queries.
-This time, we use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
+In the example below, we show all types of JQL queries.
+We use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
 as these languages are far more readable for BDD-style tests than Java.
 
-Groovy is a nice, dynamic language, runnable on JVM
-and Spock is our tool of choice for TDD. We really like it so this is also a chance to
-encourage you to switch from JUnit to Spock.
-
 **What’s important** <br/>
-Data history can be fetched from JaversRepository in two views — changes and snapshots.
+Data history can be fetched from JaversRepository using `javers.find*()` methods in on of the three views:
+*Changes*,
+*Shadows*, and 
+*Snapshots*. 
 
-For changes use
-[javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
-and for snapshots use
-[javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
+* [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html) represents an atomic difference between two objects. 
+* [Shadow]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) (<font color="red">new in JaVers 3.2</font>) is a historical version of a domain object restored from a snapshot.
+* [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the property->value Map.
 
-Both methods understand the same JQL API,
-so you can use the same query object to get changes and snapshots views.
+**List of Examples** <br/>
 
-**Table of Contents** <br/>
-There are three types of queries:
+There are three `find*()` methods:
+
+* [findChanges()](#query-for-changes) for Changes view,
+* [findShadows()](#query-for-shadows) for Shadows view,
+* [findSnapshots()](#query-for-snapshots) for Snapshots view.
+
+There are four types of queries:
 
 * query for [Entity](#instance-id-query) changes by Instance Id,
 * query for [ValueObject](#by-value-object-query) changes,
-* query for any object changes [by class of object](#by-class-query),
-* query for [any domain object](#any-domain-object-query) changes.
+* query by objects' [class](#by-class-query),
+* query for [any object](#any-domain-object-query) changes.
 
 Queries can have one or more optional [filters](#query-filters):
 
@@ -74,17 +75,35 @@ JQL can adapt when you refactor your domain classes:
 * refactoring [Entities](#entity-refactoring) with `@TypeName`,
 * free refactoring of [ValueObjects](#value-object-refactoring).
 
+Let’s see how to run a simple query for changes.
 
-Let’s see how to run simple query for changes.
+<h2 id="find-methods">Find methods</h2>
 
-<h2 id="instance-id-query">Querying for Entity changes by Instance Id</h2>
+All `find*()` methods understand JQL, so you can use the same JqlQuery to get Changes, Shadows and Snapshots views
+
+<h3 id="query-for-changes">Querying for Changes</h3>
+
+<h3 id="query-for-shadows">Querying for Shadows</h3>
+
+<h3 id="query-for-snapshots">Querying for Snapshots</h3>
+
+<h2 id="query-types">Query types</h2>
+JqlQueries are created by the following methods: 
+
+* `QueryBuilder.byInstanceId()` &mdash; query for Entity instance changes,
+* `QueryBuilder.byValueObjectId()` and `QueryBuilder.byValueObject()` &mdash; query for ValueObject changes,
+* `QueryBuilder.byClass()` &mdash; query by objects' class,
+* `QueryBuilder.anyDomainObject()` &mdash; query for any object changes.
+
+<h3 id="instance-id-query">Querying for Entity changes by Instance Id</h3> 
+
 This query selects changes made on concrete [Entity](/documentation/domain-configuration/#entity) instance.
 The query accepts two mandatory parameters:
 
 * `Object localId` &mdash; expected Instance Id,
 * `Class entityClass` &mdash; expected Entity class.
 
-Here is the Groovy snippet, to change it to Java just add semicolons and switch defs to types.
+Here is the Groovy snippet. If you want it in Java, add semicolons and switch `defs` to types.
 
 ```groovy
 def "should query for Entity changes by instance Id"() {
@@ -111,7 +130,7 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', 
 commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
 ```
 
-<h2 id="by-value-object-query">Querying for ValueObject changes</h2>
+<h3 id="by-value-object-query">Querying for ValueObject changes</h3>
 This query selects changes made on a concrete [ValueObject](/documentation/domain-configuration/#value-object)
 (so a ValueObject owned by a concrete Entity instance)
 or changes made on all ValueObjects owned by any instance of a given Entity.
@@ -164,7 +183,7 @@ commit 5.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#p
 commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-<h2 id="by-class-query">Querying for any object changes by object class</h2>
+<h3 id="by-class-query">Querying for any object changes by class</h3>
 The only mandatory parameter of this query is a class.
 It selects objects regardless of theirs JaversType and
 can be used for Entities, ValueObjects and UnboundedValueObjects.
@@ -177,31 +196,32 @@ ValueObjects owned by two different Entities.
 
 ```groovy
 def "should query for Object changes by its class"() {
-    given:
-    def javers = JaversBuilder.javers().build()
+  given:
+  def javers = JaversBuilder.javers().build()
 
-    javers.commit("author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "London")))
-    javers.commit("author", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "Paris")))
-    javers.commit("author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "New York")))
-    javers.commit("author", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "Washington")))
+  javers.commit("me", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "London")))
+  javers.commit("me", new DummyUserDetails(id:1, dummyAddress: new DummyAddress(city: "Paris")))
+  javers.commit("me", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "Rome")))
+  javers.commit("me", new SnapshotEntity(id:2, valueObjectRef: new DummyAddress(city: "Palma")))
+  javers.commit("me", new SnapshotEntity(id:2, intProperty:2))
 
-    when:
-    def changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build() )
+  when:
+  def changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build() )
 
-    then:
-    printChanges(changes)
-    assert changes.size() == 2
+  then:
+  printChanges(changes)
+  assert changes.size() == 2
 }
 ```
 
 query result:
 
 ```
-commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueObjectRef', property:'city', oldVal:'New York', newVal:'Washington'}
+commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueObjectRef', property:'city', oldVal:'Rome', newVal:'Palma'}
 commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummyAddress', property:'city', oldVal:'London', newVal:'Paris'}
 ```
 
-<h2 id="any-domain-object-query">Querying for any domain object changes</h2>
+<h3 id="any-domain-object-query">Querying for any domain object changes</h3>
 This query is a kind of a shotgun approach. It accepts no parameters.
 It selects all objects regardless of theirs JaversType or class.
 
@@ -787,7 +807,7 @@ def '''should allow Entity class name change
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
 objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
-**I forgot about @TypeName example** <br/>
+**I forgot about @TypeName...** <br/>
 What if I forgot to use @TypeName, but my objects are already persisted
 in JaversRepository
 and I need to refactor now?
