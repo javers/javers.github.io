@@ -53,7 +53,7 @@ If these defaults are OK for you, don’t add anything to your application confi
 ```
 javers:
   mappingStyle: FIELD
-  algorithm: BEAN
+  algorithm: SIMPLE
   prettyPrint: true
   typeSafeValues: false
   newObjectSnapshot: false
