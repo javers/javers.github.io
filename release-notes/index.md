@@ -5,7 +5,7 @@ submenu: release-notes
 ---
 
 ### 3.1.1
-released on 2017-05-06 <br/>
+released on 2017-05-07 <br/>
 
 * [532](https://github.com/javers/javers/issues/532)
  Added the method to clear sequence allocation in PolyJDBC.
