@@ -4,6 +4,17 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.1.1
+released on 2017-05-06 <br/>
+
+* [532](https://github.com/javers/javers/issues/532)
+ Added the method to clear sequence allocation in PolyJDBC.
+ See JaversSqlRepository<wbr/>evictSequenceAllocationCache().
+ 
+* [539](https://github.com/javers/javers/issues/539)
+ Added annotation priorities.
+ Now, Javers' annotations have priority over JPA annotations. 
+
 ### 3.1.0
 released on 2017-03-27 <br/>
 
