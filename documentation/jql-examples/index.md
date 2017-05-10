@@ -75,15 +75,122 @@ JQL can adapt when you refactor your domain classes:
 * refactoring [Entities](#entity-refactoring) with `@TypeName`,
 * free refactoring of [ValueObjects](#value-object-refactoring).
 
-Let’s see how to run a simple query for changes.
-
 <h2 id="find-methods">Find methods</h2>
 
-All `find*()` methods understand JQL, so you can use the same JqlQuery to get Changes, Shadows and Snapshots views
+All `find*()` methods understand JQL, so you can use the same JqlQuery to get Changes, Shadows and Snapshots views.
 
 <h3 id="query-for-changes">Querying for Changes</h3>
 
+Changes view is the list of atomic differences between subsequent versions of a domain object. 
+There are various types of changes: ValueChange, ReferenceChange, ListChange, NewObject, and so on.
+See the [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)
+class inheritance hierarchy for the complete list.
+
+Since JaVers persists only Snapshots of domain objects,
+Changes are recalculated by the JQL engine as the diff between 
+Snapshots loaded from JaversRepository.
+
+See how it works:
+
+```groovy
+def "should query for Changes made on any object"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+    def bob = new Employee(name: "bob",
+                           age: 30,
+                           salary: 1000,
+                           primaryAddress: new Address("London"))
+    javers.commit("author", bob)       // initial commit
+
+    bob.salary = 1200                  // changes
+    bob.primaryAddress.city = "Paris"  //
+    
+    javers.commit("author", bob)       // second commit
+
+    when:
+    def changes = javers.findChanges( QueryBuilder.anyDomainObject().build() )
+
+    then:
+    assert changes.size() == 2
+    ValueChange salaryChange = changes.find{it.propertyName == "salary"}
+    ValueChange cityChange = changes.find{it.propertyName == "city"}
+    assert salaryChange.left ==  1000
+    assert salaryChange.right == 1200
+    assert cityChange.left ==  "London"
+    assert cityChange.right == "Paris"
+    
+    printChanges(changes)
+}
+```
+
+query result:
+
+```
+changes:
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
+commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
+```
+
+You can also load Changes generated from an initial Snapshot (see [NewObject Filter](#new-object-filter)).
+
 <h3 id="query-for-shadows">Querying for Shadows</h3>
+
+Shadows view is the most natural view on data history.
+Thanks to JaVers magic, you can see historical versions of your domain objects
+*reconstructed* from Snapshots.
+
+Since Shadows are instances of your domain classes,
+you can use them easily in your application. 
+Moreover, JQL engine strives to rebuild object structures
+and link them to form original graphs.
+  
+See below how it works:
+
+
+```groovy
+def "should query for Shadows of an Entity"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+    def bob = new Employee(name: "bob",
+                           age: 30,
+                           salary: 1000,
+                           primaryAddress: new Address("London"))
+    javers.commit("author", bob)       // initial commit
+
+    bob.salary = 1200                  // changes
+    bob.primaryAddress.city = "Paris"  //
+
+    javers.commit("author", bob)       // second commit
+
+    when:
+    def shadows = javers.findShadows(
+            QueryBuilder.byInstance(bob).withChildValueObjects().build() )
+
+    then:
+    assert shadows.size() == 2
+
+    Employee bobNew = shadows[0].get()     // Employees Shadows are instances
+    Employee bobOld = shadows[1].get()     // of Employee.class
+
+    bobNew.salary == 1200
+    bobOld.salary == 1000
+    bobNew.primaryAddress.city == "Paris"  // Employees Shadows are linked
+    bobOld.primaryAddress.city == "London" // with Addresses Shadows
+
+    shadows[0].commitMetadata.id.majorId == 2
+    shadows[1].commitMetadata.id.majorId == 1
+}
+```  
+  
+<br/>
+**Limitations of Shadows** <br/>
+
+Shadows are reconstruction with some limitations.
+ 
+a) //TODO
+ 
+If you want to be 100% sure that Shadows reconstruction
+didn't hide some details &mdash; use Snapshots (raw data stored in JaversRepository).
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
@@ -103,7 +210,7 @@ The query accepts two mandatory parameters:
 * `Object localId` &mdash; expected Instance Id,
 * `Class entityClass` &mdash; expected Entity class.
 
-Here is the Groovy snippet. If you want it in Java, add semicolons and switch `defs` to types.
+Here is the Groovy spec:
 
 ```groovy
 def "should query for Entity changes by instance Id"() {
