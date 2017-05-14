@@ -141,11 +141,9 @@ Thanks to JaVers magic, you can see historical versions of your domain objects
 
 Since Shadows are instances of your domain classes,
 you can use them easily in your application. 
-Moreover, JQL engine strives to rebuild object structures
-and link them to form original graphs.
+Moreover, JQL engine strives to rebuild original object graphs.
   
 See below how it works:
-
 
 ```groovy
 def "should query for Shadows of an Entity"() {
@@ -185,15 +183,52 @@ def "should query for Shadows of an Entity"() {
 <br/>
 **Shadow Scopes** <br/>
 
-Shadows reconstruction comes with one limitations &mdash; the query scope.
-All references are loaded eagerly, there is no Hibernate’s style lazy loading.
-By default, shadows are loaded 
+Shadow reconstruction comes with one limitation &mdash; the query scope.
+References inside a scope are loaded eagerly.
+References outside a scope are simply nulled.
+There is no Hibernate’s style lazy loading.
 
+By default, `SHALLOW` scope is used and
+Shadows are created only from snapshots selected directly in the JQL query.
+When you choose `COMMIT_DEPTH` scope, the query is slower,
+but JaVers tries to rebuild original object graphs 
+(see [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) enum).
+ 
+See below how what is the difference:
 
+```groovy
+def "should query for Shadows with different scopes"(){
+  given:
+  def javers = JaversBuilder.javers().build()
+  def john = new Employee(name: "john")
+  def bob = new Employee(name: "bob", boss: john)
+
+  javers.commit("author", bob)       // initial commit
+  bob.salary = 1200                  // changes
+  javers.commit("author", bob)       // second commit
+
+  when: "query with SHALLOW scope"
+  def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build() ) //SHALLOW scope
+  Employee bobNew = shadows[0].get()
+  Employee bobOld = shadows[1].get()
+
+  then:
+  assert bobNew.boss == null  //john is outside the query scope,
+  assert bobOld.boss == null  //so references from bob to john are nulled
+
+  when: "query with COMMIT_DEPTH scope"
+  shadows = javers.findShadows(QueryBuilder.byInstance(bob).withShadowScopeDeep().build())
+  bobNew = shadows[0].get()
+  bobOld = shadows[1].get()
+
+  then:
+  assert bobNew.boss.name == "john"  // john is inside the query scope, 
+  assert bobOld.boss.name == "john"  // so his Shadow is reconstruced 
+                                     // and linked with bob's Shadows
+}
+```
  
-a) //TODO
- 
-If you want to be 100% sure that Shadows reconstruction
+If you want to be 100% sure that Shadow reconstruction
 didn’t hide some details &mdash; use Snapshots (raw data stored in JaversRepository).
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
