@@ -183,14 +183,18 @@ def "should query for Shadows of an Entity"() {
 ```  
   
 <br/>
-**Limitations of Shadows** <br/>
+**Shadow Scopes** <br/>
 
-Shadows are reconstruction with some limitations.
+Shadows reconstruction comes with one limitations &mdash; the query scope.
+All references are loaded eagerly, there is no Hibernate’s style lazy loading.
+By default, shadows are loaded 
+
+
  
 a) //TODO
  
 If you want to be 100% sure that Shadows reconstruction
-didn't hide some details &mdash; use Snapshots (raw data stored in JaversRepository).
+didn’t hide some details &mdash; use Snapshots (raw data stored in JaversRepository).
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
