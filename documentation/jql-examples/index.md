@@ -97,14 +97,12 @@ def "should query for Changes made on any object"() {
     given:
     def javers = JaversBuilder.javers().build()
     def bob = new Employee(name: "bob",
-                           age: 30,
                            salary: 1000,
                            primaryAddress: new Address("London"))
     javers.commit("author", bob)       // initial commit
 
     bob.salary = 1200                  // changes
     bob.primaryAddress.city = "Paris"  //
-    
     javers.commit("author", bob)       // second commit
 
     when:
@@ -139,25 +137,23 @@ Shadows view is the most natural view on data history.
 Thanks to JaVers magic, you can see historical versions of your domain objects
 *reconstructed* from Snapshots.
 
-Since Shadows are instances of your domain classes,
+Since [Shadows]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) are instances of your domain classes,
 you can use them easily in your application. 
 Moreover, JQL engine strives to rebuild original object graphs.
   
 See below how it works:
 
 ```groovy
-def "should query for Shadows of an Entity"() {
+def "should query for Shadows of an object"() {
     given:
     def javers = JaversBuilder.javers().build()
     def bob = new Employee(name: "bob",
-                           age: 30,
                            salary: 1000,
                            primaryAddress: new Address("London"))
     javers.commit("author", bob)       // initial commit
 
     bob.salary = 1200                  // changes
     bob.primaryAddress.city = "Paris"  //
-
     javers.commit("author", bob)       // second commit
 
     when:
@@ -229,9 +225,51 @@ def "should query for Shadows with different scopes"(){
 ```
  
 If you want to be 100% sure that Shadow reconstruction
-didn’t hide some details &mdash; use Snapshots (raw data stored in JaversRepository).
+didn’t hide some details &mdash; use Snapshots or Changes queries. 
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
+
+[Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
+is the historical state of a domain object captured as the property->value Map.
+
+Snapshots are raw data stored in JaversRepository. When an object is changed,
+JaVers makes a snapshot of its state and persists it.
+When an object isn’t changed (since the last commit), no snapshot is created, even if you commit it several times.  
+
+
+```groovy
+def "should query for Snapshots of an object"(){
+    given:
+    def javers = JaversBuilder.javers().build()
+    def bob = new Employee(name: "bob",
+                           salary: 1000,
+                           age: 29,
+                           boss: new Employee("john"))
+    javers.commit("author", bob)       // initial commit
+
+    bob.salary = 1200                  // changes
+    bob.age = 30                       //
+    javers.commit("author", bob)       // second commit
+
+    when:
+    def snapshots = javers.findSnapshots( QueryBuilder.byInstance(bob).build() )
+
+    then:
+    assert snapshots.size() == 2
+
+    assert snapshots[0].commitMetadata.id.majorId == 2
+    assert snapshots[0].changed == ["salary", "age"]
+    assert snapshots[0].getPropertyValue("salary") == 1200
+    assert snapshots[0].getPropertyValue("age") == 30
+    // references are dehydrated
+    assert snapshots[0].getPropertyValue("boss").value() == "Employee/john"
+
+    assert snapshots[1].commitMetadata.id.majorId == 1
+    assert snapshots[1].getPropertyValue("salary") == 1000
+    assert snapshots[1].getPropertyValue("age") == 29
+    assert snapshots[1].getPropertyValue("boss").value() == "Employee/john"
+}
+```
 
 <h2 id="query-types">Query types</h2>
 JqlQueries are created by the following methods: 
