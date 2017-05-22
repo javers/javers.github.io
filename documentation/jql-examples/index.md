@@ -40,7 +40,7 @@ Data history can be fetched from JaversRepository using `javers.find*()` methods
 
 * [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html) represents an atomic difference between two objects. 
 * [Shadow]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) (<font color="red">new in JaVers 3.2</font>) is a historical version of a domain object restored from a snapshot.
-* [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the property->value Map.
+* [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the `property:value` Map.
 
 **List of Examples** <br/>
 
@@ -230,7 +230,7 @@ didn’t hide some details &mdash; use Snapshots or Changes queries.
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
 [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
-is the historical state of a domain object captured as the property->value Map.
+is the historical state of a domain object captured as the `property:value` Map.
 
 Snapshots are raw data stored in JaversRepository. When an object is changed,
 JaVers makes a snapshot of its state and persists it.
