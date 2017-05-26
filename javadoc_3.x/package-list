@@ -37,3 +37,4 @@ org.javers.mongosupport
 org.javers.repository.api
 org.javers.repository.inmemory
 org.javers.repository.jql
+org.javers.shadow
