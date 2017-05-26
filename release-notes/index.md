@@ -5,7 +5,7 @@ submenu: release-notes
 ---
 
 ### <font color="red">3.2.0</font>
-released on 2017-05-27 <br/>
+released on 2017-05-26 <br/>
 
 * [133](https://github.com/javers/javers/issues/133) New JQL queries &mdash; **Shadows**. 
   See [Shadow query examples](/documentation/jql-examples/#query-for-shadows). 

@@ -33,28 +33,28 @@ We use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://cod
 as these languages are far more readable for BDD-style tests than Java.
 
 **What’s important** <br/>
-Data history can be fetched from JaversRepository using `javers.find*()` methods in on of the three views:
+Data history can be fetched from JaversRepository using `javers.find*()` methods in one of three views:
 *Changes*,
 *Shadows*, and 
 *Snapshots*. 
 
 * [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html) represents an atomic difference between two objects. 
 * [Shadow]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) (<font color="red">new in JaVers 3.2</font>) is a historical version of a domain object restored from a snapshot.
-* [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the `property:value` Map.
+* [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the `property:value` map.
 
 **List of Examples** <br/>
 
 There are three `find*()` methods:
 
-* [findChanges()](#query-for-changes) for Changes view,
-* [findShadows()](#query-for-shadows) for Shadows view,
-* [findSnapshots()](#query-for-snapshots) for Snapshots view.
+* [findChanges()](#query-for-changes) for the Changes view,
+* [findShadows()](#query-for-shadows) for the Shadows view,
+* [findSnapshots()](#query-for-snapshots) for the Snapshots view.
 
 There are four types of queries:
 
 * query for [Entity](#instance-id-query) changes by Instance Id,
 * query for [ValueObject](#by-value-object-query) changes,
-* query by objects' [class](#by-class-query),
+* query by object’s [class](#by-class-query),
 * query for [any object](#any-domain-object-query) changes.
 
 Queries can have one or more optional [filters](#query-filters):
@@ -77,16 +77,16 @@ JQL can adapt when you refactor your domain classes:
 
 <h2 id="find-methods">Find methods</h2>
 
-All `find*()` methods understand JQL, so you can use the same JqlQuery to get Changes, Shadows and Snapshots views.
+All `find*()` methods understand JQL so you can use the same JqlQuery to get Changes, Shadows and Snapshots views.
 
 <h3 id="query-for-changes">Querying for Changes</h3>
 
-Changes view is the list of atomic differences between subsequent versions of a domain object. 
+The Changes view is the list of atomic differences between subsequent versions of a domain object. 
 There are various types of changes: ValueChange, ReferenceChange, ListChange, NewObject, and so on.
 See the [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)
 class inheritance hierarchy for the complete list.
 
-Since JaVers persists only Snapshots of domain objects,
+Since JaVers stores only Snapshots of domain objects,
 Changes are recalculated by the JQL engine as the diff between 
 Snapshots loaded from JaversRepository.
 
@@ -133,15 +133,15 @@ You can also load Changes generated from an initial Snapshot (see [NewObject Fil
 
 <h3 id="query-for-shadows">Querying for Shadows</h3>
 
-Shadows view is the most natural view on data history.
+Shadows offer the most natural view on data history.
 Thanks to JaVers magic, you can see historical versions of your domain objects
 *reconstructed* from Snapshots.
 
 Since [Shadows]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) are instances of your domain classes,
 you can use them easily in your application. 
-Moreover, JQL engine strives to rebuild original object graphs.
+Moreover, the JQL engine strives to rebuild original object graphs.
   
-See below how it works:
+See how it works:
 
 ```groovy
 def "should query for Shadows of an object"() {
@@ -182,7 +182,7 @@ def "should query for Shadows of an object"() {
 Shadow reconstruction comes with one limitation &mdash; the query scope.
 References inside a scope are loaded eagerly.
 References outside a scope are simply nulled.
-There is no Hibernate’s style lazy loading.
+There is no Hibernate-style lazy loading.
 
 By default, `SHALLOW` scope is used and
 Shadows are created only from snapshots selected directly in the JQL query.
@@ -190,7 +190,7 @@ When you choose `COMMIT_DEPTH` scope, the query is slower,
 but JaVers tries to rebuild original object graphs 
 (see [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) enum).
  
-See below how what is the difference:
+See the difference below:
 
 ```groovy
 def "should query for Shadows with different scopes"(){
@@ -230,11 +230,11 @@ didn’t hide some details &mdash; use Snapshots or Changes queries.
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
 [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
-is the historical state of a domain object captured as the `property:value` Map.
+is the historical state of a domain object captured as the `property:value` map.
 
 Snapshots are raw data stored in JaversRepository. When an object is changed,
 JaVers makes a snapshot of its state and persists it.
-When an object isn’t changed (since the last commit), no snapshot is created, even if you commit it several times.  
+When an object isn’t changed (i.e. hasn’t changed since the last commit), no snapshot is created, even if you commit it several times.  
 
 
 ```groovy
