@@ -4,6 +4,16 @@ title: Release notes
 submenu: release-notes
 ---
 
+### <font color="red">3.2.0</font>
+released on 2017-05-26 <br/>
+
+* [133](https://github.com/javers/javers/issues/133) New JQL queries &mdash; **Shadows**. 
+  See [Shadow query examples](/documentation/jql-examples/#query-for-shadows). 
+
+* [455](https://github.com/javers/javers/issues/455)
+ Fixed error in schema creation on MySQL database with non UTF-8 encoding &mdash;
+ MySQL error: Specified key was too long; max key length is 767 bytes 
+
 ### 3.1.1
 released on 2017-05-07 <br/>
 
