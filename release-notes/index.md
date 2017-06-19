@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.2.1
+released on 2017-06-12 <br/>
+
+* [32](https://github.com/polyjdbc/polyjdbc/pull/32)
+  Fix in PolyJDBC for MySql INSERTS with autoincrement.
+
 ### <font color="red">3.2.0</font>
 released on 2017-05-26 <br/>
 
