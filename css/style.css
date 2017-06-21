@@ -48,17 +48,20 @@ pre code {
 
 .navbar-javers {
     border: none;
-    background: #1a1f25;
+    background: white;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-inverse .navbar-nav > .open > a:hover,
 .navbar-inverse .navbar-nav > .open > a {
     background: transparent;
+    color: #EA4D1A;
 }
 
 .navbar-javers .navbar-nav > li.active > a {
     border-bottom: solid 2px #ea4d1a;
     background: transparent;
+    color: #EA4D1A;
 }
 
 .navbar-javers .navbar-nav > li.active > a:hover,
@@ -70,7 +73,7 @@ pre code {
 
 .navbar-javers .navbar-nav > li > a {
     font-family: 'Oxygen', sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 0.9em;
     padding-bottom: 5px;
     margin-bottom: 15px;
@@ -79,11 +82,15 @@ pre code {
     margin-right: 10px;
     margin-left: 10px;
     text-transform: uppercase;
-    color: white;
+    color: black;
 }
 
 .navbar-javers .navbar-brand img {
     height: 28px;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    border: none;
 }
 
 .logo-version:active {
@@ -165,6 +172,7 @@ pre code {
 
 .social {
     text-align: center;
+    padding: 25px;
 }
 
 .social .icon-container {
@@ -235,7 +243,7 @@ h3.black-header {
 }
 
 .grey-container {
-    background-color: #f0f4f7;
+    background-color: #f9f9f9;
     padding-bottom: 40px;
     padding-top: 40px;
 }
@@ -293,7 +301,7 @@ footer {
     bottom: 0;
     width: 100%;
     height: 58px;
-    background-color: #181d23;
+    background-color: #fff;
     padding: 10px;
 }
 
@@ -308,7 +316,7 @@ footer p img {
 }
 
 #team {
-    padding:10px;
+    padding: 10px;
 }
 
 body.page section header {
@@ -318,6 +326,7 @@ body.page section header {
 body.page section #main {
     padding-right: 35px;
     padding-bottom: 35px;
+    padding-top: 5px;
     font-size: 1.1em;
 }
 
@@ -355,7 +364,7 @@ body.page section #content #main blockquote {
 }
 
 #sidebar > div {
-    margin-top: 10px;
+    margin-top: 20px;
     border-left: 1px solid #dde0e2;
 }
 
@@ -400,7 +409,7 @@ body.page section #sidebar section li {
 
 body.page section #sidebar section li.nested {
     line-height: 140%;
-    font-size:1em;
+    font-size: 1em;
     padding-left: 35px;
 }
 
@@ -429,6 +438,7 @@ body.page section #sidebar section ul li.active {
     border-left: 2px solid #ee6c21;
     padding-left: 8px;
 }
+
 body.page section #sidebar section ul li.nested.active {
     border-left: 2px solid #ee6c21;
     padding-left: 33px;
