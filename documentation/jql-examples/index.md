@@ -32,7 +32,8 @@ In the example below, we show all types of JQL queries.
 We use [Groovy](http://groovy-lang.org/style-guide.html) and [Spock](https://code.google.com/p/spock/)
 as these languages are far more readable for BDD-style tests than Java.
 
-**What’s important** <br/>
+<h4 id="data-history-views">Data history views</h4>
+
 Data history can be fetched from JaversRepository using `javers.find*()` methods in one of three views:
 *Changes*,
 *Shadows*, and 
@@ -42,7 +43,7 @@ Data history can be fetched from JaversRepository using `javers.find*()` methods
 * [Shadow]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) (<font color="red">new in JaVers 3.2</font>) is a historical version of a domain object restored from a snapshot.
 * [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the `property:value` map.
 
-**List of Examples** <br/>
+<h4>List of Examples</h4>
 
 There are three `find*()` methods:
 
