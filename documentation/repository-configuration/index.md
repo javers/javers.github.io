@@ -39,7 +39,7 @@ compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
 Check
-[Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-persistence-mongo|{{site.javers_current_version}}|jar)
+[Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-persistence-mongo|{{site.javers_current_version}}|jar)
 for other build tools snippets.
 
 **Usage**<br/>
@@ -79,7 +79,7 @@ Add `javers-persistence-sql` module to your classpath:
 compile 'org.javers:javers-persistence-sql:{{site.javers_current_version}}'
 ```
 Check
-[Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-persistence-sql|{{site.javers_current_version}}|jar)
+[Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-persistence-sql|{{site.javers_current_version}}|jar)
 for other build tools snippets.
 
 <h3>Overview</h3>
@@ -136,19 +136,19 @@ which you already use for your main database.
 <tr>
     <td>PostgreSQL</td>
     <td>POSTGRES</td>
-    <td><a href="http://search.maven.org/#artifactdetails|org.postgresql|postgresql|9.4-1201-jdbc41|jar">
+    <td><a href="https://search.maven.org/#artifactdetails|org.postgresql|postgresql|9.4-1201-jdbc41|jar">
         org.postgresql:postgresql:9.4-1201-jdbc41</a></td>
 </tr>
 <tr>
     <td>MySQL</td>
     <td>MYSQL</td>
-    <td><a href="http://search.maven.org/#artifactdetails|mysql|mysql-connector-java|5.1.36|jar">
+    <td><a href="https://search.maven.org/#artifactdetails|mysql|mysql-connector-java|5.1.36|jar">
         mysql:mysql-connector-java:5.1.36</a></td>
 </tr>
 <tr>
     <td>H2</td>
     <td>H2</td>
-    <td><a href="http://search.maven.org/#artifactdetails|com.h2database|h2|1.4.187|jar">
+    <td><a href="https://search.maven.org/#artifactdetails|com.h2database|h2|1.4.187|jar">
         com.h2database:h2:1.4.187</a></td>
 </tr>
 <tr>
