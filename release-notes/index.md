@@ -4,6 +4,23 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.3.0
+released on 2017-06-21 <br/>
+
+* Added possibility to register
+ a [custom method]({{ site.javadoc_url }}org/javers/core/diff/custom/CustomValueComparator.html) for comparing ValueTypes
+ (it works also for Values stored in Lists, Arrays and Maps).
+ Solved issues: [492](https://github.com/javers/javers/issues/492),
+                  [531](https://github.com/javers/javers/issues/531).
+ 
+ For example, BigDecimals are (by default) ValueTypes
+ compared using `BigDecimal.equals()`.
+ Now, you can compare them in the smarter way, ignoring trailing zeros:
+ 
+```java 
+ javersBuilder.registerValue(BigDecimal.class, (a,b) -> a.compareTo(b) == 0);
+```
+
 ### 3.2.1
 released on 2017-06-12 <br/>
 
