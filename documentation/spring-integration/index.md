@@ -24,7 +24,7 @@ If you are not using Spring Boot, add `javers-spring` module to your classpath:
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
 Check
-[Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
+[Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
 for other build tools snippets.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>

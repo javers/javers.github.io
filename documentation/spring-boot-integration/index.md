@@ -38,7 +38,7 @@ compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version
 compile 'org.springframework.boot:spring-boot-starter-data-jpa:' + $SPRING_BOOT_VERSION   
 ```
 
-Check [Maven Central](http://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
+Check [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
 for other build tool snippets.
 
 <h2 id="javers-configuration-properties">JaVers Core configuration</h2>

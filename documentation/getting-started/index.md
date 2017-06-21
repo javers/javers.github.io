@@ -7,7 +7,7 @@ sidebar-url: docs-sidebar.html
 
 <h2 id="get-javers">Get JaVers</h2>
 
-JaVers artifacts are published to [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.javers%22).
+JaVers artifacts are published to [Maven Central](https://search.maven.org/#artifactdetails%7Corg.javers%7Cjavers-core%7C{{site.javers_current_version}}%7C).
 To get JaVers, add `javers-core`
 to your project dependencies and (optionally) choose proper `javers-repository` module.
 
