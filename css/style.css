@@ -345,6 +345,13 @@ body.page section #content #main h3 {
     font-size: 1.3em;
 }
 
+body.page section #content #main h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+body.page section #content #main h4:before,
 body.page section #content #main h3:before,
 body.page section #content #main h2:before {
     display: block;
