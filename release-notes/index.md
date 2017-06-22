@@ -5,7 +5,7 @@ submenu: release-notes
 ---
 
 ### 3.3.0
-released on 2017-06-21 <br/>
+released on 2017-06-21 at Devoxx PL, Cracow <br/>
 
 * Added possibility to register
  the [CustomValueComparator]({{ site.javadoc_url }}org/javers/core/diff/custom/CustomValueComparator.html)
