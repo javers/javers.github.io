@@ -8,7 +8,7 @@ submenu: release-notes
 released on 2017-06-21 <br/>
 
 * Added possibility to register
- a [CustomValueComparator]({{ site.javadoc_url }}org/javers/core/diff/custom/CustomValueComparator.html)
+ the [CustomValueComparator]({{ site.javadoc_url }}org/javers/core/diff/custom/CustomValueComparator.html)
  function for comparing ValueTypes
  (it works also for Values stored in Lists, Arrays and Maps).
  Solved issues: [492](https://github.com/javers/javers/issues/492),
