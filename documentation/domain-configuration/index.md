@@ -70,14 +70,14 @@ for each of your classes spotted in runtime (see [mapping configuration](#mappin
 Let’s examine these three fundamental types more closely.
 
 <h3 id="entity">Entity</h3>
-JaVers [`Entity`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)
+JaVers [Entity]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)
 has exactly the same semantic as DDD Entity or JPA Entity.
 
 Usually, each Entity instance represents a concrete physical object.
 The Entity has a list of mutable properties and its own *identity* held in *ID property*.
 
 Each Entity instance has a global identifier called
-[`InstanceId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html).
+[InstanceId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html).
 It consists of a class name and an ID value.
 
 **Comparing strategy** for Entity references is based on InstanceId and
@@ -88,12 +88,12 @@ Entity can contain ValueObjects, Entity references, Containers, Values and Primi
 **For example** Entities are: Person, Company.
 
 <h3 id="value-object">Value Object</h3>
-JaVers [`ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
+JaVers [ValueObject]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
 It’s a complex value holder with a list of mutable properties but without a unique identifier.
 
 ValueObject instances has a ‘best effort’ global identifier called
-[`ValueObjectId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
+[ValueObjectId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
 It consists of the owning Entity InstanceId and
 the path in a object subtree.
 
@@ -106,11 +106,23 @@ So in JaVers, ValueObject is just an Entity without identity.
 **For example** ValueObjects are: Address, Point.
 
 <h3 id="ValueType">Value</h3>
-JaVers [`Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
+JaVers [Value]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
 is a simple (scalar) value holder.
 
-**Comparing strategy** for Values is based on the `equals()` method.
-So it’s highly important to implement it properly by comparing the underlying state.
+**Comparing strategy** for Values is (by default) based on the `Object.equals()`.
+So it’s highly important to implement this method properly,
+it should compare the state of given objects.
+
+If you don’t control the Value implementation, 
+you can still change the comparing strategy by registering the [CustomValueComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomValueComparator.html)
+function.
+For example, if you want to compare BigDecimals using only the integer part:
+ 
+```java
+Javers javers = JaversBuilder.javers()
+        .registerValue(BigDecimal.class, (a, b) -> a.intValue() == b.intValue()).build();
+
+``` 
 
 **For example** Values are: BigDecimal, LocalDate.
 
