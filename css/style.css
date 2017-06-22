@@ -52,11 +52,18 @@ pre code {
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
+.navbar-collapse {
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
 .navbar-inverse .navbar-toggle .icon-bar {
     background-color: black;
 }
 .navbar-inverse .navbar-toggle {
     margin-top:12px;
+}
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: white;
 }
 
 .navbar-inverse .navbar-nav > .open > a:hover,
