@@ -36,6 +36,5 @@ This is the niche that JaVers fills. In JaVers, *version* and *change* are **fir
   If you still use Java 7, the last JaVers version compatible with Java 7 is {{site.javers_java7_version}}. 
 
 <h2 id="licence">Licence</h2>
-JaVers is released under
-<a title="Apache License Version 2.0" href="http://opensource.org/licenses/Apache-2.0">Apache License
-Version 2.0</a>.
+JaVers is available under open source
+[Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0").
