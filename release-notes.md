@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.3.2
+released on 2017-06-25 <br/>
+                       
+* [546](https://github.com/javers/javers/issues/546)
+ Arrays on Value position are compared using `Arrays.equals()`.
+
 ### 3.3.1
 released on 2017-06-25 <br/>
                        
@@ -38,7 +44,7 @@ released on 2017-06-12 <br/>
 released on 2017-05-26 <br/>
 
 * [133](https://github.com/javers/javers/issues/133) New JQL queries &mdash; **Shadows**. 
-  See [Shadow query examples](/documentation/jql-examples/#query-for-shadows). 
+  See [Shadow query examples](/documentation/jql-examples#query-for-shadows). 
 
 * [455](https://github.com/javers/javers/issues/455)
  Fixed error in schema creation on MySQL database with non UTF-8 encoding &mdash;
@@ -198,7 +204,7 @@ released on 2016-12-09 <br/>
     }
 ```
 
-  See full example of [Spring configuration](/documentation/spring-integration/#spring-jpa-example).
+  See full example of [Spring configuration](/documentation/spring-integration#spring-jpa-example).
   
 
 * [#461](https://github.com/javers/javers/issues/461)
@@ -306,7 +312,7 @@ released on 2016-09-06 <br/>
   If you are using `javers-spring-boot-starter-*`,
   both aspects are enabled by default so you don’t have to change anything.
   <br/>
-  See [auto-audit aspects documentaton](/documentation/spring-integration/#auto-audit-aspect).
+  See [auto-audit aspects documentaton](/documentation/spring-integration#auto-audit-aspect).
 
 * [#425](https://github.com/javers/javers/pull/425)
   Fixed some bugs in ShallowReference type handling.
@@ -332,7 +338,7 @@ released on 2016-07-28 <br/>
 
 * [#220](https://github.com/javers/javers/pull/220) New aggregate filter in JQL.
 Now child ValueObjects can be selected when querying for Entity changes.
-See [childValueObjects filter example](/documentation/jql-examples/#child-value-objects-filter).
+See [childValueObjects filter example](/documentation/jql-examples#child-value-objects-filter).
 
 * [#408](https://github.com/javers/javers/pull/408)
 Added equals() and hashCode() in ContainerElementChange and EntryChange classes.
@@ -396,18 +402,18 @@ Thanks to that, change queries are far more useful and they work as you could ex
 **New features**<br/>
 
 * New query for any domain object.
-See [any domain object query example](/documentation/jql-examples/#any-domain-object-query).
+See [any domain object query example](/documentation/jql-examples#any-domain-object-query).
 
 * [#334](https://github.com/javers/javers/issues/334)
 New JQL `author()` filter.
-See [author filter example](/documentation/jql-examples/#author-filter).
+See [author filter example](/documentation/jql-examples#author-filter).
 
 * [#305](https://github.com/javers/javers/issues/305)
 New JQL `commitProperty()` filter.
-See [commit property filter example](/documentation/jql-examples/#commit-property-filter).
+See [commit property filter example](/documentation/jql-examples#commit-property-filter).
 
 * [#375](https://github.com/javers/javers/issues/375) Added support for commit properties in auto-audit aspect.
-See [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean).
+See [CommitPropertiesProvider](/documentation/spring-integration#commit-properties-provider-bean).
 
 **SQL Schema migration**<br/>
 
@@ -484,7 +490,7 @@ released on 2016-02-28 <br/>
 
 * New JaVers Spring Boot starter for SQL and Spring Data
   &mdash; `javers-spring-boot-starter-sql`.
-  See [Spring Boot integration](/documentation/spring-boot-integration/).
+  See [Spring Boot integration](/documentation/spring-boot-integration).
 
 * Starting from this version we use [SemVer](http://semver.org/) scheme for JaVers version numbers.
 
@@ -499,17 +505,17 @@ released on 2016-02-12 <br/>
 
 * [#333](https://github.com/javers/javers/issues/333)
 GroovyObjects support. Now JaVers can be used in Groovy applications.
-See [Groovy diff example](/documentation/diff-examples/#groovy-diff-example).
+See [Groovy diff example](/documentation/diff-examples#groovy-diff-example).
 
 * `@DiffIgnore` can be used on class level
 (for example, GroovyObjects support is implemented by
 ignoring all properties with `groovy.lang.MetaClass` type).
-See [class annotations](/documentation/domain-configuration/#class-level-annotations).
+See [class annotations](/documentation/domain-configuration#class-level-annotations).
 
 * [#211](https://github.com/javers/javers/issues/211)
 New annotation `@ShallowReference` added.
 It can be used as the less radical alternative to `@DiffIgnore`.
-See [ignoring things](/documentation/domain-configuration/#ignoring-things).
+See [ignoring things](/documentation/domain-configuration#ignoring-things).
 
 ### 1.4.10
 released on 2016-02-02 <br/>
@@ -531,7 +537,7 @@ released on 2016-01-29 <br/>
 
 * [#322](https://github.com/javers/javers/issues/322)
 New JQL `withVersion()` filter for snapshot queries.
-See [Snapshot version filter example](/documentation/jql-examples/#version-filter).
+See [Snapshot version filter example](/documentation/jql-examples#version-filter).
 
 
 ### 1.4.5
@@ -539,7 +545,7 @@ released on 2016-01-25 <br/>
 
 * [#309](https://github.com/javers/javers/issues/309)
 New JQL `withCommitId()` filter for snapshot queries.
-See [CommitId filter example](/documentation/jql-examples/#commit-id-filter).
+See [CommitId filter example](/documentation/jql-examples#commit-id-filter).
 
 ### 1.4.4
 released on 2016-01-20 <br/>
@@ -571,26 +577,26 @@ released on 2016-01-18 <br/>
 
 * [#179](https://github.com/javers/javers/issues/179)
 New JQL `skip()` filter, useful for pagination.
-See [Skip filter example](/documentation/jql-examples/#skip-filter).
+See [Skip filter example](/documentation/jql-examples#skip-filter).
 
 ### 1.4.2
 released on 2016-01-15 <br/>
 
 * [#243](https://github.com/javers/javers/issues/243) New JQL filters by createDate `from()` and `to()`.
-  See [CommitDate filter example](/documentation/jql-examples/#commit-date-filter).
+  See [CommitDate filter example](/documentation/jql-examples#commit-date-filter).
 
 ### 1.4.1
 released on 2016-01-08 <br/>
 
 * New JaVers module &mdash; `javers-spring-boot-starter-mongo`.
-  See [Spring Boot integration](/documentation/spring-boot-integration/).
+  See [Spring Boot integration](/documentation/spring-boot-integration).
 
 ### 1.4.0
 released on 2015-12-18 <br/>
 
 * Added @TypeName annotation and support for domain classes refactoring,
   see
-  [Entity refactoring](/documentation/jql-examples/#entity-refactoring) example.
+  [Entity refactoring](/documentation/jql-examples#entity-refactoring) example.
   Fixed issues:
   [#178](https://github.com/javers/javers/issues/178),
   [#232](https://github.com/javers/javers/issues/232).
@@ -625,7 +631,7 @@ released on 2015-11-08 <br/>
 
 * [#177](https://github.com/javers/javers/pull/177)
   Added long-awaited `javers.compareCollections()` feature.
-  See [compare top-level collections](/documentation/diff-examples/#compare-collections) example.
+  See [compare top-level collections](/documentation/diff-examples#compare-collections) example.
 
 * [#240](https://github.com/javers/javers/pull/240)
   Fixed NPE in `LevenshteinListChangeAppender`.
@@ -801,7 +807,7 @@ released on 2015-04-20<br/>
 
 * [#36](https://github.com/javers/javers/issues/36) Javers Query Language.
   New fluent API for querying JaversRepository.
-  New query types: by class, by property and more, See [JQL examples](/documentation/jql-examples/).
+  New query types: by class, by property and more, See [JQL examples](/documentation/jql-examples).
 * [#98](https://github.com/javers/javers/issues/98) Track changes in collection. Tracking VO changes while looking at master Entity.
 * [#118](https://github.com/javers/javers/issues/118) API to get change history for a given property.
 * [#128](https://github.com/javers/javers/issues/128) Changes of a set of entities.

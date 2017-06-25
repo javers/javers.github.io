@@ -26,7 +26,7 @@ JaVers object diff is the easiest way to deeply compare two object graphs.
 
 **How to use it?**
 
-* Create a JaVers instance (see [getting started](/documentation/getting-started/#create-javers-instance)) and
+* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
   use [`javers.compare()`]({{ site.javadoc_url }}org/javers/core/Javers.html#compare-java.lang.Object-java.lang.Object-)
   to compare two object graphs.
 
@@ -60,10 +60,10 @@ who made it and what was the value before and after.
   `commit()` call.
 
 * If you are using Spring Data, annotate your Repositories with @JaversSpringDataAuditable
-  and take advantage of the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
+  and take advantage of the [auto-audit aspect](/documentation/spring-integration#auto-audit-aspect).
 
 * Once your domain objects are being managed by JaVers, you can query
-  JaversRepository (see [JQL examples](/documentation/jql-examples/))
+  JaversRepository (see [JQL examples](/documentation/jql-examples))
   for objects change history.
 
 * JaVers provides two views on object change history: diffs and snapshots.
@@ -77,7 +77,7 @@ JaversRepository is designed to be easily implemented for any kind of database.
 At the moment we provide **MongoDB** implementation and
 **SQL** implementation for the folowing dialects: MySQL, PostgreSQL, H2,
 Oracle and Microsoft SQL Server.<br/>
-See [repository configuratoin](/documentation/repository-configuration/).
+See [repository configuratoin](/documentation/repository-configuration).
 
 If you are using another database, for example Cassandra, you are encouraged to implement
 the JaversRepository interface and contribute it to JaVers project.
