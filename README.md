@@ -6,7 +6,7 @@
 This site uses Jekyll,
 see https://help.github.com/articles/using-jekyll-with-pages
 
-#Running Jekyll
+# Running Jekyll
 Run Jekyll on your box
 
     jekyll serve
