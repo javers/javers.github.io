@@ -8,7 +8,7 @@ submenu: release-notes
 released on 2017-06-25 <br/>
                        
 * [546](https://github.com/javers/javers/issues/546)
- Arrays on Value position are compared using `Arrays.equals()`.
+ Arrays on Value position are now compared using `Arrays.equals()`.
 
 ### 3.3.1
 released on 2017-06-25 <br/>
