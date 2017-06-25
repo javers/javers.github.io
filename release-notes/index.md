@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.3.1
+released on 2017-06-25 <br/>
+                       
+* [33](https://github.com/polyjdbc/polyjdbc/pull/33)
+ Fix in PolyJDBC for MsSql, deprecated `TEXT` column type changed to `VARCHAR(MAX)` 
+
 ### 3.3.0
 released on 2017-06-21 at Devoxx PL, Cracow <br/>
 
