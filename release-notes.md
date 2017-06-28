@@ -13,7 +13,7 @@ released on 2017-06-25 <br/>
 ### 3.3.1
 released on 2017-06-25 <br/>
                        
-* [33](https://github.com/polyjdbc/polyjdbc/pull/33)
+* [497](https://github.com/javers/javers/issues/497)
  Fix in PolyJDBC for MsSql, deprecated `TEXT` column type changed to `VARCHAR(MAX)` 
 
 ### 3.3.0
