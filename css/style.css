@@ -49,11 +49,15 @@ pre code {
 .navbar-javers {
     border: none;
     background: white;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-collapse {
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: transparent;
+}
+
+.in {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-inverse .navbar-toggle .icon-bar {
