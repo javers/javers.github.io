@@ -4,6 +4,12 @@ title: Release notes
 submenu: release-notes
 ---
 
+### 3.3.4
+released on 2017-07-04 <br/>
+                       
+* [560](https://github.com/javers/javers/issues/560)
+ Fixed NPE when getting empty list of Shadows.
+
 ### 3.3.3
 released on 2017-06-29 <br/>
                        
