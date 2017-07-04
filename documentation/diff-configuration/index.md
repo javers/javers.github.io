@@ -1,5 +1,6 @@
 ---
 layout: page
+category: JaVers Documentation
 title: Diff Configuration
 submenu: diff-configuration
 sidebar-url: docs-sidebar.html

@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Support
+category: JaVers Support
 submenu: support
 ---
 

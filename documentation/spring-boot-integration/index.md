@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Spring Boot integration
+category: JaVers Documentation
 submenu: spring-boot-integration
 sidebar-url: docs-sidebar.html
 ---

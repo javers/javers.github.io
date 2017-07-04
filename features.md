@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Features Overview
+category: JaVers Documentation
 submenu: features
 sidebar-url: features-sidebar.html
 redirect_from:

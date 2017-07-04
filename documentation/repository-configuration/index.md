@@ -1,6 +1,7 @@
 ---
 layout: page
 title: JaVers Repository Configuration
+category: JaVers Documentation
 submenu: repository-configuration
 sidebar-url: docs-sidebar.html
 ---

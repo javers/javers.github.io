@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% assign titleSuffix = " — JaVers Documentation" %}
+    {% capture titleSuffix %} — {{page.category}}{% endcapture %}
     {% include head.html %}
 </head>
 <body class="page" data-spy="scroll" data-target="#sidebar">

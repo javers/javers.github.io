@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Overview
+category: JaVers Documentation
 submenu: introduction
 sidebar-url: docs-sidebar.html
 ---
