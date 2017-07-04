@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Getting started
-category: JaVers Documentation
+category: Documentation
 submenu: getting-started
 sidebar-url: docs-sidebar.html
 ---

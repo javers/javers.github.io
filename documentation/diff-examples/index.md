@@ -1,6 +1,6 @@
 ---
 layout: page
-category: JaVers Documentation
+category: Documentation
 title: Diff Examples
 submenu: diff-examples
 sidebar-url: docs-sidebar.html

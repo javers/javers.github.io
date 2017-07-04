@@ -1,7 +1,7 @@
 ---
 layout: page
 title: JQL (JaVers Query Language) examples
-category: JaVers Documentation
+category: Documentation
 submenu: jql-examples
 sidebar-url: docs-sidebar.html
 ---

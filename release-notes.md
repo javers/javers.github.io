@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Release notes
-category: JaVers Documentation
+category: Documentation
 submenu: release-notes
 ---
 

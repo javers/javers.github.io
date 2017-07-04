@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Repository examples
-category: JaVers Documentation
+category: Documentation
 submenu: repository-examples
 sidebar-url: docs-sidebar.html
 ---

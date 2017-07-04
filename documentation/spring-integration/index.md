@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Spring integration
-category: JaVers Documentation
+category: Documentation
 submenu: spring-integration
 sidebar-url: docs-sidebar.html
 ---

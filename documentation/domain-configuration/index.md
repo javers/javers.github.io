@@ -1,6 +1,6 @@
 ---
 layout: page
-category: JaVers Documentation
+category: Documentation
 title: Domain Configuration
 submenu: domain-configuration
 sidebar-url: docs-sidebar.html
