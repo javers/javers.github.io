@@ -64,16 +64,16 @@ who made it and what was the value before and after.
   and take advantage of the [auto-audit aspect](/documentation/spring-integration#auto-audit-aspect).
 
 * Once your domain objects are being managed by JaVers, you can query
-  JaversRepository (see [JQL examples](/documentation/jql-examples))
-  for objects change history.
-
-* JaVers provides two views on object change history: diffs and snapshots.
-  Use [javers.findChanges(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findChanges-org.javers.repository.jql.JqlQuery-)
-  and [javers.findSnapshots(JqlQuery)]({{ site.javadoc_url }}org/javers/core/Javers.html#findSnapshots-org.javers.repository.jql.JqlQuery-)
-  functions to browse the detailed history of a given class, object or property.
+  JaversRepository using powerful [JQL](/documentation/jql-examples) &mdash; JaVers Query Language.
+  
+* JaVers provides [three views](/documentation/jql-examples/#data-history-views) on objects history:
+  [Changes](/documentation/jql-examples/#query-for-changes),
+  [Shadows](/documentation/jql-examples/#query-for-shadows) and 
+  [Snapshots](/documentation/jql-examples/#query-for-snapshots). 
+  Use `javers.find*()` methods to browse detailed history of a given class, object or property.
 
 * Take a look at [repository examples](/documentation/repository-examples).
-
+  
 JaversRepository is designed to be easily implemented for any kind of database.
 At the moment we provide **MongoDB** implementation and
 **SQL** implementation for the folowing dialects: MySQL, PostgreSQL, H2,
