@@ -1,7 +1,7 @@
 ---
 layout: page
 category: Blog
-title: First video tutorial about JaVers
+title: JaVers vs Envers
 author: Bartosz Walacik
 submenu: blog
 ---
