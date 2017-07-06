@@ -1,0 +1,23 @@
+---
+layout: page
+category: Blog
+submenu: blog
+---
+
+{% for post in site.posts %}
+<div style="border: 1px solid rgba(0,0,0,.09); padding: 15px; margin-bottom: 15px;">
+
+  <a href="{{ post.url }}"><h2> {{ post.title }} </h2></a>
+
+    <span>{{post.author}}</span> <br/>
+    <time datetime="{{ post.date }}">{{ post.date | date: "%b %-d %Y" }}</time>
+
+
+  <div style="margin-top: 10px">
+    {{ post.excerpt }}
+  </div>
+
+  <a href="{{ post.url }}"> Read more ... </a>
+
+</div>
+{% endfor %}
