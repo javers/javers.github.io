@@ -16,7 +16,7 @@ javers_java7_version: "2.9.2"
 
 url: "https://javers.org"
 
-description: JaVers &mdash; object auditing and diff framework for Java
+description: Object auditing and diff framework for Java
 
 permalink: /blog/:year/:month/:title.html
 
