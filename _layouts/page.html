@@ -14,12 +14,16 @@
 
                 {% unless page.author %}
                 <div itemprop="author" itemscope itemtype="https://schema.org/Person">
-                    <meta itemprop="name" content="Bartosz Walacik">
+                    <meta itemprop="name" content="Bartosz Walacik"/>
                 </div>
                 {% endunless %}
 
+                {% unless page.date %}
+                <meta itemprop="datePublished" content="2017-01-01T00:00:00+00:00"/>
+                {% endunless %}
+
                 <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-                    <meta itemprop="name" content="javers.org">
+                    <meta itemprop="name" content="javers.org"/>
                 </div>
 
                 <h1 itemprop="headline">{{ page.title }}</h1>
