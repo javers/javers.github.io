@@ -16,7 +16,7 @@ javers_java7_version: "2.9.2"
 
 url: "https://javers.org"
 
-description: With JaVers you can forget about troublesome data versioning. Let the changes in your data be managed by JaVers.
+description: JaVers &mdash; object versioning and diff framework for Java.
 
 permalink: /blog/:year/:month/:title.html
 
