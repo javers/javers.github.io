@@ -1,19 +1,21 @@
 ---
 layout: page
-category: Blog
-submenu: blog
+category:
+submenu:
+title: JaVers Blog
 ---
 
 {% for post in site.posts %}
-<div style="border: 1px solid rgba(0,0,0,.09); padding: 15px; margin-bottom: 15px;">
+<div class="blogPost">
 
-  <a href="{{ post.url }}"><h2> {{ post.title }} </h2></a>
+  <h2><a href="{{ post.url }}"> {{ post.title }} </a></h2>
 
-    <span>{{post.author}}</span> <br/>
-    <time datetime="{{ post.date }}">{{ post.date | date: "%b %-d %Y" }}</time>
+    <div class="postHeader">
+      <span>{{post.author}}</span> <br/>
+      <time datetime="{{ post.date }}">{{ post.date | date: "%b %-d %Y" }}</time>
+    </div>
 
-
-  <div style="margin-top: 10px">
+  <div>
     {{ post.excerpt }}
   </div>
 

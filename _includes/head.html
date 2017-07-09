@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
 <meta name="author" content="">
+{% capture titleSuffix %}{% if page.category %} — JaVers {{page.category}}{% endif %}{% endcapture %}
 <title>{{page.title}}{{titleSuffix}}</title>
 <link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">

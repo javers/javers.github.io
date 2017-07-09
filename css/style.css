@@ -16,6 +16,7 @@ p {
 
 a, a:hover, a:active {
     color: #ea4d1a;
+    text-decoration: none;
 }
 
 code {
@@ -31,6 +32,30 @@ code {
 pre code {
     word-wrap: normal;
     font-size: 12px;
+}
+
+.blogPost h2 {
+    margin-top: 5px;
+}
+
+.blogPost  {
+    border-bottom: 1px solid rgba(0,0,0,.09);
+    margin-top: 25px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.blogPost a:hover, a:active  {
+    color: #ea4d1a;
+    text-decoration: none;
+}
+
+.postHeader {
+    margin-bottom: 10px;
+}
+
+.postHeader time {
+    color: darkgrey;
 }
 
 #main li {

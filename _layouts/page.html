@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% capture titleSuffix %} — JaVers {{page.category}}{% endcapture %}
     {% include head.html %}
 </head>
 <body class="page" data-spy="scroll" data-target="#sidebar">
@@ -11,12 +10,13 @@
     <div id="content" class="container">
         <div class="row">
             <div id="main" class="col-md-8" itemscope itemtype="http://schema.org/TechArticle">
-                <meta itemprop="datePublished" content="2015-08-27T00:00:00+00:00"/>
                 <meta itemprop="image" content="{{ site.url }}/img/logotype.png">
 
+                {% unless page.author %}
                 <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                     <meta itemprop="name" content="Bartosz Walacik">
                 </div>
+                {% endunless %}
 
                 <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
                     <meta itemprop="name" content="javers.org">
@@ -24,10 +24,20 @@
 
                 <h1 itemprop="headline">{{ page.title }}</h1>
 
+                {% if page.date  %}
+                <div class="postHeader">
+                    <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                        <span itemprop="name">{{ page.author }}</span>
+                    </div>
+
+                    <time itemprop="datePublished"
+                          datetime="{{ page.date }}">{{ page.date | date: "%b %-d %Y" }}</time>
+                </div>
+                {% endif %}
+
                 <div itemprop="articleBody">
                     {{ content }}
                 </div>
-
             </div>
 
             {% if page.sidebar-url %}
