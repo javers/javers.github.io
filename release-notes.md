@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.3.5
+released on 2017-07-14 <br/>
+                       
+* [565](https://github.com/javers/javers/issues/565)
+ Fixed error when executing query byInstance with HibernateUnproxyObjectAccessHook. 
+
 ### 3.3.4
 released on 2017-07-04 <br/>
                        
