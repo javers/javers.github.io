@@ -33,18 +33,19 @@ There are two big difference between JaVers and Envers:
    persistence framework. For now, JaVers comes with repository implementations for MongoDB and
    popular SQL databases. Other databases (like Cassandra, Elastic) might be added in the future.
    
-1. Envers’ audit data model is simple. As the doc says:
+1. Envers’ audit data model is a copy of application’s data model. As the doc says:
    *For each audited entity, an audit table is created.
-   By default, the audit table's name is created by adding a `_AUD` suffix to the original name.*
-   It can be advantage, you have audit data close to your live data, Envers’ tables look familiar.
+   By default, the audit table name is created by adding a `_AUD` suffix to the original name.*
+   It can be advantage, you have audit data close to your live data. Envers’ tables look familiar.
    It’s easy query them with SQL.
      
-   JaVers uses the opposite approach. Audit data are decoupled from live data.
-   Snapshots of all objects are saved to the single table (`jv_snapshots`) as
-   JSON documents with unified structure.
+   JaVers uses its own Snapshot model for audit data.
+   Snapshots are decoupled from live data.
+   JaVers saves them to the single table (`jv_snapshots`) as JSON documents with unified structure.
    Advantages? You can choose where to store audit data.
    By default JaVers uses the same database as application does,
-   but you can point another database for audit data
+   but you can point another database
    (even of different kind, for example, SQL for application and MongoDB for JaVers).
+   
     
     
