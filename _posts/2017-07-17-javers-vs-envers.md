@@ -40,12 +40,13 @@ There are two big difference between JaVers and Envers:
    It’s easy query them with SQL.
      
    JaVers uses its own Snapshot model for audit data.
-   Snapshots are decoupled from live data.
+   Snapshots are decoupled from live data,
    JaVers saves them to the single table (`jv_snapshots`) as JSON documents with unified structure.
    Advantages? You can choose where to store audit data.
    By default JaVers uses the same database as application does,
    but you can point another database
-   (even of different kind, for example, SQL for application and MongoDB for JaVers).
+   (even of different kind). For example, SQL for application and MongoDB for JaVers
+   or centralized JaVers database shared for all applications in your company).
    
     
     
