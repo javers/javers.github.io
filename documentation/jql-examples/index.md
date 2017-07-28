@@ -215,13 +215,13 @@ def "should query for Shadows with different scopes"(){
   assert bobOld.boss == null  //so references from bob to john are nulled
 
   when: "query with COMMIT_DEPTH scope"
-  shadows = javers.findShadows(QueryBuilder.byInstance(bob).withShadowScopeDeep().build())
+  shadows = javers.findShadows(QueryBuilder.byInstance(bob).withCommitScopeDepth().build())
   bobNew = shadows[0].get()
   bobOld = shadows[1].get()
 
   then:
   assert bobNew.boss.name == "john"  // john is inside the query scope, 
-  assert bobOld.boss.name == "john"  // so his Shadow is reconstruced 
+  assert bobOld.boss.name == "john"  // so his Shadow is reconstructed 
                                      // and linked with bob's Shadows
 }
 ```
@@ -473,7 +473,7 @@ def "should query for changes (and snapshots) with property filter"() {
 
     when:
     def query = QueryBuilder.byInstanceId("bob", Employee.class)
-            .andProperty("salary").build()
+            .withChangedProperty("salary").build()
     def changes = javers.findChanges(query)
 
     then:
