@@ -188,7 +188,7 @@ There is no Hibernate-style lazy loading.
 
 By default, `SHALLOW` scope is used and
 Shadows are created only from snapshots selected directly in the JQL query.
-When you choose `COMMIT_DEPTH` scope, the query is slower,
+When you choose `COMMIT_DEEP` scope, the query is slower,
 but JaVers tries to rebuild original object graphs 
 (see [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) enum).
  
@@ -214,8 +214,8 @@ def "should query for Shadows with different scopes"(){
   assert bobNew.boss == null  //john is outside the query scope,
   assert bobOld.boss == null  //so references from bob to john are nulled
 
-  when: "query with COMMIT_DEPTH scope"
-  shadows = javers.findShadows(QueryBuilder.byInstance(bob).withCommitScopeDepth().build())
+  when: "query with COMMIT_DEEP scope"
+  shadows = javers.findShadows(QueryBuilder.byInstance(bob).withCommitDeepScope().build())
   bobNew = shadows[0].get()
   bobOld = shadows[1].get()
 
