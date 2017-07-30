@@ -1,6 +1,5 @@
 gems:
   - jekyll-sitemap
-  - jekyll-redirect-from
 
 # Build settings
 kramdown:
