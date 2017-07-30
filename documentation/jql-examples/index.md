@@ -179,7 +179,7 @@ def "should query for Shadows of an object"() {
 ```  
   
 <br/>
-**Shadow Scopes** <br/>
+<h4 id="shadow-scopes">Shadow Scopes</h4>
 
 Shadow reconstruction comes with one limitation &mdash; the query scope.
 Shadows inside the scope are loaded eagerly.
