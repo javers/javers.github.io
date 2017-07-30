@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.5.0-RC
+released on 2017-07-30 <br/>
+
+* [568](https://github.com/javers/javers/issues/568)
+ Added the new scope for Shadow queries &mdash; <b>commit-depth+</b>.
+ In this scope, JaVers tries to restore an original object graph
+ with (possibly) all object references resolved.
+ See [Shadow Scopes](/documentation/jql-examples/#shadow-scopes).
+
 ### 3.3.5
 released on 2017-07-14 <br/>
                        

@@ -1,6 +1,5 @@
 gems:
   - jekyll-sitemap
-  - jekyll-redirect-from
 
 # Build settings
 kramdown:
@@ -10,7 +9,7 @@ kramdown:
 
 #Site content configuration
 javadoc_url: /javadoc_3.x/
-javers_current_version: "3.3.5"
+javers_current_version: "3.5.0-RC"
 
 javers_java7_version: "2.9.2"
 
