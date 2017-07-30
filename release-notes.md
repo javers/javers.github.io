@@ -5,7 +5,7 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 3.5.0-RC
+### 3.5.0
 released on 2017-07-30 <br/>
 
 * [568](https://github.com/javers/javers/issues/568)
