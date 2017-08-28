@@ -179,55 +179,86 @@ def "should query for Shadows of an object"() {
 ```  
   
 <br/>
-**Shadow Scopes** <br/>
+<h4 id="shadow-scopes">Shadow Scopes</h4>
 
 Shadow reconstruction comes with one limitation &mdash; the query scope.
-References inside a scope are loaded eagerly.
-References outside a scope are simply nulled.
+Shadows inside the scope are loaded eagerly.
+References to Shadows outside the scope are simply nulled.
 There is no Hibernate-style lazy loading.
 
-By default, `SHALLOW` scope is used and
-Shadows are created only from snapshots selected directly in the JQL query.
-When you choose `COMMIT_DEPTH` scope, the query is slower,
-but JaVers tries to rebuild original object graphs 
-(see [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) enum).
- 
-See the difference below:
+There are three scopes.
+The wider the scope, the more object shadows are loaded to the resulting graph
+(and the more database queries are executed).
+
+* [shallow]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#SHALLOW)
+  &mdash; (defult scope),
+   Shadows are created only from snapshots selected directly in the JQL query.
+* [commit-deep]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#COMMIT_DEEP)
+  &mdash; Shadows are created from all snapshots saved in
+  commits touched by the query.
+* [commit-deep+]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#COMMIT_DEEP_PLUS)
+  &mdash; JaVers tries to restore a full object graph with
+  (possibly) all objects loaded.
+
+The following example shows how all the three scopes work:
 
 ```groovy
 def "should query for Shadows with different scopes"(){
   given:
   def javers = JaversBuilder.javers().build()
-  def john = new Employee(name: "john")
-  def bob = new Employee(name: "bob", boss: john)
 
-  javers.commit("author", bob)       // initial commit
-  bob.salary = 1200                  // changes
-  javers.commit("author", bob)       // second commit
+  //    /-> John -> Steve
+  // Bob
+  //    \-> #address
+  def steve = new Employee(name: 'steve')
+  def john = new Employee(name: 'john', boss: steve)
+  def bob  = new Employee(name: 'bob', boss: john, primaryAddress: new Address('London'))
 
-  when: "query with SHALLOW scope"
-  def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build() ) //SHALLOW scope
-  Employee bobNew = shadows[0].get()
-  Employee bobOld = shadows[1].get()
+  javers.commit('author', steve)  // commit 1.0 with snapshot of Steve
+  javers.commit('author', bob)    // commit 2.0 with snapshots of Bob, Bob#address and John
+  bob.salary = 1200               // changes
+  javers.commit('author', bob)    // commit 3.0 with snapshot of Bob
 
-  then:
-  assert bobNew.boss == null  //john is outside the query scope,
-  assert bobOld.boss == null  //so references from bob to john are nulled
+  when: 'shallow scope query'
+  def shadows = javers.findShadows(QueryBuilder.byInstance(bob)
+               .withChildValueObjects().build())
+  Employee bobShadow = shadows[0].get()  //get the latest version of Bob
 
-  when: "query with COMMIT_DEPTH scope"
-  shadows = javers.findShadows(QueryBuilder.byInstance(bob).withShadowScopeDeep().build())
-  bobNew = shadows[0].get()
-  bobOld = shadows[1].get()
+  then: 'only Bob and his address are loaded'
+  assert shadows.size() == 2           //we have 2 shadows of Bob
+  assert bobShadow.name == 'bob'
+  assert bobShadow.primaryAddress.city == 'London'
+  assert bobShadow.boss == null        //john is outside the query scope,
+                                       //so reference from bob to john is nulled
 
-  then:
-  assert bobNew.boss.name == "john"  // john is inside the query scope, 
-  assert bobOld.boss.name == "john"  // so his Shadow is reconstruced 
-                                     // and linked with bob's Shadows
+  when: 'commit-deep scope query'
+  shadows = javers.findShadows(QueryBuilder.byInstance(bob)
+          .withChildValueObjects()
+          .withScopeCommitDeep().build())
+  bobShadow = shadows[0].get()
+
+  then: 'John is also loaded'
+  assert bobShadow.boss.name == 'john' // John is inside the query scope, so his
+                                       // shadow is loaded and linked to Bob
+
+  when: 'commit-deep+ scope query'
+  shadows = javers.findShadows(QueryBuilder.byInstance(bob)
+          .withChildValueObjects()
+          .withScopeCommitDeepPlus(1).build())
+  bobShadow = shadows[0].get()
+
+  then: 'all objects are loaded'
+  assert bobShadow.boss.name == 'john'
+  assert bobShadow.boss.boss.name == 'steve'
 }
 ```
  
 If you want to be 100% sure that Shadow reconstruction
-didn’t hide some details &mdash; use Snapshots or Changes queries. 
+didn’t hide some details &mdash; use Snapshots or Changes view.
+
+
+Read more about the scopes in these javadocs: [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html)
+and [QueryBuilder#withShadowScope()]({{ site.javadoc_url }}org/javers/repository/jql/QueryBuilder.html#withShadowScope-org.javers.repository.jql.ShadowScope-).
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
@@ -473,7 +504,7 @@ def "should query for changes (and snapshots) with property filter"() {
 
     when:
     def query = QueryBuilder.byInstanceId("bob", Employee.class)
-            .andProperty("salary").build()
+            .withChangedProperty("salary").build()
     def changes = javers.findChanges(query)
 
     then:
