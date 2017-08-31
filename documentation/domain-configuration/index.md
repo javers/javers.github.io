@@ -157,9 +157,9 @@ Type inferring algorithm has the lowest priority.
 
 **Mapping ProTips**
 
-* First, try to map high level abstract classes or interfaces.
+* First, try to map high level abstract classes.
   For example, if all of your Entities extend some abstract class,
-  you should map only this class.
+  you can map only this class with `@Entity`.
 * JaVers automatically scans JPA annotations
   and maps classes with `@Entity` annotation as Entities
   and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,
