@@ -394,6 +394,12 @@ body.page section #content #main h4 {
     margin-bottom: 5px;
 }
 
+body.page section #content #main h5 {
+    font-size: 1em;
+    margin-top: 12px;
+    margin-bottom: 5px;
+}
+
 body.page section #content #main h4:before,
 body.page section #content #main h3:before,
 body.page section #content #main h2:before {
