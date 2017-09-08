@@ -118,9 +118,17 @@ compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 ```
 
 
+To run the application ane populate the database, execute:
 
+```
+./gradlew test -Dtest.single=InitHierarchySpec
+```
 
+Now your database should have the `Employee` table with some initial data. 
 
+##### `select * from Employee`
+
+<img src="/blog/javers-vs-envers/employee-table.png" alt="Employee table" width="646"/>
 
 ### Enabling Envers audit
 We use Spring Data repositories,
