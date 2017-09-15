@@ -30,19 +30,22 @@ There are two big difference between JaVers and Envers:
    persistence framework. For now, JaVers comes with repository implementations for MongoDB and
    popular SQL databases. Other databases (like Cassandra, Elastic) might be added in the future.
    
-1. Envers’ audit data model is a copy of application’s data model. As the doc says:
+1. Envers’ audit model is **table-oriented**.
+   You can think about Envers as a tool for versioning database records.  
+   As the doc says:
    *For each audited entity, an audit table is created.
    By default, the audit table name is created by adding a `_AUD` suffix to the original name.*
-   It can be advantage, you have audit data close to your live data. Envers’ tables look familiar.
-   It’s easy to query them with SQL.
+   It can be advantage, you have audit data stored close to your live data.
+   Envers’ tables look familiar. It’s easy to query them with SQL.
      
-   JaVers uses its own Snapshot model for audit data.
-   Snapshots are decoupled from live data,
+   JaVers’ audit model is **object-oriented**, it’s all about objects’ Snapshots.
    JaVers saves them to the single table (or the collection in Mongo)
    as JSON documents with unified structure.
-   Advantages? You can choose where to store audit data.
-   By default JaVers uses the same database as application does,
-   but you can point another database. For example, SQL for application and MongoDB for JaVers
+   Advantages? You can focus on domain objects and treat persistence and auditing
+   as infrastructural aspects.
+   Since audit data are decoupled from live data, you can choose where to store them.
+   By default JaVers saves Snapshots to the application’s database, but you can point another one.
+   For example, SQL for application and MongoDB for JaVers
    or centralized JaVers database shared for all applications in your company).
    
 ## Demo application  
@@ -103,7 +106,7 @@ class Address {
 ### Database
 
 The application is configured to work with a local PostgreSQL.
-You can change it easily (don’t forget about a proper driver).
+You can change it easily (don’t forget about a proper JDBC driver).
 
 ##### [`application.properties`](https://github.com/javers/javers-vs-envers/blob/master/src/main/resources/application.properties)
 
@@ -118,13 +121,13 @@ compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 ```
 
 
-To run the application ane populate the database, execute:
+To run the application and populate the database, execute this test:
 
 ```
-./gradlew test -Dtest.single=InitHierarchySpec
+./gradlew test -Dtest.single=InitHierarchyTest
 ```
 
-Now your database should have the `Employee` table with some initial data. 
+Now you should have the `Employee` table populated with initial data. 
 
 ##### `select * from Employee`
 
