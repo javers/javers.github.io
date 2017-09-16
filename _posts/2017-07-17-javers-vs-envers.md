@@ -21,24 +21,24 @@ In third section, I define a few audit related use cases and I compare how both 
 
 There are two big difference between JaVers and Envers:
 
-1. Envers is the Hibernate plugin.
+1. **Envers** is the Hibernate plugin.
    It has good integration with Hibernate but you can use it only with traditional SQL databases.
    If you choosed NoSQL database or SQL but with other persistence framework like 
    [JOOQ](https://www.jooq.org/) &mdash; Envers is not an option.
    
-   On the contrary, JaVers can be used with any kind of database and any kind of 
+   On the contrary, **JaVers** can be used with any kind of database and any kind of 
    persistence framework. For now, JaVers comes with repository implementations for MongoDB and
    popular SQL databases. Other databases (like Cassandra, Elastic) might be added in the future.
    
-1. Envers’ audit model is **table-oriented**.
-   You can think about Envers as a tool for versioning database records.  
+1. **Envers’ audit model is table-oriented**.
+   You can think about Envers as the tool for versioning database records.  
    As the doc says:
    *For each audited entity, an audit table is created.
    By default, the audit table name is created by adding a `_AUD` suffix to the original name.*
    It can be advantage, you have audit data stored close to your live data.
    Envers’ tables look familiar. It’s easy to query them with SQL.
      
-   JaVers’ audit model is **object-oriented**, it’s all about objects’ Snapshots.
+   **JaVers’ audit model is object-oriented**, it’s all about objects’ Snapshots.
    JaVers saves them to the single table (or the collection in Mongo)
    as JSON documents with unified structure.
    Advantages? You can focus on domain objects and treat persistence and auditing
@@ -46,7 +46,7 @@ There are two big difference between JaVers and Envers:
    Since audit data are decoupled from live data, you can choose where to store them.
    By default JaVers saves Snapshots to the application’s database, but you can point another one.
    For example, SQL for application and MongoDB for JaVers
-   or centralized JaVers database shared for all applications in your company).
+   (or even centralized JaVers database shared for all applications in your company).
    
 ## Demo application  
  
@@ -79,7 +79,8 @@ class Employee {
 
     Employee() {
     }
-    // ...
+    
+    ...
 }
 ```
 
@@ -120,8 +121,22 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/javers-vs-envers
 compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 ```
 
+To run the application and populate the database, execute the 
+[`InitHierarchyTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/InitHierarchyTest.groovy):
 
-To run the application and populate the database, execute this test:
+```groovy
+def "should init and persist organization structure"(){
+  given:
+  def boss = hierarchyService.initStructure()
+
+  boss.prettyPrint()
+
+  expect:
+  boss.name == "Gandalf"
+}
+```
+
+You can run it from command line:
 
 ```
 ./gradlew test -Dtest.single=InitHierarchyTest
@@ -131,12 +146,63 @@ Now you should have the `Employee` table populated with initial data.
 
 ##### `select * from Employee`
 
-<img src="/blog/javers-vs-envers/employee-table.png" alt="Employee table" width="646"/>
+<img src="/blog/javers-vs-envers/employee-table.png" alt="Employee table" width="646px"/>
 
 ### Enabling Envers audit
-We use Spring Data repositories,
+
+To enable Envers we need to add the `hibernate-envers` dependency:
+
+```
+compile 'org.hibernate:hibernate-envers:'+hibernateVersion
+```
+
+and `@Audited` annotation to our entity:
+
+```java
+@Entity
+@Audited
+class Employee {
+    @Id
+    String name
+    
+    ...
+```
+
+That’s it. Now, we can do some audited changes:
+
+
+##### [`SimpleChangeTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/SimpleChangeTest.groovy)
+
+```groovy
+def "should persist Employee's property change"(){
+    given:
+    def boss = hierarchyService.initStructure()
+
+    hierarchyService.giveRaise(boss, 200)
+
+    expect:
+    hierarchyService.findByName("Gandalf").salary == 10200
+}
+```
+ 
+Envers creates two tables: `revinfo` and `employee_aud`.
+
+##### `select * from revinfo`
+
+<img src="/blog/javers-vs-envers/revinfo_1.png" alt="revinfo table" width="213px"/>
+
+##### `select * from employee_aud`
+
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee_aud.png" alt="revinfo table" width="807px"/>
+
+No surprise so far. We have two revisions likned with records in the audit table,
+revtype 0 means insert and 1 means update.
+What is strange is the type of revision timestamps.
+Why long instead of date? Luckily you can fix using custom [Revision Entity](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-revisionlog).
+Also, Revision Entity is the place when you can hook changes metadata like change author.
 
 ### Enabling JaVers audit
+We use Spring Data repositories,
 
 
 ## Use cases    
