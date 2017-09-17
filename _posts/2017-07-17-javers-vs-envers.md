@@ -158,14 +158,14 @@ compile 'org.hibernate:hibernate-envers:'+hibernateVersion
 
 and `@Audited` annotation to our entity:
 
-```java
+```groovy
+import org.hibernate.envers.Audited
+
 @Entity
 @Audited
 class Employee {
-    @Id
-    String name
-    
     ...
+}
 ```
 
 That’s it. Now, we can do some audited changes:
@@ -195,14 +195,42 @@ Envers creates two tables: `revinfo` and `employee_aud`.
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee_aud.png" alt="revinfo table" width="807px"/>
 
-No surprise so far. We have two revisions likned with records in the audit table,
-revtype 0 means insert and 1 means update.
+No surprise so far. We have two revisions likned with records in the audit table.
+Revtype 0 means insert and 1 means update.
 What is strange is the type of revision timestamps.
 Why long instead of date? Luckily you can fix using custom [Revision Entity](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-revisionlog).
 Also, Revision Entity is the place when you can hook changes metadata like change author.
 
 ### Enabling JaVers audit
-We use Spring Data repositories,
+
+To enable JaVers we need to add the dependency to JaVers Spring Boot starter for SQL:
+
+```
+compile 'org.javers:javers-spring-boot-starter-sql:'+javersVersion
+```
+
+The easiest way to integrate JaVers with a Spring application is the  
+`@JaversSpringDataAuditable` annotation putted on Spring Data repositories.
+This annotation enables the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
+
+##### [`EmployeeRepository.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/EmployeeRepository.groovy)
+
+```groovy
+import org.javers.spring.annotation.JaversSpringDataAuditable
+import org.springframework.data.repository.CrudRepository
+
+@JaversSpringDataAuditable
+interface EmployeeRepository extends CrudRepository<Employee, String> {
+}
+```
+
+That’s all. Now, when you rerun the `SimpleChangeTest`,
+JaVers will create three tables: `jv_commit`, `jv_global_id` and `jv_snapshot`
+(there is also the fourth table &mdash; `jv_commit_property`, but our application doesn’t touch it).
+
+##### `select * from jv_commit`
+
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_commit_table.png" alt="revinfo table" width="457px"/>
 
 
 ## Use cases    
