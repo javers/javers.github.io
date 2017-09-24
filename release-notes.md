@@ -5,6 +5,25 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 3.5.1
+released on 2017-09-24 <br/>
+
+* Dependencies versions update:
+
+```
+springVersion=4.3.11.RELEASE
+springBootVersion=1.5.7.RELEASE
+guavaVersion=23.0
+gsonVersion=2.8.1
+fastClasspathScannerVersion=2.4.7
+jodaVersion=2.9.7
+mongoDbDriverVersion=3.5.0
+hibernateVersion=5.0.12.Final
+polyjdbcVersion=0.7.1
+aspectjweaverVersion=1.8.6
+```
+
 ### 3.5.0
 released on 2017-07-30 <br/>
 
