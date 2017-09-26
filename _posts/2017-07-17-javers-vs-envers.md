@@ -193,7 +193,7 @@ Envers creates two tables: `revinfo` and `employee_aud`.
 
 ##### `select * from employee_aud`
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee_aud.png" alt="revinfo table" width="807px"/>
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee_aud.png" alt="employee_aud table" width="807px"/>
 
 No surprise so far. We have two revisions likned with records in the audit table.
 Revtype 0 means insert and 1 means update.
@@ -210,7 +210,7 @@ compile 'org.javers:javers-spring-boot-starter-sql:'+javersVersion
 ```
 
 The easiest way to integrate JaVers with a Spring application is the  
-`@JaversSpringDataAuditable` annotation putted on Spring Data repositories.
+`@JaversSpringDataAuditable` annotation added to Spring Data CRUD repositories.
 This annotation enables the [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
 
 ##### [`EmployeeRepository.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/EmployeeRepository.groovy)
@@ -230,7 +230,23 @@ JaVers will create three tables: `jv_commit`, `jv_global_id` and `jv_snapshot`
 
 ##### `select * from jv_commit`
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_commit_table.png" alt="revinfo table" width="457px"/>
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_commit_table.png" alt="jv_commit table" width="457px"/>
 
+So JaVers’ Commit is the similar concept to EnVers’ Revision
+(inspirations from Git and Subversion are evident). 
+
+In JaVers, each Commit has timestamp and author.
+Here, author field is `unknown`, it would be set to current user if you enable Spring Security
+(see [AuthorProvider](https://javers.org/documentation/spring-integration/#author-provider-bean))
+
+Now, let's check out how objects’ Snapshots are stored. 
+
+##### `select * from jv_global_id`
+
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" width="683px"/>
+
+##### `select * from jv_snapshot`
+
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_snapshot_table.png" alt="jv_snapshot table" width="1002px"/>
 
 ## Use cases    
