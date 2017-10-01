@@ -1111,7 +1111,7 @@ However, we still recommend to adding @TypeName.
 For example, querying by ValueObject class relies on it.
 
 JaVers treats ValueObjects as property containers and doesn’t care much about their classes.
-This approach is known us Duck Typing, and is widely adopted by dynamic languages like Groovy.
+This approach is known as Duck Typing, and is widely adopted by dynamic languages like Groovy.
 
 **Example** <br/>
 Let’s consider the refactoring of Person’s address,
