@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.5.2
+released on 2017-10-05 <br/>
+
+* [574](https://github.com/javers/javers/issues/574)
+ Added missing support for `@PropertyName` in Shadows.
 
 ### 3.5.1
 released on 2017-09-24 <br/>
