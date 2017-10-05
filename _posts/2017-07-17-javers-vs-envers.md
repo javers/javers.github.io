@@ -225,28 +225,52 @@ interface EmployeeRepository extends CrudRepository<Employee, String> {
 ```
 
 That’s all. Now, when you rerun the `SimpleChangeTest`,
-JaVers will create three tables: `jv_commit`, `jv_global_id` and `jv_snapshot`
+JaVers will create three tables: 
+
+* `jv_commit`,
+* `jv_global_id`,
+* `jv_snapshot`
+
 (there is also the fourth table &mdash; `jv_commit_property`, but our application doesn’t touch it).
+
+JaVers’ Commit is the similar concept to Envers’ Revision 
+(inspirations from Git and Subversion are evident). 
+
+In JaVers, each Commit has timestamp and author.
+Here, author field is unknown, it would be set to current user if you enable Spring Security
+(see [AuthorProvider](https://javers.org/documentation/spring-integration/#author-provider-bean))
 
 ##### `select * from jv_commit`
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_commit_table.png" alt="jv_commit table" width="457px"/>
 
-So JaVers’ Commit is the similar concept to EnVers’ Revision
-(inspirations from Git and Subversion are evident). 
+Now, let's check out how objects’ Snapshots are stored.
 
-In JaVers, each Commit has timestamp and author.
-Here, author field is `unknown`, it would be set to current user if you enable Spring Security
-(see [AuthorProvider](https://javers.org/documentation/spring-integration/#author-provider-bean))
-
-Now, let's check out how objects’ Snapshots are stored. 
+In JaVers, each audited object has GlobalId.
+For Entities it’s the pair of type name and local Id.
+ValueObjects (like Address) are treated as components of an Entity,
+so they are identified by the pair: owning entity GlobalId and a path (typically a property name).  
+We have 18 objects so far, hence 18 GlobalIds are stored.
 
 ##### `select * from jv_global_id`
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" width="683px"/>
+<img style="margin-bottom:10px;"
+     src="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" width="683px"/>
+
+For each GlobalId, JaVers binds one ore more object’s Snapshots.
+We did only one change so far (Gandalf got a rise), so we have 18 *initial* Snapshots
+and one *update* Snapshot for Gandalf. Seems right.
 
 ##### `select * from jv_snapshot`
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_snapshot_table.png" alt="jv_snapshot table" width="1002px"/>
+
+What distinguish JaVers from Envers is the `state` column &mdash; a Snapshot per se.
+It’s the text column with JSON documents.
+Thanks to that, Javers is not coupled to any particular kind of database.
+As long as a database supports text or JSON types, it’s fine.
+In fact, MongoDB is more *natural* to JaVers than SQL,
+because MongoDB is designed to store JSON documents.
+
 
 ## Use cases    
