@@ -265,12 +265,43 @@ and one *update* Snapshot for Gandalf. Seems right.
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_snapshot_table.png" alt="jv_snapshot table" width="1002px"/>
 
-What distinguish JaVers from Envers is the `state` column &mdash; a Snapshot per se.
+What distinguish JaVers from Envers is the `state` column, here live Snapshots per se.
 It’s the text column with JSON documents.
-Thanks to that, Javers is not coupled to any particular kind of database.
+Thanks to that, JaVers isn’t coupled to any particular kind of database.
 As long as a database supports text or JSON types, it’s fine.
 In fact, MongoDB is more *natural* to JaVers than SQL,
 because MongoDB is designed to store JSON documents.
 
+The Snapshot’s state document is the map where keys are properties’ names and values are,
+well, properties’ values (pretty much like in Javascript).
+References to other objects are *dehydrated* and stored as GlobalId.
+
+For example, this is the current state of Gandalf: 
+
+```json
+{
+  "address": {
+    "valueObject": "org.javers.organization.structure.Address",
+    "ownerId": {
+      "entity": "org.javers.organization.structure.Employee",
+      "cdoId": "Gandalf"
+    },
+    "fragment": "address"
+  },
+  "name": "Gandalf",
+  "position": "CEO",
+  "salary": 10200,
+  "subordinates": [
+    {
+      "entity": "org.javers.organization.structure.Employee",
+      "cdoId": "Elrond"
+    },
+    {
+      "entity": "org.javers.organization.structure.Employee",
+      "cdoId": "Aragorn"
+    }
+  ]
+}
+```
 
 ## Use cases    
