@@ -305,3 +305,23 @@ For example, this is the current state of Gandalf:
 ```
 
 ## Use cases    
+
+Some applications do data audit only just in case.
+For example, in case of an unexpected and intimidating visit of an IT auditor asking you tons of questions.
+In this scenario, application don’t need to have any special UI for browsing audit data.
+Any developer can connect directly to an application’s database,
+generate some reports and make auditor happy.
+
+In other applications, data audit is so important that
+it becomes one of the features offered to users.
+For example, Wikipedia has the [page history view](https://en.wikipedia.org/w/index.php?title=Lego&action=history)
+which shows changes made to any page.
+
+Our use cases focus on this kind of scenarios,
+we are going to browse history of The Fellowship using JaVers and Envers.
+
+### Browsing history of all objects
+
+### Browsing history of a selected object.
+
+### Browsing history of a few related objects. 
