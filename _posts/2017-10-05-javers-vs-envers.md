@@ -13,9 +13,9 @@ JaVers offers the fresh approach and technology independence.
 If you consider which tool will be better for your project, this article is the good starting point.
 
 The article has three sections. First, is a high level comparison.
-In second section, I show the simple, demo application for managing organization structure with 
+In second section, we show the simple, demo application for managing organization structure with 
 data audit made by both JaVers and Envers.
-In third section, I define a few audit related use cases and I compare how both tools are coping with them.
+In third section, we show how both tools are coping with queries on audit data.
 
 ## High level comparison
 
@@ -304,24 +304,148 @@ For example, this is the current state of Gandalf:
 }
 ```
 
-## Use cases    
+## Queries   
 
 Some applications do data audit only just in case.
 For example, in case of an unexpected and intimidating visit of an IT auditor asking you tons of questions.
 In this scenario, application don’t need to have any special UI for browsing audit data.
-Any developer can connect directly to an application’s database,
-generate some reports and make auditor happy.
+Any developer can connect directly to a database, generate some reports and make auditor happy.
 
 In other applications, data audit is so important that
 it becomes one of the features offered to users.
 For example, Wikipedia has the [page history view](https://en.wikipedia.org/w/index.php?title=Lego&action=history)
 which shows changes made to any page.
 
-Our use cases focus on this kind of scenarios,
-we are going to browse history of The Fellowship using JaVers and Envers.
+We focus on the second case,
+our application runs queries on audit data to show history of The Fellowship.
 
-### Browsing history of all objects
+### Browsing history of objects by type
 
-### Browsing history of a selected object.
+Let’s start from the elementary query &mdash; query by type.
+We are giving a rise for Gandalf and Aragorn and also we are changing their address.
+That means four changes.
+Then we show how to browse history of our Employees in Envers and JaVers.
 
-### Browsing history of a few related objects. 
+#### Envers way &mdash; [`EnversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L25)
+
+```groovy
+@Transactional
+def "should browse Envers history of objects by type"(){
+    given:
+    def gandalf = hierarchyService.initStructure()
+    def aragorn = gandalf.getSubordinate('Aragorn')
+    gandalf.prettyPrint()
+
+    //changes
+    hierarchyService.giveRaise(gandalf, 200)
+    hierarchyService.updateCity(gandalf, 'Shire')
+    hierarchyService.giveRaise(aragorn, 100)
+    hierarchyService.updateCity(aragorn, 'Shire')
+
+    when:
+    List folks = AuditReaderFactory
+            .get(entityManager)
+            .createQuery()
+            .forRevisionsOfEntity( Employee, false, true )
+            .add(AuditEntity.revisionType().eq(MOD)) // filter out initial versions
+            .getResultList()
+
+    println 'envers history of Employees:'
+    folks.each {
+        println 'revision:' + it[1].id + ', entity: '+ it[0]
+    }
+
+    then:
+    folks.size() == 4
+}
+```
+
+output: 
+
+```text
+envers history of Employees:
+revision:33, entity: Employee{ Gandalf CEO, $10200, Middle-earth, subordinates:Aragorn,Elrond }
+revision:34, entity: Employee{ Gandalf CEO, $10200, Shire, subordinates:Aragorn,Elrond }
+revision:35, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:Thorin }
+revision:36, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates:Thorin }
+```
+
+#### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L21)
+
+```groovy
+def "should browse JaVers history of objects by type"(){
+    given:
+    def gandalf = hierarchyService.initStructure()
+    def aragorn = gandalf.getSubordinate('Aragorn')
+    gandalf.prettyPrint()
+
+    //changes
+    hierarchyService.giveRaise(gandalf, 200)
+    hierarchyService.updateCity(gandalf, 'Shire')
+    hierarchyService.giveRaise(aragorn, 100)
+    hierarchyService.updateCity(aragorn, 'Shire')
+
+    when:
+    List<Shadow<Employee>> shadows = javers.findShadows(
+            QueryBuilder.byClass(Employee)
+                        .withChildValueObjects()
+                        .build())
+            .subList(0,4) //no better way to filter out initial versions
+
+    println 'javers history of Employees:'
+    shadows.each { shadow ->
+        println 'commit:' + shadow.commitMetadata.id + ', entity: '+ shadow.get()
+    }
+
+    then:
+    shadows.size() == 4
+    shadows[0].commitMetadata.id.majorId == 5
+    shadows[3].commitMetadata.id.majorId == 2
+}
+```
+
+output: 
+
+```text
+javers history of Employees:
+commit:5.0, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates:Thorin }
+commit:4.0, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:Thorin }
+commit:3.0, entity: Employee{ Gandalf CEO, $10200, Shire, subordinates:Aragorn,Elrond }
+commit:2.0, entity: Employee{ Gandalf CEO, $10200, Middle-earth, subordinates:Aragorn,Elrond }
+```
+
+#### Comparision
+
+Both tools did the job and shown correct history. 
+Both tools loaded related entities (subordinates), although we didn’t asked.
+
+What about artistic impression? There are a few interesting differences.
+
+* Envers query results are ordered chronologically.
+  The oldest change is first on the list. 
+  When browsing history, usually you want to see latest changes first.
+  The reverse chronological order is more natural and that’s how JaVers sorts.
+  I didn’t find the way in Envers to get reverse ordering.
+   
+* JaVers API seems more elegant but of course it’s a matter of taste. 
+
+* What is really cryptic in Envers’ query is the results type.
+  Why `getResultList()` returns non-parametrized List? List of what? Well, it depends on the second flag
+  passed to `forRevisionsOfEntity()` named `selectEntitiesOnly`.
+  If it’s true it will be a list of entites, otherwise
+  *a list of three-element arrays, containing: the entity instance, revision entity and type of the revision*. 
+  Not cool. In Groovy it’s not a problem but in Java you have to cast heavily to get the data.
+  In JaVers, you get the type-safe list of
+  [Shadows](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/shadow/Shadow.java).
+  In short, Shadow is a pair of a historical version of an entity and commit metadata.  
+
+* Both tools have loaded related entities (subordinates and boss),
+  although we didn’t asked. Envers uses Hibernate-style lazy loading.
+  On the contrary, JaVers always loads data eagerly
+  on a basis of the [query scope](/documentation/jql-examples/#shadow-scopes).
+  
+### Browsing history of a selected object by Id.
+
+### Browsing history of a few related objects.
+
+### Browsing history of a selected property.  
