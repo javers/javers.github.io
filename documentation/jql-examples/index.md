@@ -191,7 +191,7 @@ The wider the scope, the more object shadows are loaded to the resulting graph
 (and the more database queries are executed).
 
 * [shallow]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#SHALLOW)
-  &mdash; (defult scope),
+  &mdash; (defult scope)
    Shadows are created only from snapshots selected directly in the JQL query.
 * [commit-deep]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#COMMIT_DEEP)
   &mdash; Shadows are created from all snapshots saved in

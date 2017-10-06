@@ -427,7 +427,8 @@ What about artistic impression? There are a few interesting differences.
   The reverse chronological order is more natural and that’s how JaVers sorts.
   I didn’t find the way in Envers to get reverse ordering.
    
-* JaVers API seems more elegant but of course it’s a matter of taste. 
+* JaVers query API seems more elegant but of course it’s a matter of taste.
+  In fact it’s a small DSL called JQL (JaVers Query Language). 
 
 * What is really cryptic in Envers’ query is the results type.
   Why `getResultList()` returns non-parametrized List? List of what? Well, it depends on the second flag
@@ -440,9 +441,15 @@ What about artistic impression? There are a few interesting differences.
   In short, Shadow is a pair of a historical version of an entity and commit metadata.  
 
 * Both tools have loaded related entities (subordinates and boss),
-  although we didn’t asked. Envers uses Hibernate-style lazy loading.
+  although we didn’t asked. Envers uses well-known Hibernate lazy loading approach.
   On the contrary, JaVers always loads data eagerly
   on a basis of the [query scope](/documentation/jql-examples/#shadow-scopes).
+  Both approaches have pros and cons.
+  Lazy loading looks invitingly, you load as much data as you need without bothering about query boundaries.
+  Disadvantages? `LazyInitializationException` is a constant threat.
+  Moreover, Hibernate dynamic proxies and persistent collections clutter your object graph.
+  
+  
   
 ### Browsing history of a selected object by Id.
 
