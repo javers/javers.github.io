@@ -5,6 +5,31 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.6.0
+released on 2017-10-05
+
+* [431](https://github.com/javers/javers/issues/431)
+ Auto-audit aspect also on [JpaRepository.saveAndFlush()](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html).
+ 
+<span style="color:red">This task forced a major refactoring</span>.
+
+`Javers-spring` module was split into two parts:
+ 
+* `javers-spring` with general purpose auto-audit aspect and
+  auto-audit aspect for Spring Data CrudRepository.
+* `javers-spring-jpa` &mdash; a superset of `javers-spring` &mdash; with
+   JPA & Hibernate integration, so:
+   auto-audit aspect for Spring Data JpaRepository,
+   HibernateUnproxyObjectAccessHook, JpaHibernateConnectionProvider,
+   and JaversTransactionalDecorator.
+   
+If you are using <span style="color:red">JaVers with MongoDB</span>, you don't need to change anything.
+
+If you are using <span style="color:red">JaVers with SQL</span> but without Spring Boot,
+you need to change the `javers-spring` dependency to `javers-spring-jpa`.
+If you are using Spring Boot with our starter (`javers-spring-boot-starter-sql`), 
+you don't need to change anything. Our starters always provide the right configuration. 
+
 ### 3.5.2
 released on 2017-10-05 <br/>
 
