@@ -12,18 +12,18 @@ Envers is here for a long time and it’s considered mainstream.
 JaVers offers the fresh approach and technology independence.
 If you consider which tool will be better for your project, this article is the good starting point.
 
-The article has three sections. First, is a high level comparison.
-In second section, we show the simple, demo application for managing organization structure with 
+The article has three sections. First, is a high-level comparison.
+In the second section, we show the simple, demo application for managing organization structure with 
 data audit made by both JaVers and Envers.
-In third section, we show how both tools are coping with queries on audit data.
+In the third section, we show how both tools are coping with queries on audit data.
 
-## High level comparison
+## High-level comparison
 
-There are two big difference between JaVers and Envers:
+There are two big differences between JaVers and Envers:
 
 1. **Envers** is the Hibernate plugin.
    It has good integration with Hibernate but you can use it only with traditional SQL databases.
-   If you choosed NoSQL database or SQL but with other persistence framework like 
+   If you chose NoSQL database or SQL but with other persistence framework like 
    [JOOQ](https://www.jooq.org/) &mdash; Envers is not an option.
    
    On the contrary, **JaVers** can be used with any kind of database and any kind of 
@@ -319,7 +319,7 @@ which shows changes made to any page.
 We focus on the second case,
 our application runs queries on audit data to show history of The Fellowship.
 
-### Browsing history of objects by type
+### Browsing objects history by type
 
 Let’s start from the elementary query &mdash; query by type.
 We are giving a rise for Gandalf and Aragorn and also we are changing their address.
@@ -427,18 +427,18 @@ What about artistic impression? There are a few interesting differences.
   The reverse chronological order is more natural and that’s how JaVers sorts.
   I didn’t find the way in Envers to get reverse ordering.
    
-* JaVers query API seems more elegant but of course it’s a matter of taste.
-  In fact it’s a small DSL called JQL (JaVers Query Language). 
+* JaVers query API seems more elegant. In fact it’s a small DSL called [JQL](/documentation/jql-examples/)
+  (JaVers Query Language). 
 
 * What is really cryptic in Envers’ query is the results type.
   Why `getResultList()` returns non-parametrized List? List of what? Well, it depends on the second flag
   passed to `forRevisionsOfEntity()` named `selectEntitiesOnly`.
-  If it’s true it will be a list of entites, otherwise
+  If it’s true, it will be a list of entites, otherwise
   *a list of three-element arrays, containing: the entity instance, revision entity and type of the revision*. 
   Not cool. In Groovy it’s not a problem but in Java you have to cast heavily to get the data.
   In JaVers, you get the type-safe list of
   [Shadows](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/shadow/Shadow.java).
-  In short, Shadow is a pair of a historical version of an entity and commit metadata.  
+  In short, Shadow is a pair of a historical entity and commit metadata.  
 
 * Both tools have loaded related entities (subordinates and boss),
   although we didn’t asked. Envers uses well-known Hibernate lazy loading approach.
@@ -446,13 +446,12 @@ What about artistic impression? There are a few interesting differences.
   on a basis of the [query scope](/documentation/jql-examples/#shadow-scopes).
   Both approaches have pros and cons.
   Lazy loading looks invitingly, you load as much data as you need without bothering about query boundaries.
-  Disadvantages? `LazyInitializationException` is a constant threat.
+  Disadvantages? `LazyInitializationException` is the constant threat.
   Moreover, Hibernate dynamic proxies and persistent collections clutter your object graph.
-  
-  
-  
-### Browsing history of a selected object by Id.
+   
+### Query filters
+
+### Browsing history of a selected property.  
 
 ### Browsing history of a few related objects.
 
-### Browsing history of a selected property.  
