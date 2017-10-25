@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.6.1
+released on 2017-10-29
+
+* Fix for ValueObject loading in Shadow queries.
+See [updated docs of Shadow scopes](/documentation/jql-examples/#shadow-scopes). 
+
 ### 3.6.0
 released on 2017-10-05
 
