@@ -331,7 +331,7 @@ Then we show how to browse history of our Employees in Envers and JaVers.
 ```groovy
 @Transactional
 def "should browse Envers history of objects by type"(){
-    given:
+  given:
     def gandalf = hierarchyService.initStructure()
     def aragorn = gandalf.getSubordinate('Aragorn')
     gandalf.prettyPrint()
@@ -342,7 +342,7 @@ def "should browse Envers history of objects by type"(){
     hierarchyService.giveRaise(aragorn, 100)
     hierarchyService.updateCity(aragorn, 'Shire')
 
-    when:
+  when:
     List folks = AuditReaderFactory
             .get(entityManager)
             .createQuery()
@@ -355,7 +355,7 @@ def "should browse Envers history of objects by type"(){
         println 'revision:' + it[1].id + ', entity: '+ it[0]
     }
 
-    then:
+  then:
     folks.size() == 4
 }
 ```
@@ -374,7 +374,7 @@ revision:36, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates:Thorin }
 
 ```groovy
 def "should browse JaVers history of objects by type"(){
-    given:
+  given:
     def gandalf = hierarchyService.initStructure()
     def aragorn = gandalf.getSubordinate('Aragorn')
     gandalf.prettyPrint()
@@ -385,7 +385,7 @@ def "should browse JaVers history of objects by type"(){
     hierarchyService.giveRaise(aragorn, 100)
     hierarchyService.updateCity(aragorn, 'Shire')
 
-    when:
+  when:
     List<Shadow<Employee>> shadows = javers.findShadows(
             QueryBuilder.byClass(Employee)
                         .withChildValueObjects()
@@ -397,7 +397,7 @@ def "should browse JaVers history of objects by type"(){
         println 'commit:' + shadow.commitMetadata.id + ', entity: '+ shadow.get()
     }
 
-    then:
+  then:
     shadows.size() == 4
     shadows[0].commitMetadata.id.majorId == 5
     shadows[3].commitMetadata.id.majorId == 2
@@ -451,7 +451,12 @@ What about artistic impression? There are a few interesting differences.
    
 ### Query filters
 
-### Browsing history of a selected property.  
+```groovy
+def "should browse JaVers history of objects by type with filters"(){
+...
+}
+```
+    
 
 ### Browsing history of a few related objects.
 
