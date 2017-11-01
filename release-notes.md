@@ -5,6 +5,14 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.6.2
+released on 2017-11-01
+
+* New [snapshotType]({{ site.javadoc_url }}org/javers/repository/jql/QueryBuilder.html#withSnapshotType-org.javers.core.metamodel.object.SnapshotType-)
+filter in JQL. Allows selecting snapshots by type: `INITIAL`, `UPDATE`, `TERMINAL`.
+
+* Improved exception handling in `byInstance` query.
+
 ### 3.6.1
 released on 2017-10-29
 
