@@ -326,7 +326,7 @@ We are giving a rise for Gandalf and Aragorn and also we are changing their addr
 That means four changes.
 Then we show how to browse history of our Employees in Envers and JaVers.
 
-#### Envers way &mdash; [`EnversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L25)
+#### Envers way &mdash; [`EnversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L27)
 
 ```groovy
 @Transactional
@@ -347,7 +347,7 @@ def "should browse Envers history of objects by type"(){
             .get(entityManager)
             .createQuery()
             .forRevisionsOfEntity( Employee, false, true )
-            .add(AuditEntity.revisionType().eq(MOD)) // filter out initial versions
+            .add(AuditEntity.revisionType().eq(MOD)) // without initial versions
             .getResultList()
 
     println 'envers history of Employees:'
@@ -370,7 +370,7 @@ revision:35, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:Th
 revision:36, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates:Thorin }
 ```
 
-#### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L21)
+#### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L23)
 
 ```groovy
 def "should browse JaVers history of objects by type"(){
@@ -389,8 +389,8 @@ def "should browse JaVers history of objects by type"(){
     List<Shadow<Employee>> shadows = javers.findShadows(
             QueryBuilder.byClass(Employee)
                         .withChildValueObjects()
+                        .withSnapshotTypeUpdate()
                         .build())
-            .subList(0,4) //no better way to filter out initial versions
 
     println 'javers history of Employees:'
     shadows.each { shadow ->
@@ -416,8 +416,7 @@ commit:2.0, entity: Employee{ Gandalf CEO, $10200, Middle-earth, subordinates:Ar
 
 #### Comparision
 
-Both tools did the job and shown correct history. 
-Both tools loaded related entities (subordinates), although we didn’t asked.
+Both tools did the job and shown correct history. Both tools loaded related entities.
 
 What about artistic impression? There are a few interesting differences.
 
@@ -441,7 +440,8 @@ What about artistic impression? There are a few interesting differences.
   In short, Shadow is a pair of a historical entity and commit metadata.  
 
 * Both tools have loaded related entities (subordinates and boss),
-  although we didn’t asked. Envers uses well-known Hibernate lazy loading approach.
+  although we didn’t asked for this.
+  Envers uses well-known Hibernate lazy loading approach.
   On the contrary, JaVers always loads data eagerly
   on a basis of the [query scope](/documentation/jql-examples/#shadow-scopes).
   Both approaches have pros and cons.
@@ -449,14 +449,136 @@ What about artistic impression? There are a few interesting differences.
   Disadvantages? `LazyInitializationException` is the constant threat.
   Moreover, Hibernate dynamic proxies and persistent collections clutter your object graph.
    
-### Query filters
+### Query filters 
+ 
+Browsing objects history is not very useful without search features.
+  
+In the next example we show how to implement
+the two common search use cases:
+
+1. Search by Id, to show history of a specified Employee. 
+1. Search by changed property, to show history of salary changes in the whole organization.
+
+Let’s start from Envers.
+
+#### Envers way &mdash; [`EnversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L57)
+
+```groovy
+@Transactional
+def "should browse Envers history of objects by type with filters"(){
+  given:
+    def gandalf = hierarchyService.initStructure()
+    def aragorn = gandalf.getSubordinate('Aragorn')
+    def thorin = aragorn.getSubordinate('Thorin')
+
+    //changes
+    [gandalf, aragorn, thorin].each {
+        hierarchyService.giveRaise(it, 100)
+        hierarchyService.updateCity(it, 'Shire')
+    }
+
+  when: 'query with Id filter'
+    List aragorns = AuditReaderFactory
+          .get(entityManager)
+          .createQuery()
+          .forRevisionsOfEntity( Employee, false, true )
+          .add(AuditEntity.id().eq( 'Aragorn' ))
+          .getResultList()
+
+  then:
+    println 'envers history of Aragorn:'
+    aragorns.each {
+        println 'revision:' + it[1].id + ', entity: '+ it[0]
+    }
+    aragorns.size() == 3
+
+  when: 'query with Property filter'
+  List folks = AuditReaderFactory
+          .get(entityManager)
+          .createQuery()
+          .forRevisionsOfEntity( Employee, false, true )
+          .add(AuditEntity.property('salary').hasChanged())
+          .add(AuditEntity.revisionType().eq(MOD))
+          .getResultList()
+
+  then:
+    println 'envers history of salary changes:'
+    folks.each {
+        println 'revision:' + it[1].id + ', entity: '+ it[0]
+    }
+    folks.size() == 3
+}
+```
+
+Our queries didn’t change much. To search by Id we added:
+
+```groovy
+.add(AuditEntity.id().eq( 'Aragorn' ))
+```
+
+and to search by changed property we added:
+
+```groovy
+.add(AuditEntity.property('salary').hasChanged())
+```
+
+Looks fine, but what happens you run this test? Whoops!
+The second query throws an exception:
+
+```text
+org.hibernate.QueryException: could not resolve property: salary_MOD of: org.javers.organization.structure.Employee_AUD [select e__, r from org.javers.organization.structure.Employee_AUD e__, org.hibernate.envers.DefaultRevisionEntity r where e__.salary_MOD = :_p0 and e__.REVTYPE = :_p1 and e__.originalId.REV.id = r.id order by e__.originalId.REV.id asc]
+```
+
+What happened? Looks like there is a missing column &mdash;
+`salary_MOD` in the `employee_AUD` table. But this table is managed by Envers,
+why he can’t find a column in his own table? 
+
+After some digging in the [User Guide](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-tracking-properties-changes)
+, we can find the answer &mdash; *Modification Flags*.
+If we want to query by changed property we need to enable them for our class:
+
+
+```groovy
+@Entity
+@Audited( withModifiedFlag=true )
+class Employee {
+    ...
+```
+
+Then, Envers adds the boolean matrix to the `employee_AUD` table:
+
+<img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee-aud-matrix.png" alt="employee_aud table" width="679px"/>
+
+Now, when we see these flags, they become obvious.
+Envers uses them to find records which changed a given property.
+
+What if you application is running on production for some time
+and you didn’t enabled Modification Flags from the very beginning? 
+Okay, let’s leave it. Time to rerun our test.
+
+Now, the output seems right:
+
+```text
+envers history of Aragorn:
+revision:6554, entity: Employee{ Aragorn CTO, $8000, Minas Tirith, subordinates:'Thorin' }
+revision:6557, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:'Thorin' }
+revision:6558, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates:'Thorin' }
+
+envers history of salary changes:
+revision:6555, entity: Employee{ Gandalf CEO, $10100, Middle-earth, subordinates:'Aragorn','Elrond' }
+revision:6557, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:'Thorin' }
+revision:6559, entity: Employee{ Thorin TEAM_LEAD, $5100, Lonely Mountain, subordinates:'Bombur','Frodo','Fili','Kili','Bifur' }
+
+```  
+
+#### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L53)
 
 ```groovy
 def "should browse JaVers history of objects by type with filters"(){
-...
 }
 ```
-    
+
+### More filters ...
 
 ### Browsing history of a few related objects.
 
