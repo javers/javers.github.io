@@ -510,7 +510,7 @@ def "should browse Envers history of objects by type with filters"(){
 }
 ```
 
-Our queries didn’t change much. To search by Id we added:
+Our queries didn’t change much. To search by Id we use:
 
 ```groovy
 .add(AuditEntity.id().eq( 'Aragorn' ))
@@ -529,14 +529,13 @@ The second query throws an exception:
 org.hibernate.QueryException: could not resolve property: salary_MOD of: org.javers.organization.structure.Employee_AUD [select e__, r from org.javers.organization.structure.Employee_AUD e__, org.hibernate.envers.DefaultRevisionEntity r where e__.salary_MOD = :_p0 and e__.REVTYPE = :_p1 and e__.originalId.REV.id = r.id order by e__.originalId.REV.id asc]
 ```
 
-What happened? Looks like there is a missing column &mdash;
+Looks like there is a missing column &mdash;
 `salary_MOD` in the `employee_AUD` table. But this table is managed by Envers,
 why he can’t find a column in his own table? 
 
 After some digging in the [User Guide](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-tracking-properties-changes)
 , we can find the answer &mdash; *Modification Flags*.
 If we want to query by changed property we need to enable them for our class:
-
 
 ```groovy
 @Entity
@@ -550,13 +549,13 @@ Then, Envers adds the boolean matrix to the `employee_AUD` table:
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee-aud-matrix.png" alt="employee_aud table" width="679px"/>
 
 Now, when we see these flags, they become obvious.
-Envers uses them to find records which changed a given property.
+Envers uses them to find records with changes on a given property.
 
 What if you application is running on production for some time
 and you didn’t enabled Modification Flags from the very beginning? 
 Okay, let’s leave it. Time to rerun our test.
 
-Now, the output seems right:
+Now, the Envers output seems right:
 
 ```text
 envers history of Aragorn:
@@ -571,14 +570,70 @@ revision:6559, entity: Employee{ Thorin TEAM_LEAD, $5100, Lonely Mountain, subor
 
 ```  
 
+JaVers solved this problem in a bit more elegant way.
+Each Snapshot holds the list of changed property names (in `jv_snapshot.changed_properties`).
+Moreover, Snapshot structure is fixed, no more mucking around flags configuration.
+
 #### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L53)
 
 ```groovy
 def "should browse JaVers history of objects by type with filters"(){
+  given:
+    def gandalf = hierarchyService.initStructure()
+    def aragorn = gandalf.getSubordinate('Aragorn')
+    def thorin = aragorn.getSubordinate('Thorin')
+
+    //changes
+    [gandalf, aragorn, thorin].each {
+        hierarchyService.giveRaise(it, 100)
+        hierarchyService.updateCity(it, 'Shire')
+    }
+
+  when: 'query with Id filter'
+    List<Shadow<Employee>> shadows = javers.findShadows(
+            QueryBuilder.byInstanceId('Aragorn', Employee)
+                        .withChildValueObjects()
+                        .build())
+
+  then:
+    println 'javers history of Aragorn:'
+    shadows.each { shadow ->
+      println 'commit:' + shadow.commitMetadata.id + ', entity: '+ shadow.get()
+    }
+    shadows.size() == 3
+
+  when: 'query with Property filter'
+    shadows = javers.findShadows(
+            QueryBuilder.byClass(Employee)
+                        .withChangedProperty('salary')
+                        .withSnapshotTypeUpdate()
+                        .withChildValueObjects()
+                        .build())
+
+  then:
+    println 'javers history of salary changes:'
+    shadows.each { shadow ->
+        println 'commit:' + shadow.commitMetadata.id + ', entity: '+ shadow.get()
+    }
+    shadows.size() == 3
 }
 ```
 
-### More filters ...
+and the JaVers output: 
+
+```text
+javers history of Aragorn:
+commit:5.1, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates: }
+commit:4.1, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates: }
+commit:1.1, entity: Employee{ Aragorn CTO, $8000, Minas Tirith, subordinates: }
+javers history of salary changes:
+commit:6.0, entity: Employee{ Thorin TEAM_LEAD, $5100, Lonely Mountain, subordinates: }
+commit:4.1, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates: }
+commit:2.1, entity: Employee{ Gandalf CEO, $10100, Middle-earth, subordinates: }
+```
+
+### More query filters ...
+
 
 ### Browsing history of a few related objects.
 
