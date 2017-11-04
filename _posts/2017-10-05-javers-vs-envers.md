@@ -360,7 +360,7 @@ def "should browse Envers history of objects by type"(){
 }
 ```
 
-output: 
+Envers output: 
 
 ```text
 envers history of Employees:
@@ -404,7 +404,7 @@ def "should browse JaVers history of objects by type"(){
 }
 ```
 
-output: 
+JaVers output: 
 
 ```text
 javers history of Employees:
@@ -522,7 +522,7 @@ and to search by changed property we added:
 .add(AuditEntity.property('salary').hasChanged())
 ```
 
-Looks fine, but what happens you run this test? Whoops!
+Looks fine, but what happens when you run this test? Whoops!
 The second query throws an exception:
 
 ```text
@@ -548,12 +548,8 @@ Then, Envers adds the boolean matrix to the `employee_AUD` table:
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee-aud-matrix.png" alt="employee_aud table" width="679px"/>
 
-Now, when we see these flags, they become obvious.
+When we see these flags, they become obvious.
 Envers uses them to find records with changes on a given property.
-
-What if you application is running on production for some time
-and you didn’t enabled Modification Flags from the very beginning? 
-Okay, let’s leave it. Time to rerun our test.
 
 Now, the Envers output seems right:
 
@@ -567,12 +563,9 @@ envers history of salary changes:
 revision:6555, entity: Employee{ Gandalf CEO, $10100, Middle-earth, subordinates:'Aragorn','Elrond' }
 revision:6557, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:'Thorin' }
 revision:6559, entity: Employee{ Thorin TEAM_LEAD, $5100, Lonely Mountain, subordinates:'Bombur','Frodo','Fili','Kili','Bifur' }
-
 ```  
 
-JaVers solved this problem in a bit more elegant way.
-Each Snapshot holds the list of changed property names (in `jv_snapshot.changed_properties`).
-Moreover, Snapshot structure is fixed, no more mucking around flags configuration.
+On the contrary, JaVers queries works out of the box.
 
 #### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L53)
 
@@ -619,7 +612,7 @@ def "should browse JaVers history of objects by type with filters"(){
 }
 ```
 
-and the JaVers output: 
+JaVers output: 
 
 ```text
 javers history of Aragorn:
@@ -631,6 +624,24 @@ commit:6.0, entity: Employee{ Thorin TEAM_LEAD, $5100, Lonely Mountain, subordin
 commit:4.1, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates: }
 commit:2.1, entity: Employee{ Gandalf CEO, $10100, Middle-earth, subordinates: }
 ```
+
+#### Comparision
+
+Once again both tools did the job and shown correct history.
+
+* **Search by Id**. Just works as expected.
+
+* **Search by changed property**.
+Here, at the beginning, Envers thrown an exception and we had to add 
+the Modification Flags to the table schema. 
+I like the design of these flags for its simplicity.
+The problem is that they are disabled by default.  
+What if you application is running on production for some time
+and you didn’t enabled *the Flags* from the very beginning? Adding them to existing tables could be a pain...
+<br/>
+I think that JaVers solved this problem in a bit more elegant way.
+By default, each Snapshot holds the list of changed property names (in `jv_snapshot.changed_properties`).
+JaVers’ Snapshot structure is fixed, no more mucking around flags configuration.
 
 ### More query filters ...
 
