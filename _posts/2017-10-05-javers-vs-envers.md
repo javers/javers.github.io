@@ -643,8 +643,42 @@ I think that JaVers solved this problem in a bit more elegant way.
 By default, each Snapshot holds the list of changed property names (in `jv_snapshot.changed_properties`).
 JaVers’ Snapshot structure is fixed, no more mucking around flags configuration.
 
-### More query filters ...
+### More query filters
 
+What are the other options for filtering?
 
-### Browsing history of a few related objects.
+Envers offers filtering by property value:
+
+```java
+query.add(AuditEntity.property("name").eq("John"));
+// or
+query.add(AuditEntity.relatedId("address").eq(addressId));
+```
+
+This is useful. Besides `eq`, you can use many other operators typical to SQL: `ge`, `le`, `like`, `between`, etc.
+
+In JaVers, there are no property value filters, we have the open [issue](https://github.com/javers/javers/issues/556) for that.
+On the other hand, JaVers offers a few filters based on Commit metadata.
+You can query by Commit author, dates and properties:
+
+```groovy
+QueryBuilder.byInstanceId("bob", Employee.class).byAuthor("Pam").build()
+// or
+QueryBuilder.byInstanceId("bob", Employee.class).withCommitProperty("tenant", "ACME")
+// or
+QueryBuilder.byInstanceId("bob", Employee.class)
+            .from(new LocalDate(2016,01,1))
+            .to  (new LocalDate(2018,01,1)).build()
+```
+
+See the full list of JaVers’ [query filters](https://javers.org/documentation/jql-examples/#query-filters).
+    
+### Reconstructing a full object graph
+
+The last task for both tools is the hardest part of the competition. 
+We want to reconstruct the full object graph for a given point in time.
+That means time-aware joins which are hard to implement.  
+
+In this use case, we load the historical version of one Employee
+and we check if related Employees are joined in proper versions.
 
