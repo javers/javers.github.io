@@ -1,1 +1,1 @@
-bundle exec jekyll serve
+echo !! run: bundle exec jekyll serve
