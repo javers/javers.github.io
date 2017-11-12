@@ -199,21 +199,23 @@ def "should query for Shadows with different scopes"(){
                       .withChildValueObjects()
                       .withScopeCommitDeep().build())
       bobShadow = shadows[0].get()
+      
   then:
       assert bobShadow.primaryAddress.city == 'London'
       assert bobShadow.boss.name == 'john' // John is inside the query scope, so his
                                            // shadow is loaded and linked to Bob
       assert bobShadow.boss.boss == null   // Steve is still outside the scope
 
-  when: 'commit-deep+ scope query'
+  when: 'deep+2 scope query'
       shadows = javers.findShadows(QueryBuilder.byInstance(bob)
                       .withChildValueObjects()
-                      .withScopeCommitDeepPlus(1).build())
+                      .withScopeDeepPlus(2).build())
       bobShadow = shadows[0].get()
+
   then: 'all objects are loaded'
       assert bobShadow.primaryAddress.city == 'London'
       assert bobShadow.boss.name == 'john'
-      assert bobShadow.boss.boss.name == 'steve' // Steve is loaded thanks to +1 scope
+      assert bobShadow.boss.boss.name == 'steve' // Steve is loaded thanks to deep+2 scope
 }
 ```
  
@@ -284,7 +286,6 @@ is the historical state of a domain object captured as the `property:value` map.
 Snapshots are raw data stored in JaversRepository. When an object is changed,
 JaVers makes a snapshot of its state and persists it.
 When an object isn’t changed (i.e. hasn’t changed since the last commit), no snapshot is created, even if you commit it several times.  
-
 
 ```groovy
 def "should query for Snapshots of an object"(){
