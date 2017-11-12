@@ -144,13 +144,13 @@ Scopes are defined and described in the
 
 * **Child-value-object** &mdash;
   Entity Shadows are loaded with their child ValueObjects.
-  This scope can be combined with commit-deep and commit-deep+.
+  This scope can be combined with commit-deep and deep+.
    
 * **Commit-deep** &mdash;
   Shadows are created from all snapshots saved in
   commits touched by the main query.
   
-* **Commit-deep+**
+* **Deep+**
   &mdash; JaVers tries to restore the full object graph with
   (possibly) all objects loaded.
 
