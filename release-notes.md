@@ -5,6 +5,17 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.7.0
+released on 2017-11-24
+
+* [605](https://github.com/javers/javers/issues/605) Compare Lists as Sets.
+  New List comparing algorithm contributed by [drakin](https://github.com/drakin).
+  See [List comparing algorithms](/documentation/diff-configuration/#list-algorithms)
+
+* [601](https://github.com/javers/javers/issues/601)
+  Fixed bug in the type mapping algorithm. In this case, an Entity with complex inheritance structure
+  was mapped as Value.  
+
 ### 3.6.3
 released on 2017-11-13
 

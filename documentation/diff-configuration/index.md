@@ -12,32 +12,40 @@ It consists of the core comparators suite and optionally, [custom comparators](#
 You can fine-tune how the whole algorithm works by registering custom comparators
 for certain types (custom comparators overrides core comparators).
 
-For [comparing Lists](#list-algorithms), JaVers has two core comparators, pick one.
-
+For [comparing Lists](#list-algorithms), JaVers has three core comparators:
+ **Simple** (default), **Levenshtein** distance, and **Set**. Pick one.
 
 <h2 id="list-algorithms">List comparing algorithms</h2>
-Choose between two algorithms for comparing list: SIMPLE (default)
-or Levenshtein distance.
-
-Generally, we recommend using **Levenshtein**, because it’s smarter.
+Generally, we recommend using **Levenshtein**, because it’s the smartest one.
 But use it with caution, it could be slow for long lists,
 say more then 300 elements.
 
-The main advantage of **SIMPLE** algorithm is speed, it has linear computation complexity.
-The main disadvantage is a verbose output.
+The main advantage of **Simple** algorithm is speed, it has linear computation complexity.
+The main disadvantage is the verbose output.
 
-You can switch to Levenshtein in JaversBuilder:
+Choose the **Set** algorithm if you don’t care about the items ordering. 
+JaVers will convert all Lists to Sets before comparision.
+This algorithm produces the most concise output (only `ValueAdded` and `ValueRemoved`).   
+
+You can switch to Levenshtein or Set in JaversBuilder:
 
 ```java
-    Javers javers = JaversBuilder
-        .javers()
+    Javers javers = JaversBuilder.javers()
         .withListCompareAlgorithm(ListCompareAlgorithm.LEVENSHTEIN_DISTANCE)
+        .build();
+```
+
+or
+
+```java
+    Javers javers = JaversBuilder.javers()
+        .withListCompareAlgorithm(ListCompareAlgorithm.AS_SET)
         .build();
 ```
 
 <h3 id="simple-vs-levenshtein">Simple vs Levenshtein algorithm</h3>
 
-SIMPLE algorithm generates changes for shifted elements (in case when elements are inserted or removed in the middle of a list).
+Simple algorithm generates changes for shifted elements (in case when elements are inserted or removed in the middle of a list).
 On the contrary, Levenshtein algorithm calculates short and clear change list even in case when elements are shifted.
 It doesn’t care about index changes for shifted elements.
 
