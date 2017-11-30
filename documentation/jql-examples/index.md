@@ -105,8 +105,7 @@ def "should query for Shadows of an object"() {
       javers.commit("author", bob)       // second commit
 
   when:
-      def shadows = javers.findShadows(
-              QueryBuilder.byInstance(bob).withChildValueObjects().build() )
+      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
 
   then:
       assert shadows.size() == 2
@@ -135,7 +134,7 @@ There is no Hibernate-style lazy loading.
 There are four scopes.
 The wider the scope, the more object shadows are loaded to the resulting graph
 (and the more database queries are executed).
-Scopes are defined and described in the
+Scopes are defined in the
 `ShadowScope` enum (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html)). 
 
 * **Shallow**
@@ -144,18 +143,18 @@ Scopes are defined and described in the
 
 //TODO 
 * **Child-value-object** &mdash;
-  Entity Shadows are loaded with their child ValueObjects.
-  This scope can be combined with commit-deep and deep+.
-   
+  JaVers loads all child ValueObjects owned by selected Entities.
+  Since 3.7.5, this scope is implicitly enabled for all Shadow queries and can't be disabled.
+     
 * **Commit-deep** &mdash;
   Shadows are created from all snapshots saved in
   commits touched by the main query.
   
 * **Deep+**
-  &mdash; JaVers tries to restore the full object graph with
+  &mdash; JaVers tries to restore full object graphs with
   (possibly) all objects loaded.
 
-The following example shows how all the four scopes work:
+The following example shows how all the scopes work:
 
 ```groovy
 def "should query for Shadows with different scopes"(){

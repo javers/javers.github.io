@@ -128,7 +128,7 @@ Javers javers = JaversBuilder.javers()
 **For example** Values are: BigDecimal, LocalDate.
 
 For Values it’s advisable to customize JSON serialization by implementing *Type Adapters*
-(see [custom json serialization](#custom-json-serialization)).
+(see [custom json serialization](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
