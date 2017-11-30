@@ -141,7 +141,6 @@ Scopes are defined in the
   &mdash;  the defult scope &mdash;
    Shadows are created only from snapshots selected directly in the main JQL query.
 
-//TODO 
 * **Child-value-object** &mdash;
   JaVers loads all child ValueObjects owned by selected Entities.
   Since 3.7.5, this scope is implicitly enabled for all Shadow queries and can't be disabled.
@@ -210,7 +209,7 @@ def "should query for Shadows with different scopes"(){
 If you want to be 100% sure that Shadow reconstruction
 didn’t hide some details &mdash; use Snapshots or Changes view.
 
-Read more about the scopes in 
+Read more about Shadow query <b>scopes, profiling, and runtime statistics</b> in 
 [Javers#findShadows()]({{ site.javadoc_url }}org/javers/core/Javers.html#findShadows-org.javers.repository.jql.JqlQuery-)
 javadoc.
 
