@@ -5,6 +5,52 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.7.5
+released on 2017-12-01
+
+* **Shadow queries performance optimization**. Less DB queries executed for 
+each **Deep+** query.
+
+* Changes in Shadow Scopes. Now, JaVers always loads child ValueObjects owned by selected Entities.
+So there is no need to call `QueryBuilder.withChildValueObjects()`.
+See [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) javadoc
+
+* Shadow queries execution statistics logger. Enable it: 
+
+```
+    <logger name="org.javers.JQL" level="DEBUG"/>
+```      
+
+and you will get detailed logs from query execution, for example: 
+
+```text
+DEBUG org.javers.JQL - SHALLOW query: 1 snapshots loaded (entities: 1, valueObjects: 0)
+DEBUG org.javers.JQL - DEEP_PLUS query for '...SnapshotEntity/2' at commitId 3.0, 1 snapshot(s) loaded, gaps filled so far: 1
+DEBUG org.javers.JQL - warning: object '...SnapshotEntity/3' is outside of the DEEP_PLUS+1 scope, references to this object will be nulled. Increase maxGapsToFill and fill all gaps in your object graph.
+DEBUG org.javers.JQL - queryForShadows executed:
+JqlQuery {
+  IdFilter{ globalId: ...SnapshotEntity/1 }
+  QueryParams{ aggregate: true, limit: 100 }
+  ShadowScopeDefinition{ shadowScope: DEEP_PLUS, maxGapsToFill: 1 }
+  Stats{
+    executed in millis: 12
+    DB queries: 2
+    all snapshots: 2
+    SHALLOW snapshots: 1
+    DEEP_PLUS snapshots: 1
+    gaps filled: 1
+    gaps left!: 1
+  }
+}
+```
+
+Statistics are also available in `Stats` object that you can get from
+an executed query:
+ 
+```java
+Stats stats = jqlQuery.stats();
+```
+
 ### 3.7.0
 released on 2017-11-24
 
@@ -19,7 +65,7 @@ released on 2017-11-24
 ### 3.6.3
 released on 2017-11-13
 
-* Changes in Shadow Scopes. **Commit-deep+** is renamed to **deep+**. 
+* Changes in Shadow Scopes. **Commit-deep+** is renamed to **Deep+**. 
   See [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) javadoc.
   Now, deep+ scope doesn't include commit-deep scope. They are independent scopes.
 

@@ -105,8 +105,7 @@ def "should query for Shadows of an object"() {
       javers.commit("author", bob)       // second commit
 
   when:
-      def shadows = javers.findShadows(
-              QueryBuilder.byInstance(bob).withChildValueObjects().build() )
+      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
 
   then:
       assert shadows.size() == 2
@@ -135,7 +134,7 @@ There is no Hibernate-style lazy loading.
 There are four scopes.
 The wider the scope, the more object shadows are loaded to the resulting graph
 (and the more database queries are executed).
-Scopes are defined and described in the
+Scopes are defined in the
 `ShadowScope` enum (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html)). 
 
 * **Shallow**
@@ -143,18 +142,18 @@ Scopes are defined and described in the
    Shadows are created only from snapshots selected directly in the main JQL query.
 
 * **Child-value-object** &mdash;
-  Entity Shadows are loaded with their child ValueObjects.
-  This scope can be combined with commit-deep and deep+.
-   
+  JaVers loads all child ValueObjects owned by selected Entities.
+  Since 3.7.5, this scope is implicitly enabled for all Shadow queries and can't be disabled.
+     
 * **Commit-deep** &mdash;
   Shadows are created from all snapshots saved in
   commits touched by the main query.
   
 * **Deep+**
-  &mdash; JaVers tries to restore the full object graph with
+  &mdash; JaVers tries to restore full object graphs with
   (possibly) all objects loaded.
 
-The following example shows how all the four scopes work:
+The following example shows how all the scopes work:
 
 ```groovy
 def "should query for Shadows with different scopes"(){
@@ -174,55 +173,43 @@ def "should query for Shadows with different scopes"(){
       javers.commit('author', bob)    // commit 3.0 with snapshot of Bob
 
   when: 'shallow scope query'
-      def shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-                          .build())
+      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
       Employee bobShadow = shadows[0].get()  //get the latest version of Bob
+ 
   then:
-      assert shadows.size() == 2      //we have 2 shadows of Bob
+      assert shadows.size() == 2             //we have 2 shadows of Bob
       assert bobShadow.name == 'bob'
-      // all referenced objects (including address) are outside the query scope
-      // so they are nulled
-      assert bobShadow.primaryAddress == null
+      // referenced entities are outside the query scope so they are nulled
       assert bobShadow.boss == null
-
-  when: 'child-value-object scope query'
-      shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-                      .withChildValueObjects().build())
-      bobShadow = shadows[0].get()
-  then:
-      // address is inside the query scope
+      // child Value Objects are always in scope
       assert bobShadow.primaryAddress.city == 'London'
-      assert bobShadow.boss == null        // John is still outside the query scope
-
+ 
   when: 'commit-deep scope query'
       shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-                      .withChildValueObjects()
                       .withScopeCommitDeep().build())
       bobShadow = shadows[0].get()
-      
   then:
-      assert bobShadow.primaryAddress.city == 'London'
       assert bobShadow.boss.name == 'john' // John is inside the query scope, so his
                                            // shadow is loaded and linked to Bob
       assert bobShadow.boss.boss == null   // Steve is still outside the scope
-
+      assert bobShadow.primaryAddress.city == 'London'
+ 
   when: 'deep+2 scope query'
       shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-                      .withChildValueObjects()
                       .withScopeDeepPlus(2).build())
       bobShadow = shadows[0].get()
-
+ 
   then: 'all objects are loaded'
-      assert bobShadow.primaryAddress.city == 'London'
       assert bobShadow.boss.name == 'john'
       assert bobShadow.boss.boss.name == 'steve' // Steve is loaded thanks to deep+2 scope
+      assert bobShadow.primaryAddress.city == 'London'
 }
 ```
  
 If you want to be 100% sure that Shadow reconstruction
 didn’t hide some details &mdash; use Snapshots or Changes view.
 
-Read more about the scopes in 
+Read more about Shadow query <b>scopes, profiling, and runtime statistics</b> in 
 [Javers#findShadows()]({{ site.javadoc_url }}org/javers/core/Javers.html#findShadows-org.javers.repository.jql.JqlQuery-)
 javadoc.
 
