@@ -388,7 +388,6 @@ def "should browse JaVers history of objects by type"(){
   when:
     List<Shadow<Employee>> shadows = javers.findShadows(
             QueryBuilder.byClass(Employee)
-                        .withChildValueObjects()
                         .withSnapshotTypeUpdate()
                         .build())
 
@@ -584,9 +583,7 @@ def "should browse JaVers history of objects by type with filters"(){
 
   when: 'query with Id filter'
     List<Shadow<Employee>> shadows = javers.findShadows(
-            QueryBuilder.byInstanceId('Aragorn', Employee)
-                        .withChildValueObjects()
-                        .build())
+            QueryBuilder.byInstanceId('Aragorn', Employee).build())
 
   then:
     println 'javers history of Aragorn:'
@@ -600,7 +597,6 @@ def "should browse JaVers history of objects by type with filters"(){
             QueryBuilder.byClass(Employee)
                         .withChangedProperty('salary')
                         .withSnapshotTypeUpdate()
-                        .withChildValueObjects()
                         .build())
 
   then:
