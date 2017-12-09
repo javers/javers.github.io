@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.7.6
+released on 2017-12-09
+* [614](https://github.com/javers/javers/issues/614) Custom `toString` function.
+[Ismael Gomes Costa](https://github.com/ismaelgomescosta)
+contributed the method for registering `toString` function for complex `ValueTypes` used as Entity Id.
+See [registerValueWithCustomToString]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueWithCustomToString-java.lang.Class-java.util.function.Function-) javadoc. 
+
 ### 3.7.5
 released on 2017-12-01
 
