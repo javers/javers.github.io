@@ -36,20 +36,18 @@ as these languages are far more readable for BDD-style tests than Java.
 <h4 id="data-history-views">Data history views</h4>
 
 Data history can be fetched from JaversRepository using `javers.find*()` methods in one of three views:
-*Changes*,
-*Shadows*, and 
-*Snapshots*. 
+*Shadows*, *Changes*, and *Snapshots*. 
 
-* [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html) represents an atomic difference between two objects. 
-* [Shadow]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) (<font color="red">new in JaVers 3.2</font>) is a historical version of a domain object restored from a snapshot.
-* [Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html) is a historical state of a domain object captured as the `property:value` map.
+* **Shadow** is a historical version of a domain object restored from a snapshot.
+* **Change** represents an atomic difference between two objects. 
+* **Snapshot** is a historical state of a domain object captured as the `property:value` map.
 
 <h4>List of Examples</h4>
 
 There are three `find*()` methods:
 
-* [findChanges()](#query-for-changes) for the Changes view,
 * [findShadows()](#query-for-shadows) for the Shadows view,
+* [findChanges()](#query-for-changes) for the Changes view,
 * [findSnapshots()](#query-for-snapshots) for the Snapshots view.
 
 There are four types of queries:
@@ -81,11 +79,145 @@ JQL can adapt when you refactor your domain classes:
 
 All `find*()` methods understand JQL so you can use the same JqlQuery to get Changes, Shadows and Snapshots views.
 
+<h3 id="query-for-shadows">Querying for Shadows</h3>
+
+Shadows (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html)) offer the most natural view on data history.
+Thanks to JaVers magic, you can see historical versions of your domain objects
+*reconstructed* from Snapshots.
+
+Since Shadows are instances of your domain classes,
+you can use them easily in your application. 
+Moreover, the JQL engine strives to rebuild original object graphs.
+  
+See how it works:
+
+```groovy
+def "should query for Shadows of an object"() {
+  given:
+      def javers = JaversBuilder.javers().build()
+      def bob = new Employee(name: "bob",
+                             salary: 1000,
+                             primaryAddress: new Address("London"))
+      javers.commit("author", bob)       // initial commit
+
+      bob.salary = 1200                  // changes
+      bob.primaryAddress.city = "Paris"  //
+      javers.commit("author", bob)       // second commit
+
+  when:
+      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
+
+  then:
+      assert shadows.size() == 2
+
+      Employee bobNew = shadows[0].get()     // Employee shadows are instances
+      Employee bobOld = shadows[1].get()     // of Employee.class
+
+      bobNew.salary == 1200
+      bobOld.salary == 1000
+      bobNew.primaryAddress.city == "Paris"  // Employee shadows are linked
+      bobOld.primaryAddress.city == "London" // to Address Shadows
+
+      shadows[0].commitMetadata.id.majorId == 2
+      shadows[1].commitMetadata.id.majorId == 1
+}
+```  
+  
+<br/>
+<h4 id="shadow-scopes">Shadow Scopes</h4>
+
+Shadow reconstruction comes with one limitation &mdash; the query scope.
+Shadows inside the scope are loaded eagerly.
+References to Shadows outside the scope are simply nulled.
+There is no Hibernate-style lazy loading.
+
+There are four scopes.
+The wider the scope, the more object shadows are loaded to the resulting graph
+(and the more database queries are executed).
+Scopes are defined in the
+`ShadowScope` enum (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html)). 
+
+* **Shallow**
+  &mdash;  the defult scope &mdash;
+   Shadows are created only from snapshots selected directly in the main JQL query.
+
+* **Child-value-object** &mdash;
+  JaVers loads all child ValueObjects owned by selected Entities.
+  Since 3.7.5, this scope is implicitly enabled for all Shadow queries and can't be disabled.
+     
+* **Commit-deep** &mdash;
+  Shadows are created from all snapshots saved in
+  commits touched by the main query.
+  
+* **Deep+**
+  &mdash; JaVers tries to restore full object graphs with
+  (possibly) all objects loaded.
+
+The following example shows how all the scopes work:
+
+```groovy
+def "should query for Shadows with different scopes"(){
+  given:
+      def javers = JaversBuilder.javers().build()
+
+      //    /-> John -> Steve
+      // Bob
+      //    \-> #address
+      def steve = new Employee(name: 'steve')
+      def john = new Employee(name: 'john', boss: steve)
+      def bob  = new Employee(name: 'bob', boss: john, primaryAddress: new Address('London'))
+
+      javers.commit('author', steve)  // commit 1.0 with snapshot of Steve
+      javers.commit('author', bob)    // commit 2.0 with snapshots of Bob, Bob#address and John
+      bob.salary = 1200               // the change
+      javers.commit('author', bob)    // commit 3.0 with snapshot of Bob
+
+  when: 'shallow scope query'
+      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
+      Employee bobShadow = shadows[0].get()  //get the latest version of Bob
+ 
+  then:
+      assert shadows.size() == 2             //we have 2 shadows of Bob
+      assert bobShadow.name == 'bob'
+      // referenced entities are outside the query scope so they are nulled
+      assert bobShadow.boss == null
+      // child Value Objects are always in scope
+      assert bobShadow.primaryAddress.city == 'London'
+ 
+  when: 'commit-deep scope query'
+      shadows = javers.findShadows(QueryBuilder.byInstance(bob)
+                      .withScopeCommitDeep().build())
+      bobShadow = shadows[0].get()
+  then:
+      assert bobShadow.boss.name == 'john' // John is inside the query scope, so his
+                                           // shadow is loaded and linked to Bob
+      assert bobShadow.boss.boss == null   // Steve is still outside the scope
+      assert bobShadow.primaryAddress.city == 'London'
+ 
+  when: 'deep+2 scope query'
+      shadows = javers.findShadows(QueryBuilder.byInstance(bob)
+                      .withScopeDeepPlus(2).build())
+      bobShadow = shadows[0].get()
+ 
+  then: 'all objects are loaded'
+      assert bobShadow.boss.name == 'john'
+      assert bobShadow.boss.boss.name == 'steve' // Steve is loaded thanks to deep+2 scope
+      assert bobShadow.primaryAddress.city == 'London'
+}
+```
+ 
+If you want to be 100% sure that Shadow reconstruction
+didn’t hide some details &mdash; use Snapshots or Changes view.
+
+Read more about Shadow query <b>scopes, profiling, and runtime statistics</b> in 
+[Javers#findShadows()]({{ site.javadoc_url }}org/javers/core/Javers.html#findShadows-org.javers.repository.jql.JqlQuery-)
+javadoc.
+
 <h3 id="query-for-changes">Querying for Changes</h3>
 
 The Changes view is the list of atomic differences between subsequent versions of a domain object. 
 There are various types of changes: ValueChange, ReferenceChange, ListChange, NewObject, and so on.
-See the [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)
+See the Change ([javadoc]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)) 
 class inheritance hierarchy for the complete list.
 
 Since JaVers stores only Snapshots of domain objects,
@@ -133,142 +265,14 @@ commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#pr
 
 You can also load Changes generated from an initial Snapshot (see [NewObject Filter](#new-object-filter)).
 
-<h3 id="query-for-shadows">Querying for Shadows</h3>
-
-Shadows offer the most natural view on data history.
-Thanks to JaVers magic, you can see historical versions of your domain objects
-*reconstructed* from Snapshots.
-
-Since [Shadows]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html) are instances of your domain classes,
-you can use them easily in your application. 
-Moreover, the JQL engine strives to rebuild original object graphs.
-  
-See how it works:
-
-```groovy
-def "should query for Shadows of an object"() {
-    given:
-    def javers = JaversBuilder.javers().build()
-    def bob = new Employee(name: "bob",
-                           salary: 1000,
-                           primaryAddress: new Address("London"))
-    javers.commit("author", bob)       // initial commit
-
-    bob.salary = 1200                  // changes
-    bob.primaryAddress.city = "Paris"  //
-    javers.commit("author", bob)       // second commit
-
-    when:
-    def shadows = javers.findShadows(
-            QueryBuilder.byInstance(bob).withChildValueObjects().build() )
-
-    then:
-    assert shadows.size() == 2
-
-    Employee bobNew = shadows[0].get()     // Employees Shadows are instances
-    Employee bobOld = shadows[1].get()     // of Employee.class
-
-    bobNew.salary == 1200
-    bobOld.salary == 1000
-    bobNew.primaryAddress.city == "Paris"  // Employees Shadows are linked
-    bobOld.primaryAddress.city == "London" // with Addresses Shadows
-
-    shadows[0].commitMetadata.id.majorId == 2
-    shadows[1].commitMetadata.id.majorId == 1
-}
-```  
-  
-<br/>
-<h4 id="shadow-scopes">Shadow Scopes</h4>
-
-Shadow reconstruction comes with one limitation &mdash; the query scope.
-Shadows inside the scope are loaded eagerly.
-References to Shadows outside the scope are simply nulled.
-There is no Hibernate-style lazy loading.
-
-There are three scopes.
-The wider the scope, the more object shadows are loaded to the resulting graph
-(and the more database queries are executed).
-
-* [shallow]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#SHALLOW)
-  &mdash; (defult scope)
-   Shadows are created only from snapshots selected directly in the JQL query.
-* [commit-deep]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#COMMIT_DEEP)
-  &mdash; Shadows are created from all snapshots saved in
-  commits touched by the query.
-* [commit-deep+]({{ site.javadoc_url }}org/javers/repository/jql/ShadowScope.html#COMMIT_DEEP_PLUS)
-  &mdash; JaVers tries to restore a full object graph with
-  (possibly) all objects loaded.
-
-The following example shows how all the three scopes work:
-
-```groovy
-def "should query for Shadows with different scopes"(){
-  given:
-  def javers = JaversBuilder.javers().build()
-
-  //    /-> John -> Steve
-  // Bob
-  //    \-> #address
-  def steve = new Employee(name: 'steve')
-  def john = new Employee(name: 'john', boss: steve)
-  def bob  = new Employee(name: 'bob', boss: john, primaryAddress: new Address('London'))
-
-  javers.commit('author', steve)  // commit 1.0 with snapshot of Steve
-  javers.commit('author', bob)    // commit 2.0 with snapshots of Bob, Bob#address and John
-  bob.salary = 1200               // changes
-  javers.commit('author', bob)    // commit 3.0 with snapshot of Bob
-
-  when: 'shallow scope query'
-  def shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-               .withChildValueObjects().build())
-  Employee bobShadow = shadows[0].get()  //get the latest version of Bob
-
-  then: 'only Bob and his address are loaded'
-  assert shadows.size() == 2           //we have 2 shadows of Bob
-  assert bobShadow.name == 'bob'
-  assert bobShadow.primaryAddress.city == 'London'
-  assert bobShadow.boss == null        //john is outside the query scope,
-                                       //so reference from bob to john is nulled
-
-  when: 'commit-deep scope query'
-  shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-          .withChildValueObjects()
-          .withScopeCommitDeep().build())
-  bobShadow = shadows[0].get()
-
-  then: 'John is also loaded'
-  assert bobShadow.boss.name == 'john' // John is inside the query scope, so his
-                                       // shadow is loaded and linked to Bob
-
-  when: 'commit-deep+ scope query'
-  shadows = javers.findShadows(QueryBuilder.byInstance(bob)
-          .withChildValueObjects()
-          .withScopeCommitDeepPlus(1).build())
-  bobShadow = shadows[0].get()
-
-  then: 'all objects are loaded'
-  assert bobShadow.boss.name == 'john'
-  assert bobShadow.boss.boss.name == 'steve'
-}
-```
- 
-If you want to be 100% sure that Shadow reconstruction
-didn’t hide some details &mdash; use Snapshots or Changes view.
-
-
-Read more about the scopes in these javadocs: [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html)
-and [QueryBuilder#withShadowScope()]({{ site.javadoc_url }}org/javers/repository/jql/QueryBuilder.html#withShadowScope-org.javers.repository.jql.ShadowScope-).
-
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
-[Snapshot]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
+Snapshot (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html))
 is the historical state of a domain object captured as the `property:value` map.
 
 Snapshots are raw data stored in JaversRepository. When an object is changed,
 JaVers makes a snapshot of its state and persists it.
 When an object isn’t changed (i.e. hasn’t changed since the last commit), no snapshot is created, even if you commit it several times.  
-
 
 ```groovy
 def "should query for Snapshots of an object"(){
@@ -1111,7 +1115,7 @@ However, we still recommend to adding @TypeName.
 For example, querying by ValueObject class relies on it.
 
 JaVers treats ValueObjects as property containers and doesn’t care much about their classes.
-This approach is known us Duck Typing, and is widely adopted by dynamic languages like Groovy.
+This approach is known as Duck Typing, and is widely adopted by dynamic languages like Groovy.
 
 **Example** <br/>
 Let’s consider the refactoring of Person’s address,

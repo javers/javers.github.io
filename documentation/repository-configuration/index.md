@@ -111,6 +111,7 @@ ConnectionProvider connectionProvider = new ConnectionProvider() {
 
 JaversSqlRepository sqlRepository = SqlRepositoryBuilder
         .sqlRepository()
+        .withSchema("my_schema") //optionally, provide the schame name
         .withConnectionProvider(connectionProvider)
         .withDialect(DialectName.H2).build();
 Javers javers = JaversBuilder.javers().registerJaversRepository(sqlRepository).build();

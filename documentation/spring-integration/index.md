@@ -6,24 +6,41 @@ submenu: spring-integration
 sidebar-url: docs-sidebar.html
 ---
 
-Our main idea at JaVers is that our library should be very easy to use.
-So we made JaVers compatible with Spring Framework.
+We made JaVers easy to use for applications based on Spring Framework.
+There are two modules for Spring integration.
 
-`javers-spring` module provides the following features:
+**`javers-spring`** module provides two auto-audit aspects:
 
-* [aspects](#auto-audit-aspect) for Repository auto-audit (both SQL and NoSQL),
-* [integration](#jpa-entity-manager-integration) with JPA EntityManager for SQL databases.
+* [@JaversAuditable](#at-javers-auditable) for ordinary Repositories,
+* [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) for Spring Data CrudRepository.
+   
+**`javers-spring-jpa`** module &mdash; a superset of `javers-spring` &mdash; provides:
 
-### Dependency ###
+* [JPA & Hibernate integration](#jpa-entity-manager-integration) for SQL databases,
+* support for Spring Data JpaRepository `saveAndFlush()`.
+
+### Dependencies ###
 
 If you are using [Spring Boot](http://projects.spring.io/spring-boot/),
-simplify JaVers setup with our starters, see [Spring Boot integration](/documentation/spring-boot-integration/).
+simplify your [JaVers setup with our Spring Boot starters](/documentation/spring-boot-integration/). This is
+**the recommended way** of using JaVers in Spring-based applications.
+Our starters give you the right configuration out of the box.
 
-If you are not using Spring Boot, add `javers-spring` module to your classpath:
 
+#### Non Spring Boot applications
+
+Take `javers-spring-jpa` if you are using JaVers with SQL database and JPA & Hibernate:
+
+```groovy
+compile 'org.javers:javers-spring-jpa:{{site.javers_current_version}}'
+```
+
+Take `javers-spring` if you are using JaVers with MongoDB (or any persistence stack other than SQL with JPA & Hibernate):
+ 
 ```groovy
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
+
 Check
 [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
 for other build tools snippets.
@@ -47,50 +64,68 @@ You need to register exactly one JaVers instance in your Application Context.
 For example, if you’re using MongoDB, setup JaVers as follows:
 
 ```java
-    @Bean
-    public Javers javers() {
-        MongoRepository javersMongoRepository = new MongoRepository(mongoDB());
+@Bean
+public Javers javers() {
+    MongoRepository javersMongoRepository =
+            new MongoRepository(mongo().getDatabase("mydatabase"));
 
-        return JaversBuilder.javers()
-                .registerJaversRepository(javersMongoRepository)
-                .build();
-    }
+    return JaversBuilder.javers()
+            .registerJaversRepository(javersMongoRepository)
+            .build();
+}
 
-    @Bean
-    public MongoDatabase mongoDB() {
-        return new Fongo("test").getDatabase("test");
-    }
+@Bean
+public MongoClient mongo() {
+    return new Fongo("test").getMongo();
+}
 ```
 
 <h3 id="javers-auto-audit-aspects">Aspect beans</h3>
 
-JaVers provides two aspects which manage the auto-audit feature:
+JaVers provides three aspects for the auto-audit feature:
 
-* **`JaversSpringDataAuditableRepositoryAspect`**
-  for Spring Data CRUD Repositories, enabled by [`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable).
+**`JaversSpringDataAuditableRepositoryAspect`**
+  for Spring Data CRUD Repositories.
   <br/>
-  It defines the pointcut on all `save(..)` and `delete(..)` methods
-  within all Spring Data CRUD Repositories annotated with the class-level [`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable) annotation.
+  It defines the pointcut on `save(..)` and `delete(..)` methods
+  within Spring Data CRUD Repositories annotated with the class-level
+  [`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable) annotation.
 
 ```java
-    @Bean
-    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
-        return new JaversSpringDataAuditableRepositoryAspect(
-                javers(), authorProvider(), commitPropertiesProvider());
-    }
+@Bean
+public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
+    return new JaversSpringDataAuditableRepositoryAspect(
+            javers(), authorProvider(), commitPropertiesProvider());
+}
 ```
+
+**`JaversSpringDataJpaAuditableRepositoryAspect`** 
+  for Spring Data JPA Repositories.
+  <br/>
+  It extends the first aspect with the pointcut on `JpaRepository.saveAndFlush()`.
+  
+```java
+@Bean
+public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAuditableAspect(Javers javers) {
+    return new JaversSpringDataJpaAuditableRepositoryAspect(javers, authorProvider(),
+        commitPropertiesProvider());
+}
+```  
  
-* **`JaversAuditableAspect`**
-  for ordinary Repositories, enabled by [`@JaversAuditable`](#at-javers-auditable).
+**`JaversAuditableAspect`**
+  for ordinary Repositories.
   <br/>
-  It defines the pointcut on any method annotated with the method-level [`@JaversAuditable`](#at-javers-auditable) annotation.
+  It defines the pointcut on any method annotated with the method-level
+  [`@JaversAuditable`](#at-javers-auditable) annotation.
 
 ```java
-    @Bean
-    public JaversAuditableAspect javersAuditableAspect() {
-        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
-    }
+@Bean
+public JaversAuditableAspect javersAuditableAspect() {
+    return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+}
 ```
+
+### How auto-audit aspects work?
 
 After an advised method is executed, all of its **arguments**
 are automatically saved to JaversRepository. <br/>
@@ -100,7 +135,7 @@ JaVers iterates over it and saves each element separately.
 Aspects require one more bean &mdash; [`AuthorProvider`](#author-provider-bean)
 and optionally [`CommitPropertiesProvider`](#commit-properties-provider-bean) bean.
 
-Note that both aspects are based on Spring `@AspectJ`.<br/>
+Note that these aspects are based on Spring `@AspectJ`.<br/>
 **Remember to enable** `@AspectJ` support by putting the `@EnableAspectJAutoProxy`
 annotation in your Spring configuration.
 
@@ -257,10 +292,10 @@ package org.javers.spring.example;
 import ...
 
 @Configuration
-@ComponentScan(basePackages = "org.javers.spring.repository.jpa")
+@ComponentScan(basePackages = "org.javers.spring.repository")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
-@EnableJpaRepositories(basePackages = "org.javers.spring.repository.jpa")
+@EnableJpaRepositories({"org.javers.spring.repository"})
 public class JaversSpringJpaApplicationConfig {
 
     //.. JaVers setup ..
@@ -291,19 +326,20 @@ public class JaversSpringJpaApplicationConfig {
      * to mark data writing methods that you want to audit.
      */
     @Bean
-    public JaversAuditableAspect javersAuditableAspect() {
-        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+    public JaversAuditableAspect javersAuditable(Javers javers) {
+        return new JaversAuditableAspect(javers, authorProvider(), commitPropertiesProvider());
     }
 
     /**
      * Enables auto-audit aspect for Spring Data repositories. <br/>
      *
      * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
-     * to annotate CrudRepositories you want to audit.
+     * to annotate CrudRepository, PagingAndSortingRepository or JpaRepository
+     * you want to audit.
      */
     @Bean
-    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
-        return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
+    public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAspect(Javers javers) {
+        return new JaversSpringDataJpaAuditableRepositoryAspect(javers, authorProvider(),
             commitPropertiesProvider());
     }
 
@@ -319,16 +355,12 @@ public class JaversSpringJpaApplicationConfig {
     }
 
     /**
-     * Optional for auto-audit aspect.
+     * Optional for auto-audit aspect. <br/>
+     * @see CommitPropertiesProvider
      */
     @Bean
     public CommitPropertiesProvider commitPropertiesProvider() {
-        return new CommitPropertiesProvider() {
-            @Override
-            public Map<String, String> provide() {
-                return ImmutableMap.of("key", "ok");
-            }
-        };
+        return () -> ImmutableMap.of("key", "ok");
     }
 
     /**
@@ -398,17 +430,19 @@ package org.javers.spring.example;
 import ...
 
 @Configuration
-@ComponentScan(basePackages = "org.javers.spring.repository.mongo")
+@ComponentScan(basePackages = "org.javers.spring.repository")
+@EnableMongoRepositories({"org.javers.spring.repository"})
 @EnableAspectJAutoProxy
-@EnableMongoRepositories(basePackages = "org.javers.spring.repository.mongo")
 public class JaversSpringMongoApplicationConfig {
+    private static final String DATABASE_NAME = "mydatabase";
 
     /**
      * Creates JaVers instance backed by {@link MongoRepository}
      */
     @Bean
     public Javers javers() {
-        MongoRepository javersMongoRepository = new MongoRepository(mongoDB());
+        MongoRepository javersMongoRepository =
+                new MongoRepository(mongo().getDatabase(DATABASE_NAME));
 
         return JaversBuilder.javers()
                 .registerJaversRepository(javersMongoRepository)
@@ -419,8 +453,16 @@ public class JaversSpringMongoApplicationConfig {
      * MongoDB setup
      */
     @Bean
-    public MongoDatabase mongoDB() {
-        return new Fongo("test").getDatabase("test");
+    public MongoClient mongo() {
+        return new Fongo("test").getMongo();
+    }
+
+    /**
+     * required by Spring Data MongoDB
+     */
+    @Bean
+    public MongoTemplate mongoTemplate() throws Exception {
+        return new MongoTemplate(mongo(), DATABASE_NAME);
     }
 
     /**
@@ -443,7 +485,7 @@ public class JaversSpringMongoApplicationConfig {
     @Bean
     public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
         return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
-            commitPropertiesProvider());
+                commitPropertiesProvider());
     }
 
     /**
@@ -458,16 +500,12 @@ public class JaversSpringMongoApplicationConfig {
     }
 
     /**
-     * Optional for auto-audit aspect.
+     * Optional for auto-audit aspect. <br/>
+     * @see CommitPropertiesProvider
      */
     @Bean
     public CommitPropertiesProvider commitPropertiesProvider() {
-        return new CommitPropertiesProvider() {
-            @Override
-            public Map<String, String> provide() {
-                return ImmutableMap.of("key", "ok");
-            }
-        };
+        return () -> ImmutableMap.of("key", "ok");
     }
 }
 ```

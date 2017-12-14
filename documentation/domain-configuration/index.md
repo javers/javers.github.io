@@ -128,7 +128,7 @@ Javers javers = JaversBuilder.javers()
 **For example** Values are: BigDecimal, LocalDate.
 
 For Values it’s advisable to customize JSON serialization by implementing *Type Adapters*
-(see [custom json serialization](#custom-json-serialization)).
+(see [custom json serialization](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
@@ -157,9 +157,9 @@ Type inferring algorithm has the lowest priority.
 
 **Mapping ProTips**
 
-* First, try to map high level abstract classes or interfaces.
+* First, try to map high level abstract classes.
   For example, if all of your Entities extend some abstract class,
-  you should map only this class.
+  you can map only this class with `@Entity`.
 * JaVers automatically scans JPA annotations
   and maps classes with `@Entity` annotation as Entities
   and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,

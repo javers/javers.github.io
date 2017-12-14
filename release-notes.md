@@ -5,6 +5,136 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.7.5
+released on 2017-12-01
+
+* **Shadow queries performance optimization**. Less DB queries executed for 
+each **Deep+** query.
+
+* Changes in Shadow Scopes. Now, JaVers always loads child ValueObjects owned by selected Entities.
+So there is no need to call `QueryBuilder.withChildValueObjects()`.
+See [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) javadoc
+
+* Shadow queries execution statistics logger. Enable it: 
+
+```
+    <logger name="org.javers.JQL" level="DEBUG"/>
+```      
+
+and you will get detailed logs from query execution, for example: 
+
+```text
+DEBUG org.javers.JQL - SHALLOW query: 1 snapshots loaded (entities: 1, valueObjects: 0)
+DEBUG org.javers.JQL - DEEP_PLUS query for '...SnapshotEntity/2' at commitId 3.0, 1 snapshot(s) loaded, gaps filled so far: 1
+DEBUG org.javers.JQL - warning: object '...SnapshotEntity/3' is outside of the DEEP_PLUS+1 scope, references to this object will be nulled. Increase maxGapsToFill and fill all gaps in your object graph.
+DEBUG org.javers.JQL - queryForShadows executed:
+JqlQuery {
+  IdFilter{ globalId: ...SnapshotEntity/1 }
+  QueryParams{ aggregate: true, limit: 100 }
+  ShadowScopeDefinition{ shadowScope: DEEP_PLUS, maxGapsToFill: 1 }
+  Stats{
+    executed in millis: 12
+    DB queries: 2
+    all snapshots: 2
+    SHALLOW snapshots: 1
+    DEEP_PLUS snapshots: 1
+    gaps filled: 1
+    gaps left!: 1
+  }
+}
+```
+
+Statistics are also available in `Stats` object that you can get from
+an executed query:
+ 
+```java
+Stats stats = jqlQuery.stats();
+```
+
+### 3.7.0
+released on 2017-11-24
+
+* [605](https://github.com/javers/javers/issues/605) Compare Lists as Sets.
+  New List comparing algorithm contributed by [drakin](https://github.com/drakin).
+  See [List comparing algorithms](/documentation/diff-configuration/#list-algorithms)
+
+* [601](https://github.com/javers/javers/issues/601)
+  Fixed bug in the type mapping algorithm. In this case, an Entity with complex inheritance structure
+  was mapped as Value.  
+
+### 3.6.3
+released on 2017-11-13
+
+* Changes in Shadow Scopes. **Commit-deep+** is renamed to **Deep+**. 
+  See [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) javadoc.
+  Now, deep+ scope doesn't include commit-deep scope. They are independent scopes.
+
+* [597](https://github.com/javers/javers/issues/597)
+  Second fix for MySQL error: Specified key was too long; max key length is 767 bytes.
+    
+### 3.6.2
+released on 2017-11-01
+
+* New [snapshotType]({{ site.javadoc_url }}org/javers/repository/jql/QueryBuilder.html#withSnapshotType-org.javers.core.metamodel.object.SnapshotType-)
+  filter in JQL. Allows selecting snapshots by type: `INITIAL`, `UPDATE`, `TERMINAL`.
+
+* Improved exception handling in `byInstance` query.
+
+### 3.6.1
+released on 2017-10-29
+
+* Fix for ValueObject loading in Shadow queries.
+See [updated docs of Shadow scopes](/documentation/jql-examples/#shadow-scopes). 
+
+### 3.6.0
+released on 2017-10-05
+
+* [431](https://github.com/javers/javers/issues/431)
+ Auto-audit aspect also on [JpaRepository.saveAndFlush()](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html).
+ 
+<span style="color:red">This task forced a major refactoring</span>.
+
+`Javers-spring` module was split into two parts:
+ 
+* `javers-spring` with general purpose auto-audit aspect and
+  auto-audit aspect for Spring Data CrudRepository.
+* `javers-spring-jpa` &mdash; a superset of `javers-spring` &mdash; with
+   JPA & Hibernate integration, so:
+   auto-audit aspect for Spring Data JpaRepository,
+   HibernateUnproxyObjectAccessHook, JpaHibernateConnectionProvider,
+   and JaversTransactionalDecorator.
+   
+If you are using <span style="color:red">JaVers with MongoDB</span>, you don't need to change anything.
+
+If you are using <span style="color:red">JaVers with SQL</span> but without Spring Boot,
+you need to change the `javers-spring` dependency to `javers-spring-jpa`.
+If you are using Spring Boot with our starter (`javers-spring-boot-starter-sql`), 
+you don't need to change anything. Our starters always provide the right configuration. 
+
+### 3.5.2
+released on 2017-10-05 <br/>
+
+* [574](https://github.com/javers/javers/issues/574)
+ Added missing support for `@PropertyName` in Shadows.
+
+### 3.5.1
+released on 2017-09-24 <br/>
+
+* Dependencies versions update:
+
+```
+springVersion=4.3.11.RELEASE
+springBootVersion=1.5.7.RELEASE
+guavaVersion=23.0
+gsonVersion=2.8.1
+fastClasspathScannerVersion=2.4.7
+jodaVersion=2.9.7
+mongoDbDriverVersion=3.5.0
+hibernateVersion=5.0.12.Final
+polyjdbcVersion=0.7.1
+aspectjweaverVersion=1.8.6
+```
+
 ### 3.5.0
 released on 2017-07-30 <br/>
 
