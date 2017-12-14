@@ -17,6 +17,15 @@ In the second section, we show the simple, demo application for managing organiz
 data audit made by both JaVers and Envers.
 In the third section, we show how both tools are coping with queries on audit data.
 
+#### ToC
+
+* [High-level comparison](#high-level-comparison)
+* [Demo application](#demo-application)
+  * [Database configuration](#database-configuration) 
+  * [Enabling Envers audit](#enabling-envers-audit)
+  * [Enabling JaVers audit](#enabling-javers-audit)
+* [Querying contest](#querying-contest)   
+
 ## High-level comparison
 
 There are two big differences between JaVers and Envers:
@@ -104,7 +113,7 @@ class Address {
 }
 ```
 
-### Database
+### Database configuration
 
 The application is configured to work with a local PostgreSQL.
 You can change it easily (don’t forget about a proper JDBC driver).
@@ -304,7 +313,7 @@ For example, this is the current state of Gandalf:
 }
 ```
 
-## Queries   
+## Querying contest   
 
 Some applications do data audit only just in case.
 For example, in case of an unexpected and intimidating visit of an IT auditor asking you tons of questions.
@@ -326,7 +335,9 @@ We are giving a rise for Gandalf and Aragorn and also we are changing their addr
 That means four changes.
 Then we show how to browse history of our Employees in Envers and JaVers.
 
-#### Envers way &mdash; [`EnversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L27)
+#### Envers way
+
+[`EnversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L27)
 
 ```groovy
 @Transactional
@@ -370,7 +381,9 @@ revision:35, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates:Th
 revision:36, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates:Thorin }
 ```
 
-#### JaVers way &mdash; [`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L23)
+#### JaVers way
+
+[`JaversQueryTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/JaversQueryTest.groovy#L23)
 
 ```groovy
 def "should browse JaVers history of objects by type"(){
@@ -641,9 +654,7 @@ JaVers’ Snapshot structure is fixed, no more mucking around flags configuratio
 
 ### More query filters
 
-What are the other options for filtering?
-
-Envers offers filtering by property value:
+What are the other options for filtering? Envers offers filtering by property value:
 
 ```java
 query.add(AuditEntity.property("name").eq("John"));
@@ -668,9 +679,7 @@ QueryBuilder.byInstanceId("bob", Employee.class)
 ```
 
 See the full list of JaVers’ [query filters](https://javers.org/documentation/jql-examples/#query-filters).
-    
-### Other types of queries    
-    
+        
 ### Reconstructing a full object graph
 
 The last task is the hardest part of the competition. 
@@ -679,5 +688,76 @@ That means time-aware joins which are tricky.
 
 In this use case, we load the historical version of one Employee
 and we check if related Employees are joined in proper versions.
-Challenge!
 
+To make the case harder (and more realistic), we update Employees independently.
+What we want from JaVers and Envers is recalling that specific point in time
+when all the guys had the same sallary &mdash; $6000.  
+
+Let’s start the challenge from Envers.
+
+#### Envers way &mdash; [`EnversQueryTest.groovy#L102`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/EnversQueryTest.groovy#L102)
+
+```groovy
+@Transactional
+def "should reconstruct a full object graph with Envers"(){
+  given:
+    def gandalf = hierarchyService.initStructure()
+    def aragorn = gandalf.getSubordinate('Aragorn')
+    def thorin = aragorn.getSubordinate('Thorin')
+    def bombur = thorin.getSubordinate("Bombur")
+    gandalf.prettyPrint()
+
+    [gandalf,aragorn, bombur].each {
+        hierarchyService.updateSalary(it, 6000)
+    }
+
+    hierarchyService.giveRaise(thorin, 1000)
+    //this state we want to reconstruct,
+    //when all the four guys have salary $6000
+    gandalf.prettyPrint()
+
+    [gandalf, aragorn, thorin, bombur].each {
+        hierarchyService.giveRaise(it, 500)
+    }
+
+  when:
+    def start = System.currentTimeMillis()
+    List thorins = AuditReaderFactory
+          .get(entityManager)
+          .createQuery()
+          .forRevisionsOfEntity( Employee, false, true )
+          .add( AuditEntity.id().eq( 'Thorin' ) )
+          .getResultList()
+
+  then:
+    def thorinShadow = thorins.collect{it[0]}.find{it.salary == 6000}
+
+    [thorinShadow,
+     thorinShadow.getBoss(),
+     thorinShadow.getBoss().getBoss(),
+     thorinShadow.getSubordinate("Bombur")].each
+    {
+        println it
+        assert it.salary == 6000
+    }
+    println "Envers query executed in " + (System.currentTimeMillis() - start) + " millis"
+}
+```
+
+Envers output: 
+
+```text
+Employee{ Thorin TEAM_LEAD, $6000, Lonely Mountain, subordinates:'Bombur','Frodo','Fili','Kili','Bifur' }
+Employee{ Aragorn CTO, $6000, Minas Tirith, subordinates:'Thorin' }
+Employee{ Gandalf CEO, $6000, Middle-earth, subordinates:'Aragorn','Elrond' }
+Employee{ Bombur SCRUM_MASTER, $6000, Lonely Mountain, subordinates: }
+Envers query executed in 399 millis
+```
+
+#### Comparision
+
+
+### Other types of queries
+//TODO
+
+### Final thoughts.

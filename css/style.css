@@ -22,6 +22,7 @@ a, a:hover, a:active {
 code {
     background: transparent;
     padding-right: 0;
+    padding-left: 0;
     color: #111;
     font-size: 0.95em;
     white-space: pre-wrap;
