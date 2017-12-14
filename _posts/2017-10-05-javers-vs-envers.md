@@ -675,7 +675,7 @@ See the full list of JaVers’ [query filters](https://javers.org/documentation/
 
 The last task is the hardest part of the competition. 
 We want to reconstruct the full object graph for a given point in time.
-That means time-aware joins which are hard to implement.  
+That means time-aware joins which are tricky.  
 
 In this use case, we load the historical version of one Employee
 and we check if related Employees are joined in proper versions.
