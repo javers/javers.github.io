@@ -815,17 +815,57 @@ JaVers query executed in 48 millis
 
 #### Comparision
 
-Both tools managed to reconstruct the correct object graph.
-Thorin’s shadow with salary $6000 is wired with
-the right Aragorn’s shadow, which is wired with the right  
-Gandalf’s shadow.
-Believe or not, but this reconstruction backed by time-aware joins is not trivial
-and can be time slow for large object graphs.
+Both tools succeeded to reconstruct the correct object graph.
+Thorin’s version is wired with
+the right Aragorn’s version, which is wired with the right  
+Gandalf’s version.
+Believe or not, this reconstruction is not trivial
+because it’s implemented atop of an ordinary SQL database which has no time dimension.
 
-..perf
- 
+You can face performance issues when you try to reconstruct large object graphs on a production database.
+In JaVers you can enable a simple profiler tool, which logs query execution statistics
+to standard `slf4j` logger:
+
+```xml
+<logger name="org.javers.JQL" level="DEBUG"/>
+```
+
+Then, you can analyze logs from the JQL query execution: 
+
+```text
+[main] org.javers.core.Javers  : Commit(id:6.1, snapshots:1, author:unknown, changes - ValueChange:1), done in 68 millis (diff:64, persist:4)
+[main] org.javers.core.Javers  : Commit(id:7.1, snapshots:1, author:unknown, changes - ValueChange:1), done in 54 millis (diff:52, persist:2)
+[main] org.javers.core.Javers  : Commit(id:8.0, snapshots:1, author:unknown, changes - ValueChange:1), done in 66 millis (diff:64, persist:2)
+[main] org.javers.core.Javers  : Commit(id:9.0, snapshots:1, author:unknown, changes - ValueChange:1), done in 62 millis (diff:57, persist:5)
+[main] org.javers.JQL          : SHALLOW query: 4 snapshots loaded (entities: 3, valueObjects: 1)
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Aragorn' at commitId 8.0, 4 snapshot(s) loaded, gaps filled so far: 1
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Gandalf' at commitId 8.0, 4 snapshot(s) loaded, gaps filled so far: 2
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Elrond' at commitId 8.0, 2 snapshot(s) loaded, gaps filled so far: 3
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Frodo' at commitId 8.0, 2 snapshot(s) loaded, gaps filled so far: 4
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Kili' at commitId 8.0, 2 snapshot(s) loaded, gaps filled so far: 5
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Fili' at commitId 8.0, 2 snapshot(s) loaded, gaps filled so far: 6
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Bifur' at commitId 8.0, 2 snapshot(s) loaded, gaps filled so far: 7
+[main] org.javers.JQL          : DEEP_PLUS query for '...Employee/Bombur' at commitId 8.0, 3 snapshot(s) loaded, gaps filled so far: 8
+[main] org.javers.JQL          : queryForShadows executed: 
+JqlQuery {
+  IdFilter{ globalId: ...Employee/Thorin }
+  QueryParams{ aggregate: true, limit: 100 }
+  ShadowScopeDefinition{ shadowScope: DEEP_PLUS, maxGapsToFill: 10 }
+  Stats{  
+    executed in millis: 36  
+    DB queries: 9  
+    all snapshots: 25  
+    SHALLOW snapshots: 4  
+    DEEP_PLUS snapshots: 21  
+    gaps filled: 8  
+  }
+}
+```
+
+The rule of thumb &mdash; try keep the number of DB queries executed per each JQL query
+as low as possible. Use the right *Shadow scope* (read more about [scopes](/documentation/jql-examples/#shadow-scopes)).
 
 ### Other types of queries
 //TODO
 
-### Final thoughts.
+### Final thoughts

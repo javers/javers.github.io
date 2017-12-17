@@ -31,7 +31,7 @@ code {
 }
 
 pre code {
-    word-wrap: normal;
+    white-space: pre;
     font-size: 12px;
 }
 
