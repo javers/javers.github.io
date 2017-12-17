@@ -815,6 +815,15 @@ JaVers query executed in 48 millis
 
 #### Comparision
 
+Both tools managed to reconstruct the correct object graph.
+Thorin’s shadow with salary $6000 is wired with
+the right Aragorn’s shadow, which is wired with the right  
+Gandalf’s shadow.
+Believe or not, but this reconstruction backed by time-aware joins is not trivial
+and can be time slow for large object graphs.
+
+..perf
+ 
 
 ### Other types of queries
 //TODO

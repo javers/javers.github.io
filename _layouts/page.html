@@ -26,18 +26,20 @@
                     <meta itemprop="name" content="javers.org"/>
                 </div>
 
-                <h1 itemprop="headline">{{ page.title }}</h1>
+
 
                 {% if page.date  %}
                 <div class="postHeader">
                     <div itemprop="author" itemscope itemtype="https://schema.org/Person">
-                        <span itemprop="name">{{ page.author }}</span>
+                        <b><span style="color:#1F618D;" itemprop="name">{{ page.author }}</span></b>
                     </div>
 
-                    <time itemprop="datePublished"
+                    <time style="color:#515A5A;" itemprop="datePublished"
                           datetime="{{ page.date }}">{{ page.date | date: "%b %-d %Y" }}</time>
                 </div>
                 {% endif %}
+
+                <h1 itemprop="headline">{{ page.title }}</h1>
 
                 <div itemprop="articleBody">
                     {{ content }}

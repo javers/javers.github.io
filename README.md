@@ -9,4 +9,5 @@ see https://help.github.com/articles/using-jekyll-with-pages
 # Running Jekyll
 Run Jekyll on your box
 
-    ./serve.sh
+bundle exec jekyll serve --incremental
+

@@ -52,11 +52,8 @@ pre code {
 }
 
 .postHeader {
-    margin-bottom: 10px;
-}
-
-.postHeader time {
-    color: darkgrey;
+    margin-top: 20px;
+    margin-bottom: 5px;
 }
 
 #main li {
