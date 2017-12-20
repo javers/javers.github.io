@@ -5,8 +5,18 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 3.7.7
+released on 2017-12-20
+
+* [596](https://github.com/javers/javers/issues/596)
+  Fixed NullPointerException when commit property value is null (by Sergey Rozhnov).
+  
+* [519](https://github.com/javers/javers/issues/519) Added index on Entity typeName in MongoDB.
+
 ### 3.7.6
 released on 2017-12-09
+
 * [614](https://github.com/javers/javers/issues/614) Custom `toString` function.
 [Ismael Gomes Costa](https://github.com/ismaelgomescosta)
 contributed the method for registering `toString` function for complex `ValueTypes` used as Entity Id.
