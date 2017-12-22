@@ -1,7 +1,7 @@
 ---
 layout: page
 category: Blog
-title: JaVers vs Envers
+§title: JaVers vs Envers Comparision
 author: Bartosz Walacik
 submenu: blog
 ---
@@ -16,6 +16,10 @@ The article has three sections. First, is a high-level comparison.
 In the second section, we show the simple, demo application for managing organization structure with 
 data audit made by both JaVers and Envers.
 In the third section, we show how both tools are coping with queries on audit data.
+
+<center>
+<img src="/blog/javers-vs-envers/competition.png" alt="competition" style="margin:10px;"/>
+</center>
 
 #### ToC
 
@@ -38,6 +42,8 @@ In the third section, we show how both tools are coping with queries on audit da
     * [Envers way](#envers-way-graphs)
     * [JaVers way](#javers-way-graphs)
     * [Comparision](#comparision-graphs) 
+  * [Other query types](#other-query-types)    
+* [Final thoughts](#final-thoughts)   
 
 ## High-level comparison
 
@@ -813,7 +819,7 @@ Employee{ Bombur SCRUM_MASTER, $6000, Lonely Mountain, subordinates: }
 JaVers query executed in 48 millis
 ```
 
-#### Comparision
+<h4 id="comparision-graphs">Comparision</h4>
 
 Both tools succeeded to reconstruct the correct object graph.
 Thorin’s version is wired with
@@ -822,7 +828,10 @@ Gandalf’s version.
 Believe or not, this reconstruction is not trivial
 because it’s implemented atop of an ordinary SQL database which has no time dimension.
 
-You can face performance issues when you try to reconstruct large object graphs on a production database.
+**Performance** benchmark is beyond the scope of this article.
+When you try to reconstruct large object graphs on a production database,
+you are likely to face performance issues both in JaVers and Envers.
+ 
 In JaVers you can enable a simple profiler tool, which logs query execution statistics
 to standard `slf4j` logger:
 
@@ -865,7 +874,46 @@ JqlQuery {
 The rule of thumb &mdash; try keep the number of DB queries executed per each JQL query
 as low as possible. Use the right *Shadow scope* (read more about [scopes](/documentation/jql-examples/#shadow-scopes)).
 
-### Other types of queries
-//TODO
+### Other query types
 
-### Final thoughts
+Envers has the only one type of query result &mdash; 
+historical versions of an object, which is the most natural view of objects history.
+
+In JaVers, this query type is called *Shadow query* (that’s why we use `findShadows()` in query examples).
+Besides that, JaVers provides two more query types:
+[Snapshots query](/documentation/jql-examples/#query-for-snapshots)
+and
+[Changes query](/documentation/jql-examples/#query-for-changes). 
+
+**Snapshots** contain the same data as Shadows, but they are *dehydrated*. What does it mean?
+
+* Snapshot is an instance of the JaVers’ `CdoSnapshot` class,
+  while Shadow is simply an instance of a user’s domain class.
+* Snapshot is self-contained and can be easily serialized/deserialized to JSON and send over network.
+  Snapshots can be useful for example when you are building REST API for frontend application
+  (see how we use Snapshots in the POC of [JaVers GUI](https://javers.org/javers-admin-frontend)).
+  
+**Changes** are the best choice for rendering objects history as a unified change log.
+JaVers provides the `SimpleTextChangeLog` formatter, which creates the textual change log like this:   
+  
+```text 
+commit 3.0, author: hr.manager, 2015-04-16 22:16:50
+  changed object: Employee/Bob
+    list changed on 'subordinates' property: [(0).added:'Employee/Trainee One', (1).added:'Employee/Trainee Two']
+commit 2.0, author: hr.director, 2015-04-16 22:16:50
+  changed object: Employee/Bob
+    value changed on 'position' property: 'Scrum master' -> 'Team Lead'
+    value changed on 'salary' property: '9000' -> '11000'  
+```    
+
+It’s easy to implement your own change log formatter (see [example](/documentation/repository-examples/#change-log)).  
+   
+## Final thoughts
+
+So which tool is better?
+
+As the author of JaVers I can’t be objective when answering this question 
+(you can easily guess what is my opinion).
+In fact, the goal of this article is to provide a fair comparision of JaVers and Envers
+which give you enough information to make a conscious decision.
+

@@ -9,7 +9,9 @@
 <section >
     <div id="content" class="container">
         <div class="row">
-            <div id="main" class="col-md-8" itemscope itemtype="http://schema.org/TechArticle">
+            <div id="main"
+                 {% if page.category == 'Blog' %}class="col-md-8 col-md-offset-2"{% else %}class="col-md-8"{% endif %}
+                 itemscope itemtype="http://schema.org/TechArticle">
                 <meta itemprop="image" content="{{ site.url }}/img/logotype.png">
 
                 {% unless page.author %}
