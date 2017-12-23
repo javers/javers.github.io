@@ -3,6 +3,7 @@ layout: page
 category: Blog
 title: First video tutorial about JaVers
 author: Bartosz Walacik
+authorTwitter: BartoszWalacik
 submenu: blog
 ---
 

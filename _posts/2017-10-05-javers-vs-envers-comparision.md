@@ -3,6 +3,7 @@ layout: page
 category: Blog
 §title: JaVers vs Envers Comparision
 author: Bartosz Walacik
+authorTwitter: BartoszWalacik
 submenu: blog
 ---
 
