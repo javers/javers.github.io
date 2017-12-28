@@ -14,9 +14,9 @@ JaVers offers the fresh approach and technology independence.
 If you consider which tool will be better for your project, this article is the good starting point.
 
 The article has three sections. First, is a high-level comparison.
-In the second section, we show the simple, demo application for managing organization structure with 
+In the second section, I show the simple, demo application for managing organization structure with 
 data audit made by both JaVers and Envers.
-In the third section, we show how both tools are coping with queries on audit data.
+In the third section, I check how both tools are coping with queries on audit data.
 
 <center>
 <img src="/blog/javers-vs-envers/competition.png" alt="competition" style="margin:10px;"/>
@@ -52,8 +52,8 @@ There are two big differences between JaVers and Envers:
 
 1. **Envers** is the Hibernate plugin.
    It has good integration with Hibernate but you can use it only with traditional SQL databases.
-   If you chose NoSQL database or SQL but with another persistence framework like 
-   [JOOQ](https://www.jooq.org/) &mdash; Envers is not an option.
+   If you chose NoSQL database or SQL but with another persistence framework 
+   (for example [JOOQ](https://www.jooq.org/)) &mdash; Envers is not an option.
    
    On the contrary, **JaVers** can be used with any kind of database and any kind of 
    persistence framework. For now, JaVers comes with repository implementations for MongoDB and
@@ -67,7 +67,7 @@ There are two big differences between JaVers and Envers:
    It can be an advantage, you have audit data stored close to your live data.
    Envers’ tables look familiar. It’s easy to query them with SQL.
      
-   **JaVers’ audit model is object-oriented**, it’s all about objects’ Snapshots.
+   **JaVers’ audit model is object-oriented**. It’s all about objects’ Snapshots.
    JaVers saves them to the single table (or the collection in Mongo)
    as JSON documents with unified structure.
    Advantages? You can focus on domain objects and treat persistence and auditing
@@ -83,9 +83,9 @@ Our demo project is the simple Groovy application based on Spring Boot.
 Clone it from [https://github.com/javers/javers-vs-envers](https://github.com/javers/javers-vs-envers).
         
 Let’s start with the domain model. 
-There are only two classes: Employee and Address. Employees are organized in tree structures.
+There are only two classes: Employee and Address. Employees are organized in a tree structure.
 
-##### [`Employee.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/domain/Employee.groovy)
+##### [`Employee.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/Employee.groovy)
 
 ```groovy
 @Entity
@@ -113,7 +113,7 @@ class Employee {
 }
 ```
 
-##### [`Address.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/domain/Address.groovy)
+##### [`Address.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/Address.groovy)
 
 ```groovy
 @Embeddable
@@ -151,7 +151,7 @@ compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 ```
 
 To run the application and populate the database, execute the 
-[`InitHierarchyTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/InitHierarchyTest.groovy):
+[`InitHierarchyTest.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/test/groovy/org/javers/organization/structure/InitHierarchyTest.groovy) test:
 
 ```groovy
 def "should init and persist organization structure"(){
@@ -228,14 +228,14 @@ No surprise so far. We have two revisions linked with records in the audit table
 Revtype 0 means insert and 1 means update.
 What is strange is the type of revision timestamps.
 Why long instead of date? Luckily you can fix using custom [Revision Entity](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-revisionlog).
-Also, Revision Entity is the place when you can hook changes metadata like change author.
+Also, Revision Entity is the place when you can hook revision metadata like change author.
 
 ### Enabling JaVers audit
 
-To enable JaVers we need to add the dependency to JaVers Spring Boot starter for SQL:
+To enable JaVers we need to add this dependency to JaVers Spring Boot starter for SQL:
 
 ```
-compile 'org.javers:javers-spring-boot-starter-sql:'+javersVersion
+compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
 ```
 
 The easiest way to integrate JaVers with a Spring application is the  
@@ -262,12 +262,11 @@ JaVers will create three tables:
 
 (there is also the fourth table &mdash; `jv_commit_property`, but our application doesn’t touch it).
 
-JaVers’ Commit is the similar concept to Envers’ Revision 
+JaVers’ **Commit** is the similar concept to Envers’ revision 
 (inspirations from Git and Subversion are evident). 
-
-In JaVers, each Commit has timestamp and author.
+Each Commit has timestamp and author.
 Here, author field is unknown, it would be set to current user if you enable Spring Security
-(see [AuthorProvider](https://javers.org/documentation/spring-integration/#author-provider-bean))
+(see [AuthorProvider](https://javers.org/documentation/spring-integration/#author-provider-bean)).
 
 ##### `select * from jv_commit`
 
@@ -275,7 +274,7 @@ Here, author field is unknown, it would be set to current user if you enable Spr
 
 Now, let's check out how objects’ Snapshots are stored.
 
-In JaVers, each audited object has GlobalId.
+In JaVers, each audited object has **GlobalId**.
 For Entities, it’s the pair of type name and local Id.
 ValueObjects (like Address) are treated as components of an Entity,
 so they are identified by the pair: owning entity GlobalId and a path (typically a property name).  
@@ -286,7 +285,7 @@ We have 18 objects so far, hence 18 GlobalIds are stored.
 <img style="margin-bottom:10px;"
      src="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" width="683px"/>
 
-For each GlobalId, JaVers binds one or more object’s Snapshots.
+For each GlobalId, JaVers creates one or more object’s **Snapshots**.
 We did only one change so far (Gandalf got a rise), so we have 18 *initial* Snapshots
 and one *update* Snapshot for Gandalf. Seems right.
 
@@ -301,8 +300,8 @@ As long as a database supports text or JSON types, it’s fine.
 In fact, MongoDB is more *natural* to JaVers than SQL,
 because MongoDB is designed to store JSON documents.
 
-The Snapshot’s state document is the map where keys are properties’ names and values are,
-well, properties’ values (pretty much like in Javascript).
+The Snapshot state document is the map where keys are property names and values are,
+well, property values (pretty much like in Javascript).
 References to other objects are *dehydrated* and stored as GlobalId.
 
 For example, this is the current state of Gandalf: 
@@ -335,7 +334,7 @@ For example, this is the current state of Gandalf:
 
 ## Querying contest   
 
-Some applications do data audit only just in case.
+Some applications have data audit implemented only just in case.
 For example, in case of an unexpected and intimidating visit of an IT auditor asking you questions.
 In this scenario, an application doesn’t need to have any special UI for browsing audit data.
 Any developer can connect directly to a database, generate some reports and make auditor happy.
@@ -345,8 +344,8 @@ it becomes one of the features offered to users.
 For example, Wikipedia has the [page history view](https://en.wikipedia.org/w/index.php?title=Lego&action=history)
 which shows changes made to any page.
 
-We focus on the second case,
-our application runs queries on audit data to show history of The Fellowship.
+I’ve focused on the second case,
+our demo application runs queries against audit data to show history of The Fellowship.
 
 ### Browsing objects history by type
 
@@ -917,4 +916,8 @@ As the author of JaVers I can’t be objective when answering this question
 (you can easily guess what is my opinion).
 In fact, the goal of this article is to provide a fair comparison of JaVers and Envers
 which give you enough information to make a conscious decision.
+
+
+Trivia
+
 
