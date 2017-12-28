@@ -39,7 +39,7 @@ In the third section, we show how both tools are coping with queries on audit da
     * [JaVers way](#javers-way-query-filters)
     * [Comparision](#comparision-query-filters)
   * [More query filters](#more-query-filters)  
-  * [Reconstructing a full object graphs](#reconstructing-full-object-graphs) 
+  * [Reconstructing full object graphs](#reconstructing-full-object-graphs) 
     * [Envers way](#envers-way-graphs)
     * [JaVers way](#javers-way-graphs)
     * [Comparision](#comparision-graphs) 
@@ -52,7 +52,7 @@ There are two big differences between JaVers and Envers:
 
 1. **Envers** is the Hibernate plugin.
    It has good integration with Hibernate but you can use it only with traditional SQL databases.
-   If you chose NoSQL database or SQL but with other persistence framework like 
+   If you chose NoSQL database or SQL but with another persistence framework like 
    [JOOQ](https://www.jooq.org/) &mdash; Envers is not an option.
    
    On the contrary, **JaVers** can be used with any kind of database and any kind of 
@@ -64,7 +64,7 @@ There are two big differences between JaVers and Envers:
    As the doc says:
    *For each audited entity, an audit table is created.
    By default, the audit table name is created by adding a `_AUD` suffix to the original name.*
-   It can be advantage, you have audit data stored close to your live data.
+   It can be an advantage, you have audit data stored close to your live data.
    Envers’ tables look familiar. It’s easy to query them with SQL.
      
    **JaVers’ audit model is object-oriented**, it’s all about objects’ Snapshots.
@@ -73,7 +73,7 @@ There are two big differences between JaVers and Envers:
    Advantages? You can focus on domain objects and treat persistence and auditing
    as infrastructural aspects.
    Since audit data are decoupled from live data, you can choose where to store them.
-   By default JaVers saves Snapshots to the application’s database, but you can point another one.
+   By default, JaVers saves Snapshots to the application’s database, but you can point another one.
    For example, SQL for application and MongoDB for JaVers
    (or even centralized JaVers database shared for all applications in your company).
    
@@ -82,7 +82,7 @@ There are two big differences between JaVers and Envers:
 Our demo project is the simple Groovy application based on Spring Boot.
 Clone it from [https://github.com/javers/javers-vs-envers](https://github.com/javers/javers-vs-envers).
         
-Let’s start from the domain model. 
+Let’s start with the domain model. 
 There are only two classes: Employee and Address. Employees are organized in tree structures.
 
 ##### [`Employee.groovy`](https://github.com/javers/javers-vs-envers/blob/master/src/main/groovy/org/javers/organization/structure/domain/Employee.groovy)
@@ -224,7 +224,7 @@ Envers creates two tables: `revinfo` and `employee_aud`.
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee_aud.png" alt="employee_aud table" width="807px"/>
 
-No surprise so far. We have two revisions likned with records in the audit table.
+No surprise so far. We have two revisions linked with records in the audit table.
 Revtype 0 means insert and 1 means update.
 What is strange is the type of revision timestamps.
 Why long instead of date? Luckily you can fix using custom [Revision Entity](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-revisionlog).
@@ -276,7 +276,7 @@ Here, author field is unknown, it would be set to current user if you enable Spr
 Now, let's check out how objects’ Snapshots are stored.
 
 In JaVers, each audited object has GlobalId.
-For Entities it’s the pair of type name and local Id.
+For Entities, it’s the pair of type name and local Id.
 ValueObjects (like Address) are treated as components of an Entity,
 so they are identified by the pair: owning entity GlobalId and a path (typically a property name).  
 We have 18 objects so far, hence 18 GlobalIds are stored.
@@ -286,7 +286,7 @@ We have 18 objects so far, hence 18 GlobalIds are stored.
 <img style="margin-bottom:10px;"
      src="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" width="683px"/>
 
-For each GlobalId, JaVers binds one ore more object’s Snapshots.
+For each GlobalId, JaVers binds one or more object’s Snapshots.
 We did only one change so far (Gandalf got a rise), so we have 18 *initial* Snapshots
 and one *update* Snapshot for Gandalf. Seems right.
 
@@ -294,7 +294,7 @@ and one *update* Snapshot for Gandalf. Seems right.
 
 <img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_snapshot_table.png" alt="jv_snapshot table" width="1002px"/>
 
-What distinguish JaVers from Envers is the `state` column, here live Snapshots per se.
+What distinguishes JaVers from Envers is the `state` column, here live Snapshots per se.
 It’s the text column with JSON documents.
 Thanks to that, JaVers isn’t coupled to any particular kind of database.
 As long as a database supports text or JSON types, it’s fine.
@@ -336,8 +336,8 @@ For example, this is the current state of Gandalf:
 ## Querying contest   
 
 Some applications do data audit only just in case.
-For example, in case of an unexpected and intimidating visit of an IT auditor asking you tons of questions.
-In this scenario, application don’t need to have any special UI for browsing audit data.
+For example, in case of an unexpected and intimidating visit of an IT auditor asking you questions.
+In this scenario, an application doesn’t need to have any special UI for browsing audit data.
 Any developer can connect directly to a database, generate some reports and make auditor happy.
 
 In other applications, data audit is so important that
@@ -350,7 +350,7 @@ our application runs queries on audit data to show history of The Fellowship.
 
 ### Browsing objects history by type
 
-Let’s start from the elementary query &mdash; query by type.
+Let’s start with the elementary query &mdash; query by type.
 We are giving a rise for Gandalf and Aragorn and also we are changing their address.
 That means four changes.
 Then we show how to browse history of our Employees in Envers and JaVers.
@@ -455,21 +455,21 @@ What about artistic impression? There are a few interesting differences.
   The reverse chronological order is more natural and that’s how JaVers sorts.
   I didn’t find the way in Envers to get reverse ordering.
    
-* JaVers query API seems more elegant. In fact it’s a small DSL called [JQL](/documentation/jql-examples/)
+* JaVers query API seems more elegant. In fact, it’s a small DSL called [JQL](/documentation/jql-examples/)
   (JaVers Query Language). 
 
 * What is really cryptic in Envers’ query is the results type.
   Why `getResultList()` returns non-parametrized List? List of what? Well, it depends on the second flag
   passed to `forRevisionsOfEntity()` named `selectEntitiesOnly`.
-  If it’s true, it will be a list of entites, otherwise
-  *a list of three-element arrays, containing: the entity instance, revision entity and type of the revision*. 
+  If it’s true, it will be a list of entities, otherwise
+  *a list of three-element arrays, containing: the entity instance, revision entity, and type of the revision*. 
   Not cool. In Groovy it’s not a problem but in Java you have to cast heavily to get the data.
   In JaVers, you get the type-safe list of
   [Shadows](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/shadow/Shadow.java).
   In short, Shadow is a pair of a historical entity and commit metadata.  
 
 * Both tools have loaded related entities (subordinates and boss),
-  although we didn’t asked for this.
+  although we didn’t ask for this.
   Envers uses well-known Hibernate lazy loading approach.
   On the contrary, JaVers always loads data eagerly
   on a basis of the [query scope](/documentation/jql-examples/#shadow-scopes).
@@ -562,8 +562,8 @@ Looks like there is a missing column &mdash;
 `salary_MOD` in the `employee_AUD` table. But this table is managed by Envers,
 why he can’t find a column in his own table? 
 
-After some digging in the [User Guide](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-tracking-properties-changes)
-, we can find the answer &mdash; *Modification Flags*.
+After some digging in the [User Guide](http://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-tracking-properties-changes),
+we can find the answer &mdash; *Modification Flags*.
 If we want to query by changed property we need to enable them for our class:
 
 ```groovy
@@ -660,12 +660,12 @@ Once again both tools did the job and shown correct history.
 * **Search by Id**. Just works as expected.
 
 * **Search by changed property**.
-Here, at the beginning, Envers thrown an exception and we had to add 
+Here, at the beginning, Envers threw an exception and we had to add 
 the Modification Flags to the table schema. 
 I like the design of these flags for its simplicity.
 The problem is that they are disabled by default.  
-What if you application is running on production for some time
-and you didn’t enabled *the Flags* from the very beginning? Adding them to existing tables could be a pain...
+What if your application is running on production for some time
+and you didn’t enable *the Flags* from the very beginning? Adding them to existing tables could be a pain...
 <br/>
 I think that JaVers solved this problem in a bit more elegant way.
 By default, each Snapshot holds the list of changed property names (in `jv_snapshot.changed_properties`).
@@ -710,7 +710,7 @@ and we check if related Employees are joined in proper versions.
 
 To make the case harder (and more realistic), we update Employees independently.
 What we want from JaVers and Envers is recalling that specific point in time
-when all the guys had the same sallary &mdash; $6000.  
+when all the guys had the same salary &mdash; $6000.  
 
 
 ```groovy
@@ -895,7 +895,7 @@ and
   (see how we use Snapshots in the POC of [JaVers GUI](https://javers.org/javers-admin-frontend)).
   
 **Changes** are the best choice for rendering objects history as a unified change log.
-JaVers provides the `SimpleTextChangeLog` formatter, which creates the textual change log like this:   
+JaVers provides the `SimpleTextChangeLog` formatter, which creates the textual changelog like this:   
   
 ```text 
 commit 3.0, author: hr.manager, 2015-04-16 22:16:50
@@ -915,6 +915,6 @@ So which tool is better?
 
 As the author of JaVers I can’t be objective when answering this question 
 (you can easily guess what is my opinion).
-In fact, the goal of this article is to provide a fair comparision of JaVers and Envers
+In fact, the goal of this article is to provide a fair comparison of JaVers and Envers
 which give you enough information to make a conscious decision.
 
