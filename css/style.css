@@ -22,6 +22,7 @@ a, a:hover, a:active {
 code {
     background: transparent;
     padding-right: 0;
+    padding-left: 0;
     color: #111;
     font-size: 0.95em;
     white-space: pre-wrap;
@@ -30,12 +31,22 @@ code {
 }
 
 pre code {
-    word-wrap: normal;
+    white-space: pre;
     font-size: 12px;
 }
 
 .blogPost h2 {
     margin-top: 5px;
+}
+
+.shareThis {
+    border-top: 1px solid rgba(0,0,0,.09);
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top:30px;
+    font-size: 9pt;
+    font-weight: 700;
 }
 
 .blogPost  {
@@ -51,11 +62,17 @@ pre code {
 }
 
 .postHeader {
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.postAuthor {
+    font-weight: bold;
+    color:#1F618D;
 }
 
 .postHeader time {
-    color: darkgrey;
+    color:#515A5A;
 }
 
 #main li {
@@ -367,7 +384,7 @@ body.page section header {
 }
 
 body.page section #main {
-    padding-right: 35px;
+    padding-right: 25px;
     padding-bottom: 35px;
     padding-top: 5px;
     font-size: 1.1em;
@@ -391,6 +408,13 @@ body.page section #content #main h3 {
 body.page section #content #main h4 {
     font-size: 1em;
     font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+body.page section #content #main h5 {
+    font-size: 1em;
+    margin-top: 12px;
     margin-bottom: 5px;
 }
 
