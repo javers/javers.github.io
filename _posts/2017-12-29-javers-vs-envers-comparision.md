@@ -352,7 +352,6 @@ our demo application runs queries against audit data to show history of The Fell
 Let’s start with the elementary query &mdash; query by type.
 We are giving a rise for Gandalf and Aragorn and also we are changing their address.
 That means four changes.
-Then we show how to browse history of our Employees in Envers and JaVers.
 
 ```groovy
   given:
@@ -366,6 +365,9 @@ Then we show how to browse history of our Employees in Envers and JaVers.
     hierarchyService.giveRaise(aragorn, 100)
     hierarchyService.updateCity(aragorn, 'Shire')
 ```    
+
+Then we want to browse history of our Employees in Envers and JaVers.
+
 
 <h4 id="envers-way-1">Envers way</h4>
 
@@ -444,7 +446,7 @@ commit:2.0, entity: Employee{ Gandalf CEO, $10200, Middle-earth, subordinates:Ar
 
 <h4 id="comparision-1">Comparision</h4>
 
-Both tools did the job and shown correct history. Both tools loaded related entities.
+Both tools have done the job and shown correct history. Both tools have loaded related entities.
 
 What about artistic impression? There are a few interesting differences.
 
@@ -454,13 +456,13 @@ What about artistic impression? There are a few interesting differences.
   The reverse chronological order is more natural and that’s how JaVers sorts.
   I didn’t find the way in Envers to get reverse ordering.
    
-* JaVers query API seems more elegant. In fact, it’s a small DSL called [JQL](/documentation/jql-examples/)
+* JaVers query API seems more elegant. It’s called [JQL](/documentation/jql-examples/)
   (JaVers Query Language). 
 
 * What is really cryptic in Envers’ query is the results type.
   Why `getResultList()` returns non-parametrized List? List of what? Well, it depends on the second flag
   passed to `forRevisionsOfEntity()` named `selectEntitiesOnly`.
-  If it’s true, it will be a list of entities, otherwise
+  If it’s true, it will be a list of entities, otherwise &mdash;
   *a list of three-element arrays, containing: the entity instance, revision entity, and type of the revision*. 
   Not cool. In Groovy it’s not a problem but in Java you have to cast heavily to get the data.
   In JaVers, you get the type-safe list of
@@ -473,13 +475,14 @@ What about artistic impression? There are a few interesting differences.
   On the contrary, JaVers always loads data eagerly
   on a basis of the [query scope](/documentation/jql-examples/#shadow-scopes).
   Both approaches have pros and cons.
-  Lazy loading looks invitingly, you load as much data as you need without bothering about query boundaries.
+  Lazy loading looks invitingly, you get as much data as you need without bothering
+  about underlying database queries.
   Disadvantages? `LazyInitializationException` is the constant threat.
   Moreover, Hibernate dynamic proxies and persistent collections clutter your object graph.
    
 ### Query filters 
  
-Browsing objects history is not very useful without search features.
+Browsing objects history is not very useful without search filters.
   
 In the next example we show how to implement
 the two common search use cases:
@@ -646,6 +649,7 @@ javers history of Aragorn:
 commit:5.1, entity: Employee{ Aragorn CTO, $8100, Shire, subordinates: }
 commit:4.1, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates: }
 commit:1.1, entity: Employee{ Aragorn CTO, $8000, Minas Tirith, subordinates: }
+
 javers history of salary changes:
 commit:6.0, entity: Employee{ Thorin TEAM_LEAD, $5100, Lonely Mountain, subordinates: }
 commit:4.1, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates: }
@@ -654,7 +658,7 @@ commit:2.1, entity: Employee{ Gandalf CEO, $10100, Middle-earth, subordinates: }
 
 <h4 id="comparision-query-filters">Comparision</h4>
 
-Once again both tools did the job and shown correct history.
+Once again both tools have done the job and shown correct history.
 
 * **Search by Id**. Just works as expected.
 
@@ -668,7 +672,7 @@ and you didn’t enable *the Flags* from the very beginning? Adding them to exis
 <br/>
 I think that JaVers solved this problem in a bit more elegant way.
 By default, each Snapshot holds the list of changed property names (in `jv_snapshot.changed_properties`).
-JaVers’ Snapshot structure is fixed, no more mucking around flags configuration.
+Snapshot structure is fixed, no more mucking around flags configuration.
 
 ### More query filters
 
@@ -821,12 +825,12 @@ JaVers query executed in 48 millis
 
 <h4 id="comparision-graphs">Comparision</h4>
 
-Both tools succeeded to reconstruct the correct object graph.
+Both tools have succeeded to reconstruct the correct object graph.
 Thorin’s version is wired with
 the right Aragorn’s version, which is wired with the right  
 Gandalf’s version.
 Believe or not, this reconstruction is not trivial
-because it’s implemented atop of an ordinary SQL database which has no time dimension.
+because it’s implemented atop of an ordinary SQL database which is unaware of time dimensions.
 
 **Performance** benchmark is beyond the scope of this article.
 When you try to reconstruct large object graphs on a production database,
@@ -871,8 +875,8 @@ JqlQuery {
 }
 ```
 
-The rule of thumb &mdash; try keep the number of DB queries executed per each JQL query
-as low as possible. Use the right *Shadow scope* (read more about [scopes](/documentation/jql-examples/#shadow-scopes)).
+The rule of thumb &mdash; try to keep the number of DB queries executed per each JQL query
+as small as possible. Use the right *Shadow scope* (read more about [scopes](/documentation/jql-examples/#shadow-scopes)).
 
 ### Other query types
 
@@ -890,7 +894,7 @@ and
 * Snapshot is an instance of the JaVers’ `CdoSnapshot` class,
   while Shadow is simply an instance of a user’s domain class.
 * Snapshot is self-contained and can be easily serialized/deserialized to JSON and send over network.
-  Snapshots can be useful for example when you are building REST API for frontend application
+  Snapshots can be useful for example when you are building REST API for a frontend application
   (see how we use Snapshots in the POC of [JaVers GUI](https://javers.org/javers-admin-frontend)).
   
 **Changes** are the best choice for rendering objects history as a unified change log.
@@ -918,6 +922,5 @@ In fact, the goal of this article is to provide a fair comparison of JaVers and 
 which give you enough information to make a conscious decision.
 
 
-Trivia
 
 
