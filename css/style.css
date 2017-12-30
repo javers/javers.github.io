@@ -624,3 +624,10 @@ li.github-user a {
     display: block;
     text-align: center;
 }
+
+.big-image {
+    display: block;
+    margin: auto;
+    width: 90%;
+    height: auto;
+}

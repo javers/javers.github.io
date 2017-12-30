@@ -19,9 +19,7 @@ In the second section, I show the simple, demo application for managing organiza
 data audit made by both JaVers and Envers.
 In the third section, I check how both tools are coping with queries on audit data.
 
-<center>
-<img src="/blog/javers-vs-envers/competition.png" alt="competition" style="margin:10px;"/>
-</center>
+<img class="big-image" src="/blog/javers-vs-envers/competition.png" alt="competition"/>
 
 #### ToC
 
