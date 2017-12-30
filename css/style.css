@@ -80,7 +80,7 @@ pre code {
 }
 
 pre.highlight {
-    min-width: 92ex;
+    min-width: 90%;
     width: fit-content;
 }
 
