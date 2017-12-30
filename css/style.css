@@ -79,8 +79,9 @@ pre code {
     word-wrap: break-word;
 }
 
-.highlight pre {
-    font-size: 0.8em;
+pre.highlight {
+    min-width: 92ex;
+    width: fit-content;
 }
 
 .navbar-nav > li > a {
