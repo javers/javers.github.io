@@ -180,7 +180,7 @@ can be saved to SQL database in one transaction.
 
 If you’re using a **transaction manager**, implement a ConnectionProvider to integrate with it.
 For Spring users, we have out-of-the-box implementation: `JpaHibernateConnectionProvider` from `javers-spring` module.
-Choose this, if you’re using Spring/JPA/Hibernate stack (see [JPA Transaction Manager integration](/documentation/spring-integration/#jpa-entity-manager-integration)).
+Choose this, if you’re using Spring/JPA/Hibernate stack (see [JPA EntityManager integration](/documentation/spring-integration/#jpa-entity-manager-integration)).
 
 If you’re not using any kind of transaction manager, implement a ConnectionProvider to return
 the current connection (thread-safely).
