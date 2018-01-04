@@ -33,6 +33,9 @@ code {
 pre code {
     white-space: pre;
     font-size: 12px;
+}
+
+div .highlight {
     overflow-x: scroll;
 }
 
