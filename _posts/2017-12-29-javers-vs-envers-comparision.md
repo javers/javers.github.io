@@ -269,7 +269,8 @@ Here, author field is unknown, it would be set to current user if you enable Spr
 
 ##### `select * from jv_commit`
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_commit_table.png" alt="jv_commit table" width="457px"/>
+{% include fancy-image.html image="/blog/javers-vs-envers/jv_commit_table.png"
+                            alt="jv_commit table" width="457px" %}
 
 Now, let's check out how objects’ Snapshots are stored.
 
