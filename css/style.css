@@ -33,6 +33,7 @@ code {
 pre code {
     white-space: pre;
     font-size: 12px;
+    overflow-x: scroll;
 }
 
 .fancy-min {
@@ -84,10 +85,6 @@ pre code {
 
 #main li {
     word-wrap: break-word;
-}
-
-pre.highlight {
-    overflow-x: scroll;
 }
 
 .navbar-nav > li > a {
