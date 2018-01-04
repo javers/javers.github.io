@@ -25,17 +25,21 @@ code {
     padding-left: 0;
     color: #111;
     font-size: 0.95em;
+}
+
+p code {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 
-pre code {
+pre.highlight > code {
+    word-break: keep-all;
+    word-wrap: normal;
     white-space: pre;
     font-size: 12px;
-}
-
-div .highlight {
-    overflow-x: scroll;
+    overflow-x: auto;
+    width: 100%;
+    display: block;
 }
 
 .fancy-min {

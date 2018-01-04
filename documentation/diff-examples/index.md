@@ -9,14 +9,14 @@ sidebar-url: docs-sidebar.html
 All examples are runnable.
 Checkout our github repository:
 
-```
+```text
 git clone https://github.com/javers/javers.git
 cd javers
 ```
 
 Run examples as unit tests:
 
-```
+```text
 ./gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
 ./gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
 ...
