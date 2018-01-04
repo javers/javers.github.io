@@ -27,7 +27,6 @@ code {
     font-size: 0.95em;
     white-space: pre-wrap;
     word-wrap: break-word;
-    overflow: auto;
 }
 
 pre code {
