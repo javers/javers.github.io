@@ -174,7 +174,7 @@ Now you should have the `Employee` table populated with initial data.
 
 ##### `select * from Employee`
 
-<img src="/blog/javers-vs-envers/employee-table.png" alt="Employee table" width="646px"/>
+{% include fancy-image.html image="/blog/javers-vs-envers/employee-table.png" alt="Employee table" %}
 
 ### Enabling Envers audit
 
@@ -221,7 +221,7 @@ Envers creates two tables: `revinfo` and `employee_aud`.
 
 ##### `select * from employee_aud`
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee_aud.png" alt="employee_aud table" width="807px"/>
+{% include fancy-image.html image="/blog/javers-vs-envers/employee_aud.png" alt="employee_aud table" %}
 
 No surprise so far. We have two revisions linked with records in the audit table.
 Revtype 0 means insert and 1 means update.
@@ -281,8 +281,7 @@ We have 18 objects so far, hence 18 GlobalIds are stored.
 
 ##### `select * from jv_global_id`
 
-<img style="margin-bottom:10px;"
-     src="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" width="683px"/>
+{% include fancy-image.html image="/blog/javers-vs-envers/jv_global_id_table.png" alt="jv_global_id table" %}
 
 For each GlobalId, JaVers creates one or more object’s **Snapshots**.
 We did only one change so far (Gandalf got a rise), so we have 18 *initial* Snapshots
@@ -290,7 +289,7 @@ and one *update* Snapshot for Gandalf. Seems right.
 
 ##### `select * from jv_snapshot`
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/jv_snapshot_table.png" alt="jv_snapshot table" width="1002px"/>
+{% include fancy-image.html image="/blog/javers-vs-envers/jv_snapshot_table.png" alt="jv_snapshot table" %}
 
 What distinguishes JaVers from Envers is the `state` column, here live Snapshots per se.
 It’s the text column with JSON documents.
@@ -576,7 +575,7 @@ class Employee {
 
 Then, Envers adds the boolean matrix to the `employee_AUD` table:
 
-<img style="margin-bottom:10px" src="/blog/javers-vs-envers/employee-aud-matrix.png" alt="employee_aud table" width="679px"/>
+{% include fancy-image.html image="/blog/javers-vs-envers/employee-aud-matrix.png" alt="employee_aud table" %}
 
 When we see these flags, they become obvious.
 Envers uses them to find records with changes on a given property.

@@ -35,6 +35,13 @@ pre code {
     font-size: 12px;
 }
 
+.fancy-min {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
 .blogPost h2 {
     margin-top: 5px;
 }
@@ -80,8 +87,7 @@ pre code {
 }
 
 pre.highlight {
-    min-width: 80ch;
-    width: fit-content;
+    overflow-x: scroll;
 }
 
 .navbar-nav > li > a {
