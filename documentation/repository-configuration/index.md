@@ -27,7 +27,7 @@ but for production environment you need something real.
 
 First, choose proper JaversRepository implementation.
 Currently, JaVers supports the following databases: **MongoDB**, **H2**, **PostgreSQL**, **MySQL**,
-**Oracle** and **Microsoft SQL Server**.
+**Oracle** and **Microsoft SQL Server**. Support for DB2 and DB2400 is also available but with beta status.
 
 <h2 id="mongodb-configuration">MongoDB</h2>
 **Dependency**<br/>

@@ -6,6 +6,15 @@ submenu: release-notes
 ---
 
 
+### 3.7.8
+released on 2018-01-05
+
+* [Marvin Diaz](https://github.com/marvindaviddiaz) added 
+ [support](https://github.com/javers/javers/pull/624/commits) for DB2 and DB2400 (beta).
+
+* Fixed comparing of complex Id values in `ValueChangeAppender`. 
+  Now their `equals()` is not used here. 
+
 ### 3.7.7
 released on 2017-12-20
 
