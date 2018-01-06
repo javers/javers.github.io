@@ -32,6 +32,10 @@ p code {
     word-wrap: break-word;
 }
 
+pre.highlight {
+    margin-bottom: 15px;
+}
+
 pre.highlight > code {
     word-break: keep-all;
     word-wrap: normal;

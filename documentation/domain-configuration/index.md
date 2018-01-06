@@ -68,35 +68,142 @@ To make long story short, JaVers needs to know
 the [`JaversType`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/JaversType.html)
 for each of your classes spotted in runtime (see [mapping configuration](#mapping-configuration)).
 
-Let’s examine these three fundamental types more closely.
+Let’s examine the fundamental types more closely.
 
 <h3 id="entity">Entity</h3>
 JaVers [Entity]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)
 has exactly the same semantic as DDD Entity or JPA Entity.
+It’s a big domain object (for example Person, Company, Car).
 
-Usually, each Entity instance represents a concrete physical object.
-The Entity has a list of mutable properties and its own *identity* held in *ID property*.
+Usually, each Entity instance represents a concrete physical object
+which can be identified.
+An Entity has a list of mutable properties and its own *identity* held in *ID property*.
 
-Each Entity instance has a global identifier called
-[InstanceId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html).
-It consists of a class name and an ID value.
+For example:
 
-**Comparing strategy** for Entity references is based on InstanceId and
-for Entity state is property-by-property.
+```groovy
+@TypeName("Person")
+class Person {
+    @Id String name
+    String position
+}
+
+def "should map Person as EntityType"(){
+  given:
+  def bob = new Person(name: "Bob", position: "dev")
+  def javers = JaversBuilder.javers().build()
+
+  def personType = javers.getTypeMapping(Person)
+  def bobId = personType.createIdFromInstance(bob)
+
+  expect:
+  bobId.value() == "Person/Bob"
+  bobId instanceof InstanceId
+  
+  println "JaversType of Person: " + personType.prettyPrint()
+  println "ID of bob: '${bobId.value()}'"
+}
+```
+
+output:
+
+```text
+JaversType of Person: EntityType{
+  baseType: class org.javers.core.examples.CustomToStringExample$Person
+  typeName: Person
+  managedProperties:
+    Field String name; //declared in Person
+    Field String position; //declared in Person
+  idProperty: name
+}
+ID of bob: 'Person/Bob'
+```
+
+**Comparing strategy** for Entity state is property-by-property. 
+For Entity references, comparing is based on InstanceId.
 
 Entity can contain ValueObjects, Entity references, Containers, Values and Primitives.
 
-**For example** Entities are: Person, Company.
+<h3 id="entity-id">Entity ID</h3>
+
+Entity ID has a special role in JaVers. It identifies an Entity instance.
+You need to choose **exactly one** property as ID for each of your Entity classes
+(we call it ID property).
+ 
+For each Entity instance, JaVers creates a global identifier called
+[InstanceId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/InstanceId.html).
+It’s a String composed of an Entity type name and an ID value.
+
+Since InstanceId value is a String, each object used as Entity ID
+should have a good String representation.
+
+There are three ways of creating a **String representation** for an Entity ID:
+
+* For Primitives (and we recommend using Primitives here), JaVers simply calls `Object.toString()`. 
+
+* For Objects, JaVers uses the [`reflectiveToString()`]({{ site.javadoc_url }}org/javers/common/reflection/ReflectionUtil.html#reflectiveToString-java.lang.Object-)
+function by default, which concatenates `toString()` called on
+all properties of a given Object ID. 
+
+* For Objects, you can also register a custom function to be used instead of `reflectiveToString()`.
+
+For example:
+
+```groovy
+@TypeName("Entity")
+class Entity {
+    @Id Point id
+    String data
+}
+
+class Point {
+    double x
+    double y
+
+    String myToString() {
+        "("+ (int)x +"," +(int)y + ")"
+    }
+}
+    
+def "should use custom toString function for complex Id"(){
+  given:
+  Entity entity = new Entity(id: new Point(x: 1/3, y: 4/3))
+
+  when: "default reflectiveToString function"
+  def javers = JaversBuilder.javers()
+          .build()
+  GlobalId id = javers.getTypeMapping(Entity).createIdFromInstance(entity)
+
+  then:
+  id.value() == "Entity/0.3333333333,1.3333333333"
+
+  when: "custom toString function"
+  javers = JaversBuilder.javers()
+          .registerValueWithCustomToString(Point, {it.myToString()})
+          .build()
+  id = javers.getTypeMapping(Entity).createIdFromInstance(entity)
+
+  then:
+  id.value() == "Entity/(0,1)"
+}
+```   
+
+**ProTip:** The JaversType of an ID property type is mapped automatically
+to Value if it’s an Object or to Primitive if it’s a Java primitive.
+So &mdash; technically &mdash; you can’t have a ValueObject type here. 
+
+**ProTip:** JaVers doesn’t distinguish between JPA `@Id` and `@EmbeddedId` annotations,
+so you can use them interchangeably. 
 
 <h3 id="value-object">Value Object</h3>
 JaVers [ValueObject]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
 is similar to DDD ValueObject and JPA Embeddable.
 It’s a complex value holder with a list of mutable properties but without a unique identifier.
 
-ValueObject instances has a ‘best effort’ global identifier called
+ValueObject instances has a 'best effort' global identifier called
 [ValueObjectId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
 It consists of the owning Entity InstanceId and
-the path in a object subtree.
+the path in an object subtree.
 
 **Comparing strategy** for ValueObjects is property-by-property.
 
@@ -104,18 +211,21 @@ the path in a object subtree.
 (as a part of an Aggregate). JaVers is not so radical and supports both embedded and dangling ValueObjects.
 So in JaVers, ValueObject is just an Entity without identity.
 
-**For example** ValueObjects are: Address, Point.
+**Examples** of ValueObjects: Address, Point.
 
 <h3 id="ValueType">Value</h3>
 JaVers [Value]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
 is a simple (scalar) value holder.
 
-**Comparing strategy** for Values is (by default) based on the `Object.equals()`.
+**Comparing strategy** for Values is (by default) based on the **`Object.equals()`**.
 So it’s highly important to implement this method properly,
-it should compare the state of given objects.
+it should compare the underlying state of given objects.
+
+Well-known Value types like `BigDecimal` or `LocalDate` have it already.
+Remember to implement `equals()` for all your Value classes.
 
 If you don’t control the Value implementation, 
-you can still change the comparing strategy by registering the [CustomValueComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomValueComparator.html)
+you can still change the comparing strategy by registering a [CustomValueComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomValueComparator.html)
 function.
 For example, if you want to compare BigDecimals using only the integer part:
  
@@ -125,10 +235,10 @@ Javers javers = JaversBuilder.javers()
 
 ``` 
 
-**For example** Values are: BigDecimal, LocalDate.
+**Examples** of Values: BigDecimal, LocalDate.
 
-For Values it’s advisable to customize JSON serialization by implementing *Type Adapters*
-(see [custom json serialization](/documentation/repository-configuration/#custom-json-serialization)).
+For Values, it’s advisable to customize JSON serialization by implementing *Type Adapters*
+(see [custom JSON serialization](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
@@ -268,81 +378,37 @@ Two **JPA** property level annotations are interpreted as synonyms of JaVers ann
 * `@javax.persistence.Id` is the synonym of JaVers `@Id`,
 * `@javax.persistence.Transient` is the synonym of `@DiffIgnore`.
 
-<h2 id="entity-id-property">Entity Id</h2>
-Entity Id has a special role in JaVers. It identifies an Entity instance.
-You need to choose **exactly one** property as Id for each of your Entity classes (we call it Id-property).
-
-The JaversType of an Id-property type is mapped automatically
-to [`Value`](#ValueType) if it’s an Object or 
-to [`Primitive`](#Primitive) if it’s a Java primitive
-. So &mdash; technically &mdash; you cant have a ValueObject type here. 
-
-JaVers doesn’t distinct between JPA `@Id` and `@EmbeddedId` annotations,
-so you can use them interchangeably.  
+<h2 id="entity-mapping-example">Mapping example</h2>
  
 Consider the following Entity mapping example:
 
-```java
-package org.javers.core.cases.morphia;
+```groovy
+import org.bson.types.ObjectId
+import org.mongodb.morphia.annotations.Id
+import org.mongodb.morphia.annotations.Property
+import org.mongodb.morphia.annotations.Entity
 
-import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Entity;
-
-@Entity
-public class MongoStoredEntity {
+class MongoStoredEntity {
     @Id
-    private ObjectId _id;
+    private ObjectId id
 
     @Property("description")
-    private String description;
+    private String description
 
-    ... //
+    // ... 
+}    
 ```
 
 With zero config, JaVers maps:
 
-- `MongoStoredEntity` class to `Entity`, since `@Id` and `@Entity` annotations are present,
-- `ObjectId` class as `Value`, since it’s the type of the Id-property and it’s not a Primitive.
-
-**Object.equals()**<br/>
-In JaVers, each Value type should have proper `equals()` implementation 
-that compares underlying states.
-It it’s especially important for Id-properties.
-
-Well known Value types like `BigDecimal` or `LocalDate` have it already.
-**Remember** to implement `equals()` for all your Value types. For example:
-
-```groovy
-class MyEntity {
-    @EmbeddedId
-    MyEmbeddableId id
-    String value
-}
-
-class MyEmbeddableId {
-    String text
-    Long number
-
-    boolean equals(o) {
-        if (!(o instanceof MyEmbeddableId)) return false
-
-        MyEmbeddableId that = (MyEmbeddableId) o
-        return Objects.equals(text, that.text) &&
-               Objects.equals(number, that.number)
-    }
-
-    int hashCode() {
-        Objects.hash(text, number)
-    }
-}
-```
+- `MongoStoredEntity` class as Entity, since the `@Id` annotation is present,
+- `ObjectId` class as Value, since it’s the type of the ID property and it’s not a Primitive.
 
 **So far so good**. This mapping is OK for calculating diffs.
-Nevertheless, if you plan to use `JaversRepository`,
+Nevertheless, if you plan to use JaversRepository,
 consider providing custom JSON `TypeAdapters`
-for your each of your `Value` types, especially Id types like `ObjectId` (see [JSON TypeAdapters](#json-type-adapters)).
+for each of yours Value types,
+especially Value types used as Entity ID (see [JSON TypeAdapters](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="property-mapping-style">Property mapping style</h2>
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
