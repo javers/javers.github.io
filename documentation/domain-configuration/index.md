@@ -135,9 +135,9 @@ For each Entity instance, JaVers creates a global identifier called
 It’s a String composed of an Entity type name and an ID value.
 
 Since InstanceId value is a String, each object used as Entity ID
-should have good String representation.
+should have a good String representation.
 
-There are three ways of creating **String representation** for an Entity ID:
+There are three ways of creating a **String representation** for an Entity ID:
 
 * For Primitives (and we recommend using Primitives here), JaVers simply calls `Object.toString()`. 
 
@@ -192,7 +192,7 @@ def "should use custom toString function for complex Id"(){
 to Value if it’s an Object or to Primitive if it’s a Java primitive.
 So &mdash; technically &mdash; you can’t have a ValueObject type here. 
 
-**ProTip:** JaVers doesn’t distinct between JPA `@Id` and `@EmbeddedId` annotations,
+**ProTip:** JaVers doesn’t distinguish between JPA `@Id` and `@EmbeddedId` annotations,
 so you can use them interchangeably. 
 
 <h3 id="value-object">Value Object</h3>
@@ -203,7 +203,7 @@ It’s a complex value holder with a list of mutable properties but without a un
 ValueObject instances has a 'best effort' global identifier called
 [ValueObjectId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
 It consists of the owning Entity InstanceId and
-the path in a object subtree.
+the path in an object subtree.
 
 **Comparing strategy** for ValueObjects is property-by-property.
 
@@ -219,9 +219,9 @@ is a simple (scalar) value holder.
 
 **Comparing strategy** for Values is (by default) based on the **`Object.equals()`**.
 So it’s highly important to implement this method properly,
-it should compare underlying state of given objects.
+it should compare the underlying state of given objects.
 
-Well known Value types like `BigDecimal` or `LocalDate` have it already.
+Well-known Value types like `BigDecimal` or `LocalDate` have it already.
 Remember to implement `equals()` for all your Value classes.
 
 If you don’t control the Value implementation, 
@@ -238,7 +238,7 @@ Javers javers = JaversBuilder.javers()
 **Examples** of Values: BigDecimal, LocalDate.
 
 For Values, it’s advisable to customize JSON serialization by implementing *Type Adapters*
-(see [custom json serialization](/documentation/repository-configuration/#custom-json-serialization)).
+(see [custom JSON serialization](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
@@ -382,34 +382,33 @@ Two **JPA** property level annotations are interpreted as synonyms of JaVers ann
  
 Consider the following Entity mapping example:
 
-```java
-package org.javers.core.cases.morphia;
+```groovy
+import org.bson.types.ObjectId
+import org.mongodb.morphia.annotations.Id
+import org.mongodb.morphia.annotations.Property
+import org.mongodb.morphia.annotations.Entity
 
-import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Entity;
-
-@Entity
-public class MongoStoredEntity {
+class MongoStoredEntity {
     @Id
-    private ObjectId _id;
+    private ObjectId id
 
     @Property("description")
-    private String description;
+    private String description
 
-    ... //
+    // ... 
+}    
 ```
 
 With zero config, JaVers maps:
 
-- `MongoStoredEntity` class to `Entity`, since `@Id` and `@Entity` annotations are present,
-- `ObjectId` class as `Value`, since it’s the type of the Id-property and it’s not a Primitive.
+- `MongoStoredEntity` class as Entity, since the `@Id` annotation is present,
+- `ObjectId` class as Value, since it’s the type of the ID property and it’s not a Primitive.
 
 **So far so good**. This mapping is OK for calculating diffs.
-Nevertheless, if you plan to use `JaversRepository`,
+Nevertheless, if you plan to use JaversRepository,
 consider providing custom JSON `TypeAdapters`
-for your each of your `Value` types, especially Id types like `ObjectId` (see [JSON TypeAdapters](#json-type-adapters)).
+for each of yours Value types,
+especially Value types used as Entity ID (see [JSON TypeAdapters](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="property-mapping-style">Property mapping style</h2>
 There are two mapping styles in JaVers `FIELD` and `BEAN`.
