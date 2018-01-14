@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.7.9
+released on 2018-01-14
+
+* [558](https://github.com/javers/javers/issues/558) Performance improvement in
+Hibernate unproxy hook. Now, ShallowReferences can be created without 
+initializing Hibernate proxies.
 
 ### 3.7.8
 released on 2018-01-05
