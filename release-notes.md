@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.8.0
+released on 2018-02-06
+
+* [616](https://github.com/javers/javers/issues/616) New annotation &mdash; `@DiffInclude` &mdash;
+ for properties whitelisting. See [property level annotations](/documentation/domain-configuration/#property-level-annotations).
+
 ### 3.7.9
 released on 2018-01-14
 

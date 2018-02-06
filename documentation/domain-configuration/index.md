@@ -357,6 +357,13 @@ There are three property level annotations:
   &mdash;
   declares a property as ignored by JaVers.
 
+* [`@DiffInclude`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/DiffInclude.html)
+  &mdash;
+  declares a property as visible by JaVers. Other 
+  properties in a given class are ignored (unless explicitly included).
+  Including is opposite approach to Ignoring, like blacklisting vs whitelisting.
+  You can use only one approach for a given class.
+ 
 * [`@ShallowReference`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ShallowReference.html)
     &mdash;
   declares a property as `ShallowReference`.
@@ -494,18 +501,15 @@ check JaVers log messages with commit statistics, e.g.
 23:49:01.155 [main] INFO  org.javers.core.Javers - Commit(id:1.0, snapshots:2, changes - NewObject:2)
 
 ```
-If numbers looks suspicious, configure JaVers to ignore all business irrelevant data.
+If numbers looks suspicious, configure JaVers to ignore data not important in your business.
 
-**How to configure ignored properties**<br/>
-There are a few ways to do this.
+There are a few ways to do this:
 
-If you want to locally ignore concrete properties,
-use property-level `@DiffIgnore` or `@ShallowReference`
-(see [property annotations](#property-level-annotations)).
+**Use property-level** `@DiffIgnore` or `@ShallowReference`
+to ignore non-important properties. Alternatively, use `@DiffInclude`
+to mark all important properties. See [property annotations](#property-level-annotations).
 
-You can also ignore properties globally, by type.
-There are three class-level annotations for this:
-`@DiffIgnore`, `@ShallowReference` and `@IgnoreDeclaredProperties`
+**Use class-level** `@DiffIgnore`, `@ShallowReference` or `@IgnoreDeclaredProperties`
 (see [class annotations](#class-level-annotations)).
 
 * `@DiffIgnore` is strongest and means *I don’t care, just ignore all objects with this type.*
