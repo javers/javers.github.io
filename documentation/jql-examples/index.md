@@ -958,18 +958,17 @@ Moreover, the renamed Class
 has some properties added/removed. The second commit is persisted,
 using the new Class definition: `PersonRefactored`.
 
-
 Old class:
 
 ```groovy
 @TypeName("Person")
 class Person {
     @Id
-    private int id;
+    int id
 
-    private String name;
+    String name
 
-    private Address address;
+    Address address
 }
 ```
 
@@ -979,11 +978,11 @@ New class:
 @TypeName("Person")
 class PersonRefactored {
     @Id
-    private int id;
+    int id
 
-    private String name;
+    String name
 
-    private String city;
+    String city
 }
 ```
 
