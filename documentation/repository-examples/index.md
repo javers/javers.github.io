@@ -304,31 +304,18 @@ but it shines when used for changes fetched from JaversRepository.
 
 The full example is shown below.
 
-<tt>ChangeLogExample.class :</tt>
+[`ChangeLogExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ChangeLogExample.java)
 
 ```java
-package org.javers.core.examples;
-
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.core.changelog.SimpleTextChangeLog;
-import org.javers.core.diff.Change;
-import org.javers.core.examples.model.Employee;
-import org.javers.repository.jql.QueryBuilder;
-import org.junit.Test;
-import java.util.List;
-
-public class ChangeLogExample {
-
-  @Test
-  public void shoudPrintTextChangeLog() {
+@Test
+public void shouldPrintTextChangeLog() {
     // given:
     Javers javers = JaversBuilder.javers().build();
-    Employee bob = new Employee("Bob", 9_000, "Scrum master" );
+    Employee bob = new Employee("Bob", 9_000, "ScrumMaster");
     javers.commit("hr.manager", bob);
 
     // do some changes and commit
-    bob.setPosition("Team Lead");
+    bob.setPosition("Developer");
     bob.setSalary(11_000);
     javers.commit("hr.director", bob);
 
@@ -342,7 +329,6 @@ public class ChangeLogExample {
 
     // then:
     System.out.println(changeLog);
-  }
 }
 ```
 
