@@ -14,331 +14,299 @@ git clone https://github.com/javers/javers.git
 cd javers
 ```
 
-Run examples as unit tests:
+Run an example:
 
 ```text
 ./gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
-./gradlew javers-core:example -Dtest.single=BasicValueObjectDiffExample
-...
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
 
-Let’s start from something simple. This example shows how to find a diff between two objects of `Person` class.
-Since every person has his own identity, Person class is an Entity
-(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for Entity definition).
+Let’s start with something simple. This example shows how to find a diff between two objects of 
+the `Employee` class. Every employee has his own identity, so the `Employee` class is mapped as Entity.
+Our employee has some basic properties, collections, and references.
+Just the usual stuff.
 
 **The case**<br/>
 We have two objects, `tommyOld` and `tommyNew`.
 These objects represent two versions of the same being (a person called Tommy).
-To find out what’s changed, just call
-
-    javers.compare(tommyOld, tommyNew)
-
-**Configuration** <br/>
-JaVers needs to know that Person class is an Entity.
-It’s enough to annotate `login` field with `@Id` annotation.
-
-**What’s important**<br/>
-Notice that both objects have the same Id value (`'tommy'`).
-That’s why they are matched and compared.
-JaVers compares only objects with the same [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
-In this case, it’s `'org.javers.core.examples.model.Person/tommy'`.
-
-`Person.class:`
+To find out what’s changed, just call:
 
 ```java
-package org.javers.core.examples.model;
+    javers.compare(tommyOld, tommyNew)
+```    
 
-import javax.persistence.Id;
+**Configuration** <br/>
+JaVers needs to know that the `Employee` class is an Entity
+and the `Address` class is a Value Object.
+It’s enough to annotate the `name` field with the `@Id` annotation to map `Employee` as Entity.
+`Address` is mapped as Value Object by default.
+See [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for 
+more details about JaVers’ type system.
 
-public class Person {
+**What’s important**<br/>
+Notice that both objects have the same Id value &mdash; `'tommy'`.
+That’s why they are matched and compared.
+JaVers matches only objects with the same `GlobalId`.
+In this case, the `GlobalId` value is: `'Employee/tommy'`.
+Without the `@TypeName` annotation, it would be `'org.javers.core.examples.model.Employee/tommy'`.
+<a name="Employee_java"/>
+
+[`Employee`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java):
+
+```java
+@TypeName("Employee")
+public class Employee {
+
     @Id
-    private String login;
     private String name;
 
-    public Person(String login, String name) {
-        this.login = login;
-        this.name = name;
-    }
+    private Position position;
 
-    public String getLogin() { return login; }
+    private int salary;
 
-    public String getName() { return name; }
+    private int age;
+
+    private Employee boss;
+
+    private List<Employee> subordinates = new ArrayList<>();
+
+    private Address primaryAddress;
+
+    private Address postalAddress;
+
+    private Set<String> skills;
+
+    ... // omitted
 }
 ```
 
-`BasicEntityDiffExample.class`:
+[`Address.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Address.java):
 
 ```java
-package org.javers.core.examples;
-
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.core.diff.Diff;
-import org.javers.core.diff.changetype.ValueChange;
-import org.javers.core.examples.model.Person;
-import org.junit.Test;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-public class BasicEntityDiffExample {
-  @Test
-  public void shouldCompareTwoEntityObjects() {
-    //given
-    Javers javers = JaversBuilder.javers().build();
-
-    Person tommyOld = new Person("tommy", "Tommy Smart");
-    Person tommyNew = new Person("tommy", "Tommy C. Smart");
-
-    //when
-    Diff diff = javers.compare(tommyOld, tommyNew);
-
-    //then
-    //there should be one change of type {@link ValueChange}
-    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
-
-    assertThat(diff.getChanges()).hasSize(1);
-    assertThat(change.getPropertyName()).isEqualTo("name");
-    assertThat(change.getAffectedGlobalId()
-        .value()).isEqualTo("org.javers.core.examples.model.Person/tommy");
-    assertThat(change.getLeft()).isEqualTo("Tommy Smart");
-    assertThat(change.getRight()).isEqualTo("Tommy C. Smart");
-
-    System.out.println(diff);
-  }
-}
-```
-
-The output of running this program is:
-
-```
-Diff:
-1. ValueChange{globalId:'org.javers.core.examples.model.Person/tommy',
-               property:'name', oldVal:'Tommy Smart', newVal:'Tommy C. Smart'}
-
-```
-
-<h2 id="compare-valueobjects">Compare ValueObjects</h2>
-
-This example shows how to find a diff between two objects of `Address` class.
-Address is a typical ValueObject; it doesn’t have its own identity. It’s just a complex value holder
-(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for ValueObject definition).
-
-**The case**<br/>
-We have two objects, `address1` and `address2`. These objects represent two different addresses.
-To find out what the difference is, just call
-
-    javers.compare(address1, address2)
-
-**Configuration** <br/>
-In this case, no configuration is required since JaVers is going to map
-Address class as ValueObject by default.
-
-**What’s important**<br/>
-When JaVers knows nothing about a class, it treats it as ValueObject.
-As we said in the previous example, JaVers compares only objects with the same
-[`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
-What’s the Address Id? Well, it’s a tricky beast...
-
-It’s based on the path in the object graph. In this case, both objects are roots, so the path is simply `'/'`
-and the GlobalId is `'org.javers.core.examples.model.Address/'`.
-
-
-`Address.class:`
-
-```java
-package org.javers.core.examples.model;
-
 public class Address {
-    private final String city;
-    private final String street;
+    private String city;
 
-    public Address(String city, String street) {
-        this.city = city;
-        this.street = street;
-    }
+    private String street;
 
-    public String getCity() { return city; }
-
-    public String getStreet() { return street; }
-}
-```
-
-`BasicValueObjectDiffExample.class:`
-
-```java
-package org.javers.core.examples;
-
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.core.diff.Diff;
-import org.javers.core.diff.changetype.ValueChange;
-import org.javers.core.examples.model.Address;
-import org.junit.Test;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-public class BasicValueObjectDiffExample {
-
-  @Test
-  public void shouldCompareTwoObjects() {
-
-    //given
-    Javers javers = JaversBuilder.javers().build();
-
-    Address address1 = new Address("New York","5th Avenue");
-    Address address2 = new Address("New York","6th Avenue");
-
-    //when
-    Diff diff = javers.compare(address1, address2);
-
-    //then
-    //there should be one change of type {@link ValueChange}
-    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
-
-    assertThat(diff.getChanges()).hasSize(1);
-    assertThat(change.getAffectedGlobalId().value())
-              .isEqualTo("org.javers.core.examples.model.Address/");
-    assertThat(change.getPropertyName()).isEqualTo("street");
-    assertThat(change.getLeft()).isEqualTo("5th Avenue");
-    assertThat(change.getRight()).isEqualTo("6th Avenue");
-
-    System.out.println(diff);
-  }
+    ... // omitted
 }
 ```    
 
-The output of running this program is:
+[`BasicEntityDiffExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/BasicEntityDiffExample.java):
 
+```java
+@Test
+public void shouldCompareTwoEntities() {
+  //given
+  Javers javers = JaversBuilder.javers()
+          .withListCompareAlgorithm(LEVENSHTEIN_DISTANCE)
+          .build();
+
+  Employee tommyOld = EmployeeBuilder.Employee("Frodo")
+          .withAge(40)
+          .withPosition("Townsman")
+          .withSalary(10_000)
+          .withPrimaryAddress(new Address("Shire"))
+          .withSkills("management")
+          .withSubordinates(new Employee("Sam"))
+          .build();
+
+  Employee tommyNew = EmployeeBuilder.Employee("Frodo")
+          .withAge(41)
+          .withPosition("Hero")
+          .withBoss(new Employee("Gandalf"))
+          .withPrimaryAddress(new Address("Mordor"))
+          .withSalary(12_000)
+          .withSkills("management", "agile coaching")
+          .withSubordinates(new Employee("Sméagol"), new Employee("Sam"))
+          .build();
+
+  //when
+  Diff diff = javers.compare(tommyOld, tommyNew);
+
+  //then
+  assertThat(diff.getChanges()).hasSize(9);
+}
 ```
+You can print the list of changes using pretty `toString()`:
+
+```java
+System.out.println(diff);
+```
+
+```text
 Diff:
-1. ValueChange{globalId:'org.javers.core.examples.model.Address/',
-               property:'street', oldVal:'5th Avenue', newVal:'6th Avenue'}
+1. NewObject{ globalId:'Employee/Gandalf' }
+2. NewObject{ globalId:'Employee/Sméagol' }
+3. ValueChange{ globalId:'Employee/Frodo#primaryAddress', city 'Shire' changed to 'Mordor' }
+4. ValueChange{ globalId:'Employee/Frodo', position 'Townsman' changed to 'Hero' }
+5. ValueChange{ globalId:'Employee/Frodo', salary '10000' changed to '12000' }
+6. ValueChange{ globalId:'Employee/Frodo', age '40' changed to '41' }
+7. ReferenceChange{ globalId:'Employee/Frodo', boss 'null' changed to 'Employee/Gandalf' }
+8. ListChange{ globalId:'Employee/Frodo', subordinates changes:
+  0. 'Employee/Sméagol' added }
+9. SetChange{ globalId:'Employee/Frodo', skills changes:
+  . 'agile coaching' added }
+```
+
+The resulting [Diff](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Diff.java)
+is a container for the list of
+[Changes](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Change.java).
+There are various types of Changes, here is the complete hierarchy:
+
+{% include fancy-image.html image="/img/change-hierarchy.png" alt="Change hierarchy" width="530px"%}
+
+Diff can be easily serialized to JSON:
+
+```java
+System.out.println(javers.getJsonConverter().toJson(diff));
+```
+
+```json
+{
+  "changes": [
+    {
+      "changeType": "NewObject",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Gandalf"
+      }
+    },
+    {
+      "changeType": "NewObject",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Sméagol"
+      }
+    },
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "valueObject": "org.javers.core.examples.model.Address",
+        "ownerId": {
+          "entity": "Employee",
+          "cdoId": "Frodo"
+        },
+        "fragment": "primaryAddress"
+      },
+      "property": "city",
+      "left": "Shire",
+      "right": "Mordor"
+    },
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Frodo"
+      },
+      "property": "position",
+      "left": "Townsman",
+      "right": "Hero"
+    },
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Frodo"
+      },
+      "property": "salary",
+      "left": 10000,
+      "right": 12000
+    },
+    {
+      "changeType": "ValueChange",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Frodo"
+      },
+      "property": "age",
+      "left": 40,
+      "right": 41
+    },
+    {
+      "changeType": "ReferenceChange",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Frodo"
+      },
+      "property": "boss",
+      "left": null,
+      "right": {
+        "entity": "Employee",
+        "cdoId": "Gandalf"
+      }
+    },
+    {
+      "changeType": "ListChange",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Frodo"
+      },
+      "property": "subordinates",
+      "elementChanges": [
+        {
+          "elementChangeType": "ValueAdded",
+          "index": 0,
+          "value": {
+            "entity": "Employee",
+            "cdoId": "Sméagol"
+          }
+        }
+      ]
+    },
+    {
+      "changeType": "SetChange",
+      "globalId": {
+        "entity": "Employee",
+        "cdoId": "Frodo"
+      },
+      "property": "skills",
+      "elementChanges": [
+        {
+          "elementChangeType": "ValueAdded",
+          "index": null,
+          "value": "agile coaching"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 <h2 id="compare-graphs">Compare graphs</h2>
 
 JaVers can compare arbitrary complex structures of objects.
-In this example, we show how easily you can compare employee hierarchies.
+In this example, we show how you can deeply compare employee hierarchies to detect specific types of changes.
 
-For the simplicity of this example, the data model is reduced to one class,
-`Employee` (see below).
+For simplicity of this example, the data model is reduced to the one class &mdash; 
+[Employee](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java)
+ (the same as in the previous example).
 
 Conceptually, an employee hierarchy is a tree.
 Technically, we have a graph with cycles here (since the relationship between boss and employees is bidirectional).
 
 **The case**<br/>
-We are comparing two versions (historical states) of an employee hierarchy.
-We have two Employee objects, `oldBoss` and `newBoss`. These guys are roots and handles to
-our hierarchies.
+We are comparing two versions (historical states) of the employee hierarchy in order 
+to detect the four types of changes:
 
-We could consider the following types of changes:
-
-- employee hired — [`NewObject`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
-- employee fired — [`ObjectRemoved`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
-- salary change — [`ValueChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
-- boss change — [`ReferenceChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
-- change on subordinates list — [`ListChange`]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html).
-
-We show code examples for three cases: employee hired, salary change and boss change
-(other cases are done similarly).
-See the tests in `EmployeeHierarchiesDiffExample.class` below.
+- employee hired — [NewObject](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/NewObject.java),
+- employee fired — [ObjectRemoved](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/ObjectRemoved.java),
+- salary change — [ValueChange](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/ValueChange.java),
+- boss change — [ReferenceChange](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/ReferenceChange.java).
 
 **Configuration** <br/>
-JaVers needs to know that Employee class is an Entity.
-It’s enough to annotate the `name` field with `@Id` annotation.
+JaVers needs to know that `Employee` class is an Entity.
+It’s enough to annotate the `name` field with the `@Id` annotation. 
 
 **What’s important**<br/>
 JaVers makes no assumptions about your data structures
 and treats them just like graphs with cycles (the same as JVM does).
 There are no limitations on the number of nodes in the graph.
 
-<tt>[Employee.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java)</tt>:
+[`shouldDetectHired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L14):
 
 ```java
-package org.javers.core.examples.model;
-
-import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class Employee {
-
-    @Id
-    private final String name;
-
-    private final int salary;
-
-    private Employee boss;
-
-    private final List<Employee> subordinates = new ArrayList<>();
-
-    public Employee(String name) {
-        this(name, 10000);
-    }
-
-    public Employee(String name, int salary) {
-        checkNotNull(name);
-        this.name = name;
-        this.salary = salary;
-    }
-
-    public Employee addSubordinate(Employee employee) {
-        checkNotNull(employee);
-        employee.boss = this;
-        subordinates.add(employee);
-        return this;
-    }
-
-    // ...
-}
-```
-
-<tt>[EmployeeHierarchiesDiffExample<wbr/>.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java)</tt>:
-
-```java
-package org.javers.core.examples;
-
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.core.diff.Diff;
-import org.javers.core.diff.changetype.*;
-import org.javers.core.examples.model.Employee;
-import org.junit.Test;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-public class EmployeeHierarchiesDiffExample {
-
-  /** {@link ValueChange} example */
-  @Test
-  public void shouldDetectSalaryChange(){
-    //given
-    Javers javers = JaversBuilder.javers().build();
-
-    Employee oldBoss = new Employee("Big Boss")
-        .addSubordinates(
-            new Employee("Noisy Manager"),
-            new Employee("Great Developer", 10000));
-
-    Employee newBoss = new Employee("Big Boss")
-        .addSubordinates(
-            new Employee("Noisy Manager"),
-            new Employee("Great Developer", 20000));
-
-    //when
-    Diff diff = javers.compare(oldBoss, newBoss);
-
-    //then
-    ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
-
-    assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-    assertThat(change.getPropertyName()).isEqualTo("salary");
-    assertThat(change.getLeft()).isEqualTo(10000);
-    assertThat(change.getRight()).isEqualTo(20000);
-
-    System.out.println(diff);
-  }
-
   /** {@link NewObject} example */
   @Test
   public void shouldDetectHired() {
@@ -366,7 +334,101 @@ public class EmployeeHierarchiesDiffExample {
 
     System.out.println(diff);
   }
+``` 
 
+```text
+Diff:
+1. NewObject{ globalId:'Employee/Hired Second' }
+2. NewObject{ globalId:'Employee/Hired One' }
+3. ListChange{ globalId:'Employee/Big Boss', subordinates changes:
+  1. 'Employee/Hired One' added
+  2. 'Employee/Hired Second' added }
+```                      
+
+[`shouldDetectFired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L42):
+
+```java
+  /** {@link ObjectRemoved} example */
+  @Test
+  public void shouldDetectFired() {
+    //given
+    Javers javers = JaversBuilder.javers().build();
+
+    Employee oldBoss = new Employee("Big Boss")
+            .addSubordinates(
+                    new Employee("Great Developer"),
+                    new Employee("Team Lead").addSubordinates(
+                            new Employee("Another Dev"),
+                            new Employee("To Be Fired")
+                    ));
+
+    Employee newBoss = new Employee("Big Boss")
+            .addSubordinates(
+                    new Employee("Great Developer"),
+                    new Employee("Team Lead").addSubordinates(
+                            new Employee("Another Dev")
+                    ));
+
+    //when
+    Diff diff = javers.compare(oldBoss, newBoss);
+
+    //then
+    assertThat(diff.getChangesByType(ObjectRemoved.class)).hasSize(1);
+
+    System.out.println(diff);
+  }
+```
+
+```text
+Diff:
+1. ObjectRemoved{ globalId:'Employee/To Be Fired' }
+2. ListChange{ globalId:'Employee/Team Lead', subordinates changes:
+  1. 'Employee/To Be Fired' removed }
+
+```
+ 
+[`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L72):
+
+```java
+  /** {@link ValueChange} example */
+  @Test
+  public void shouldDetectSalaryChange(){
+    //given
+    Javers javers = JaversBuilder.javers().build();
+
+    Employee oldBoss = new Employee("Big Boss")
+            .addSubordinates(
+                    new Employee("Noisy Manager"),
+                    new Employee("Great Developer", 10000));
+
+    Employee newBoss = new Employee("Big Boss")
+            .addSubordinates(
+                    new Employee("Noisy Manager"),
+                    new Employee("Great Developer", 20000));
+
+    //when
+    Diff diff = javers.compare(oldBoss, newBoss);
+
+    //then
+    ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
+
+    assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
+    assertThat(change.getPropertyName()).isEqualTo("salary");
+    assertThat(change.getLeft()).isEqualTo(10000);
+    assertThat(change.getRight()).isEqualTo(20000);
+
+    System.out.println(diff);
+  }
+``` 
+
+```text
+Diff:
+1. ValueChange{ globalId:'Employee/Great Developer', salary '10000' changed to '20000' }
+```
+
+[`shouldDetectBossChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L102):
+
+```java
   /** {@link ReferenceChange} example */
   @Test
   public void shouldDetectBossChange() {
@@ -397,70 +459,84 @@ public class EmployeeHierarchiesDiffExample {
 
     System.out.println(diff);
   }
+``` 
 
-  /** {@link NewObject} example, large structure */
+```text
+Diff:
+1. ListChange{ globalId:'Employee/Manager One', subordinates changes:
+  0. 'Employee/Great Developer' removed }
+2. ReferenceChange{ globalId:'Employee/Great Developer', boss 'Employee/Manager One' changed to 'Employee/Manager Second' }
+3. ListChange{ globalId:'Employee/Manager Second', subordinates changes:
+  0. 'Employee/Great Developer' added }
+```
+
+<h2 id="compare-valueobjects">Compare top-level Value Objects</h2>
+
+This example shows how to find a diff between two objects of the `Address` class.
+Address is a typical [Value Object](/documentation/domain-configuration/#value-object), it doesn’t have its own identity.
+It’s just a complex value holder.
+
+**The case**<br/>
+We have two objects, `address1` and `address2`. These objects represent two different addresses.
+To find out what the difference is, just call:
+
+    javers.compare(address1, address2)
+
+**What’s important**<br/>
+When JaVers knows nothing about a class, it treats it as Value Object.
+As we said in the previous example, JaVers compares only objects with the same `GlobalId`.
+
+What’s the Address Id? It’s based on the path in the object graph.
+In this case, both objects are roots, so the path is simply `'/'`
+and the `GlobalId` is `'org.javers.core.examples.model.Address/'`.
+
+[`Address.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Address.java):
+
+```java
+public class Address {
+    private String city;
+
+    private String street;
+
+    ... // omitted
+}
+``` 
+
+[`BasicValueObjectDiffExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/BasicValueObjectDiffExample.java):
+
+```java
   @Test
-  public void shouldDetectFiredInLargeDepthStructure() {
+  public void shouldCompareTwoObjects() {
+
     //given
     Javers javers = JaversBuilder.javers().build();
 
-    Employee oldBoss = new Employee("Big Boss");
-    Employee boss = oldBoss;
-    for (int i=0; i<1000; i++){
-        boss.addSubordinate(new Employee("Emp no."+i));
-        boss = boss.getSubordinates().get(0);
-    }
-
-    Employee newBoss = new Employee("Big Boss");
+    Address address1 = new Address("New York","5th Avenue");
+    Address address2 = new Address("New York","6th Avenue");
 
     //when
-    Diff diff = javers.compare(oldBoss, newBoss);
+    Diff diff = javers.compare(address1, address2);
 
     //then
-    assertThat(diff.getChangesByType(ObjectRemoved.class)).hasSize(1000);
+    //there should be one change of type {@link ValueChange}
+    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
+
+    assertThat(diff.getChanges()).hasSize(1);
+    assertThat(change.getAffectedGlobalId().value())
+              .isEqualTo("org.javers.core.examples.model.Address/");
+    assertThat(change.getPropertyName()).isEqualTo("street");
+    assertThat(change.getLeft()).isEqualTo("5th Avenue");
+    assertThat(change.getRight()).isEqualTo("6th Avenue");
+
+    System.out.println(diff);
   }
-}
-```
+```    
 
 The output of running this program is:
 
 ```
-//.. shouldDetectSalaryChange()
-
-1. ValueChange{
-   globalId:'org.javers.core.examples.model.Employee/Great Developer',
-   property:'salary', oldVal:'10000', newVal:'20000'}
-
-
-//.. shouldDetectHired()
-
-1. NewObject {
-   globalId:'org.javers.core.examples.model.Employee/Hired Second'}
-2. NewObject {
-   globalId:'org.javers.core.examples.model.Employee/Hired One'}
-3. ListChange{
-   globalId:'org.javers.core.examples.model.Employee/Big Boss',
-   property:'subordinates',
-   containerChanges:[(1).added:'org.javers.core.examples.model.Employee/Hired One',
-                     (2).added:'org.javers.core.examples.model.Employee/Hired Second']}
-
-
-//.. shouldDetectBossChange()
-
 Diff:
-1. ReferenceChange{
-   globalId:'org.javers.core.examples.model.Employee/Great Developer',
-   property:'boss',
-   oldRef:'org.javers.core.examples.model.Employee/Manager One',
-   newRef:'org.javers.core.examples.model.Employee/Manager Second'}
-2. ListChange{
-   globalId:'org.javers.core.examples.model.Employee/Manager Second',
-   property:'subordinates',
-   containerChanges:[(0).added:'org.javers.core.examples.model.Employee/Great Developer']}
-3. ListChange{
-   globalId:'org.javers.core.examples.model.Employee/Manager One',
-   property:'subordinates',
-   containerChanges:[(0).removed:'org.javers.core.examples.model.Employee/Great Developer']}
+1. ValueChange{ globalId:'org.javers.core.examples.model.Address/', street '5th Avenue' changed to '6th Avenue' }
 ```
 
 <h2 id="compare-collections">Compare top-level collections</h2>
@@ -468,15 +544,15 @@ Diff:
 JaVers can compare arbitrary complex structures of objects,
 including collections passed as top-level handles.
 
-If you want to compare top-level collections with simple items like Primitives or Values
-(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping),
+If you want to compare top-level collections with Primitives or Values
+(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping)),
 you can use the standard `javers.compare(Object, Object)` method.
 Collection items will be compared using `equals()`, resulting in a flat list of Changes.
 
 But when you need to compare top-level collections with complex items,
-like Entities or ValueObjects, use `javers.compareCollections(Collection, Collection, Class)`.
+like Entities or Value Objects, use `javers.compareCollections(Collection, Collection, Class)`.
 This method builds object graphs and compares them deeply,
-using `itemClass` as a hint about the items type.
+using `itemClass` as a hint about the item’s type.
 
 **The case**<br/>
 When collections are properties of a domain object, for example:
@@ -502,26 +578,9 @@ due to type erasure, there is no way to statically determine the type of items s
 Luckily, `compareCollections()` comes to the rescue
 and gives you exactly the same diff result for top-level collections as if they were object properties.
 
-<tt>[ComparingTopLevelCollectionExample<wbr/>.class](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java)</tt>
+[`ComparingTopLevelCollectionExample`<wbr/>`.java`](http://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ComparingTopLevelCollectionExample.java):
 
 ```java
-package org.javers.core.examples;
-
-import org.javers.common.collections.Lists;
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.core.diff.Diff;
-import org.javers.core.diff.changetype.ValueChange;
-import org.javers.core.examples.model.Person;
-import org.junit.Test;
-import java.util.List;
-import static org.fest.assertions.api.Assertions.assertThat;
-
-/**
- * @author bartosz.walacik
- */
-public class ComparingTopLevelCollectionExample {
-
   @Test
   public void shouldDeeplyCompareTwoTopLevelCollections() {
     //given
@@ -544,20 +603,25 @@ public class ComparingTopLevelCollectionExample {
 
     System.out.println(diff);
   }
-}
+```
+
+The output of running this program is:
+
+```text
+Diff:
+1. ValueChange{ globalId:'...Person/tommy', name 'Tommy Smart' changed to 'Tommy C. Smart' }
 ```
 
 <h2 id="groovy-diff-example">Groovy diff example</h2>
 
 In JaVers we love the [Groovy](http://www.groovy-lang.org/) language.
-From the very beginning of the JaVers project we used the [Spock framework](http://docs.spockframework.org)
+From the very beginning of the JaVers project, we used the [Spock framework](http://docs.spockframework.org)
 for writing tests.
-Recently, Groovy has started gaining momentum as a full-blown application language.
 One of Groovy’s killer features is excellent interoperability with Java.
 Looking from the other side, modern Java frameworks should be Groovy friendly. 
 
-As you know, all Java classes extends the `Object` class.
-All Groovy classes extends [GroovyObject](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GroovyObject.html),
+As you know, all Java classes extend the `Object` class.
+All Groovy classes extend [GroovyObject](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GroovyObject.html),
 that’s how Groovy implements its metaprogramming features. 
 
 Good news, JaVers is fully compatible with Groovy!
@@ -565,16 +629,9 @@ You can compare and commit Groovy objects in the same way as plain Java objects.
 Let’s see how it works:
 
 
-<tt>[GroovyDiffExample.groovy](http://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/GroovyDiffExample.groovy)</tt>
+[`GroovyDiffExample.groovy`](http://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/GroovyDiffExample.groovy):
 
 ```groovy
-package org.javers.core.examples
-
-import groovy.transform.TupleConstructor
-import org.javers.core.JaversBuilder
-import org.javers.core.metamodel.annotation.Id
-import spock.lang.Specification
-
 class GroovyDiffExample extends Specification {
 
     @TupleConstructor
@@ -602,6 +659,6 @@ class GroovyDiffExample extends Specification {
 ```
 
 No special JaVers configuration is required for Groovy.
-In the example we use the `FIELD` (default) mapping style.
+In the example, we use the `FIELD` (default) mapping style.
 Since Groovy generates getters and setters on the fly, you
 can also use the `BEAN` mapping style without adding boilerplate code to domain classes.

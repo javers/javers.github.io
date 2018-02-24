@@ -940,63 +940,53 @@ JPA allows you to specify `@Entity` name
 and Spring Data uses `@TypeAlias` annotation.
 
 JaVers has
-[`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
-annotation and uses its value as a Class identifier
-instead of a fully-qualified Class name.
+[@TypeName]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
+annotation. Use it to give stable names for your Entities.
+Type name is used as a Class identifier instead of a fully-qualified Class name.
 
 **What’s important**<br/>
-We encourage you to use @TypeName annotation for all Entities &mdash; it will make your
+We encourage you to use explicit Type names for all Entities &mdash; it will make your
 life easier in case of refactoring.
 
-When an Entity has @TypeName, you can rename it or move it to another package safely.
+When an Entity has a Type name, you can rename it or move it to another package safely.
 Without it, refactoring may break your queries.
 
 **Simple example** <br/>
-Let’s consider the refactoring of a `Person` Entity.
-After persisting some commits in JaversRepository, we decide to change the class name.
-Moreover, the renamed class
+Let’s consider refactoring of the `Person` Entity.
+After persisting some commits in JaversRepository, we decide to change the Class name.
+Moreover, the renamed Class
 has some properties added/removed. The second commit is persisted,
-using the new class definition: `PersonRefactored`.
+using the new Class definition: `PersonRefactored`.
 
-`Person.class`:
+Old class:
 
-```java
-package org.javers.core.examples;
-
-import org.javers.core.metamodel.annotation.Id;
-import org.javers.core.metamodel.annotation.TypeName;
-
+```groovy
 @TypeName("Person")
 class Person {
     @Id
-    private int id;
+    int id
 
-    private String name;
+    String name
 
-    private Address address;
+    Address address
 }
 ```
 
-`PersonRefactored.class`:
+New class:
 
-```java
-package org.javers.core.examples;
-
-import org.javers.core.metamodel.annotation.Id;
-import org.javers.core.metamodel.annotation.TypeName;
-
+```groovy
 @TypeName("Person")
 class PersonRefactored {
     @Id
-    private int id;
+    int id
 
-    private String name;
+    String name
 
-    private String city;
+    String city
 }
 ```
 
-As `@TypeName` annotation was engaged from the very beginning,
+Since `@TypeName` annotation was engaged from the very beginning,
 our JQL just works. See the following Spock test:
 
 ```groovy
@@ -1045,34 +1035,24 @@ Let’s see how the second approach works:
 
 Old class:
 
-```java
-package org.javers.core.examples;
-
-import org.javers.core.metamodel.annotation.Id;
-
+```groovy
 class PersonSimple {
     @Id
-    private int id;
+    int id
 
-    private String name;
+    String name
 }
-
 ```
 
 New class:
 
-```java
-package org.javers.core.examples;
-
-import org.javers.core.metamodel.annotation.Id;
-import org.javers.core.metamodel.annotation.TypeName;
-
+```groovy
 @TypeName("org.javers.core.examples.PersonSimple")
 class PersonRetrofitted {
     @Id
-    private int id;
+    int id
 
-    private String name;
+    String name
 }
 ```
 
@@ -1125,47 +1105,32 @@ We want to change its type from `EmailAddress` to `HomeAddress`,
 For the sake of brevity, we use the abstract `Address` class
 in the Person definition (owner Entity), so we don’t need to change it after the type of Address is altered.
 
-Abstract `Address.class`:
-
-```java
-package org.javers.core.examples;
-
+```groovy
 abstract class Address {
-    private boolean verified;
+    boolean verified
 
     Address(boolean verified) {
-        this.verified = verified;
+        this.verified = verified
     }
 }
-```
-
-`EmailAddress.class`
-
-```java
-package org.javers.core.examples;
 
 class EmailAddress extends Address {
-    private String email;
+    String email
 
     EmailAddress(String email, boolean verified) {
-        super(verified);
-        this.email = email;
+        super(verified)
+        this.email = email
     }
-```
-
-`HomeAddress.class`
-
-```java
-package org.javers.core.examples;
+}
 
 class HomeAddress extends Address {
-    private String city;
-    private String street;
+    String city
+    String street
 
     HomeAddress(String city, String street, boolean verified) {
-        super(verified);
-        this.city = city;
-        this.street = street;
+        super(verified)
+        this.city = city
+        this.street = street
     }
 }
 ```
@@ -1179,9 +1144,9 @@ another two versions are persisted with `HomeAddress` as the type:
 def 'should be very relaxed about ValueObject types'(){
   given:
   def javers = JaversBuilder.javers().build()
-  javers.commit('author', new Person(1,new EmailAddress('me@example.com', false)))
-  javers.commit('author', new Person(1,new HomeAddress ('London','Green 50', true)))
-  javers.commit('author', new Person(1,new HomeAddress ('London','Green 55', true)))
+  javers.commit('author', new Person(id:1, address:new EmailAddress('me@example.com', false)))
+  javers.commit('author', new Person(id:1, address:new HomeAddress ('London','Green 50', true)))
+  javers.commit('author', new Person(id:1, address:new HomeAddress ('London','Green 55', true)))
 
   when:
   def changes =
