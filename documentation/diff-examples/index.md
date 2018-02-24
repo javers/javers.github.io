@@ -129,7 +129,15 @@ public void shouldCompareTwoEntities() {
   assertThat(diff.getChanges()).hasSize(9);
 }
 ```
-You can print the list of changes using pretty `toString()`:
+
+The resulting [Diff](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Diff.java)
+is a container for the list of
+[Changes](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Change.java).
+There are various types of Changes, here is the complete hierarchy:
+
+{% include fancy-image.html image="/img/change-hierarchy.png" alt="Change hierarchy" width="530px"%}
+
+You can print the list of Changes using pretty `toString()`:
 
 ```java
 System.out.println(diff);
@@ -149,13 +157,6 @@ Diff:
 9. SetChange{ globalId:'Employee/Frodo', skills changes:
   . 'agile coaching' added }
 ```
-
-The resulting [Diff](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Diff.java)
-is a container for the list of
-[Changes](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Change.java).
-There are various types of Changes, here is the complete hierarchy:
-
-{% include fancy-image.html image="/img/change-hierarchy.png" alt="Change hierarchy" width="530px"%}
 
 Diff can be easily serialized to JSON:
 
