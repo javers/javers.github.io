@@ -61,6 +61,7 @@ javers:
   packagesToScan:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
+  sqlSchemaManagementEnabled: true
 ```  
 
 See [JaversBuilder javadoc]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html)
