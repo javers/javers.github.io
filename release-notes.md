@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.8.1
+released on 2018-02-25
+
+* [542](https://github.com/javers/javers/issues/542) 
+Added possibility to disable SQL schema auto creation. <br/>
+The flag `withSchemaManagementEnabled()`
+is added to `SqlRepositoryBuilder`. The flag is also available in the
+[Spring Boot starter](/documentation/spring-boot-integration/#javers-configuration-properties) for SQL.
+
 ### 3.8.0
 released on 2018-02-06
 
