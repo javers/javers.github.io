@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.8.2
+released on 2018-02-28
+* [640](https://github.com/javers/javers/issues/640)
+ Added scanning of gettres declared in interfaces. See [this Spec](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/cases/Case640InterfaceGettersInheritance.groovy).
+ 
+
 ### 3.8.1
 released on 2018-02-25
 
