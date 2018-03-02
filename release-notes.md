@@ -5,8 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.8.3
+released on 2018-03-02
+
+* [645](https://github.com/javers/javers/issues/645)
+Added support for Entity as an Id of another Entity.
+
 ### 3.8.2
 released on 2018-02-28
+
 * [640](https://github.com/javers/javers/issues/640)
  Added scanning of gettres declared in interfaces. See [this Spec](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/cases/Case640InterfaceGettersInheritance.groovy).
  
