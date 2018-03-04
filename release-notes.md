@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.8.4
+released on 2018-03-04
+
+* [638](https://github.com/javers/javers/issues/638) Fixed NPE in EdgeBuilder.
+
 ### 3.8.3
 released on 2018-03-02
 
