@@ -28,12 +28,12 @@ Our employee has some basic properties, collections, and references.
 Just the usual stuff.
 
 **The case**<br/>
-We have two objects, `tommyOld` and `tommyNew`.
-These objects represent two versions of the same being (a person called Tommy).
+We have two objects, `frodoOld` and `frodoNew`.
+These objects represent two versions of the same being (a person called Frodo).
 To find out what’s changed, just call:
 
 ```java
-    javers.compare(tommyOld, tommyNew)
+    javers.compare(frodoOld, frodoNew)
 ```    
 
 **Configuration** <br/>
@@ -45,11 +45,11 @@ See [domain-model-mapping](/documentation/domain-configuration/#domain-model-map
 more details about JaVers’ type system.
 
 **What’s important**<br/>
-Notice that both objects have the same Id value &mdash; `'tommy'`.
+Notice that both objects have the same Id value &mdash; `"Frodo"`.
 That’s why they are matched and compared.
 JaVers matches only objects with the same `GlobalId`.
-In this case, the `GlobalId` value is: `'Employee/tommy'`.
-Without the `@TypeName` annotation, it would be `'org.javers.core.examples.model.Employee/tommy'`.
+In this case, the `GlobalId` value is: `"Employee/Frodo"`.
+Without the `@TypeName` annotation, it would be `"org.javers.core.examples.model.Employee/frodo"`.
 <a name="Employee_java"/>
 
 [`Employee`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java):
@@ -103,7 +103,7 @@ public void shouldCompareTwoEntities() {
           .withListCompareAlgorithm(LEVENSHTEIN_DISTANCE)
           .build();
 
-  Employee tommyOld = EmployeeBuilder.Employee("Frodo")
+  Employee frodoOld = EmployeeBuilder.Employee("Frodo")
           .withAge(40)
           .withPosition("Townsman")
           .withSalary(10_000)
@@ -112,7 +112,7 @@ public void shouldCompareTwoEntities() {
           .withSubordinates(new Employee("Sam"))
           .build();
 
-  Employee tommyNew = EmployeeBuilder.Employee("Frodo")
+  Employee frodoNew = EmployeeBuilder.Employee("Frodo")
           .withAge(41)
           .withPosition("Hero")
           .withBoss(new Employee("Gandalf"))
@@ -123,7 +123,7 @@ public void shouldCompareTwoEntities() {
           .build();
 
   //when
-  Diff diff = javers.compare(tommyOld, tommyNew);
+  Diff diff = javers.compare(frodoOld, frodoNew);
 
   //then
   assertThat(diff.getChanges()).hasSize(9);
