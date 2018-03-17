@@ -45,11 +45,11 @@ See [domain-model-mapping](/documentation/domain-configuration/#domain-model-map
 more details about JaVers’ type system.
 
 **What’s important**<br/>
-Notice that both objects have the same Id value &mdash; `"Frodo"`.
+Notice that both objects have the same Id value &mdash; `'Frodo'`.
 That’s why they are matched and compared.
 JaVers matches only objects with the same `GlobalId`.
-In this case, the `GlobalId` value is: `"Employee/Frodo"`.
-Without the `@TypeName` annotation, it would be `"org.javers.core.examples.model.Employee/frodo"`.
+In this case, the `GlobalId` value is: `'Employee/Frodo'`.
+Without the `@TypeName` annotation, it would be `'org.javers.core.examples.model.Employee/frodo'`.
 <a name="Employee_java"/>
 
 [`Employee`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java):
