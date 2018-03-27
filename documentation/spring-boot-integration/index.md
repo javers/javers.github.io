@@ -49,7 +49,7 @@ and configure JaVers in the same way as your application (typically by YAML prop
 
 Here is an `application.yml` file example
 with the full list of JaVers properties and their default values.
-If these defaults are OK for you, don’t add anything to your application configuration.
+If these defaults are OK for you, don’t need to add anything to your application configuration.
 
 ```
 javers:
@@ -62,11 +62,15 @@ javers:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
   sqlSchemaManagementEnabled: true
+  prettyPrintDateFormats:
+    localDateTime: "dd MMM yyyy, HH:mm:ss"
+    zonedDateTime: "dd MMM yyyy, HH:mm:ssZ"
+    localDate: "dd MMM yyyy"
+    localTime: "HH:mm:ss"  
 ```  
 
-See [JaversBuilder javadoc]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html)
-for properties documentation.
-Each `javers-core` property has a corresponding `with*()` method.
+Each property in the Spring `application.yml` file has the corresponding `with*()` method in the
+[JaversBuilder]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html).
 
 <h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
 Thanks to Spring Boot magic, starters available on the classpath are automatically picked up

@@ -73,8 +73,6 @@ public class Employee {
 
     private Address primaryAddress;
 
-    private Address postalAddress;
-
     private Set<String> skills;
 
     ... // omitted
@@ -145,16 +143,16 @@ System.out.println(diff);
 
 ```text
 Diff:
-1. NewObject{ globalId:'Employee/Gandalf' }
-2. NewObject{ globalId:'Employee/Sméagol' }
-3. ValueChange{ globalId:'Employee/Frodo#primaryAddress', city 'Shire' changed to 'Mordor' }
-4. ValueChange{ globalId:'Employee/Frodo', position 'Townsman' changed to 'Hero' }
-5. ValueChange{ globalId:'Employee/Frodo', salary '10000' changed to '12000' }
-6. ValueChange{ globalId:'Employee/Frodo', age '40' changed to '41' }
-7. ReferenceChange{ globalId:'Employee/Frodo', boss 'null' changed to 'Employee/Gandalf' }
-8. ListChange{ globalId:'Employee/Frodo', subordinates changes:
+1. NewObject { globalId: 'Employee/Gandalf' }
+2. NewObject { globalId: 'Employee/Sméagol' }
+3. ValueChange { globalId: 'Employee/Frodo#primaryAddress', city changed from 'Shire' to 'Mordor' }
+4. ValueChange { globalId: 'Employee/Frodo', position changed from 'Townsman' to 'Hero' }
+5. ValueChange { globalId: 'Employee/Frodo', salary changed from '10000' to '12000' }
+6. ValueChange { globalId: 'Employee/Frodo', age changed from '40' to '41' }
+7. ReferenceChange { globalId: 'Employee/Frodo', boss changed from '' to 'Employee/Gandalf' }
+8. ListChange { globalId: 'Employee/Frodo', subordinates changes:
   0. 'Employee/Sméagol' added }
-9. SetChange{ globalId:'Employee/Frodo', skills changes:
+9. SetChange { globalId: 'Employee/Frodo', skills changes:
   . 'agile coaching' added }
 ```
 
@@ -205,72 +203,7 @@ System.out.println(javers.getJsonConverter().toJson(diff));
       "left": "Townsman",
       "right": "Hero"
     },
-    {
-      "changeType": "ValueChange",
-      "globalId": {
-        "entity": "Employee",
-        "cdoId": "Frodo"
-      },
-      "property": "salary",
-      "left": 10000,
-      "right": 12000
-    },
-    {
-      "changeType": "ValueChange",
-      "globalId": {
-        "entity": "Employee",
-        "cdoId": "Frodo"
-      },
-      "property": "age",
-      "left": 40,
-      "right": 41
-    },
-    {
-      "changeType": "ReferenceChange",
-      "globalId": {
-        "entity": "Employee",
-        "cdoId": "Frodo"
-      },
-      "property": "boss",
-      "left": null,
-      "right": {
-        "entity": "Employee",
-        "cdoId": "Gandalf"
-      }
-    },
-    {
-      "changeType": "ListChange",
-      "globalId": {
-        "entity": "Employee",
-        "cdoId": "Frodo"
-      },
-      "property": "subordinates",
-      "elementChanges": [
-        {
-          "elementChangeType": "ValueAdded",
-          "index": 0,
-          "value": {
-            "entity": "Employee",
-            "cdoId": "Sméagol"
-          }
-        }
-      ]
-    },
-    {
-      "changeType": "SetChange",
-      "globalId": {
-        "entity": "Employee",
-        "cdoId": "Frodo"
-      },
-      "property": "skills",
-      "elementChanges": [
-        {
-          "elementChangeType": "ValueAdded",
-          "index": null,
-          "value": "agile coaching"
-        }
-      ]
-    }
+    ...
   ]
 }
 ```
@@ -339,9 +272,9 @@ There are no limitations on the number of nodes in the graph.
 
 ```text
 Diff:
-1. NewObject{ globalId:'Employee/Hired Second' }
-2. NewObject{ globalId:'Employee/Hired One' }
-3. ListChange{ globalId:'Employee/Big Boss', subordinates changes:
+1. NewObject { globalId: 'Employee/Hired Second' }
+2. NewObject { globalId: 'Employee/Hired One' }
+3. ListChange { globalId: 'Employee/Big Boss', subordinates changes:
   1. 'Employee/Hired One' added
   2. 'Employee/Hired Second' added }
 ```                      
@@ -382,10 +315,9 @@ Diff:
 
 ```text
 Diff:
-1. ObjectRemoved{ globalId:'Employee/To Be Fired' }
-2. ListChange{ globalId:'Employee/Team Lead', subordinates changes:
+1. ObjectRemoved { globalId: 'Employee/To Be Fired' }
+2. ListChange { globalId: 'Employee/Team Lead', subordinates changes:
   1. 'Employee/To Be Fired' removed }
-
 ```
  
 [`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L72):
@@ -424,7 +356,7 @@ Diff:
 
 ```text
 Diff:
-1. ValueChange{ globalId:'Employee/Great Developer', salary '10000' changed to '20000' }
+1. ValueChange { globalId: 'Employee/Great Developer', salary changed from '10000' to '20000' }
 ```
 
 [`shouldDetectBossChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L102):
@@ -464,10 +396,10 @@ Diff:
 
 ```text
 Diff:
-1. ListChange{ globalId:'Employee/Manager One', subordinates changes:
+1. ListChange { globalId: 'Employee/Manager One', subordinates changes:
   0. 'Employee/Great Developer' removed }
-2. ReferenceChange{ globalId:'Employee/Great Developer', boss 'Employee/Manager One' changed to 'Employee/Manager Second' }
-3. ListChange{ globalId:'Employee/Manager Second', subordinates changes:
+2. ReferenceChange { globalId: 'Employee/Great Developer', boss changed from 'Employee/Manager One' to 'Employee/Manager Second' }
+3. ListChange { globalId: 'Employee/Manager Second', subordinates changes:
   0. 'Employee/Great Developer' added }
 ```
 
@@ -537,7 +469,7 @@ The output of running this program is:
 
 ```
 Diff:
-1. ValueChange{ globalId:'org.javers.core.examples.model.Address/', street '5th Avenue' changed to '6th Avenue' }
+1. ValueChange { globalId: 'org.javers.core.examples.model.Address/', street changed from '5th Avenue' to '6th Avenue' }
 ```
 
 <h2 id="compare-collections">Compare top-level collections</h2>
@@ -610,7 +542,7 @@ The output of running this program is:
 
 ```text
 Diff:
-1. ValueChange{ globalId:'...Person/tommy', name 'Tommy Smart' changed to 'Tommy C. Smart' }
+1. ValueChange { globalId: '...Person/tommy', name changed from 'Tommy Smart' to 'Tommy C. Smart' }
 ```
 
 <h2 id="groovy-diff-example">Groovy diff example</h2>

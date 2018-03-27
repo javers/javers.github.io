@@ -5,6 +5,29 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.8.5
+released on 2018-03-027
+
+* [648](https://github.com/javers/javers/issues/648) Mongo driver upgrade to 3.6.3
+
+```
+springVersion=4.3.14.RELEASE
+springBootVersion=1.5.10.RELEASE
+springDataCommonsVersion=1.13.10.RELEASE
+springDataJPAVersion=1.11.10.RELEASE
+guavaVersion=23.0
+gsonVersion=2.8.2
+fastClasspathScannerVersion=2.18.1
+jodaVersion=2.9.7
+mongoDbDriverVersion=3.6.3
+hibernateVersion=5.0.12.Final
+polyjdbcVersion=0.7.2
+aspectjweaverVersion=1.8.13
+```
+
+* Added support for customizing date formats in the Diff pretty print.
+See [JaVers Core configuration](/documentation/spring-boot-integration/#javers-configuration-properties).
+
 ### 3.8.4
 released on 2018-03-04
 
