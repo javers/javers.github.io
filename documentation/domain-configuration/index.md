@@ -22,13 +22,14 @@ and
 Proper mapping is important for both JaVers features, the object diff and the data audit (JaversRepository).
 
 The object diff algorithm is the core of JaVers. When two objects are compared, JaVers needs to know what
-type they are. We distinguish between the following types: `Entities`, `ValueObjects`, `Values`, `Containers` and `Primitives`.
+type they are.
+We distinguish between the following types: Entities, Value Objects, Values, Containers, and Primitives.
 Each type has a different comparing style.
 
 JaVers can infer the type of your classes, but if it goes wrong, the diff result might be strange.
 In this case you should tune the type mapping.
 
-For now, we support both the Java config via [`JaversBuilder`]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html)
+For now, we support both the Java config via [JaversBuilder]({{ site.javadoc_url }}index.html?org/javers/core/JaversBuilder.html)
 and the annotations config.
 
 <h2 id="domain-model-mapping">Domain model mapping</h2>
@@ -59,9 +60,9 @@ Proper mapping is essential for the diff algorithm, for example JaVers needs to 
 should be compared property-by-property or using equals().
 
 ### JaVers Types
-The JaVers type system is based on `Entity` and `ValueObjects` notions, following Eric Evans
+The JaVers type system is based on *Entity* and *Value Objects* notions, following Eric Evans
 Domain Driven Design terminology (DDD).
-Furthermore, JaVers uses *Value*, *Primitive* and *Container* notions.
+Furthermore, JaVers uses *Value*, *Primitive*, and *Container* notions.
 The last two types are JaVers internals and can’t be mapped by a user.
 
 To make long story short, JaVers needs to know
@@ -71,13 +72,12 @@ for each of your classes spotted in runtime (see [mapping configuration](#mappin
 Let’s examine the fundamental types more closely.
 
 <h3 id="entity">Entity</h3>
-JaVers [Entity]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/EntityType.html)
-has exactly the same semantic as DDD Entity or JPA Entity.
+JaVers Entity has exactly the same semantic as DDD Entity or JPA Entity.
 It’s a big domain object (for example Person, Company, Car).
 
 Usually, each Entity instance represents a concrete physical object
 which can be identified.
-An Entity has a list of mutable properties and its own *identity* held in *ID property*.
+An Entity has a list of mutable properties and its own identity held in *ID property*.
 
 For example:
 
@@ -122,7 +122,7 @@ ID of bob: 'Person/Bob'
 **Comparing strategy** for Entity state is property-by-property. 
 For Entity references, comparing is based on InstanceId.
 
-Entity can contain ValueObjects, Entity references, Containers, Values and Primitives.
+Entity can contain Value Objects, Entity references, Containers, Values and Primitives.
 
 <h3 id="entity-id">Entity ID</h3>
 
@@ -190,28 +190,27 @@ def "should use custom toString function for complex Id"(){
 
 **ProTip:** The JaversType of an ID property type is mapped automatically
 to Value if it’s an Object or to Primitive if it’s a Java primitive.
-So &mdash; technically &mdash; you can’t have a ValueObject type here. 
+So &mdash; technically &mdash; you can’t have a Value Object type here. 
 
 **ProTip:** JaVers doesn’t distinguish between JPA `@Id` and `@EmbeddedId` annotations,
 so you can use them interchangeably. 
 
 <h3 id="value-object">Value Object</h3>
-JaVers [ValueObject]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueObjectType.html)
-is similar to DDD ValueObject and JPA Embeddable.
+JaVers Value Object is similar to DDD Value Object and JPA Embeddable.
 It’s a complex value holder with a list of mutable properties but without a unique identifier.
 
-ValueObject instances has a 'best effort' global identifier called
+Value Object instances has a 'best effort' global identifier called
 [ValueObjectId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/ValueObjectId.html).
 It consists of the owning Entity InstanceId and
 the path in an object subtree.
 
-**Comparing strategy** for ValueObjects is property-by-property.
+**Comparing strategy** for Value Objects is property-by-property.
 
-**ProTip:** In a strict DDD approach, ValueObject can’t exist independently and has to be bound to an Entity instance
-(as a part of an Aggregate). JaVers is not so radical and supports both embedded and dangling ValueObjects.
-So in JaVers, ValueObject is just an Entity without identity.
+**ProTip:** In a strict DDD approach, Value Object can’t exist independently and has to be bound to an Entity instance
+(as a part of an Aggregate). JaVers is not so radical and supports both embedded and dangling Value Objects.
+So in JaVers, Value Object is just an Entity without identity.
 
-**Examples** of ValueObjects: Address, Point.
+**Examples** of Value Objects: Address, Point.
 
 <h3 id="ValueType">Value</h3>
 JaVers [Value]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/type/ValueType.html)
@@ -221,7 +220,7 @@ is a simple (scalar) value holder.
 So it’s highly important to implement this method properly,
 it should compare the underlying state of given objects.
 
-Well-known Value types like `BigDecimal` or `LocalDate` have it already.
+Well-known Value types like BigDecimal or LocalDate have it already.
 Remember to implement `equals()` for all your Value classes.
 
 If you don’t control the Value implementation, 
@@ -241,7 +240,7 @@ For Values, it’s advisable to customize JSON serialization by implementing *Ty
 (see [custom JSON serialization](/documentation/repository-configuration/#custom-json-serialization)).
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
-Your task is to identify `Entities`, `ValueObjects` and `Values` in your domain model
+Your task is to identify *Entities*, *Value Objects* and *Values* in your domain model
 and make sure that JaVers has got it. So what should you do?
 
 There are three ways to map a class:
@@ -272,17 +271,17 @@ Type inferring algorithm has the lowest priority.
   you can map only this class with `@Entity`.
 * JaVers automatically scans JPA annotations
   and maps classes with `@Entity` annotation as Entities
-  and classes with `@Embeddable` as ValueObjects. So if you are using frameworks like Hibernate,
+  and classes with `@Embeddable` as Value Objects. So if you are using frameworks like Hibernate,
   your mapping is probably almost done.
 * Use [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
   annotation for Entities, it gives you freedom of class names refactoring. 
 * In some cases, annotations could be misleading for JaVers.
   For example [Morphia](https://github.com/mongodb/morphia) framework uses `@Entity` annotation for each persistent class
-  (even for ValueObjects). This could cause incorrect JaVers mapping.
+  (even for Value Objects). This could cause incorrect JaVers mapping.
   As a solution, use explicit mapping with the JaversBuilder methods,
   as it has the highest priority.
 * For an Entity, a type of its Id-property is mapped as Value by default.
-* If JaVers knows nothing about a class, it maps that class as ValueObject **by default**.
+* If JaVers knows nothing about a class, it maps that class as Value Object **by default**.
 * JaVers compares objects deeply. It can cause performance problems for large object graphs.
   Use `@ShallowReference` and `@DiffIgnore` to [ignoring things](#ignoring-things).
 * If you are not sure how JaVers maps your class, check effective mapping using
@@ -307,7 +306,7 @@ There are six class level annotations in JaVers:
    
 * [`@ValueObject`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/ValueObject.html)
   &mdash;
-  declares a given class (and all its subclasses) as the [ValueObject](#value-object) type.
+  declares a given class (and all its subclasses) as the [Value Object](#value-object) type.
   
 * [`@Value`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/Value.html)
   &mdash;
@@ -334,8 +333,8 @@ There are six class level annotations in JaVers:
   
 * [`@TypeName`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
   &mdash;
-  a convenient way to name Entities and ValueObjects.
-  We recommend using this annotation for all Entities and ValueObjects.
+  a convenient way to name Entities and Value Objects.
+  We recommend using this annotation for all Entities and Value Objects.
   Otherwise, Javers uses fully-qualified class names 
   in GlobalIds, which hinders refactoring classes committed to JaversRepository.  
 
