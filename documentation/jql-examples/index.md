@@ -268,7 +268,7 @@ You can also load Changes generated from an initial Snapshot (see [NewObject Fil
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
 Snapshot (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html))
-is the historical state of a domain object captured as the `property:value` map.
+is the historical state of a domain object captured as the property-value map.
 
 Snapshots are raw data stored in JaversRepository. When an object is changed,
 JaVers makes a snapshot of its state and persists it.
