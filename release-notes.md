@@ -9,12 +9,22 @@ submenu: release-notes
 released on 2018-04-11
 
 * New API for processing Changes, convenient for formatting a change log. 
-Now you can group changes by commits and by objects. For example:
+Now you can group changes by commits and by objects. 
+See [groupByCommit()]({{ site.javadoc_url }}org/javers/core/Changes.html#groupByCommit--).
+For example:
 
 ```java
-diff.groupByObject().forEach(byObject -> {
-  System.out.println("* changes on " +byObject.getGlobalId().value() + " : ");
-  byObject.get().forEach(change -> System.out.println("  - " + change));
+Changes changes = javers.findChanges(QueryBuilder.byClass(Employee.class)
+        .withNewObjectChanges().build());
+     
+changes.groupByCommit().forEach(byCommit -> {
+  System.out.println("commit " + byCommit.getCommit().getId());
+  byCommit.groupByObject().forEach(byObject -> {
+    System.out.println("  changes on " + byObject.getGlobalId().value() + " : ");
+    byObject.get().forEach(change -> {
+      System.out.println("  - " + change);
+    });
+  });
 });
 ```
 
