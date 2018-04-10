@@ -37,8 +37,10 @@ To find out what’s changed, just call:
 ```    
 
 **Configuration** <br/>
-JaVers needs to know that the `Employee` class is an Entity
-and the `Address` class is a Value Object.
+JaVers needs to know that the `Employee` class is an
+[Entity](/documentation/domain-configuration/#entity)
+and the `Address` class is a
+[Value Object](/documentation/domain-configuration/#value-object).
 It’s enough to annotate the `name` field with the `@Id` annotation to map `Employee` as Entity.
 `Address` is mapped as Value Object by default.
 See [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for 
@@ -47,8 +49,9 @@ more details about JaVers’ type system.
 **What’s important**<br/>
 Notice that both objects have the same Id value &mdash; `'Frodo'`.
 That’s why they are matched and compared.
-JaVers matches only objects with the same `GlobalId`.
-In this case, the `GlobalId` value is: `'Employee/Frodo'`.
+JaVers matches only objects with the same
+[GlobalId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
+In this case, the GlobalId value is: `'Employee/Frodo'`.
 Without the `@TypeName` annotation, it would be `'org.javers.core.examples.model.Employee/frodo'`.
 <a name="Employee_java"/>
 
@@ -128,14 +131,23 @@ public void shouldCompareTwoEntities() {
 }
 ```
 
-The resulting [Diff](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Diff.java)
-is a container for the list of
-[Changes](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/Change.java).
-There are various types of Changes, here is the complete hierarchy:
+The resulting [Diff]({{ site.javadoc_url }}index.html?org/javers/core/diff/Diff.html)
+is a container for the list of Changes. There are various types of Changes, here is the complete hierarchy:
 
-{% include fancy-image.html image="/img/change-hierarchy.png" alt="Change hierarchy" width="530px"%}
-
-You can print the list of Changes using pretty `toString()`:
+[Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)<br/>
+&nbsp; - [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)<br/>
+&nbsp; - [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)<br/>
+&nbsp; - [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)<br/>
+&nbsp;&nbsp;&nbsp; - [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)<br/>
+&nbsp;&nbsp;&nbsp; - [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)<br/>
+&nbsp;&nbsp;&nbsp; - [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)<br/>
+&nbsp;&nbsp;&nbsp; - [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [CollectionChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/CollectionChange.html)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [SetChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/SetChange.html)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ListChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ArrayChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ArrayChange.html)<br/>
+    
+**You can print** the list of Changes using pretty `toString()`:
 
 ```java
 System.out.println(diff);
@@ -143,20 +155,36 @@ System.out.println(diff);
 
 ```text
 Diff:
-1. NewObject { globalId: 'Employee/Gandalf' }
-2. NewObject { globalId: 'Employee/Sméagol' }
-3. ValueChange { globalId: 'Employee/Frodo#primaryAddress', city changed from 'Shire' to 'Mordor' }
-4. ValueChange { globalId: 'Employee/Frodo', position changed from 'Townsman' to 'Hero' }
-5. ValueChange { globalId: 'Employee/Frodo', salary changed from '10000' to '12000' }
-6. ValueChange { globalId: 'Employee/Frodo', age changed from '40' to '41' }
-7. ReferenceChange { globalId: 'Employee/Frodo', boss changed from '' to 'Employee/Gandalf' }
-8. ListChange { globalId: 'Employee/Frodo', subordinates changes:
-  0. 'Employee/Sméagol' added }
-9. SetChange { globalId: 'Employee/Frodo', skills changes:
-  . 'agile coaching' added }
+* new object: Employee/Sméagol
+* new object: Employee/Gandalf
+* changes on Employee/Frodo :
+  - 'age' changed from '40' to '41'
+  - 'boss' changed from '' to 'Employee/Gandalf'
+  - 'position' changed from 'Townsman' to 'Hero'
+  - 'primaryAddress.city' changed from 'Shire' to 'Mordor'
+  - 'salary' changed from '10000' to '12000'
+  - 'skills' collection changes :
+    . 'agile coaching' added
+  - 'subordinates' collection changes :
+    0. 'Employee/Sméagol' added
 ```
 
-Diff can be easily serialized to JSON:
+**Iterating** over the list of Changes:
+
+```java
+diff.getChanges().forEach(change -> System.out.println("- " + change));
+```
+
+Iterating over the list of Changes **grouped by objects**:
+
+```java
+diff.groupByObject().forEach(byObject -> {
+  System.out.println("* changes on " +byObject.getGlobalId().value() + " : ");
+  byObject.get().forEach(change -> System.out.println("  - " + change));
+});
+```
+
+Diff can be easily **serialized to JSON**:
 
 ```java
 System.out.println(javers.getJsonConverter().toJson(diff));
@@ -224,13 +252,13 @@ Technically, we have a graph with cycles here (since the relationship between bo
 We are comparing two versions (historical states) of the employee hierarchy in order 
 to detect the four types of changes:
 
-- employee hired — [NewObject](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/NewObject.java),
-- employee fired — [ObjectRemoved](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/ObjectRemoved.java),
-- salary change — [ValueChange](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/ValueChange.java),
-- boss change — [ReferenceChange](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/ReferenceChange.java).
+- employee hired (NewObject),
+- employee fired (ObjectRemoved),
+- salary change (ValueChange),
+- boss change (ReferenceChange).
 
 **Configuration** <br/>
-JaVers needs to know that `Employee` class is an Entity.
+JaVers needs to know that `Employee` class is an [Entity](/documentation/domain-configuration/#entity).
 It’s enough to annotate the `name` field with the `@Id` annotation. 
 
 **What’s important**<br/>
@@ -272,11 +300,12 @@ There are no limitations on the number of nodes in the graph.
 
 ```text
 Diff:
-1. NewObject { globalId: 'Employee/Hired Second' }
-2. NewObject { globalId: 'Employee/Hired One' }
-3. ListChange { globalId: 'Employee/Big Boss', subordinates changes:
-  1. 'Employee/Hired One' added
-  2. 'Employee/Hired Second' added }
+* new object: Employee/Hired One
+* new object: Employee/Hired Second
+* changes on Employee/Big Boss :
+  - 'subordinates' collection changes :
+    1. 'Employee/Hired One' added
+    2. 'Employee/Hired Second' added  
 ```                      
 
 [`shouldDetectFired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L42):
@@ -315,9 +344,10 @@ Diff:
 
 ```text
 Diff:
-1. ObjectRemoved { globalId: 'Employee/To Be Fired' }
-2. ListChange { globalId: 'Employee/Team Lead', subordinates changes:
-  1. 'Employee/To Be Fired' removed }
+* object removed: Employee/To Be Fired
+* changes on Employee/Team Lead :
+  - 'subordinates' collection changes :
+    1. 'Employee/To Be Fired' removed  
 ```
  
 [`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L72):
@@ -356,7 +386,8 @@ Diff:
 
 ```text
 Diff:
-1. ValueChange { globalId: 'Employee/Great Developer', salary changed from '10000' to '20000' }
+* changes on Employee/Great Developer :
+  - 'salary' changed from '10000' to '20000'
 ```
 
 [`shouldDetectBossChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L102):
@@ -396,11 +427,14 @@ Diff:
 
 ```text
 Diff:
-1. ListChange { globalId: 'Employee/Manager One', subordinates changes:
-  0. 'Employee/Great Developer' removed }
-2. ReferenceChange { globalId: 'Employee/Great Developer', boss changed from 'Employee/Manager One' to 'Employee/Manager Second' }
-3. ListChange { globalId: 'Employee/Manager Second', subordinates changes:
-  0. 'Employee/Great Developer' added }
+* changes on Employee/Manager One :
+  - 'subordinates' collection changes :
+    0. 'Employee/Great Developer' removed
+* changes on Employee/Great Developer :
+  - 'boss' changed from 'Employee/Manager One' to 'Employee/Manager Second'
+* changes on Employee/Manager Second :
+  - 'subordinates' collection changes :
+    0. 'Employee/Great Developer' added  
 ```
 
 <h2 id="compare-valueobjects">Compare top-level Value Objects</h2>
@@ -417,11 +451,11 @@ To find out what the difference is, just call:
 
 **What’s important**<br/>
 When JaVers knows nothing about a class, it treats it as Value Object.
-As we said in the previous example, JaVers compares only objects with the same `GlobalId`.
+As we said in the previous example, JaVers compares only objects with the same GlobalId.
 
 What’s the Address Id? It’s based on the path in the object graph.
 In this case, both objects are roots, so the path is simply `'/'`
-and the `GlobalId` is `'org.javers.core.examples.model.Address/'`.
+and the GlobalId is `'org.javers.core.examples.model.Address/'`.
 
 [`Address.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Address.java):
 
@@ -469,7 +503,8 @@ The output of running this program is:
 
 ```
 Diff:
-1. ValueChange { globalId: 'org.javers.core.examples.model.Address/', street changed from '5th Avenue' to '6th Avenue' }
+* changes on org.javers.core.examples.model.Address/ :
+  - 'street' changed from '5th Avenue' to '6th Avenue'
 ```
 
 <h2 id="compare-collections">Compare top-level collections</h2>
@@ -477,7 +512,8 @@ Diff:
 JaVers can compare arbitrary complex structures of objects,
 including collections passed as top-level handles.
 
-If you want to compare top-level collections with Primitives or Values
+If you want to compare top-level collections with Primitives or 
+[Values](/documentation/domain-configuration/#ValueType)
 (see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping)),
 you can use the standard `javers.compare(Object, Object)` method.
 Collection items will be compared using `equals()`, resulting in a flat list of Changes.
@@ -542,7 +578,8 @@ The output of running this program is:
 
 ```text
 Diff:
-1. ValueChange { globalId: '...Person/tommy', name changed from 'Tommy Smart' to 'Tommy C. Smart' }
+* changes on org.javers.core.examples.model.Person/tommy :
+  - 'name' changed from 'Tommy Smart' to 'Tommy C. Smart'
 ```
 
 <h2 id="groovy-diff-example">Groovy diff example</h2>
@@ -554,7 +591,7 @@ One of Groovy’s killer features is excellent interoperability with Java.
 Looking from the other side, modern Java frameworks should be Groovy friendly. 
 
 As you know, all Java classes extend the `Object` class.
-All Groovy classes extend [GroovyObject](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GroovyObject.html),
+All Groovy classes extend `GroovyObject`,
 that’s how Groovy implements its metaprogramming features. 
 
 Good news, JaVers is fully compatible with Groovy!

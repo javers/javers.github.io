@@ -5,8 +5,34 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.0
+released on 2018-04-11
+
+* New API for processing Changes, convenient for formatting a change log. 
+Now you can group changes by commits and by objects. 
+See [groupByCommit()]({{ site.javadoc_url }}org/javers/core/Changes.html#groupByCommit--).
+For example:
+
+```java
+Changes changes = javers.findChanges(QueryBuilder.byClass(Employee.class)
+        .withNewObjectChanges().build());
+     
+changes.groupByCommit().forEach(byCommit -> {
+  System.out.println("commit " + byCommit.getCommit().getId());
+  byCommit.groupByObject().forEach(byObject -> {
+    System.out.println("  changes on " + byObject.getGlobalId().value() + " : ");
+    byObject.get().forEach(change -> {
+      System.out.println("  - " + change);
+    });
+  });
+});
+```
+
+* Fixed bug in `queryForChanges()`, which could cause NPE in some corner cases.
+Especially, for complex graphs with multiple levels of nested Value Objects.   
+
 ### 3.8.5
-released on 2018-03-027
+released on 2018-03-27
 
 * [648](https://github.com/javers/javers/issues/648) Mongo driver upgrade to 3.6.3
 

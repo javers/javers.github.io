@@ -14,19 +14,17 @@ git clone https://github.com/javers/javers.git
 cd javers
 ```
 
-Run examples as unit tests:
+Run an example:
 
 ```
 ./gradlew javers-core:example -Dtest.single=BasicCommitExample
-./gradlew javers-core:example -Dtest.single=ChangeLogExample
-./gradlew javers-core:example -Dtest.single=JsonTypeAdapterExample
 ```
 
 <h2 id="commit-changes">Commit changes</h2>
 
-This example shows how to persist changes done on a domain object in `JaversRepository`.
+This example shows how to persist changes done on a domain object.
 
-Then we show how to fetch the history of this object from the repository.
+Then we show how to fetch the history of this object from the JaversRepository.
 
 **The case**<br/>
 We have an object of `Person` class, which represents a person called Robert.
