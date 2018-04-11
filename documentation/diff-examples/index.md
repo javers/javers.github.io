@@ -135,17 +135,17 @@ The resulting [Diff]({{ site.javadoc_url }}index.html?org/javers/core/diff/Diff.
 is a container for the list of Changes. There are various types of Changes, here is the complete hierarchy:
 
 [Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)<br/>
-&nbsp; - [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)<br/>
-&nbsp; - [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)<br/>
-&nbsp; - [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)<br/>
-&nbsp;&nbsp;&nbsp; - [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)<br/>
-&nbsp;&nbsp;&nbsp; - [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)<br/>
-&nbsp;&nbsp;&nbsp; - [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)<br/>
-&nbsp;&nbsp;&nbsp; - [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [CollectionChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/CollectionChange.html)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [SetChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/SetChange.html)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ListChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ArrayChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ArrayChange.html)<br/>
+&nbsp; - [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html) &mdash; an object present only in the right graph<br/>
+&nbsp; - [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html) &mdash; an object present only in the left graph<br/>
+&nbsp; - [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html) &mdash; a change on a property of an object<br/>
+&nbsp;&nbsp;&nbsp; - [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html) &mdash; a change on a Reference property (reference to Entity or Value Object)<br/>
+&nbsp;&nbsp;&nbsp; - [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html) &mdash; a change on a Value property <br/>
+&nbsp;&nbsp;&nbsp; - [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html) &mdash; a list of changes on a Map property<br/>
+&nbsp;&nbsp;&nbsp; - [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html) &mdash; a list of changes on a Collection or an Array property<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [CollectionChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/CollectionChange.html)&mdash; a list of changes on a Collection property<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [SetChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/SetChange.html) &mdash; a list of changes on a Set property <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ListChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html) &mdash; a list of changes on a List property<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ArrayChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ArrayChange.html) &mdash; a list of changes on an Array property<br/>
     
 **You can print** the list of Changes using pretty `toString()`:
 
