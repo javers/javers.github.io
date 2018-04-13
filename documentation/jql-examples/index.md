@@ -340,6 +340,8 @@ JqlQueries are created by the following methods:
 * `QueryBuilder.byClass()` &mdash; query by objects' class,
 * `QueryBuilder.anyDomainObject()` &mdash; query for any object changes.
 
+All examples are in [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy).
+
 <h3 id="instance-id-query">Querying for Entity changes by Instance Id</h3> 
 
 This query selects changes made on concrete [Entity](/documentation/domain-configuration/#entity) instance.
@@ -348,7 +350,7 @@ The query accepts two mandatory parameters:
 * `Object localId` &mdash; expected Instance Id,
 * `Class entityClass` &mdash; expected Entity class.
 
-Here is the Groovy [`spec`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L257):
+Here is the Groovy spec:
 
 ```groovy
 def "should query for Entity changes by instance Id"() {
@@ -388,7 +390,7 @@ by definition, don’t have their own identifiers. We identify them using
 the owning Entity Instance Id and the property name.
 So in this case, the property name serves as a sort of path.
 
-Let’s see how it works &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L273):
+Let’s see how it works:
 
 ```groovy
 def "should query for ValueObject changes by owning Entity instance and class"() {
@@ -463,19 +465,24 @@ def "should query for Object changes by its class"() {
   javers.commit("me", new SnapshotEntity(id:2, intProperty:2))
 
   when:
-  def changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build() )
+  Changes changes = javers.findChanges( QueryBuilder.byClass(DummyAddress.class).build() )
 
   then:
-  printChanges(changes)
+  println changes.prettyPrint()
   assert changes.size() == 2
 }
 ```
 
-query result:
+the query result:
 
-```
-commit 4.0: ValueChange{globalId:'org.javers.core.model.SnapshotEntity/2#valueObjectRef', property:'city', oldVal:'Rome', newVal:'Palma'}
-commit 2.0: ValueChange{globalId:'org.javers.core.model.DummyUserDetails/1#dummyAddress', property:'city', oldVal:'London', newVal:'Paris'}
+```text
+Changes:
+Commit 4.0 done by me at 13 Apr 2018, 23:53:41 :
+* changes on org.javers.core.model.SnapshotEntity/2 :
+  - 'valueObjectRef.city' changed from 'Rome' to 'Palma'
+Commit 2.0 done by me at 13 Apr 2018, 23:53:41 :
+* changes on org.javers.core.model.DummyUserDetails/1 :
+  - 'dummyAddress.city' changed from 'London' to 'Paris'
 ```
 
 <h3 id="any-domain-object-query">Querying for any domain object changes</h3>
@@ -525,6 +532,8 @@ For each query you can add one or more optional filters:
 [snapshot version](#version-filter),
 [childValueObjects](#child-value-objects-filter) and
 [newObject changes](#new-object-filter) filter.
+
+All examples are in [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy).
 
 <h3 id="property-filter">Changed property filter</h3>
 Optional parameter for all queries.
