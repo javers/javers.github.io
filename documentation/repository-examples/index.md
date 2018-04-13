@@ -14,17 +14,16 @@ git clone https://github.com/javers/javers.git
 cd javers
 ```
 
-Run an example:
+Run examples as unit tests:
 
 ```
-./gradlew javers-core:example -Dtest.single=BasicCommitExample
+./gradlew javers-core:test -Dtest.single=BasicCommitAndQueryExample
 ```
 
-<h2 id="commit-changes">Commit changes</h2>
+<h2 id="commit-changes">Commit and query</h2>
 
-This example shows how to persist changes done on a domain object.
-
-Then we show how to fetch the history of this object from the JaversRepository.
+This example shows how to persist changes done on a domain object and 
+then, how to fetch the history of this object from the JaversRepository.
 
 **The case**<br/>
 We have an object of `Person` class, which represents a person called Robert.
@@ -43,19 +42,16 @@ We need to tell JaVers that Person class is an Entity.
 It’s enough to annotate the login field with `@Id` annotation.
 
 **What’s important** <br/>
-Person is a typical Entity
-(see [domain-model-mapping](/documentation/domain-configuration/#entity) for Entity definition).
-JaVers uses [`GlobalId`]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
+Person is a typical [Entity](/documentation/domain-configuration/#entity)
+(see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for 
+more details about JaVers’ type system).
+JaVers uses [GlobalId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
 for identifying and querying Entities.
 In this case, it’s expressed as `instanceId("bob", Person.class)`.
 
-`Person.class:`
+[`Person.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Person.java):
 
 ```java
-package org.javers.core.examples.model;
-
-import javax.persistence.Id;
-
 public class Person {
     @Id
     private String login;
@@ -72,180 +68,94 @@ public class Person {
 }
 ```
 
-`BasicCommitExample#shouldCommitToJaversRepository()`:
+The example test is in Groovy. First, we commit the initial version of Robert and
+then we commit the second version.
 
-```java
-package org.javers.core.examples;
+[`BasicCommitAndQueryExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/BasicCommitAndQueryExample.groovy#L15):
 
-import org.javers.core.Javers;
-import org.javers.core.JaversBuilder;
-import org.javers.core.diff.Change;
-import org.javers.core.diff.changetype.NewObject;
-import org.javers.core.diff.changetype.ValueChange;
-import org.javers.core.examples.model.Person;
-import org.javers.core.metamodel.object.CdoSnapshot;
-import org.javers.repository.jql.QueryBuilder;
-import org.junit.Test;
-import java.util.List;
-import static org.fest.assertions.api.Assertions.assertThat;
+```groovy
+ def "should commit and query from JaversRepository"() {
+    given:
+    // prepare JaVers instance. By default, JaVers uses InMemoryRepository,
+    // it's useful for testing
+    Javers javers = JaversBuilder.javers().build()
 
-public class BasicCommitExample {
-    @Test
-    public void shouldCommitToJaversRepository() {
-        //given:
+    Person robert = new Person("bob", "Robert Martin")
+    javers.commit("user", robert)           // persist initial commit
 
-        // prepare JaVers instance. By default, JaVers uses InMemoryRepository,
-        // it's useful for testing
-        Javers javers = JaversBuilder.javers().build();
+    robert.setName("Robert C.")             // do some changes
+    robert.setPosition(Position.Developer)
+    javers.commit("user", robert)           // and persist another commit
 
-        // init your data
-        Person robert = new Person("bob", "Robert Martin");
-        // and persist initial commit
-        javers.commit("user", robert);
-
-        // do some changes
-        robert.setName("Robert C.");
-        // and persist another commit
-        javers.commit("user", robert);
-
-        // when:
-        List<CdoSnapshot> snapshots = javers.findSnapshots(
-            QueryBuilder.byInstanceId("bob", Person.class).build());
-
-        // then:
-        // there should be two Snapshots with Bob's state
-        assertThat(snapshots).hasSize(2);
-    }
-}
+    ...
 ```
 
-<h2 id="read-snapshots-history">Read snapshots history</h2>
+Having some commits saved in the JaversRepository,
+you can fetch Robert’s object history in one of the three views:
+*Shadows*, *Snapshots*, and *Changes*:
+ 
+```groovy
+    JqlQuery query = QueryBuilder.byInstanceId("bob", Person.class).build()
 
-Having some commits saved in JaversRepository, we can fetch the list of Robert’s object
-[Snapshots]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html)
-and check how Robert looked like in the past:
+    when:
+    println "Shadows query:"
 
-```java
-List<CdoSnapshot> snapshots = javers.findSnapshots(
-    QueryBuilder.byInstanceId("bob", Person.class).build());
+    List<Shadow<Person>> shadows = javers.findShadows(query)
+
+    shadows.forEach{ println it.get()}
+
+    then: "there should be two Bob's Shadows"
+    assert shadows.size == 2
+
+    when:
+    println "Snapshots query:"
+
+    List<CdoSnapshot> snapshots = javers.findSnapshots(query)
+
+    snapshots.forEach{ println it}
+
+    then: "there should be two Bob's Shadows"
+    assert snapshots.size == 2
+
+    when:
+    println "Changes query:"
+
+    Changes changes = javers.findChanges(query)
+    // or the old approach:
+    // List<Change> changes = javers.findChanges(query)
+
+    println changes.prettyPrint()
+
+    then: "there should be two Changes on Bob"
+    assert changes.size() == 2
+ }
 ```
 
-**What’s important** <br/>
-In JaVers, a snapshot is the state of an object recorded during a `commit()` call.
-Technically, it’s a map from a property name to property value.
+Output:
 
-Under the hood, JaVers reuses snapshots and creates a new one only when the given object is changed.
-It allows you to save a significant amount of repository space.
+```
+22:11:56.572 [main] INFO  org.javers.core.Javers - Commit(id:1.0, snapshots:1, author:user, changes - NewObject:1), done in 74 millis (diff:74, persist:0)
+22:11:56.594 [main] INFO  org.javers.core.Javers - Commit(id:2.0, snapshots:1, author:user, changes - ValueChange:2), done in 5 millis (diff:5, persist:0)
 
-JaVers reads snapshots in reversed chronological order.
-So if you set the limit to 10, Javers returns a list of the 10 latest
-snapshots.
+Shadows query:
+Person{login='bob', name='Robert C.', position=Developer}
+Person{login='bob', name='Robert Martin', position=null}
 
-`BasicCommitExample#shouldListStateHistory()`:
+Snapshots query:
+Snapshot{commit:2.0, id:...Person/bob, version:2, (login:bob, name:Robert C., position:Developer)}
+Snapshot{commit:1.0, id:...Person/bob, version:1, (login:bob, name:Robert Martin)}
 
-```java
-... //
-public class BasicCommitExample {
-    ... //
-
-    @Test
-    public void shouldListStateHistory() {
-        // given:
-        // commit some changes
-        Javers javers = JaversBuilder.javers().build();
-        Person robert = new Person("bob", "Robert Martin");
-        javers.commit("user", robert);
-
-        robert.setName("Robert C.");
-        javers.commit("user", robert);
-
-        // when:
-        // list state history - last 10 snapshots
-        List<CdoSnapshot> snapshots = javers.findSnapshots(
-            QueryBuilder.byInstanceId("bob", Person.class).limit(10).build());
-
-        // then:
-        // there should be two Snapshots with Bob’s state
-        assertThat(snapshots).hasSize(2);
-        CdoSnapshot newState = snapshots.get(0);
-        CdoSnapshot oldState = snapshots.get(1);
-        assertThat(oldState.getPropertyValue("name")).isEqualTo("Robert Martin");
-        assertThat(newState.getPropertyValue("name")).isEqualTo("Robert C.");
-    }
-}
+Changes query:
+Changes:
+Commit 2.0 done by user at 13 Apr 2018, 22:11:56 :
+* changes on org.javers.core.examples.model.Person/bob :
+  - 'name' changed from 'Robert Martin' to 'Robert C.'
+  - 'position' changed from '' to 'Developer'
+  
 ```
 
-See [Examples — JQL](/documentation/jql-examples/) chapter for more query examples. 
-
-<h2 id="read-changes-history">Read changes history</h2>
-
-Once we have some commits saved in `JaversRepository`, we can fetch the list of
-[Changes]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)
-done on a given object.
-
-There are three top-level types of changes:
-
-* [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
-  &mdash; appears when object is committed to JaversRepository for the first time,
-* [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
-  &mdash; when object is deleted,
-* [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)
-  &mdash; when object changed its state on some property.
-
-Then, PropertyChange has the following subtypes:
-
-* [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
-  &mdash; list of changed items in Set, List or Array
-* [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
-  &mdash; list of changed Map entries,
-* [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
-  &mdash; changed Entity reference,
-* [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
-  &mdash; changed Primitive or Value.
-
-
-In our example, we changed Robert’s name. Se we expect one ValueChange
-in changes history.
-
-**What’s important** <br/>
-The changes list is different to the snapshots list as it shows only changed properties.
-It works similarly to the GIT blame function.
-
-`BasicCommitExample#shouldListChangeHistory()`:
-
-```java
-... //
-public class BasicCommitExample {
-    ... //
-
-    @Test
-    public void shouldListChangeHistory() {
-        // given:
-        // commit some changes
-        Javers javers = JaversBuilder.javers().build();
-        Person robert = new Person("bob", "Robert Martin");
-        javers.commit("user", robert);
-
-        robert.setName("Robert C.");
-        javers.commit("user", robert);
-
-        // when:
-        // list change history
-        List<Change> changes = javers.findChanges(
-            QueryBuilder.byInstanceId("bob", Person.class).build());
-
-        // then:
-        // there should be one ValueChange with Bob's firstName
-        assertThat(changes).hasSize(1);
-        ValueChange change = (ValueChange) changes.get(0);
-        assertThat(change.getPropertyName()).isEqualTo("name");
-        assertThat(change.getLeft()).isEqualTo("Robert Martin");
-        assertThat(change.getRight()).isEqualTo("Robert C.");
-    }
-}
-```
-
-See [Examples — JQL](/documentation/jql-examples/) chapter for more query examples. 
+This is just a simple example to show how Javers’ queries work.
+The full JaVers’ Query Language specification is in the [Examples — JQL](/documentation/jql-examples/) chapter. 
 
 <h2 id="change-log">Change log</h2>
 In this example we show how to create a change log &mdash;

@@ -14,10 +14,10 @@ git clone https://github.com/javers/javers.git
 cd javers
 ```
 
-Run an example:
+Run examples as unit tests:
 
 ```text
-./gradlew javers-core:example -Dtest.single=BasicEntityDiffExample
+./gradlew javers-core:test -Dtest.single=BasicEntityDiffExample
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>
@@ -55,7 +55,7 @@ In this case, the GlobalId value is: `'Employee/Frodo'`.
 Without the `@TypeName` annotation, it would be `'org.javers.core.examples.model.Employee/frodo'`.
 <a name="Employee_java"/>
 
-[`Employee`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java):
+[`Employee.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Employee.java):
 
 ```java
 @TypeName("Employee")
@@ -132,20 +132,27 @@ public void shouldCompareTwoEntities() {
 ```
 
 The resulting [Diff]({{ site.javadoc_url }}index.html?org/javers/core/diff/Diff.html)
-is a container for the list of Changes. There are various types of Changes, here is the complete hierarchy:
+is a container for the list of Changes.
 
-[Change]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)<br/>
-&nbsp; - [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html) &mdash; an object present only in the right graph<br/>
-&nbsp; - [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html) &mdash; an object present only in the left graph<br/>
-&nbsp; - [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html) &mdash; a change on a property of an object<br/>
-&nbsp;&nbsp;&nbsp; - [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html) &mdash; a change on a Reference property (reference to Entity or Value Object)<br/>
-&nbsp;&nbsp;&nbsp; - [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html) &mdash; a change on a Value property <br/>
-&nbsp;&nbsp;&nbsp; - [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html) &mdash; a list of changes on a Map property<br/>
-&nbsp;&nbsp;&nbsp; - [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html) &mdash; a list of changes on a Collection or an Array property<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [CollectionChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/CollectionChange.html)&mdash; a list of changes on a Collection property<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [SetChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/SetChange.html) &mdash; a list of changes on a Set property <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ListChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ListChange.html) &mdash; a list of changes on a List property<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - [ArrayChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ArrayChange.html) &mdash; a list of changes on an Array property<br/>
+There are three main types of Changes:
+
+* [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
+  &mdash; when an object is present only in the right graph,
+* [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
+  &mdash; when an object is present only in the left graph,
+* [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)
+  &mdash; most common &mdash; a changed property (field or getter).
+
+PropertyChange has the following subtypes:
+
+* [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
+  &mdash; list of changed items in Set, List or Array,
+* [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
+  &mdash; list of changed Map entries,
+* [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
+  &mdash; changed Entity reference,
+* [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
+  &mdash; changed Primitive or Value.
     
 **You can print** the list of Changes using pretty `toString()`:
 

@@ -17,8 +17,7 @@ cd javers
 Run examples as unit tests:
 
 ```
-./gradlew javers-core:example -Dtest.single=JqlExample
-./gradlew javers-core:example -Dtest.single=RefactoringExample
+./gradlew javers-core:test -Dtest.single=JqlExample
 ```
 
 <h2 id="query-overview">Overview</h2>
@@ -89,7 +88,7 @@ Since Shadows are instances of your domain classes,
 you can use them easily in your application. 
 Moreover, the JQL engine strives to rebuild original object graphs.
   
-See how it works:
+See how it works &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L145):
 
 ```groovy
 def "should query for Shadows of an object"() {
@@ -122,7 +121,7 @@ def "should query for Shadows of an object"() {
       shadows[1].commitMetadata.id.majorId == 1
 }
 ```  
-  
+ 
 <br/>
 <h4 id="shadow-scopes">Shadow Scopes</h4>
 
@@ -153,7 +152,7 @@ Scopes are defined in the
   &mdash; JaVers tries to restore full object graphs with
   (possibly) all objects loaded.
 
-The following example shows how all the scopes work:
+The following example shows how all the scopes work &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L175):
 
 ```groovy
 def "should query for Shadows with different scopes"(){
@@ -215,16 +214,31 @@ javadoc.
 
 <h3 id="query-for-changes">Querying for Changes</h3>
 
-The Changes view is the list of atomic differences between subsequent versions of a domain object. 
-There are various types of changes: ValueChange, ReferenceChange, ListChange, NewObject, and so on.
-See the Change ([javadoc]({{ site.javadoc_url }}index.html?org/javers/core/diff/Change.html)) 
-class inheritance hierarchy for the complete list.
-
+The Changes view is the list of atomic differences between subsequent versions of a domain object.
 Since JaVers stores only Snapshots of domain objects,
-Changes are recalculated by the JQL engine as the diff between 
-Snapshots loaded from JaversRepository.
+Changes are recalculated by the JQL engine as the diff between subsequent Snapshots loaded from the JaversRepository.
+ 
+There are three main types of Changes:
 
-See how it works:
+* [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
+  &mdash; when an object is committed to the JaversRepository for the first time,
+* [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
+  &mdash; when an object is deleted from the JaversRepository,
+* [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)
+  &mdash; most common &mdash; a changed property of an object (field or getter).
+
+PropertyChange has the following subtypes:
+
+* [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
+  &mdash; list of changed items in Set, List or Array,
+* [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
+  &mdash; list of changed Map entries,
+* [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
+  &mdash; changed Entity reference,
+* [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
+  &mdash; changed Primitive or Value.
+
+See how it works &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L175):
 
 ```groovy
 def "should query for Changes made on any object"() {
@@ -240,8 +254,8 @@ def "should query for Changes made on any object"() {
     javers.commit("author", bob)       // second commit
 
     when:
-    def changes = javers.findChanges( QueryBuilder.anyDomainObject().build() )
-
+    Changes changes = javers.findChanges( QueryBuilder.anyDomainObject().build() )
+    
     then:
     assert changes.size() == 2
     ValueChange salaryChange = changes.find{it.propertyName == "salary"}
@@ -251,16 +265,18 @@ def "should query for Changes made on any object"() {
     assert cityChange.left ==  "London"
     assert cityChange.right == "Paris"
     
-    printChanges(changes)
+    println changes.prettyPrint()
 }
 ```
 
-query result:
+the query result:
 
-```
-changes:
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
+```text
+Changes:
+Commit 2.0 done by author at 13 Apr 2018, 23:27:38 :
+* changes on Employee/bob :
+  - 'primaryAddress.city' changed from 'London' to 'Paris'
+  - 'salary' changed from '1000' to '1200
 ```
 
 You can also load Changes generated from an initial Snapshot (see [NewObject Filter](#new-object-filter)).
@@ -270,9 +286,17 @@ You can also load Changes generated from an initial Snapshot (see [NewObject Fil
 Snapshot (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html))
 is the historical state of a domain object captured as the property-value map.
 
-Snapshots are raw data stored in JaversRepository. When an object is changed,
-JaVers makes a snapshot of its state and persists it.
-When an object isn’t changed (i.e. hasn’t changed since the last commit), no snapshot is created, even if you commit it several times.  
+Snapshots are raw data stored in the JaversRepository.
+When an object is committed,
+JaVers makes a Snapshot of its state and persists it.
+Under the hood, JaVers reuses Snapshots and creates a new one, only when a given object is changed
+(i.e., is changed compared to the last persisted Snapshot).
+It allows you to save a significant amount of repository space.
+
+JaVers fetches snapshots in reversed chronological order.
+So if you set the limit to 10, you will get a list of the 10 latest Snapshots.
+
+[`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L224):
 
 ```groovy
 def "should query for Snapshots of an object"(){
@@ -324,7 +348,7 @@ The query accepts two mandatory parameters:
 * `Object localId` &mdash; expected Instance Id,
 * `Class entityClass` &mdash; expected Entity class.
 
-Here is the Groovy spec:
+Here is the Groovy [`spec`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L257):
 
 ```groovy
 def "should query for Entity changes by instance Id"() {
@@ -336,32 +360,35 @@ def "should query for Entity changes by instance Id"() {
     javers.commit("author", new Employee(name:"john",age:25) )
 
     when:
-    def changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
+    Changes changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
 
     then:
-    printChanges(changes)
+    println changes.prettyPrint()
     assert changes.size() == 2
 }
 ```
 
-query result:
+the query result:
 
-```
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'salary', oldVal:'1000', newVal:'1200'}
-commit 2.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob', property:'age', oldVal:'30', newVal:'31'}
+```text
+Changes:
+Commit 2.0 done by author at 13 Apr 2018, 23:33:42 :
+* changes on Employee/bob :
+  - 'age' changed from '30' to '31'
+  - 'salary' changed from '1000' to '1200'
 ```
 
-<h3 id="by-value-object-query">Querying for ValueObject changes</h3>
-This query selects changes made on a concrete [ValueObject](/documentation/domain-configuration/#value-object)
-(so a ValueObject owned by a concrete Entity instance)
+<h3 id="by-value-object-query">Querying for Value Object changes</h3>
+This query selects changes made on a concrete [Value Object](/documentation/domain-configuration/#value-object)
+(so a Value Object owned by a concrete Entity instance)
 or changes made on all ValueObjects owned by any instance of a given Entity.
 
-When querying for ValueObjects you should keep in mind that ValueObjects,
-by definition, don’t have their own identifiers. We identify them by providing
-the owning Entity Instance Id and a property name.
+When querying for Value Objects, you should keep in mind that Value Objects,
+by definition, don’t have their own identifiers. We identify them using
+the owning Entity Instance Id and the property name.
 So in this case, the property name serves as a sort of path.
 
-Let’s see how it works:
+Let’s see how it works &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L273):
 
 ```groovy
 def "should query for ValueObject changes by owning Entity instance and class"() {
@@ -372,36 +399,45 @@ def "should query for ValueObject changes by owning Entity instance and class"()
     javers.commit("author", new Employee(name:"bob",  primaryAddress: new Address(city:"London")))
     javers.commit("author", new Employee(name:"bob",  primaryAddress: new Address(city:"Paris")))
     javers.commit("author", new Employee(name:"lucy", primaryAddress: new Address(city:"New York")))
+    javers.commit("author", new Employee(name:"lucy", primaryAddress: new Address(city:"Washington")))
 
-    when: "query for ValueObject changes by owning Entity instance Id"
-    def changes = javers
+    when:
+    println "query for ValueObject changes by owning Entity instance Id"
+    Changes changes = javers
         .findChanges( QueryBuilder.byValueObjectId("bob",Employee.class,"primaryAddress").build())
 
     then:
-    printChanges(changes)
+    println changes.prettyPrint()
     assert changes.size() == 1
 
-    when: "query for ValueObject changes by owning Entity class"
+    when:
+    println "query for ValueObject changes by owning Entity class"
     changes = javers
         .findChanges( QueryBuilder.byValueObject(Employee.class,"primaryAddress").build())
 
     then:
-    printChanges(changes)
+    println changes.prettyPrint()
     assert changes.size() == 2
 }
 ```
 
-result of `"query for ValueObject changes by owning Entity instance Id"`:
+the query result:
 
-```
-commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
-```
+```text
+query for ValueObject changes by owning Entity instance Id
+Changes:
+Commit 3.0 done by author at 13 Apr 2018, 23:39:49 :
+* changes on Employee/bob :
+  - 'primaryAddress.city' changed from 'London' to 'Paris'
 
-result of `query for ValueObject changes by owning Entity class`:
-
-```
-commit 5.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/lucy#primaryAddress', property:'city', oldVal:'New York', newVal:'Washington'}
-commit 3.0: ValueChange{globalId:'org.javers.core.examples.model.Employee/bob#primaryAddress', property:'city', oldVal:'London', newVal:'Paris'}
+query for ValueObject changes by owning Entity class
+Changes:
+Commit 5.0 done by author at 13 Apr 2018, 23:39:49 :
+* changes on Employee/lucy :
+  - 'primaryAddress.city' changed from 'New York' to 'Washington'
+Commit 3.0 done by author at 13 Apr 2018, 23:39:49 :
+* changes on Employee/bob :
+  - 'primaryAddress.city' changed from 'London' to 'Paris'
 ```
 
 <h3 id="by-class-query">Querying for any object changes by class</h3>
