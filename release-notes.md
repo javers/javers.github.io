@@ -5,6 +5,18 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.1
+released on 2018-04-19
+
+* [657](https://github.com/javers/javers/issues/657)
+  Fixed implementaton of `RANDOM` [CommitIdGenerator]({{ site.javadoc_url }}org/javers/core/CommitIdGenerator.html#RANDOM).
+  You can use it in distributed applications:   
+  
+```java
+Javers javers = javers().withCommitIdGenerator(CommitIdGenerator.RANDOM)
+                        .build();
+```
+
 ### 3.9.0
 released on 2018-04-11
 
