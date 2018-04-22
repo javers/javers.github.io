@@ -6,7 +6,7 @@ submenu: release-notes
 ---
 
 ### 3.9.2
-released on 2018-04-20
+released on 2018-04-22
 
 * [660](https://github.com/javers/javers/issues/660) Fixed bug in Shadow query runner.
 
