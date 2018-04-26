@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.3
+released on 2018-04-26
+
+* [664](https://github.com/javers/javers/issues/664) Fixed commidDate persistence in MySql. 
+Column type is changed from `timestamp` to `timestamp(3)` &mdash; milliseconds precision. 
+
 ### 3.9.2
 released on 2018-04-22
 
