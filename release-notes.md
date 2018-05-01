@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.4
+released on 2018-05-21
+
+* [666](https://github.com/javers/javers/issues/666) Fixed compatibility with Java9 modulepath. 
+
 ### 3.9.3
 released on 2018-04-26
 
