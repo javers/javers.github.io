@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.5
+released on 2018-05-09
+
+* [669](https://github.com/javers/javers/issues/669) Fixed issue with Value Objects stored in Lists and compared
+  using AS_SET algorithm.
+
 ### 3.9.4
 released on 2018-05-01
 
