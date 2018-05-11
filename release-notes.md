@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.6
+released on 2018-05-11
+
+* [676](https://github.com/javers/javers/issues/676) Fixed NPE when comparing
+  List of Value Objects containing nulls. 
+  
 ### 3.9.5
 released on 2018-05-09
 
