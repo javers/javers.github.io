@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.7
+released on 2018-05-17
+
+* [677](https://github.com/javers/javers/issues/677) Added support for `saveAll(Iterable)` from Spring Data 2.x
+  
 ### 3.9.6
 released on 2018-05-11
 
