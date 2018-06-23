@@ -5,6 +5,29 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.9.10
+released on 2018-06-23
+
+* **Stream API for Shadow queries** &mdash; `javers.findShadowsAndStream()`.
+  Using `Stream.skip()` and `Stream.limit()` is the only correct way for paging Shadows
+  (see [658](https://github.com/javers/javers/issues/658)).
+  See the example in [ShadowStreamExample.java](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ShadowStreamExample.java).
+  
+```
+Stream<Shadow<Employee>> shadows = javers.findShadowsAndStream(
+        QueryBuilder.byInstanceId("Frodo", Employee.class).build());
+
+//then
+Employee employeeV5 = shadows.filter(shadow -> shadow.getCommitId().getMajorId() == 5)
+       .map(shadow -> shadow.get())
+       .findFirst().orElse(null);
+```
+  
+
+* [650](https://github.com/javers/javers/issues/650)
+  `@DiffIgnore` and `@DiffInclude` annotations can mixed now in one class.
+  When `@DiffInclude` is used in a class, JaVers ignores `@DiffIgnore` or `@Transient` annotations in that class. 
+
 ### 3.9.7
 released on 2018-05-17
 
