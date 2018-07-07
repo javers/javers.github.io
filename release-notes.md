@@ -5,8 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 3.9.10
-released on 2018-06-23
+### 3.10.1
+released on 2018-07-07
+
+* [682](https://github.com/javers/javers/issues/682) 
+  Fixed JaVers bootstrap error &mdash;
+  COMPONENT_NOT_FOUND: JaVers bootstrap error - component of type 'org.javers.core.CommitIdGenerator'
+
+### 3.10.0
+released on 2018-06-22
 
 * **Stream API for Shadow queries** &mdash; `javers.findShadowsAndStream()`.
   Using `Stream.skip()` and `Stream.limit()` is the only correct way for paging Shadows
