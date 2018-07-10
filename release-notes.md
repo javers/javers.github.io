@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.10.2
+released on 2018-07-10
+
+* [687](https://github.com/javers/javers/pull/687)
+  Additional advices for Spring Data Jpa Aspect.
+
 ### 3.10.1
 released on 2018-07-07
 
