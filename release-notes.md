@@ -5,6 +5,17 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.0
+released on 2018-08-04
+
+* [511](https://github.com/javers/javers/pull/511)
+ Added handling of property type changes in domain classes.
+ Now JaVers is able to load a Snapshot from JaversRepository,
+ even if property types are different in a current domain class. 
+  
+* [693](https://github.com/javers/javers/pull/693)
+ Fixed bug in javers-core dependencies. Guava is a truly optional dependency.   
+
 ### 3.10.2
 released on 2018-07-10
 
