@@ -1078,16 +1078,24 @@ def '''should allow Entity class name change
     javers.commit('author', new PersonRefactored(id:1, name:'Uncle Bob', city:'London'))
 
     def changes =
-        javers.findChanges( QueryBuilder.byInstanceId(1,PersonRefactored.class).build() )
+        javers.findChanges( QueryBuilder.byInstanceId(1, PersonRefactored.class).build() )
 
-    then: 'one ValueChange is expected'
-    assert changes.size() == 1
-    with(changes[0]){
+    then: 'two ValueChanges are expected'
+    assert changes.size() == 2
+
+    with(changes.find{it.propertyName == "name"}){
         assert left == 'Bob'
         assert right == 'Uncle Bob'
-        assert affectedGlobalId.value() == 'Person/1'
     }
-    println changes[0]
+
+    with(changes.find{it.propertyName == "city"}){
+        assert left == null
+        assert right == 'London'
+    }
+
+    changes.each { assert it.affectedGlobalId.value() == 'Person/1' }
+
+    println changes.prettyPrint()
 }
 ```
 
@@ -1228,20 +1236,21 @@ def 'should be very relaxed about ValueObject types'(){
   def changes =
       javers.findChanges( QueryBuilder.byValueObjectId(1, Person.class, 'address').build() )
 
-  then: 'three ValueChanges are expected'
-  assert changes.size() == 3
-  assert changes.collect{ it.propertyName }.containsAll( ['street','verified','email'] )
-
   changes.each { println it }
+
+  then: 'four ValueChanges are expected'
+  assert changes.size() == 4
+  assert changes.collect{ it.propertyName } as Set == ['street','verified','city'] as Set
 }
 ```
 
 Test output:
 
 ```text
-ValueChange{globalId:'Person/1#address', property:'street', oldVal:'Green 50', newVal:'Green 55'}
-ValueChange{globalId:'Person/1#address', property:'email', oldVal:'me@example.com', newVal:''}
-ValueChange{globalId:'Person/1#address', property:'verified', oldVal:'false', newVal:'true'}
+ValueChange{ 'address.street' changed from 'Green 50' to 'Green 55' }
+ValueChange{ 'address.city' changed from '' to 'London' }
+ValueChange{ 'address.street' changed from '' to 'Green 50' }
+ValueChange{ 'address.verified' changed from 'false' to 'true' }
 ```
 
 As you can see, all three versions of the ValueObject address share the same GlobalId
