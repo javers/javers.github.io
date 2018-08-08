@@ -5,6 +5,10 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.1
+released on 2018-08-09
+* [692](https://github.com/javers/javers/issues/692) Guava issue is finally fixed.
+
 ### 3.11.0
 released on 2018-08-04
 
@@ -13,7 +17,7 @@ released on 2018-08-04
  Now JaVers is able to load a Snapshot from JaversRepository,
  even if property types are different in a current domain class. 
   
-* [693](https://github.com/javers/javers/pull/693)
+* [692](https://github.com/javers/javers/issues/692)
  Fixed bug in javers-core dependencies. Guava is a truly optional dependency.   
 
 ### 3.10.2
