@@ -5,6 +5,10 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.2
+released on 2018-08-014
+* [697](https://github.com/javers/javers/issues/697) Fixed issue with Numbers.
+
 ### 3.11.1
 released on 2018-08-09
 * [692](https://github.com/javers/javers/issues/692) Guava issue is finally fixed.
