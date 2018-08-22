@@ -5,8 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.3
+released on 2018-08-22
+* Fixed JaversException PROPERTY_NOT_FOUND
+  reported [here](https://stackoverflow.com/questions/51634751/javersexception-property-not-found-property-in-derived-class-not-found-in-abstr).
+  
+* Fixed bugs in Maps and Multimaps serialization   
+
 ### 3.11.2
-released on 2018-08-014
+released on 2018-08-14
 * [697](https://github.com/javers/javers/issues/697) Fixed issue with Numbers.
 
 ### 3.11.1
