@@ -10,7 +10,7 @@ released on 2018-08-22
 * Fixed JaversException PROPERTY_NOT_FOUND
   reported [here](https://stackoverflow.com/questions/51634751/javersexception-property-not-found-property-in-derived-class-not-found-in-abstr).
   
-* Fixed bugs in Maps and Multimaps serialization   
+* Fixed bugs in Maps and Multimaps serialization.   
 
 ### 3.11.2
 released on 2018-08-14
