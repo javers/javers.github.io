@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.4
+released on 2018-08-27
+
+* Dependency update. FastClasspathScanner updated to latest ClassGraph. 
+
 ### 3.11.3
 released on 2018-08-22
 * Fixed JaversException PROPERTY_NOT_FOUND
