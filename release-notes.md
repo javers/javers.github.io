@@ -8,7 +8,7 @@ submenu: release-notes
 ### 3.11.4
 released on 2018-08-27
 
-* Dependency update. FastClasspathScanner updated to latest ClassGraph. 
+* [705](https://github.com/javers/javers/issues/705) Dependency update. FastClasspathScanner updated to the latest ClassGraph. 
 
 ### 3.11.3
 released on 2018-08-22
