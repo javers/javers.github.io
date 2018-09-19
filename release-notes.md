@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.5
+released on 2018-09-19
+
+* [717](https://github.com/javers/javers/pull/717) Added index on `global_id` SQL table to speed up
+queries by Value Object ID.  
+
 ### 3.11.4
 released on 2018-08-27
 
