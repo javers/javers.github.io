@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+
+### 3.11.6
+released on 2018-09-29
+
+* [712](https://github.com/javers/javers/issues/712) Fixed issue with
+auto-audit aspect for JPA CRUD repositories for entities with Id generated 
+by Hibernate (`@GeneratedValue`).
+
 ### 3.11.5
 released on 2018-09-19
 
