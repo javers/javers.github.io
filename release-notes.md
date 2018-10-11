@@ -5,7 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.11.7
+released on 2018-10-11
 
+* [723](https://github.com/javers/javers/issues/723)
+Added possibility to load Snapshots even if user's class is removed. 
+Prevents JaversException TYPE_NAME_NOT_FOUND.
 
 ### 3.11.6
 released on 2018-09-29
