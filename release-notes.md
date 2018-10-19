@@ -5,11 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.12.1
+released on 2018-10-19 
+
+* [724](https://github.com/javers/javers/issues/724) Fixed issue when deserializing Diff from JSON. 
+
 ### 3.12.0
 released on 2018-10-19 
 
-* [593](https://github.com/javers/javers/issues/593)
-Asynchronous commit:
+* [593](https://github.com/javers/javers/issues/593) Asynchronous commit:
 
 ```
 CompletableFuture<Commit> commitAsync(String author, Object currentVersion, Executor executor);
