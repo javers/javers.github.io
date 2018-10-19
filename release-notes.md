@@ -5,6 +5,16 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.12.0
+released on 2018-10-19 
+
+* [593](https://github.com/javers/javers/issues/593)
+Asynchronous commit:
+
+```
+CompletableFuture<Commit> commitAsync(String author, Object currentVersion, Executor executor);
+```
+
 ### 3.11.7
 released on 2018-10-11
 
