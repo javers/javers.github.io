@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.12.3
+released on 2018-10-25 
+
+* [688](https://github.com/javers/javers/issues/688) Fixed &mdash; missing property in *.yml to set CommitIdGenerator. 
+
 ### 3.12.1
 released on 2018-10-19 
 
