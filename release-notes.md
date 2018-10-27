@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.12.4
+released on 2018-10-27 
+
+* [690](https://github.com/javers/javers/issues/690) Fixed &mdash; missing property in *.yml to set SQL database schema name. 
+
+
 ### 3.12.3
 released on 2018-10-25 
 

@@ -55,12 +55,14 @@ If these defaults are OK for you, don’t need to add anything to your applicati
 javers:
   mappingStyle: FIELD
   algorithm: SIMPLE
+  commitIdGenerator: synchronized_sequence
   prettyPrint: true
   typeSafeValues: false
   newObjectSnapshot: false
   packagesToScan:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
+  sqlSchema:
   sqlSchemaManagementEnabled: true
   prettyPrintDateFormats:
     localDateTime: "dd MMM yyyy, HH:mm:ss"
