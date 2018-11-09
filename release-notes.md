@@ -5,6 +5,16 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 3.13.0
+released on 2018-11-09 
+
+* All SQL queries are rewritten using the new, faster JaVers SQL framework.
+  Poly JDBC is no longer used for queries (but is still used to schema management).
+  Thanks to that, **performance of JaVers commits with SQL repo is significantly better**,
+  especially when committing large object graphs.
+     
+* Experimental support for DB2 and DB2400 is discontinued.
+
 ### 3.12.4
 released on 2018-10-27 
 
