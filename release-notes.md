@@ -5,6 +5,25 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 4.0.0-RC1
+released on 2018-11-19
+
+* Upgrade to **Spring 5** and Spring Boot 2.<br/>
+  Since now, the last JaVers version compatible with **Spring 4** is 3.14.0. 
+  
+* Current versions of dependencies:
+
+```
+springVersion           = 5.0.9.RELEASE
+springBootVersion       = 2.0.5.RELEASE
+springDataCommonsVersion= 2.0.10.RELEASE
+springDataMongoVersion  = 2.0.10.RELEASE
+springDataJPAVersion    = 2.0.10.RELEASE
+springSecurityVersion   = 5.0.8.RELEASE
+mongoDbDriverVersion    = 3.6.4
+hibernateVersion        = 5.2.17.Final    
+```
+
 ### 3.14.0
 released on 2018-11-10 
 
