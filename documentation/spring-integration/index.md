@@ -76,7 +76,7 @@ public Javers javers() {
 
 @Bean
 public MongoClient mongo() {
-    return new Fongo("test").getMongo();
+    return new MongoClient();
 }
 ```
 
@@ -454,7 +454,7 @@ public class JaversSpringMongoApplicationConfig {
      */
     @Bean
     public MongoClient mongo() {
-        return new Fongo("test").getMongo();
+        return new MongoClient();
     }
 
     /**
