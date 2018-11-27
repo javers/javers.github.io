@@ -5,13 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 4.0.0-RC2
-released on 2018-11-21
+### 4.0.0-RC3
+released on 2018-11-26
 
 * Upgrade to **Spring 5.1** and Spring Boot 2.1.<br/>
   Since now, the last JaVers version compatible with **Spring 4** is 3.14.0. 
   
-* Current versions of dependencies:
+  Current versions of dependencies:
 
 ```
 springVersion            = 5.1.2.RELEASE
@@ -23,6 +23,32 @@ springSecurityVersion    = 5.1.1.RELEASE
 mongoDbDriverVersion     = 3.8.2
 hibernateVersion         = 5.3.7.Final   
 ```
+
+* [747](https://github.com/javers/javers/issues/747)
+  Two **breaking changes** in `CustomPropertyComparator`. Now, it has to 
+  implement `boolean equals(a, b)` method, which is used by JaVers 
+  to calculate collection-to-collection diff.
+  Return type of `compare(...)` method is changed to `Optional`.
+  See updated [examples and doc](/documentation/diff-configuration/#custom-comparators). 
+              
+```java
+public interface CustomPropertyComparator<T, C extends PropertyChange> {
+    /**
+     * This comparator is called by JaVers to calculate property-to-property diff.
+     */
+    Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
+
+    /**
+     * This comparator is called by JaVers to calculate collection-to-collection diff.
+     */
+    boolean equals(T a, T b);
+}
+
+```  
+
+* [746](https://github.com/javers/javers/issues/746) 
+  Added default comparator for raw `Collections`. Previously, raw `Collections` were ignored by JaVers,
+  now, they are converted to Lists and then compared as Lists. 
 
 ### 3.14.0
 released on 2018-11-10 

@@ -126,118 +126,75 @@ the length of both compared lists).
 
 <h2 id="custom-comparators">Custom Comparators</h2>
 
-There are cases where JaVers’ default diff algorithm isn’t appropriate.
-A good example is custom collections, like Guava’s [Multimap](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/Multimap.html),
-which are not connected with Java Collections API.
-
-Let’s focus on Guava’s Multimap.
-JaVers doesn’t support it out of the box, because Multimap is not a subtype of `java.util.Map`.
-Still, Multimap is quite popular and you could expect to
-have your objects with Multimaps compared by JaVers.
-
-JaVers is meant to be lightweight and can’t depend on the large Guava library.
-Without a custom comparator, JaVers maps Multimap as ValueType and compares its internal fields property-by-property.
-This isn’t very useful. What we would expect is MapType and a list of MapChanges as a diff result.
-
-Custom comparators come to the rescue, as they give you full control over the JaVers diff algorithm.
-You can register a custom comparator for any type (class or interface)
-to bypass the JaVers type system and diff algorithm.
-
-JaVers maps classes with custom comparators as `CustomTypes`, which pretty much means
-*I don’t care what it is*.
-
-**Implementation**<br/>
+There are cases where JaVers’ diff algorithm isn’t appropriate,
+and you need to implement your own comparing strategy for certain types.
+ 
+**Custom Property Comparators** come to the rescue.
+You can register them for any type (class or interface) to bypass the JaVers’ type system and diff algorithm. 
+ 
+JaVers maps a class with a custom comparator to *Custom Type*,
+which means:
+*I don’t care what it is, all I know is that it should be compared using this custom comparator*.
 
 All you have to do is implement the
-[CustomPropertyComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomPropertyComparator.html)
+[`CustomPropertyComparator`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomPropertyComparator.java)
 interface:
 
 ```java
-/**
- * @param <T> custom type, e.g. Multimap
- * @param <C> concrete type of PropertyChange returned by a comparator
- */
 public interface CustomPropertyComparator<T, C extends PropertyChange> {
     /**
-     * @param left left (or old) property value
-     * @param right right (or current) property value
-     * @param affectedId Id of domain object being compared
-     * @param property property being compared
-     * @return should return null if compared objects have no differences
+     * Called by JaVers to calculate property-to-property diff.
      */
-    C compare(T left, T right, GlobalId affectedId, Property property);
+    Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
+
+    /**
+     * Called by JaVers to calculate collection-to-collection diff.
+     */
+    boolean equals(T a, T b);
 }
 ```
 
-and register it with
- [`JaversBuilder.registerCustomComparator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerCustomComparator-org.javers.core.diff.custom.CustomPropertyComparator-java.lang.Class-).
-
-Implementation should calculate a diff between two values of CustomType
-and return a result as a concrete `Change` subclass, for example:
+and register your custom comparator instance in JaversBuilder:
 
 ```java
-public class GuavaCustomComparator implements CustomPropertyComparator<Multimap, MapChange> {
-    public MapChange compare(Multimap left, Multimap right, GlobalId affectedId, Property property) {
-        ... // omitted
-    }
+JaversBuilder.javers().registerCustomComparator(new MyClassComparator(), MyClass.class).build()
+```
+
+See the full [example of CustomPropertyComparator](/documentation/diff-examples/#custom-comparators-example) in our examples chapter.
+
+**Custom comparators for Values**<br/>
+
+The natural way of providing comparing strategy for [Value](/documentation/domain-configuration/#ValueType) classes is
+overriding the standard `Object.equals(Object)` method.
+
+If you don’t control the source code of a given Value class,
+you can still change its comparing strategy by registering a custom comparator.
+
+A [`CustomValueComparator`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomValueComparator.java)
+implements the single `boolean equals(a, b)` method:
+
+```java
+@FunctionalInterface
+public interface CustomValueComparator<T> {
+    boolean equals(T left, T right);
 }
 ```
 
-Register the custom comparator instance in JaversBuilder, for example:
+and it can be super-easily registered in JaversBuilder, for example:
 
 ```java
-JaversBuilder.javers()
-    .registerCustomComparator(new GuavaCustomComparator(), Multimap.class).build()
-```
+Javers javers = JaversBuilder.javers()
+        .registerValue(BigDecimal.class, (a, b) -> a.intValue() == b.intValue()).build();
 
-**Custom way to compare Value types**<br/>
-The same rules apply if you want to change JaVers’ default diff algorithm
-for existing Value type, for example `BigDecimal`.
+``` 
 
-For Values, JaVers simply uses `equals()`. If this isn’t appropriate for you,
-override it with a Custom comparator.
-For example, JaVers provides `CustomBigDecimalComparator`, which rounds BigDecimals before comparing them:
+Given `equals()` method is used by JaVers to calculate both collection-to-collection diff
+and property-to-property diff.
+Note that for Value types, property-to-property diff is always a `ValueChange`.
 
-```java
-/**
- * Compares BigDecimals with custom precision.
- * Before comparing, values are rounded (HALF_UP) to required scale.
- * <br/><br/>
- *
- * Usage example:
- * <pre>
- * JaversBuilder.javers()
- *     .registerCustomComparator(new CustomBigDecimalComparator(2), BigDecimal).build();
- * </pre>
- */
-public class CustomBigDecimalComparator
-    implements CustomPropertyComparator<BigDecimal, ValueChange>
-{
-    private int significantDecimalPlaces;
-
-    public CustomBigDecimalComparator(int significantDecimalPlaces) {
-        this.significantDecimalPlaces = significantDecimalPlaces;
-    }
-
-    @Override
-    public ValueChange compare(BigDecimal left, BigDecimal right, GlobalId affectedId,
-        Property property)
-    {
-        BigDecimal leftRounded = left.setScale(significantDecimalPlaces, ROUND_HALF_UP);
-        BigDecimal rightRounded = right.setScale(significantDecimalPlaces, ROUND_HALF_UP);
-
-        if (leftRounded.equals(rightRounded)){
-            return null;
-        }
-
-        return new ValueChange(affectedId, property, left, right);
-    }
-}
-```
-
-
-
-
+Unlike `CustomPropertyComparator`
+which offers great flexibility, 
+`CustomValueComparator` is just a way to provide other `equals()` implementation for given Value class. 
 
 
 

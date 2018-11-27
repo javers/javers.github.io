@@ -224,7 +224,8 @@ Well-known Value types like BigDecimal or LocalDate have it already.
 Remember to implement `equals()` for all your Value classes.
 
 If you don’t control the Value implementation, 
-you can still change the comparing strategy by registering a [CustomValueComparator]({{ site.javadoc_url }}index.html?org/javers/core/diff/custom/CustomValueComparator.html)
+you can still change the comparing strategy by registering a
+[CustomValueComparator](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomValueComparator.java)
 function.
 For example, if you want to compare BigDecimals using only the integer part:
  
