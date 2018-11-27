@@ -639,3 +639,129 @@ No special JaVers configuration is required for Groovy.
 In the example, we use the `FIELD` (default) mapping style.
 Since Groovy generates getters and setters on the fly, you
 can also use the `BEAN` mapping style without adding boilerplate code to domain classes.
+
+<h2 id="custom-comparators-example">Custom comparators example</h2>
+
+In this example, we show how to use a [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators).
+
+Our comparator is called `FunnyStringComparator`, and it compares Strings as character sets.
+The logic is simple. When two Strings are built from the same set of characters &mdash; we don’t see a difference.
+Otherwise, we log each added or removed character.
+
+This full example is in [CustomPropertyComparatorExample.groovy](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/CustomPropertyComparatorExample.groovy)
+coded as s Spock test. Here we show the most essential parts.
+
+First, the comparator implementation:
+
+```groovy
+class FunnyStringComparator implements CustomPropertyComparator<String, SetChange> {
+    @Override
+    Optional<SetChange> compare(String left, String right, GlobalId affectedId, Property property) {
+        if (equals(left, right)) {
+            return Optional.empty()
+        }
+
+        Set leftSet = left.toCharArray().toSet()
+        Set rightSet = right.toCharArray().toSet()
+
+        List<ContainerElementChange> changes = []
+        Sets.difference(leftSet, rightSet).forEach{c -> changes.add(new ValueRemoved(c))}
+        Sets.difference(rightSet, leftSet).forEach{c -> changes.add(new ValueAdded(c))}
+
+        return Optional.of(new SetChange(affectedId, property.getName(), changes))
+    }
+
+    @Override
+    boolean equals(String a, String b) {
+        a.toCharArray().toSet() == b.toCharArray().toSet()
+    }
+}
+```
+
+In all tests, we compare two objects
+which have a `String` property and also a `List<String>` property:
+
+```groovy
+class Entity {
+    String value
+    List<String> values
+}
+```
+
+This distinction is important because JaVers compares list items using simple `equals(a, b)`
+method and property values using more sophisticated  `compare(...)` method.
+
+Ok, let’s see how `FunnyStringComparator` compares String properties:
+
+```groovy
+def "should use FunnyStringComparator to compare String properties"(){
+    given:
+    def javers = JaversBuilder.javers()
+            .registerCustomComparator(new FunnyStringComparator(), String).build()
+
+    when:
+    def diff = javers.compare(new Entity(value: "aaa"), new Entity(value: "a"))
+    println "first diff: "+ diff
+
+    then:
+    diff.changes.size() == 0
+
+    when:
+    diff = javers.compare(new Entity(value: "aaa"), new Entity(value: "b"))
+    println "second diff: "+ diff
+
+    then:
+    diff.changes.size() == 1
+    diff.changes[0] instanceof SetChange
+    diff.changes[0].changes.size() == 2 // two item changes in this SetChange
+}
+``` 
+
+output:
+
+```text
+first diff: Diff:
+
+second diff: Diff:
+* changes on org.javers.core.examples.CustomPropertyComparatorExample$Entity/ :
+  - 'value' collection changes :
+    . 'a' removed
+    . 'b' added
+```
+
+`FunnyStringComparator` can also compare Strings when they are stored in a list:
+
+```groovy
+def "should use FunnyStringComparator to compare Strings in lists"(){
+    given:
+    def javers = JaversBuilder.javers()
+            .registerCustomComparator(new FunnyStringComparator(), String).build()
+
+    when:
+    def diff = javers.compare(new Entity(values: ["aaa"]), new Entity(values: ["a"]))
+    println "first diff: "+ diff
+
+    then:
+    diff.changes.size() == 0
+
+    when:
+    diff = javers.compare(new Entity(values: ["aaa"]), new Entity(values: ["a", "bb"]))
+    println "second diff: "+ diff
+
+    then:
+    diff.changes.size() == 1
+    diff.changes[0] instanceof ListChange
+    diff.changes[0].changes.size() == 1 // one item change in this ListChange
+}
+```
+
+output:
+
+```text
+first diff: Diff:
+
+second diff: Diff:
+* changes on org.javers.core.examples.CustomPropertyComparatorExample$Entity/ :
+  - 'values' collection changes :
+    1. 'bb' added
+```
