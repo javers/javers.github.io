@@ -5,11 +5,14 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 4.0.0-RC3
-released on 2018-11-26
+### <font color="red">5.0.0-RC2</font>
+released on 2018-11-30
 
-* Upgrade to **Spring 5.1** and Spring Boot 2.1.<br/>
-  Since now, the last JaVers version compatible with **Spring 4** is 3.14.0. 
+* JaVers’ Spring integration modules are upgraded to be fully compatible with 
+  **Spring 5.1** and **Spring Boot 2.1**.<br/>
+  
+  If you are using Spring 5.x,
+  it’s recommended to use JaVers 5.x. Otherwise you can fall into dependencies version conflict.<br/> 
   
   Current versions of dependencies:
 
@@ -23,6 +26,8 @@ springSecurityVersion    = 5.1.1.RELEASE
 mongoDbDriverVersion     = 3.8.2
 hibernateVersion         = 5.3.7.Final   
 ```
+
+  Since now, the last JaVers version compatible with **Spring 4** is 3.14.0.   
 
 * [747](https://github.com/javers/javers/issues/747)
   Two **breaking changes** in `CustomPropertyComparator`. Now, it has to 
@@ -49,6 +54,10 @@ public interface CustomPropertyComparator<T, C extends PropertyChange> {
 * [746](https://github.com/javers/javers/issues/746) 
   Added default comparator for raw `Collections`. Previously, raw `Collections` were ignored by JaVers,
   now, they are converted to Lists and then compared as Lists. 
+  
+* [738](https://github.com/javers/javers/pull/738)
+  Added `DBRefUnproxyObjectAccessHook` to support lazy `@DBRef` from Spring Data MongoDB.
+  The hook is registered automatically in `javers-spring-boot-starter-mongo`.
 
 ### 3.14.0
 released on 2018-11-10 
