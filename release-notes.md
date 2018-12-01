@@ -5,8 +5,8 @@ category: Documentation
 submenu: release-notes
 ---
 
-### <font color="red">5.0.0-RC2</font>
-released on 2018-11-30
+### <font color="red">5.0.0</font>
+released on 2018-12-01
 
 * JaVers’ Spring integration modules are upgraded to be fully compatible with 
   **Spring 5.1** and **Spring Boot 2.1**.<br/>
