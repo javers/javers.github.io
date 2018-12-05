@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.0.1
+released on 2018-12-05
+
+* Fixes for `CustomPropertyComparator` combined with `LEVENSHTEIN_DISTANCE` and `AS_SET` algorithms.
+
 ### <font color="red">5.0.0</font>
 released on 2018-12-01
 
