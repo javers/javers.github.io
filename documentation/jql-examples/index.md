@@ -80,7 +80,7 @@ All `find*()` methods understand JQL so you can use the same JqlQuery to get Cha
 
 <h3 id="query-for-shadows">Querying for Shadows</h3>
 
-Shadows (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/shadow/Shadow.html)) offer the most natural view on data history.
+Shadows (see [`Shadow.java`]({{ site.github_core_main_url }}org/javers/shadow/Shadow.java)) offer the most natural view on data history.
 Thanks to JaVers magic, you can see historical versions of your domain objects
 *reconstructed* from Snapshots.
 
@@ -88,7 +88,7 @@ Since Shadows are instances of your domain classes,
 you can use them easily in your application. 
 Moreover, the JQL engine strives to rebuild original object graphs.
   
-See how it works &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L145):
+See how it works &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L147):
 
 ```groovy
 def "should query for Shadows of an object"() {
@@ -134,7 +134,7 @@ There are four scopes.
 The wider the scope, the more object shadows are loaded to the resulting graph
 (and the more database queries are executed).
 Scopes are defined in the
-`ShadowScope` enum (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html)). 
+[`ShadowScope`]({{ site.github_core_main_url }}org/javers/repository/jql/ShadowScope.java) enum. 
 
 * **Shallow**
   &mdash;  the defult scope &mdash;
@@ -152,7 +152,7 @@ Scopes are defined in the
   &mdash; JaVers tries to restore full object graphs with
   (possibly) all objects loaded.
 
-The following example shows how all the scopes work &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L175):
+The following example shows how all the scopes work &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L177):
 
 ```groovy
 def "should query for Shadows with different scopes"(){
@@ -209,7 +209,7 @@ If you want to be 100% sure that Shadow reconstruction
 didn’t hide some details &mdash; use Snapshots or Changes view.
 
 Read more about Shadow query <b>scopes, profiling, and runtime statistics</b> in 
-[Javers#findShadows()]({{ site.javadoc_url }}org/javers/core/Javers.html#findShadows-org.javers.repository.jql.JqlQuery-)
+the [`Javers.findShadows()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
 javadoc.
 
 <h3 id="query-for-changes">Querying for Changes</h3>
@@ -220,25 +220,25 @@ Changes are recalculated by the JQL engine as the diff between subsequent Snapsh
  
 There are three main types of Changes:
 
-* [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
+* [`NewObject`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/NewObject.java)
   &mdash; when an object is committed to the JaversRepository for the first time,
-* [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
+* [`ObjectRemoved`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ObjectRemoved.java)
   &mdash; when an object is deleted from the JaversRepository,
-* [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)
+* [`PropertyChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/PropertyChange.java)
   &mdash; most common &mdash; a changed property of an object (field or getter).
 
 PropertyChange has the following subtypes:
 
-* [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
+* [`ContainerChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ContainerChange.java)
   &mdash; list of changed items in Set, List or Array,
-* [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
+* [`MapChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/map/MapChange.java)
   &mdash; list of changed Map entries,
-* [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
+* [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java)
   &mdash; changed Entity reference,
-* [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
+* [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java)
   &mdash; changed Primitive or Value.
 
-See how it works &mdash; [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L175):
+See how it works &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L120):
 
 ```groovy
 def "should query for Changes made on any object"() {
@@ -283,7 +283,7 @@ You can also load Changes generated from an initial Snapshot (see [NewObject Fil
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
-Snapshot (see [javadoc]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/CdoSnapshot.html))
+Snapshot (see [`CdoSnapshot.java`]({{ site.github_core_main_url }}org/javers/core/metamodel/object/CdoSnapshot.java))
 is the historical state of a domain object captured as the property-value map.
 
 Snapshots are raw data stored in the JaversRepository.
@@ -296,7 +296,7 @@ It allows you to save a significant amount of repository space.
 JaVers fetches snapshots in reversed chronological order.
 So if you set the limit to 10, you will get a list of the 10 latest Snapshots.
 
-[`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy#L224):
+[`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L226):
 
 ```groovy
 def "should query for Snapshots of an object"(){
@@ -340,7 +340,7 @@ JqlQueries are created by the following methods:
 * `QueryBuilder.byClass()` &mdash; query by objects' class,
 * `QueryBuilder.anyDomainObject()` &mdash; query for any object changes.
 
-All examples are in [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy).
+All examples are in [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy).
 
 <h3 id="instance-id-query">Querying for Entity changes by Instance Id</h3> 
 
@@ -537,7 +537,7 @@ For each query you can add one or more optional filters:
 [childValueObjects](#child-value-objects-filter) and
 [newObject changes](#new-object-filter) filter.
 
-All examples are in [`JqlExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/JqlExample.groovy).
+All examples are in [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy).
 
 <h3 id="property-filter">Changed property filter</h3>
 Optional parameter for all queries.
@@ -1016,7 +1016,7 @@ JPA allows you to specify `@Entity` name
 and Spring Data uses `@TypeAlias` annotation.
 
 JaVers has
-[@TypeName]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/annotation/TypeName.html)
+[`@TypeName`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/TypeName.java)
 annotation. Use it to give stable names for your Entities.
 Type name is used as a Class identifier instead of a fully-qualified Class name.
 
