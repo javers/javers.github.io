@@ -5,6 +5,14 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.0.2
+released on 2018-12-22
+
+* [45](https://github.com/polyjdbc/polyjdbc/pull/45) Fixed bug in SQL `SchemaInspector` in `polyjdbc`
+ when JaVers’ tables are created in public schema.  
+
+* Added more descriptive message in `NOT_INSTANCE_OF` exception.
+
 ### 5.0.1
 released on 2018-12-05
 
