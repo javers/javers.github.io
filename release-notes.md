@@ -5,6 +5,36 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 5.1.0
+released on 2018-12-2x
+
+* [743](https://github.com/javers/javers/issues/743) `commitDateInstant` added to `CommitMetadata`:
+
+```java
+/**
+ * Commit creation timestamp in UTC.
+ * <br/><br/>
+ *
+ * Since 5.1, commitDateInstant is persisted in JaversRepository
+ * to provide reliable chronological ordering, especially when {@link CommitIdGenerator#RANDOM}
+ * is used.
+ *
+ * <br/><br/>
+ *
+ * Commits persisted by JaVers older then 5.1
+ * have commitDateInstant guessed from commitDate and current {@link TimeZone}
+ *
+ * @since 5.1
+ */
+public Instant getCommitDateInstant() {
+    return commitMetadata.getCommitDateInstant();
+}
+```
+
+* [762](https://github.com/javers/javers/pull/762) Fixed Snapshots sorting in MongoRepository when
+ `CommitIdGenerator.RANDOM` is used.
+ 
 ### 5.0.3
 released on 2018-12-23
 
