@@ -32,6 +32,9 @@ public Instant getCommitDateInstant() {
 }
 ```
 
+* [761](https://github.com/javers/javers/issues/761) Fixed `DateTimeParseException`
+ when deserializing Snapshots of a refactored class.
+
 * [762](https://github.com/javers/javers/pull/762) Fixed Snapshots sorting in MongoRepository when
  `CommitIdGenerator.RANDOM` is used.
  
