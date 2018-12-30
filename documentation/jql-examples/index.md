@@ -214,7 +214,8 @@ javadoc.
 
 <h3 id="query-for-changes">Querying for Changes</h3>
 
-The Changes view is the list of atomic differences between subsequent versions of a domain object.
+The Changes view (see [`Changes.java`]({{ site.github_core_main_url }}org/javers/core/Changes.java)) 
+is the list of atomic differences between subsequent versions of a domain object.
 Since JaVers stores only Snapshots of domain objects,
 Changes are recalculated by the JQL engine as the diff between subsequent Snapshots loaded from the JaversRepository.
  
