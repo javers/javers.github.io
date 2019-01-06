@@ -5,9 +5,14 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.1.1
+released on 2019-01-05
 
+* [765](https://github.com/javers/javers/issues/765) Fixed bug in persisting 
+  `commitDateInstant` in SQL database.
+  
 ### 5.1.0
-released on 2018-12-2x
+released on 2018-12-30
 
 * [743](https://github.com/javers/javers/issues/743) `commitDateInstant` added to `CommitMetadata`:
 
