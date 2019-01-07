@@ -11,7 +11,7 @@ kramdown:
 javadoc_url: /javadoc_5.x/
 github_core_main_url: https://github.com/javers/javers/blob/master/javers-core/src/main/java/
 github_core_test_url: https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/
-javers_current_version: "5.1.1"
+javers_current_version: "5.1.2"
 
 javers_java7_version: "2.9.2"
 
