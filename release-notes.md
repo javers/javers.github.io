@@ -5,6 +5,14 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.1.3 
+released on 2019-01-25
+
+* [777](https://github.com/javers/javers/pull/777) Fixed bug
+  in persisting `commitDateInstant` on modern JVM's where `Instant` has microseconds precision.
+  Removed dependency on `javax.annotation.PostConstruct` annotation, which is not available
+  on OpenJDK. 
+
 ### 5.1.2
 released on 2019-01-07
 
