@@ -5,6 +5,22 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.2.0 
+released on 2019-02-16
+
+* [751](https://github.com/javers/javers/issues/751) New aspect annotation `@JaversAuditableDelete`
+  for triggering `commitShallowDelete()` with each method argument. 
+
+* [784](https://github.com/javers/javers/pull/784) Fixed bug in handling `SortedSet`.
+
+* [753](https://github.com/javers/javers/issues/753)
+  Fixed `MANAGED_CLASS_MAPPING_ERROR` after refactoring Entity type to Value type.
+
+* [769](https://github.com/javers/javers/issues/769) Fixed NPE in `CustomBigDecimalComparator`.
+
+* [782](https://github.com/javers/javers/issues/782) Fixes NPE after upgrading Javers to 5.1.
+  NPE was thrown when committing entities created prior to 5.1.
+   
 ### 5.1.3 
 released on 2019-01-25
 
