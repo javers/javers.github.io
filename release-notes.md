@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 5.2.2 
+released on 2019-02-23
+
+* [789](https://github.com/javers/javers/issues/789) Fixed "error calling Constructor for CustomType"
+  when CustomPropertyComparator is registered for Value's parent class.
+
 ### 5.2.0 
 released on 2019-02-16
 
