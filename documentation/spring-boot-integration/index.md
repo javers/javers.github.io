@@ -47,9 +47,9 @@ for other build tool snippets.
 Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
 and configure JaVers in the same way as your application (typically by YAML property files).
 
-Here is an `application.yml` file example
+Here is an example `application.yml` file
 with the full list of JaVers properties and their default values.
-If these defaults are OK for you, don’t need to add anything to your application configuration.
+If these defaults are OK for you, don’t need to add anything to your configuration.
 
 ```
 javers:
@@ -70,6 +70,21 @@ javers:
     localDate: "dd MMM yyyy"
     localTime: "HH:mm:ss"  
 ```  
+
+Additional properties available in SQL starter:
+
+```
+javers:
+  sqlSchema:
+  sqlSchemaManagementEnabled: true
+```   
+
+Additional properties available in MongoDB starter:
+
+```
+javers:
+  documentDbCompatibilityEnabled: false
+```   
 
 Each property in the Spring `application.yml` file has the corresponding `with*()` method in the
 [JaversBuilder]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html).

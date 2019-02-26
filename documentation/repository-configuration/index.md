@@ -26,8 +26,15 @@ but for production environment you need something real.
 <h2 id="choose-javers-repository">Choose JaversRepository</h2>
 
 First, choose proper JaversRepository implementation.
-Currently, JaVers supports the following databases: **MongoDB**, **H2**, **PostgreSQL**, **MySQL**,
+Currently, JaVers supports the following databases: **MongoDB**, **H2**, **PostgreSQL**, **MySQL**, **MariaDB**,
 **Oracle** and **Microsoft SQL Server**. 
+
+In JaVers 5.2.4, we have added experimental support for **Amazon DocumentDB** which claims to be
+almost fully compatible with MongoDB.
+
+**Hint.** If you are using Spring Boot, just add one of our
+[Spring Boot starters for Spring Data](/documentation/spring-boot-integration/)
+and let them automatically configure and boot a JaVers instance with proper JaversRepository implementation. 
 
 <h2 id="mongodb-configuration">MongoDB</h2>
 **Dependency**<br/>
@@ -49,17 +56,17 @@ just provide a working Mongo client.
 
 ```java
 import org.javers.repository.mongo.MongoRepository;
-import com.mongodb.MongoClient
-import com.mongodb.client.MongoDatabase
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
-... //
+... 
 
-//preferably, use the same database connection
-//as you are using for your primary database
+//by default, use the same database connection
+//which you are using for your primary database
 MongoDatabase mongoDb = new MongoClient( "localhost" ).getDatabase("test");
 
-MongoRepository mongoRepo = new MongoRepository(mongoDb);
-Javers javers = JaversBuilder.javers().registerJaversRepository(mongoRepo).build();
+MongoRepository mongoRepository = new MongoRepository(mongoDb);
+Javers javers = JaversBuilder.javers().registerJaversRepository(mongoRepository).build();
 ```
 
 Here’s the [Spring Config example](/documentation/spring-integration/#auto-audit-example) for MongoRepository.
@@ -70,7 +77,15 @@ JaVers creates two collections in MongoDB:
 * `jv_head_id` — one document with the last CommitId,
 * `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
 
-JaVers uses MongoDB Java Driver v 3.0 so which is compatible with MongoDB versions: 2.4, 2.6 and 3.0. 
+<h3 id="documentdb-configuration">Amazon DocumentDB</h3>
+
+Configuration is the same as for MongoDB, but you should use this factory method
+to create a repository instance:
+
+```java
+MongoRepository documentDBrepository =
+        MongoRepository.mongoRepositoryWithDocumentDBCompatibility(mongoDb);
+```
 
 <h2 id="sql-databases">SQL databases</h2>
 **Dependency**<br/>
@@ -85,11 +100,10 @@ for other build tools snippets.
 
 <h3>Overview</h3>
 
-JaVers is meant to be as lightweight and versatile as possible.
-That’s why we use [PolyJDBC](http://polyjdbc.org/), which
-is an abstraction layer over various SQL dialects.
+JaVers uses it’s own, lightweight abstraction layer over various SQL dialects.
 
-PolyJDBC supports the following databases: **H2**, **PostgreSQL**, **MySQL** **Oracle** and **Microsoft SQL Server**.
+The following SQL database types are supported:
+**H2**, **PostgreSQL**, **MySQL**/**MariaDB**, **Oracle** and **Microsoft SQL Server**.
 
 For testing, you can setup `JaversSqlRepository` as follows:
 
@@ -120,13 +134,15 @@ Javers javers = JaversBuilder.javers().registerJaversRepository(sqlRepository).b
 To setup JaversSqlRepository you need to provide three things: an SQL dialect name,
 a `ConnectionProvider` implementation and a JDBC driver on your classpath.
 
-In the following table, there is a summary of all supported SQL databases,
-dialect names and JDBC driver versions.
+In the following table, there is a summary of all supported SQL databases with corresponding
+dialect names.
+ 
+You should provide a proper JDBC driver version on your classpath, which works bests for you
+(these versions are only a suggestion, we use them in JaVers integration tests)
+.
+Probably it would be the same version which you already use for your application’s database.
 
-These versions are only a suggestion, we use them in JaVers integration tests. 
-You should provide a proper JDBC driver version on your classpath, which works bests for you.
-Probably it would be the same version
-which you already use for your main database. 
+**Open source databases**
 
 <div style="overflow:auto;">
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
@@ -138,30 +154,37 @@ which you already use for your main database.
 <tr>
     <td>PostgreSQL</td>
     <td>POSTGRES</td>
-    <td><a href="https://search.maven.org/#artifactdetails|org.postgresql|postgresql|9.4-1201-jdbc41|jar">
-        org.postgresql:postgresql:9.4-1201-jdbc41</a></td>
+    <td><a href="https://search.maven.org/artifact/org.postgresql/postgresql/42.2.5/jar">
+        org.postgresql:postgresql:42.2.5</a></td>
 </tr>
 <tr>
-    <td>MySQL</td>
+    <td>MariaDB</td>
     <td>MYSQL</td>
-    <td><a href="https://search.maven.org/#artifactdetails|mysql|mysql-connector-java|5.1.36|jar">
-        mysql:mysql-connector-java:5.1.36</a></td>
+    <td><a href="https://search.maven.org/artifact/org.mariadb.jdbc/mariadb-java-client/2.2.3/jar">
+        org.mariadb.jdbc:mariadb-java-client:2.2.3</a></td>
 </tr>
 <tr>
     <td>H2</td>
     <td>H2</td>
-    <td><a href="https://search.maven.org/#artifactdetails|com.h2database|h2|1.4.187|jar">
+    <td><a href="https://search.maven.org/artifact/com.h2database/h2/1.4.197/jar">
         com.h2database:h2:1.4.187</a></td>
 </tr>
 <tr>
     <td>Oracle</td>
     <td>ORACLE</td>
-    <td>ojdbc6.jar, xdb6.jar</td>
+    <td>commercial</td>
+</tr>
+<tr>
+    <td>MySQL</td>
+    <td>MYSQL</td>
+    <td><a href="https://search.maven.org/artifact/mysql/mysql-connector-java/8.0.15/jar">
+            mysql:mysql-connector-java:8.0.15</a></td>
+    <td></td>
 </tr>
 <tr>
     <td>Microsoft SQL Server</td>
     <td>MSSQL</td>
-    <td>sqljdbc4.jar</td>
+    <td>commercial</td>
 </tr>
 </table>
 </div>

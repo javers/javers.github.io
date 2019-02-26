@@ -5,6 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.2.4 
+released on 2019-02-26
+
+* [788](https://github.com/javers/javers/issues/788) 
+  Added experimental support for [Amazon DocumentDB](https://aws.amazon.com/documentdb/), 
+  a document database compatible with MongoDB.   
+  If you are using our [MongoDB Starter](/documentation/spring-boot-integration/), enable 
+  DocumentDB flavour in your `application.yml`:
+  
+```yml
+javers:
+  documentDbCompatibilityEnabled: true
+``` 
 
 ### 5.2.2 
 released on 2019-02-23
