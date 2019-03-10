@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.2.5 
+released on 2019-03-10
+
+* [795](https://github.com/javers/javers/issues/795)
+  Fixed issue when comparing Sets with nested Value Objects.
+
 ### 5.2.4 
 released on 2019-02-26
 
