@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.2.6 
+released on 2019-03-12
+
+* [801](https://github.com/javers/javers/issues/801),
+  [796](https://github.com/javers/javers/issues/796)
+  Fixed issues when querying for `anyDomainObject` on Oracle and MS SQL. 
+  
 ### 5.2.5 
 released on 2019-03-10
 
