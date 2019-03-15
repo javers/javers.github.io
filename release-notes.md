@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.3.0 
+released on 2019-03-16
+
+* [528](https://github.com/javers/javers/issues/528)
+ Added support for `@ShallowReference` on Collections and Maps.
+
 ### 5.2.6 
 released on 2019-03-12
 
