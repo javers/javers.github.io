@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 5.3.1
+released on 2019-03-16
+
+* [799](https://github.com/javers/javers/issues/799)
+ Fixed NPE when passing nulls to `javers.compare()`.
+
 ### 5.3.0 
 released on 2019-03-16
 
