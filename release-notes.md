@@ -5,7 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.3.2
+released on 2019-03-20
 
+* [810](https://github.com/javers/javers/issues/810)
+ Fixed issue when comparing Sets with nested Value Objects with `@DiffIgnore`.
+
+* [806](https://github.com/javers/javers/issues/806)
+ Fixed bug in schema management on MS SQL Server.
+ 
 ### 5.3.1
 released on 2019-03-16
 
