@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.3.3
+released on 2019-03-26
+
+* [798](https://github.com/javers/javers/issues/798)
+ Fixed error when inferring Javers type of an Id-property as Value.
+ 
 ### 5.3.2
 released on 2019-03-20
 
