@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.3.4
+released on 2019-03-29
+
+* [815](https://github.com/javers/javers/issues/815)
+ Fixed `UnsupportedOperationException` thrown by `Sets.xor()` function.
+
 ### 5.3.3
 released on 2019-03-26
 
