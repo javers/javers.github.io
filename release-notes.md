@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.3.5
+released on 2019-04-08
+
+* [821](https://github.com/javers/javers/issues/821)
+ Added basic support for mapping Entity Id-property as ValueObject.
+ 
 ### 5.3.4
 released on 2019-03-29
 
