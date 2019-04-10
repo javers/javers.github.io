@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.3.6
+released on 2019-04-10
+
+* [820](https://github.com/javers/javers/issues/820)
+ Fixed NPE in Levenshtein distance diff algorithm.
+ 
 ### 5.3.5
 released on 2019-04-08
 
