@@ -5,6 +5,49 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 5.4.0
+released on 2019-05-11
+
+* [625](https://github.com/javers/javers/issues/625)
+ Composite-Id is now available in JaVers. Multiple properties can be mapped with `@Id`,
+ and the `localId` is constructed as a Map.
+ 
+```groovy
+    class Person {
+        @Id String name
+        @Id String surname
+        @Id LocalDate dob
+        int data
+    }
+
+    def "should support Composite Id assembled from Values"(){
+        given:
+        def first  = new Person(name: "mad", surname: "kaz", dob: LocalDate.of(2019,01,01), data: 1)
+        def second = new Person(name: "mad", surname: "kaz", dob: LocalDate.of(2019,01,01), data: 2)
+
+        when:
+        javers.commit("author", first)
+        javers.commit("author", second)
+        def snapshot = javers.getLatestSnapshot(
+                [
+                    name: "mad",
+                    surname: "kaz",
+                    dob: LocalDate.of(2019,01,01)
+                ],
+                Person).get()
+
+        then:
+        snapshot.globalId.value().endsWith("Person/2019,1,1,mad,kaz")
+        snapshot.globalId.cdoId == "2019,1,1,mad,kaz"
+        snapshot.getPropertyValue("name") == "mad"
+        snapshot.getPropertyValue("surname") == "kaz"
+        snapshot.getPropertyValue("dob") == LocalDate.of(2019,01,01)
+        snapshot.getPropertyValue("data") == 2
+        snapshot.changed == ["data"]
+    }
+```
+ 
 ### 5.3.6
 released on 2019-04-10
 
