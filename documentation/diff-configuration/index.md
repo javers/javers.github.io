@@ -145,7 +145,7 @@ public interface CustomPropertyComparator<T, C extends PropertyChange> {
     /**
      * Called by JaVers to calculate property-to-property diff.
      */
-    Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
+    Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
 
     /**
      * Called by JaVers to calculate collection-to-collection diff.

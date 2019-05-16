@@ -648,15 +648,17 @@ Our comparator is called `FunnyStringComparator`, and it compares Strings as cha
 The logic is simple. When two Strings are built from the same set of characters &mdash; we don’t see a difference.
 Otherwise, we log each added or removed character.
 
-This full example is in [CustomPropertyComparatorExample.groovy](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/CustomPropertyComparatorExample.groovy)
-coded as s Spock test. Here we show the most essential parts.
+Check the full example implemented in
+[CustomPropertyComparatorExample.groovy](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/CustomPropertyComparatorExample.groovy)
+as a Spock test.
+Here we show the most essential part.
 
 First, the comparator implementation:
 
 ```groovy
 class FunnyStringComparator implements CustomPropertyComparator<String, SetChange> {
     @Override
-    Optional<SetChange> compare(String left, String right, GlobalId affectedId, Property property) {
+    Optional<SetChange> compare(String left, String right, PropertyChangeMetadata metadata, Property property) {
         if (equals(left, right)) {
             return Optional.empty()
         }
@@ -668,7 +670,7 @@ class FunnyStringComparator implements CustomPropertyComparator<String, SetChang
         Sets.difference(leftSet, rightSet).forEach{c -> changes.add(new ValueRemoved(c))}
         Sets.difference(rightSet, leftSet).forEach{c -> changes.add(new ValueAdded(c))}
 
-        return Optional.of(new SetChange(affectedId, property.getName(), changes))
+        return Optional.of(new SetChange(metadata, property.getName(), changes))
     }
 
     @Override
