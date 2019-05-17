@@ -5,6 +5,108 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.5.0-RC1
+released on 2019-05-11
+* [830](https://github.com/javers/javers/pull/830) & [834](https://github.com/javers/javers/pull/834)
+  Important new feature in [PropertyChange](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/PropertyChange.java).
+  It gained the new enum, which allows to distinguish between ordinary `null` values
+  and the case when a property is added/removed after refactoring:
+  
+```java
+/**
+ * When two objects being compared have different classes,
+ * they can have different sets of properties.
+ * <br/>
+ * When both objects have the same class, all changes have PROPERTY_VALUE_CHANGED type.
+ */
+public enum PropertyChangeType {
+
+    /**
+     * When a property of the right object is absent in the left object.
+     */
+    PROPERTY_ADDED,
+
+    /**
+     * When a property of the left object is absent in the right object.
+     */
+    PROPERTY_REMOVED,
+
+    /**
+     * Regular value change &mdash; when a property is present in both objects.
+     */
+    PROPERTY_VALUE_CHANGED
+}
+
+```  
+
+The new enum can be checked using these four new methods in `PropertyChange`:
+```java
+public abstract class PropertyChange extends Change {
+    ...
+    
+    public PropertyChangeType getChangeType() {
+        return changeType;
+    }
+
+    public boolean isPropertyAdded() {
+        return changeType == PropertyChangeType.PROPERTY_ADDED;
+    }
+
+    public boolean isPropertyRemoved() {
+        return changeType == PropertyChangeType.PROPERTY_REMOVED;
+    }
+
+    public boolean isPropertyValueChanged() {
+        return changeType == PropertyChangeType.PROPERTY_VALUE_CHANGED;
+    }
+}
+```
+
+* **Breaking changes** in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
+  and constructors of all `PropertyChange` subclasses.
+
+  `CustomPropertyComparator` interface is changed from:
+  
+    ```java 
+    public interface CustomPropertyComparator<T, C extends PropertyChange> {
+  
+        Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
+              
+        ...
+    }
+    ```
+    
+  to: 
+  
+  ```java 
+  public interface CustomPropertyComparator<T, C extends PropertyChange> {
+
+      Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
+      
+      ...
+  }
+  ```
+  
+  `PropertyChange` objects produced by comparators, now accept `PropertyChangeMetadata` in constructors,
+  for example:
+  
+  ```java
+  public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange> {
+    ...
+
+    @Override
+    public Optional<ValueChange> compare(BigDecimal left, BigDecimal right, PropertyChangeMetadata metadata, Property property)
+    {
+        if (equals(left, right)){
+            return Optional.empty();
+        }
+
+        return Optional.of(new ValueChange(metadata, left, right));
+    }
+
+    ...
+  }
+  ```
 
 ### 5.4.0
 released on 2019-05-11

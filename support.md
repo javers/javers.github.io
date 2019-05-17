@@ -24,7 +24,7 @@ If you like JaVers, give us a [star](https://github.com/javers/javers).
 
 ## Licence
 JaVers is available under open source
-[Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0").
+[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Suport us &mdash; donate!
 
