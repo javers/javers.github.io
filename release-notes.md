@@ -65,48 +65,48 @@ public abstract class PropertyChange extends Change {
 * **Breaking changes** in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
   and constructors of all `PropertyChange` subclasses.
 
-  `CustomPropertyComparator` interface is changed from:
+`CustomPropertyComparator` interface is changed from:
   
-    ```java 
-    public interface CustomPropertyComparator<T, C extends PropertyChange> {
-  
-        Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
-              
-        ...
-    }
-    ```
+```java 
+public interface CustomPropertyComparator<T, C extends PropertyChange> {
+
+    Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
+          
+    ...
+}
+```
     
-  to: 
+to: 
   
-  ```java 
-  public interface CustomPropertyComparator<T, C extends PropertyChange> {
+```java 
+public interface CustomPropertyComparator<T, C extends PropertyChange> {
 
-      Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
-      
-      ...
-  }
-  ```
+  Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
   
-  `PropertyChange` objects produced by comparators, now accept `PropertyChangeMetadata` in constructors,
-  for example:
+  ...
+}
+```
   
-  ```java
-  public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange> {
-    ...
+`PropertyChange` objects produced by comparators, now accept `PropertyChangeMetadata` in constructors,
+for example:
+  
+```java
+public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange> {
+...
 
-    @Override
-    public Optional<ValueChange> compare(BigDecimal left, BigDecimal right, PropertyChangeMetadata metadata, Property property)
-    {
-        if (equals(left, right)){
-            return Optional.empty();
-        }
-
-        return Optional.of(new ValueChange(metadata, left, right));
+@Override
+public Optional<ValueChange> compare(BigDecimal left, BigDecimal right, PropertyChangeMetadata metadata, Property property)
+{
+    if (equals(left, right)){
+        return Optional.empty();
     }
 
-    ...
-  }
-  ```
+    return Optional.of(new ValueChange(metadata, left, right));
+}
+
+...
+}
+```
 
 ### 5.4.0
 released on 2019-05-11

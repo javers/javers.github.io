@@ -680,7 +680,7 @@ class FunnyStringComparator implements CustomPropertyComparator<String, SetChang
 }
 ```
 
-In all tests, we compare two objects
+In all tests, we compare two `Entity` objects
 which have a `String` property and also a `List<String>` property:
 
 ```groovy
