@@ -5,8 +5,8 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 5.5.0-RC1
-released on 2019-05-11
+### 5.5.0
+released on 2019-05-18
 
 * <span style="color:red"><b>Breaking changes</b></span> in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
   and constructors of all `PropertyChange` subclasses. `CustomPropertyComparator` interface is changed from:
