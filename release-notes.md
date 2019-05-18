@@ -7,6 +7,51 @@ submenu: release-notes
 
 ### 5.5.0-RC1
 released on 2019-05-11
+
+* <span style="color:red"><b>Breaking changes</b></span> in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
+  and constructors of all `PropertyChange` subclasses. `CustomPropertyComparator` interface is changed from:
+  
+  ```java 
+  public interface CustomPropertyComparator<T, C extends PropertyChange> {
+  
+      Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
+            
+      ...
+  }
+  ```
+    
+  to: 
+  
+  ```java 
+  public interface CustomPropertyComparator<T, C extends PropertyChange> {
+    
+      Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
+      
+      ...
+  }
+  ```
+  
+  `PropertyChange` objects that are produced by comparators now accept `PropertyChangeMetadata` in constructors,
+  for example:
+  
+  ```java
+  public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange> {
+  ...
+
+  @Override
+  public Optional<ValueChange> compare(BigDecimal left, BigDecimal right, PropertyChangeMetadata metadata, Property property)
+  {
+      if (equals(left, right)){
+          return Optional.empty();
+      }
+ 
+      return Optional.of(new ValueChange(metadata, left, right));
+  }
+
+  ...
+  }
+  ```
+  
 * [830](https://github.com/javers/javers/pull/830) & [834](https://github.com/javers/javers/pull/834)
   Important new feature in [PropertyChange](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/changetype/PropertyChange.java).
   It gained the new enum, which allows to distinguish between ordinary `null` values
@@ -59,50 +104,6 @@ released on 2019-05-11
       public boolean isPropertyValueChanged() {
           return changeType == PropertyChangeType.PROPERTY_VALUE_CHANGED;
       }
-  }
-  ```
-
-* <span style="color:red"><b>Breaking changes</b></span> in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
-  and constructors of all `PropertyChange` subclasses. `CustomPropertyComparator` interface is changed from:
-  
-  ```java 
-  public interface CustomPropertyComparator<T, C extends PropertyChange> {
-  
-      Optional<C> compare(T left, T right, GlobalId affectedId, Property property);
-            
-      ...
-  }
-  ```
-    
-  to: 
-  
-  ```java 
-  public interface CustomPropertyComparator<T, C extends PropertyChange> {
-    
-      Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
-      
-      ...
-  }
-  ```
-  
-  `PropertyChange` objects that are produced by comparators now accept `PropertyChangeMetadata` in constructors,
-  for example:
-  
-  ```java
-  public class CustomBigDecimalComparator implements CustomPropertyComparator<BigDecimal, ValueChange> {
-  ...
-
-  @Override
-  public Optional<ValueChange> compare(BigDecimal left, BigDecimal right, PropertyChangeMetadata metadata, Property property)
-  {
-      if (equals(left, right)){
-          return Optional.empty();
-      }
- 
-      return Optional.of(new ValueChange(metadata, left, right));
-  }
-
-  ...
   }
   ```
 
