@@ -62,7 +62,7 @@ released on 2019-05-11
   }
   ```
 
-* <font color="red"><b>Breaking changes</b></font> in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
+* <span style="color:red"><b>Breaking changes</b></span> in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
   and constructors of all `PropertyChange` subclasses. `CustomPropertyComparator` interface is changed from:
   
   ```java 
