@@ -107,6 +107,9 @@ released on 2019-05-11
   }
   ```
 
+* [837](https://github.com/javers/javers/pull/837)
+ Fixed bug in SQL `JaversRepository` for Oracle and MS SQL databases.
+
 ### 5.4.0
 released on 2019-05-11
 
