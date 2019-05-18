@@ -62,7 +62,7 @@ released on 2019-05-11
   }
   ```
 
-* **Breaking changes** in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
+* <font color="red"><b>Breaking changes</b></font> in [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators)
   and constructors of all `PropertyChange` subclasses. `CustomPropertyComparator` interface is changed from:
   
   ```java 
@@ -85,7 +85,7 @@ released on 2019-05-11
   }
   ```
   
-  `PropertyChange` objects produced by comparators, now accept `PropertyChangeMetadata` in constructors,
+  `PropertyChange` objects that are produced by comparators now accept `PropertyChangeMetadata` in constructors,
   for example:
   
   ```java
