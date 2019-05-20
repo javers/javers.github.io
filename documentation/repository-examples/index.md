@@ -45,7 +45,7 @@ It’s enough to annotate the login field with `@Id` annotation.
 Person is a typical [Entity](/documentation/domain-configuration/#entity)
 (see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for 
 more details about JaVers’ type system).
-JaVers uses [GlobalId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html)
+[`GlobalId`]({{ site.github_core_main_url }}org/javers/core/metamodel/object/GlobalId.java)
 for identifying and querying Entities.
 In this case, it’s expressed as `instanceId("bob", Person.class)`.
 
@@ -265,7 +265,7 @@ Commit 1.0 done by author at 15 Apr 2018, 22:50:15 :
 see `prettyPrintDateFormats` in [JaVers configuration](/documentation/spring-boot-integration/#javers-configuration-properties).    
       
 ### ChangeProcessor    
-[ChangeProcessor]({{ site.javadoc_url }}index.html?org/javers/core/changelog/ChangeProcessor.html) 
+[`ChangeProcessor`]({{ site.github_core_main_url }}org/javers/core/changelog/ChangeProcessor.java) 
 is the general-purpose method for processing a Change list.
 It’s the callback-based approach.
 JaVers processes a list of Changes and fires callbacks provided by you when particular events occur.
@@ -374,7 +374,8 @@ used as Id in domain Entity &mdash; `MongoStoredEntity`.
 **Configuration** <br/>
 First we need to implement the `JsonTypeAdapter` interface.
 In this case, we recommend extending the
-[`BasicStringTypeAdapter`]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html) abstract class.
+[`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java) 
+abstract class.
 
 <tt>ObjectIdTypeAdapter.class :</tt>
 

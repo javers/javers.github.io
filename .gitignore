@@ -3,3 +3,6 @@
 *.iml
 _site
 Gemfile.lock
+vendor
+.bundle
+.jekyll-metadata
