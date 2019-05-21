@@ -50,7 +50,7 @@ more details about JaVers’ type system.
 Notice that both objects have the same Id value &mdash; `'Frodo'`.
 That’s why they are matched and compared.
 JaVers matches only objects with the same
-[GlobalId]({{ site.javadoc_url }}index.html?org/javers/core/metamodel/object/GlobalId.html).
+[`GlobalId`]({{ site.github_core_main_url }}org/javers/core/metamodel/object/GlobalId.java).
 In this case, the GlobalId value is: `'Employee/Frodo'`.
 Without the `@TypeName` annotation, it would be `'org.javers.core.examples.model.Employee/frodo'`.
 <a name="Employee_java"/>
@@ -131,27 +131,27 @@ public void shouldCompareTwoEntities() {
 }
 ```
 
-The resulting [Diff]({{ site.javadoc_url }}index.html?org/javers/core/diff/Diff.html)
-is a container for the list of Changes.
+The resulting [`Diff`]({{ site.github_core_main_url }}org/javers/core/diff/Diff.java)
+is a container for the list of [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
 
 There are three main types of Changes:
 
-* [NewObject]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/NewObject.html)
-  &mdash; when an object is present only in the right graph,
-* [ObjectRemoved]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ObjectRemoved.html)
-  &mdash; when an object is present only in the left graph,
-* [PropertyChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/PropertyChange.html)
-  &mdash; most common &mdash; a changed property (field or getter).
+* [NewObject]({{ site.github_core_main_url }}org/javers/core/diff/changetype/NewObject.java) &mdash;
+  when an object is present only in the right graph,
+* [ObjectRemoved]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ObjectRemoved.java) &mdash;
+  when an object is present only in the left graph,
+* [PropertyChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/PropertyChange.java) &mdash;
+  most common &mdash; a changed property (field or getter).
 
 PropertyChange has the following subtypes:
 
-* [ContainerChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/container/ContainerChange.html)
+* [ContainerChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ContainerChange.java)
   &mdash; list of changed items in Set, List or Array,
-* [MapChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/map/MapChange.html)
+* [MapChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/map/MapChange.java)
   &mdash; list of changed Map entries,
-* [ReferenceChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ReferenceChange.html)
+* [ReferenceChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java)
   &mdash; changed Entity reference,
-* [ValueChange]({{ site.javadoc_url }}index.html?org/javers/core/diff/changetype/ValueChange.html)
+* [ValueChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java)
   &mdash; changed Primitive or Value.
     
 **You can print** the list of Changes using pretty `toString()`:
