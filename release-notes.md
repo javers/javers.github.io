@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.5.1
+released on 2019-05-18
+
+* [839](https://github.com/javers/javers/pull/839)  Fixed NPE in `OptionalType.items()`.
+
 ### 5.5.0
 released on 2019-05-18
 
