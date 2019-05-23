@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.5.2
+released on 2019-05-23
+
+* [842](https://github.com/javers/javers/issues/842) 
+  Fixed bug in query with CommitId on Oracle.
+
 ### 5.5.1
 released on 2019-05-18
 
