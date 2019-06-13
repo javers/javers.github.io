@@ -4,6 +4,19 @@ title: Release notes
 category: Documentation
 submenu: release-notes
 ---
+### 5.6.0
+released on 2019-06-13
+
+* [694](https://github.com/javers/javers/issues/694) 
+  Added possibility in JaVers MongoDB starter
+  to configure a dedicated Mongo database, which is used by Javers.
+  See [JaversRepository configuration](/documentation/spring-boot-integration/#starter-repository-configuration).
+  
+* [775](https://github.com/javers/javers/issues/775)
+  Fixed issue: Spring Boot stops when SQL Schema Manager can't establish the connection.
+  
+* [851](https://github.com/javers/javers/issues/851)
+  Fixed exception: java.lang.ClassCastException: class org.javers.core.metamodel.property.MissingProperty cannot be cast to class java.util.List.
 
 ### 5.5.2
 released on 2019-05-23

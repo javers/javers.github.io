@@ -42,14 +42,14 @@ compile 'org.springframework.boot:spring-boot-starter-data-jpa:' + $SPRING_BOOT_
 Check [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
 for other build tool snippets.
 
-<h2 id="javers-configuration-properties">JaVers Core configuration</h2>
+<h2 id="javers-configuration-properties">JaVers configuration</h2>
 
 Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
 and configure JaVers in the same way as your application (typically by YAML property files).
 
 Here is an example `application.yml` file
-with the full list of JaVers properties and their default values.
-If these defaults are OK for you, don’t need to add anything to your configuration.
+with the full list of JaVers core properties and their default values.
+You don’t need to add anything to your configuration, if these defaults are OK for you.
 
 ```
 javers:
@@ -119,9 +119,56 @@ for more details.
 
 <h2 id="starter-repository-configuration">JaversRepository configuration</h2>
 JaVers starters rely on Spring Data starters.
-Proper JaversRepository implementation is created and configured to reuse an application’s database configuration
-  (managed by Spring Data starters).
+Proper JaversRepository implementation is created and configured to reuse an application’s
+database (managed by Spring Data starters).
   
+<h3 id="dedicated-mongo-database">Dedicated Mongo database for JaVers</h3>  
+  
+Optionally, you can use dedicated Mongo database for JaVers data,
+configure Javers as shown below:
+
+```yaml
+javers:
+  mongodb:
+    host: localhost
+    port: 27017
+    database: javers-audit
+    authentication-database: admin
+    username: javers
+    password: password
+```
+
+or:
+
+```yaml
+javers:
+  mongodb:
+    uri: mongodb://javers:password@localhost:27017/javers-audit&authSource=admin
+```
+
+If `javers.mongodb` property is defined, either `host` or `uri` has to set.
+If so, an application’s data and JaVers data are stored in different databases.
+  
+#### MongoClientOptions
+If you need more control over Javers’ dedicated `MongoClient`,
+you can configure a `MongoClientOptions` bean named `javersMongoClientOptions`.
+If there is no such bean, default client options are used. 
+  
+For example, if you want to enable SSL and set socket timeout value,
+define this bean:
+  
+```java
+@Bean("javersMongoClientOptions")
+public MongoClientOptions clientOptions() {
+  return MongoClientOptions.builder()
+  .sslEnabled(true)
+  .socketTimeout(1500)
+  .build();
+}
+```  
+Remember, the `javersMongoClientOptions` bean is used only when JaVers connects to dedicated Mongo
+database defined in `javers.mongodb` property.
+ 
 <h2 id="starter-boot">Boot it!</h2>
 
 Once you’ve added the JaVers starter to the classpath, you can use all JaVers features.
