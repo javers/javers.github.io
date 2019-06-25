@@ -7,7 +7,7 @@ sidebar-url: docs-sidebar.html
 ---
 
 <h2 id="what-is-javers">What is JaVers</h2>
-JaVers is a lightweight java library for **auditing** changes in your data.
+JaVers is a lightweight, fully open-source Java library for **auditing** changes in your data.
 
 We all use Version Control Systems for source code,
 so why not use a specialized framework to provide an audit trail of your Java objects (entities, POJO, data objects)?
