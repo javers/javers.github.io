@@ -4,6 +4,13 @@ title: Release notes
 category: Documentation
 submenu: release-notes
 ---
+
+### 5.6.1
+released on 2019-07-01
+
+* [855](https://github.com/javers/javers/issues/855) 
+  Fixed bug in `RANDOM` `CommitIdGenerator`.
+  
 ### 5.6.0
 released on 2019-06-13
 
