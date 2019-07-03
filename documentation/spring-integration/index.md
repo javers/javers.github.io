@@ -50,9 +50,10 @@ The JaVers auto-audit aspects are based on Spring AOP and frees you
 from calling `javers` methods in your data-changing Repositories.
 
 If you’re using Spring Data, annotate your CRUD Repositories with
-[`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable).
+[`@JaversSpringDataAuditable`]({{ site.github_spring_main_url }}org/javers/spring/annotation/JaversSpringDataAuditable.java).
 For ordinary Repositories,
-use [`@JaversAuditable`](#at-javers-auditable) to mark all data-changing methods.
+use [`@JaversAuditable`]({{ site.github_spring_main_url }}org/javers/spring/annotation/JaversAuditable.java)
+ to mark all data-changing methods.
 
 JaVers can audit your data changes automatically — AWESOME!
 
