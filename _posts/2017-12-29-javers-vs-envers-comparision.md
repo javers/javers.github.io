@@ -167,7 +167,7 @@ def "should init and persist organization structure"(){
 You can run it from command line:
 
 ```
-./gradlew test -Dtest.single=InitHierarchyTest
+./gradlew test --tests InitHierarchyTest
 ```
 
 Now you should have the `Employee` table populated with initial data. 

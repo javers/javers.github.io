@@ -17,7 +17,7 @@ cd javers
 Run examples as unit tests:
 
 ```text
-./gradlew javers-core:test -Dtest.single=BasicEntityDiffExample
+./gradlew javers-core:test --tests BasicEntityDiffExample
 ```
 
 <h2 id="compare-entities">Compare two Entity objects</h2>

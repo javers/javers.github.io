@@ -17,7 +17,7 @@ cd javers
 Run examples as unit tests:
 
 ```
-./gradlew javers-core:test -Dtest.single=JqlExample
+./gradlew javers-core:test --tests JqlExample
 ```
 
 <h2 id="query-overview">Overview</h2>

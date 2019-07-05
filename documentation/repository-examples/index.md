@@ -17,7 +17,7 @@ cd javers
 Run examples as unit tests:
 
 ```
-./gradlew javers-core:test -Dtest.single=BasicCommitAndQueryExample
+./gradlew javers-core:test --tests BasicCommitAndQueryExample
 ```
 
 <h2 id="commit-changes">Commit and query</h2>
