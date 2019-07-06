@@ -5,12 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 5.6.1
-released on 2019-07-01
+### 5.6.2
+released on 2019-07-06
 
 * [826](https://github.com/javers/javers/issues/826) 
-  Fixed bug in SQL `JaversRepository` when DB schema name was configured.
-  The bug was causing `Error on PostgreSQL: relation "jv_commit" already exists`.
+  Fixed bug in SQL JaversRepository when DB schema name was configured.
+  The bug was causing: `Error on PostgreSQL: relation "jv_commit" already exists`.
 
 ### 5.6.1
 released on 2019-07-01
