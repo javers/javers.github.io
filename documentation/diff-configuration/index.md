@@ -170,7 +170,7 @@ overriding the standard `Object.equals(Object)` method.
 If you don’t control the source code of a given Value class,
 you can still change its comparing strategy by registering a custom comparator.
 
-A [`CustomValueComparator`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomValueComparator.java)
+A [`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
 implements the single `boolean equals(a, b)` method:
 
 ```java
@@ -192,9 +192,10 @@ Given `equals()` method is used by JaVers to calculate both collection-to-collec
 and property-to-property diff.
 Note that for Value types, property-to-property diff is always a `ValueChange`.
 
-Unlike `CustomPropertyComparator`
+Unlike [`CustomPropertyComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomPropertyComparator.java)
 which offers great flexibility, 
-`CustomValueComparator` is just a way to provide other `equals()` implementation for given Value class. 
+[`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
+is just a way to provide other `equals()` implementation for given Value class. 
 
 
 

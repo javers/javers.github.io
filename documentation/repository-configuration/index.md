@@ -266,22 +266,23 @@ See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) 
 
 JaVers supports two families of TypeAdapters.
 
-1. **JaVers family**, specified by the [JsonTypeAdapter]({{ site.javadoc_url }}index.html?org/javers/core/json/JsonTypeAdapter.html) interface.
+1. **JaVers family**, specified by the
+   [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface.
    It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has a nice API and isolates you (to some extent) from low level Gson API.
-   * [BasicStringTypeAdapter]({{ site.javadoc_url }}index.html?org/javers/core/json/BasicStringTypeAdapter.html)
+   * [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
      is a convenient scaffolding implementation of the JsonTypeAdapter interface.
      Extend it if you want to represent your Value type as atomic String
      (and when you don’t want to deal with JSON API).
-   * Implement the `JsonTypeAdapter` interface
+   * Implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface
      if you need full control over the JSON conversion process.
-     Register your adapters with
-     [`JaversBuilder.registerValueTypeAdapter(JsonTypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueTypeAdapter-org.javers.core.json.JsonTypeAdapter-).
+     Register your adapters using
+     [`JaversBuilder.registerValueTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
     [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
      Register your adapters with
-     [`JaversBuilder.registerValueGsonTypeAdapter(Class, TypeAdapter)`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueGsonTypeAdapter-java.lang.Class-com.google.gson.TypeAdapter-).
+     [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
 JaVers provides JsonTypeAdapters for some well-known Values like
 `org.joda.time.LocalDate`.

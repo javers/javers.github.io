@@ -8,6 +8,13 @@ submenu: release-notes
 ### 5.6.1
 released on 2019-07-01
 
+* [826](https://github.com/javers/javers/issues/826) 
+  Fixed bug in SQL `JaversRepository` when DB schema name was configured.
+  The bug was causing `Error on PostgreSQL: relation "jv_commit" already exists`.
+
+### 5.6.1
+released on 2019-07-01
+
 * [855](https://github.com/javers/javers/issues/855) 
   Fixed bug in `RANDOM` `CommitIdGenerator`.
   
@@ -549,7 +556,7 @@ released on 2018-04-22
 released on 2018-04-19
 
 * [657](https://github.com/javers/javers/issues/657)
-  Fixed implementaton of `RANDOM` [CommitIdGenerator]({{ site.javadoc_url }}org/javers/core/CommitIdGenerator.html#RANDOM).
+  Fixed implementaton of `RANDOM` [`CommitIdGenerator`]({{ site.github_core_main_url }}org/javers/core/CommitIdGenerator.java).
   You can use it in distributed applications:   
   
 ```java
@@ -562,7 +569,7 @@ released on 2018-04-11
 
 * New API for processing Changes, convenient for formatting a change log. 
 Now you can group changes by commits and by objects. 
-See [groupByCommit()]({{ site.javadoc_url }}org/javers/core/Changes.html#groupByCommit--).
+See [`Changes.groupByCommit()`]({{ site.github_core_main_url }}org/javers/core/Changes.java).
 For example:
 
 ```java
@@ -669,7 +676,7 @@ released on 2017-12-09
 * [614](https://github.com/javers/javers/issues/614) Custom `toString` function.
 [Ismael Gomes Costa](https://github.com/ismaelgomescosta)
 contributed the method for registering `toString` function for complex `ValueTypes` used as Entity Id.
-See [registerValueWithCustomToString]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#registerValueWithCustomToString-java.lang.Class-java.util.function.Function-) javadoc. 
+See javadoc for [`JaversBuilder.registerValueWithCustomToString()`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java). 
 
 ### 3.7.5
 released on 2017-12-01
@@ -679,7 +686,7 @@ each **Deep+** query.
 
 * Changes in Shadow Scopes. Now, JaVers always loads child ValueObjects owned by selected Entities.
 So there is no need to call `QueryBuilder.withChildValueObjects()`.
-See [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) javadoc
+See javadoc for [`ShadowScope`]({{ site.github_core_main_url }}org/javers/repository/jql/ShadowScope.java). 
 
 * Shadow queries execution statistics logger. Enable it: 
 
@@ -732,7 +739,7 @@ released on 2017-11-24
 released on 2017-11-13
 
 * Changes in Shadow Scopes. **Commit-deep+** is renamed to **Deep+**. 
-  See [ShadowScope]({{ site.javadoc_url }}index.html?org/javers/repository/jql/ShadowScope.html) javadoc.
+  See javadoc for [`ShadowScope`]({{ site.github_core_main_url }}org/javers/repository/jql/ShadowScope.java).
   Now, deep+ scope doesn't include commit-deep scope. They are independent scopes.
 
 * [597](https://github.com/javers/javers/issues/597)
@@ -741,8 +748,9 @@ released on 2017-11-13
 ### 3.6.2
 released on 2017-11-01
 
-* New [snapshotType]({{ site.javadoc_url }}org/javers/repository/jql/QueryBuilder.html#withSnapshotType-org.javers.core.metamodel.object.SnapshotType-)
-  filter in JQL. Allows selecting snapshots by type: `INITIAL`, `UPDATE`, `TERMINAL`.
+* New `SnapshotType` filter in JQL.
+  Allows selecting snapshots by type: `INITIAL`, `UPDATE`, `TERMINAL`. See
+  `QueryBuilder.withSnapshotType()`.
 
 * Improved exception handling in `byInstance` query.
 
@@ -844,7 +852,7 @@ released on 2017-06-25 <br/>
 released on 2017-06-21 at Devoxx PL, Cracow <br/>
 
 * Added possibility to register
- the [CustomValueComparator]({{ site.javadoc_url }}org/javers/core/diff/custom/CustomValueComparator.html)
+ a [`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
  function for comparing ValueTypes
  (it works also for Values stored in Lists, Arrays and Maps).
  Solved issues: [492](https://github.com/javers/javers/issues/492),
@@ -1066,7 +1074,7 @@ released on 2016-10-30 <br/>
 * [#411](https://github.com/javers/javers/issues/411)
  New commitId generator for distributed applications.
  Now you can use cluster-friendly `CommitIdGenerator#RANDOM`,
- see [`withCommitIdGenerator()`]({{ site.javadoc_url }}org/javers/core/JaversBuilder.html#withCommitIdGenerator-org.javers.core.CommitIdGenerator-)
+ see [`JaversBuilder.withCommitIdGenerator()`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java)
  
 * [#209](https://github.com/javers/javers/issues/209) 
  Added multi-class query &mdash; `QueryBuilder.byClass(Class... requiredClasses)`.
@@ -1375,14 +1383,12 @@ See [CommitId filter example](/documentation/jql-examples#commit-id-filter).
 released on 2016-01-20 <br/>
 
 * [#286](https://github.com/javers/javers/issues/286)
-  New properties in `ReferenceChange`:
-  [`getLeftObject()`]({{ site.javadoc_url }}org/javers/core/diff/changetype/ReferenceChange.html#getLeftObject--)
-  and
-  [`getRightObject()`]({{ site.javadoc_url }}org/javers/core/diff/changetype/ReferenceChange.html#getRightObject--).
+  New properties in [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java): 
+  `getLeftObject()` and `getRightObject()`.
 
 * [#294](https://github.com/javers/javers/pull/294)
   Added version number to Snapshot metadata:
-  [`CdoSnapshot.getVersion()`]({{ site.javadoc_url }}org/javers/core/metamodel/object/CdoSnapshot.html#getVersion--).
+  [`CdoSnapshot.getVersion()`]({{ site.github_core_main_url }}org/javers/core/metamodel/object/CdoSnapshot.java).
 
   <font color="red">Warning!</font>
   All snapshots persisted in JaversRepository before release  1.4.4 have version 0.
