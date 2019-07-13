@@ -33,6 +33,10 @@
                 <a href="/support">Support</a>
                 </li>
 
+                <li {% if page.url contains '/sponsorship' %}class='active'{% endif %}>
+                <a href="/sponsorship">Sponsorship</a>
+                </li>
+
                 <li class="dropdown {% if page.url contains '/documentation/' %}active{% endif %}">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button">Documentation <span class="caret"></span></a>
                     <ul class="dropdown-menu">

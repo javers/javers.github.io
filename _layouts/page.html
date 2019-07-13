@@ -10,8 +10,10 @@
     <div id="content" class="container">
         <div class="row">
             <div id="main"
-                 {% if page.category == 'Blog' %}class="col-md-8 col-md-offset-2"{% else %}class="col-md-8"{% endif %}
-                 itemscope itemtype="http://schema.org/TechArticle">
+                {% if page.category == "Blog" or page.category == "page_center" %}
+                   class="col-md-8 col-md-offset-2"{% else %}class="col-md-8"
+                {% endif %}
+                itemscope itemtype="http://schema.org/TechArticle">
 
                 {% if page.image  %}
                 <meta itemprop="image" content="{{ site.url }}{{ page.image }}">
