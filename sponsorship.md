@@ -12,6 +12,9 @@ the project is not sustainable without financial backing.
 You can support JaVers development via [Open Collective](https://opencollective.com/javers)
 &mdash; an online funding platform for open and transparent communities. 
 
+Open Collective platform is used for funding popular open source projects like
+[Vue](https://opencollective.com/vuejs) or [curl](https://opencollective.com/curl).
+
 ## One-time Donations
 
 Make a one-time donation. Your donation will be listed on the JaVers

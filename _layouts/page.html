@@ -46,6 +46,21 @@
                 </div>
                 {% endif %}
 
+                {% if page.url contains '/sponsorship' %}
+                {% else %}
+                    <div style="padding-top: 12px; color:red;">
+
+                        <div class="alert">
+                            JaVers needs funding to sustain. You can
+                            <a href="/sponsorship">sponsor</a>
+                            JaVers development easily
+                            via
+                            <a href="https://opencollective.com/javers">Open Collective</a>.
+                        </div>
+
+                    </div>
+                {% endif %}
+
                 <h1 itemprop="headline">{{ page.title }}</h1>
 
                 <div itemprop="articleBody">
