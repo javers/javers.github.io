@@ -14,7 +14,7 @@ You can support JaVers development via [Open Collective](https://opencollective.
 
 ## One-time Donations
 
-Make one-time donation. Your donation will be listed on the JaVers
+Make a one-time donation. Your donation will be listed on the JaVers
 [Open Collective](https://opencollective.com/javers) page.
 
 <br/>
@@ -37,5 +37,5 @@ and listed on the JaVers [Open Collective](https://opencollective.com/javers) pa
 
 <br/>
 
-Questions? Chat with us in [sposnors room](https://gitter.im/javers/sponsors)
+Questions? Chat with us in [sponsors room](https://gitter.im/javers/sponsors)
 or talk directly to [Bartosz Walacik](https://gitter.im/bartoszwalacik) (JaVers project lead).
