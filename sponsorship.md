@@ -37,4 +37,5 @@ and listed on the JaVers [Open Collective](https://opencollective.com/javers) pa
 
 <br/>
 
-Questions? Contacts us at [Gitter chat](https://gitter.im/javers/sponsors) for sponsors.
+Questions? Chat with us in [sposnors room](https://gitter.im/javers/sponsors)
+or talk directly to [Bartosz Walacik](https://gitter.im/bartoszwalacik) (JaVers project lead).
