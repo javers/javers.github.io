@@ -52,7 +52,9 @@ pre.highlight > code {
     border-width: 4px;
     border-color: #2874a6;
     color: #154360;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    margin-left:8px;
+    margin-right:8px;
     font-size: 1em;
     font-family: 'Ubuntu', sans-serif;
 }
