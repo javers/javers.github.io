@@ -4,10 +4,18 @@ title: Sponsor JaVers Development
 category: page_center
 ---
 
-JaVers is an Apache licensed open source project and it’s completely free to use.
+JaVers is an Apache-licensed open source project and it’s completely free to use.
+ 
+JaVers is gaining momentum, the number of downloads from The Central is growing.
+In June 2019, `javers-core` was downloaded 50,000 times.
+ 
+{% include fancy-image.html image="/img/javers-downloads-2019-07.png" alt="downloads from The Central chart" %}
 
 However, the amount of effort needed to maintain and develop new features for
-the project is not sustainable without financial backing.
+this project is also growing. 
+Maintainers burnout is a serious challenge in open source projects since we work for free.
+
+**Our work is not sustainable without financial backing.**
 
 You can support JaVers development via [Open Collective](https://opencollective.com/javers)
 &mdash; an online funding platform for open and transparent communities. 
@@ -36,7 +44,8 @@ As a recurring backer or sponsor you get:
 
 * having your name or company logo placed on this website, listed in the Javers GitHub repository,
 and listed on the JaVers [Open Collective](https://opencollective.com/javers) page,
-* bugs reported by you will be fixed with higher priority. 
+* bugs reported by you will be fixed with higher priority,
+* keeping your software dependencies in good health means more safety for your business.
 
 <br/>
 

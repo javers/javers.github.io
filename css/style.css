@@ -63,6 +63,7 @@ pre.highlight > code {
     width: auto;
     max-width: 100%;
     height: auto;
+    margin-top:8px;
     margin-bottom: 10px;
 }
 
