@@ -11,7 +11,7 @@ In June 2019, `javers-core` was downloaded 50,000 times.
  
 {% include fancy-image.html image="/img/javers-downloads-2019-07.png" alt="downloads from The Central chart" %}
 
-However, the amount of effort needed to maintain and develop new features for
+However, the amount of effort needed to maintain and develop new features in
 this project is also growing. 
 Maintainers burnout is a serious challenge in open source projects since we work for free.
 
