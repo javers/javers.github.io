@@ -13,7 +13,7 @@ In June 2019, `javers-core` was downloaded 50,000 times.
 
 However, the amount of effort needed to maintain and develop new features in
 this project is also growing. 
-Maintainers burnout is a serious challenge in open source projects since we work for free.
+Maintainers burnout is a serious risk in open source projects when we work for free.
 
 **Our work is not sustainable without financial backing.**
 
