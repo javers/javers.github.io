@@ -5,6 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.6.3
+released on 2019-08-02
+
+* [864](https://github.com/javers/javers/issues/864) 
+  All Spring dependencies are updated. This update is forced by security vulnerability issues in `spring-security` 
+  and `spring-data-jpa`.
+
+* [860](https://github.com/javers/javers/issues/860) 
+  Fixed `SNAPSHOT_STATE_VIOLATION` exception when a getter was inherited both from a superclass and an interface.
+
+* [774](https://github.com/javers/javers/issues/774) 
+  Added more descriptive message for `SNAPSHOT_STATE_VIOLATION` exception.
+  
 ### 5.6.2
 released on 2019-07-06
 
