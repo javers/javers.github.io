@@ -11,13 +11,13 @@ There are two modules for Spring integration.
 
 **`javers-spring`** module provides two auto-audit aspects:
 
-* [@JaversAuditable](#at-javers-auditable) for ordinary Repositories,
-* [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) for Spring Data CrudRepository.
+* [@JaversAuditable](#at-javers-auditable) for any kind of repositories,
+* [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) for Spring Data `CrudRepositories`.
    
 **`javers-spring-jpa`** module &mdash; a superset of `javers-spring` &mdash; provides:
 
 * [JPA & Hibernate integration](#jpa-entity-manager-integration) for SQL databases,
-* support for Spring Data JpaRepository `saveAndFlush()`.
+* support for Spring Data `JpaRepository.saveAndFlush()`.
 
 ### Dependencies ###
 
@@ -46,14 +46,17 @@ Check
 for other build tools snippets.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>
-The JaVers auto-audit aspects are based on Spring AOP and frees you
-from calling `javers` methods in your data-changing Repositories.
+The auto-audit aspect is based on Spring AOP. It can automatically call
+proper `javers.commit(...)` methods whenever your domain object are saved or deleted.
 
-If you’re using Spring Data, annotate your CRUD Repositories with
-[`@JaversSpringDataAuditable`]({{ site.github_spring_main_url }}org/javers/spring/annotation/JaversSpringDataAuditable.java).
-For ordinary Repositories,
-use [`@JaversAuditable`]({{ site.github_spring_main_url }}org/javers/spring/annotation/JaversAuditable.java)
- to mark all data-changing methods.
+There are two variants of the auto-audit aspect:
+
+* **`JaversSpringDataAuditableRepositoryAspect`** and 
+  **`JaversSpringDataJpaAuditableRepositoryAspect`** for Spring Data `CrudRepositories`
+  annotated with [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
+  
+* **`JaversAuditableAspect`** does not depend on Spring Data and can be used for any kind of repository.
+  Use [@JaversAuditable](#at-javers-auditable) to mark all data-changing methods.
 
 JaVers can audit your data changes automatically — AWESOME!
 
@@ -83,14 +86,15 @@ public MongoClient mongo() {
 
 <h3 id="javers-auto-audit-aspects">Aspect beans</h3>
 
-JaVers provides three aspects for the auto-audit feature:
+There are three beans that you can add to Context to enable the auto-audit feature:
 
 **`JaversSpringDataAuditableRepositoryAspect`**
-  for Spring Data CRUD Repositories.
+  for Spring Data `CrudRepositories`.
   <br/>
   It defines the pointcut on `save(..)` and `delete(..)` methods
-  within Spring Data CRUD Repositories annotated with the class-level
-  [`@JaversSpringDataAuditable`](#at-javers-spring-data-auditable) annotation.
+  within `CrudRepositories` annotated with the class-level
+  [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) annotation.
+  Choose it if you **are not using** JPA.
 
 ```java
 @Bean
@@ -101,9 +105,11 @@ public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect
 ```
 
 **`JaversSpringDataJpaAuditableRepositoryAspect`** 
-  for Spring Data JPA Repositories.
+  for Spring Data `JpaRepositories`.
   <br/>
-  It extends the first aspect with the pointcut on `JpaRepository.saveAndFlush()`.
+  It extends the first aspect with the pointcut on `JpaRepository.saveAndFlush()`
+  and it is triggered by the same annotation &mdash; [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
+  Choose it if you **are using** JPA.
   
 ```java
 @Bean
@@ -114,10 +120,11 @@ public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAuditableAsp
 ```  
  
 **`JaversAuditableAspect`**
-  for ordinary Repositories.
+  for any kind of repository.
   <br/>
   It defines the pointcut on any method annotated with the method-level
-  [`@JaversAuditable`](#at-javers-auditable) annotation.
+  [@JaversAuditable](#at-javers-auditable) annotation.
+  Choose it if you have repositories that are not managed by Spring Data.
 
 ```java
 @Bean
@@ -172,7 +179,7 @@ If you don’t care about commit author, use
 Every JaVers commit may have one or more commit properties, useful for querying
 (see [CommitProperty filter example](/documentation/jql-examples/#commit-property-filter)).
 
-In auto-audit, commit properties are supplied by an implementation of the
+In auto-audit aspect, commit properties are supplied by an implementation of the
 [`CommitPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/CommitPropertiesProvider.java) interface,
 for example:
 
@@ -181,15 +188,18 @@ for example:
     public CommitPropertiesProvider commitPropertiesProvider() {
         return new CommitPropertiesProvider() {
             @Override
-            public Map<String, String> provide() {
-                return ImmutableMap.of("key", "ok");
+            public Map<String, String> provideForCommittedObject(Object domainObject) {
+                if (domainObject instanceof DummyEntity) {
+                    return Maps.of("dummyEntityId", ((DummyEntity)domainObject).getId() + "");
+                }
+                return Collections.emptyMap();
             }
         };
     }
 ```
 
-If you don’t use commit properties, simply skip `commitPropertiesProvider`
-in the aspect constructors.
+If you don’t use commit properties, simply skip `commitPropertiesProvider` argument
+in the aspect constructor or pass `new EmptyPropertiesProvider()`.
 
 That’s the last bean in your Application Context required to run auto-audit aspects.
 See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
@@ -361,7 +371,15 @@ public class JaversSpringJpaApplicationConfig {
      */
     @Bean
     public CommitPropertiesProvider commitPropertiesProvider() {
-        return () -> ImmutableMap.of("key", "ok");
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provideForCommittedObject(Object domainObject) {
+                if (domainObject instanceof DummyObject) {
+                    return Maps.of("dummyObject.name", ((DummyObject)domainObject).getName());
+                }
+                return Collections.emptyMap();
+            }
+        };
     }
 
     /**
@@ -506,7 +524,15 @@ public class JaversSpringMongoApplicationConfig {
      */
     @Bean
     public CommitPropertiesProvider commitPropertiesProvider() {
-        return () -> ImmutableMap.of("key", "ok");
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provideForCommittedObject(Object domainObject) {
+                if (domainObject instanceof DummyObject) {
+                    return Maps.of("dummyObject.name", ((DummyObject)domainObject).getName());
+                }
+                return Collections.emptyMap();
+            }
+        };
     }
 }
 ```

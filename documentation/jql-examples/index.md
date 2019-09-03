@@ -758,6 +758,11 @@ Commit 2.0 done by author at 14 Apr 2018, 12:00:34 :
   - 'salary' changed from '900' to '1600'
 ```
 
+Note that when you are using JaVers’ [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect)
+with Spring Data `CrudRepositories` you can still provide commit properties by implementing
+the [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean) bean.
+ 
+
 <h3 id="commit-date-filter">CommitDate filter</h3>
 CommitDate filter is an optional parameter for all queries.
 It allows time range filtering by `commitDate` (Snapshot creation timestamp).
