@@ -5,6 +5,32 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.7.0
+released on 2019-09-03
+
+* [870](https://github.com/javers/javers/issues/870) 
+  Added possibility to provide object-specific properties via
+  [`CommitPropertiesProvider`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/CommitPropertiesProvider.java).
+  No-arg `provide()` is deprecated. These three methods are added:
+  
+  ```java 
+    public interface CommitPropertiesProvider {
+    
+        default Map<String, String> provideForCommittedObject(Object domainObject) {
+            return Collections.emptyMap();
+        }
+        
+        default Map<String, String> provideForDeletedObject(Object domainObject) {
+            return provideForCommittedObject(domainObject);
+        }
+        
+        default Map<String, String> provideForDeleteById(Class<?> domainObjectClass, Object domainObjectId) {
+            return Collections.emptyMap();
+        }
+      
+        ...
+  ``` 
+  
 ### 5.6.3
 released on 2019-08-02
 
