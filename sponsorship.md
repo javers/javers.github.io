@@ -34,7 +34,7 @@ Your donation will be listed on the [JaVers Open Collective](https://opencollect
 
 ## Recurring Sponsorship
 
-Become a **backer for $5+** per month or **sponsor for $100+** per month.
+Become a **backer for $5+** per month or a **sponsor for $100+** per month.
 
 <br/>
 <script src="https://opencollective.com/javers/contribute/button.js" color="blue"></script>
