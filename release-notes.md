@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.7.1
+released on 2019-09-07
+
+* [877](https://github.com/javers/javers/issues/877) 
+  Fixed issue with the `jv_snapshot` table primary key sequence for clustered applications.
+
 ### 5.7.0
 released on 2019-09-03
 
