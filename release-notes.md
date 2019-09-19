@@ -5,6 +5,14 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.7.4
+released on 2019-09-19
+* [832](https://github.com/javers/javers/issues/832) 
+  Added possibility to use `CustomPropertyComparator` together with `ListCompareAlgorithm`.`AS_SET`.
+  A custom `equals()` methods is used to compare two Lists without paying attention
+  to ordering and duplicates. <b>Warning!</b> The list comparing algorithm would be slow in this case
+  for large lists because it has n<sup>2</sup> complexity.
+
 ### 5.7.2
 released on 2019-09-11
 
