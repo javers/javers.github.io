@@ -5,6 +5,29 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.7.5
+released on 2019-09-25
+* Dependencies bumped to the latest versions:
+    
+  ```
+  springVersion           =5.1.9.RELEASE
+  springBootVersion       =2.1.8.RELEASE
+  springDataCommonsVersion=2.1.10.RELEASE
+  springDataMongoVersion  =2.1.10.RELEASE
+  springDataJPAVersion    =2.1.10.RELEASE
+  springSecurityVersion   =5.1.6.RELEASE
+  mongoDbDriverVersion    =3.8.2
+  hibernateVersion        =5.3.11.Final
+  guavaVersion            =28.1-jre
+  gsonVersion             =2.8.5
+  classgraphVersion       =4.8.47
+  jodaVersion             =2.9.7
+  polyjdbcVersion         =0.7.6
+  aspectjweaverVersion    =1.9.4
+  slf4jApiVersion         =1.7.28
+  jbossTransactionApiVersion=1.1.1.Final
+  ``` 
+
 ### 5.7.4
 released on 2019-09-19
 * [832](https://github.com/javers/javers/issues/832) 
