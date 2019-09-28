@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.7.6
+released on 2019-09-28
+* [887](https://github.com/javers/javers/issues/887) Fixed bug introduced in 
+  5.7.2 which was causing `SQL_EXCEPTION` ORA-00917: missing comma while inserting to jv_snapshot
+
 ### 5.7.5
 released on 2019-09-25
 * Dependencies bumped to the latest versions:
