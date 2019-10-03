@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.7.7
+released on 2019-10-03
+* [888](https://github.com/javers/javers/issues/888) Fixed bug 
+  (introduced in 5.2.5) when comparing `SortedSet` and `SortedMap`.
+
 ### 5.7.6
 released on 2019-09-28
 * [887](https://github.com/javers/javers/issues/887) Fixed bug (introduced in 
