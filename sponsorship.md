@@ -23,7 +23,7 @@ You can support JaVers development via [GitHub Sponsors](https://github.com/spon
 Choose your tier.
 
 ### $2 a month 
-This shows your support for the Javers project. Any such support is very much appreciated!
+This shows your support for the Javers project. Any such support is very much appreciated! 
 
 ### $10 a month 
 Your **name** will be featured in the Javers Github repository and on this website.
