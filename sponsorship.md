@@ -17,37 +17,33 @@ Maintainers burnout is a serious risk in open source projects when we work for f
 
 **Our work is not sustainable without financial backing.**
 
-You can support JaVers development via [Open Collective](https://opencollective.com/javers)
-&mdash; an online funding platform for open and transparent communities. 
+## Sponsorship via GitHub Sponsors
 
-Open Collective platform is used for funding popular open source projects like
-[Vue](https://opencollective.com/vuejs) or [curl](https://opencollective.com/curl).
+You can support JaVers development via [GitHub Sponsors](https://github.com/sponsors/bartoszwalacik/).
+Choose your tier.
 
-## One-time Donations
+### $2 a month 
+This shows your support for the Javers project. Any such support is very much appreciated!
 
-Make a one-time donation.
-Your donation will be listed on the [JaVers Open Collective](https://opencollective.com/javers) page.
+### $10 a month 
+Your **name** will be featured in the Javers Github repository and on this website.
 
-<br/>
-<script src="https://opencollective.com/javers/donate/button.js" color="white"></script>
-<br/>
+Javers Github repository and Javers website get about 10k views per month (combined).
 
-## Recurring Sponsorship
+### $30 a month 
+Your **company logo** will be featured in the Javers Github repository and on this website.
 
-Become a **backer for $5+** per month or a **sponsor for $100+** per month.
+### $100 a month 
+Your **company logo** will be featured in the Javers Github repository and on this website.
 
-<br/>
-<script src="https://opencollective.com/javers/contribute/button.js" color="blue"></script>
-<br/>
+**Access to up to 2 hours of support per month.**
+The support could be related to configuration, domain mapping hints or performance tuning of Javers in your project.
 
-As a recurring backer or sponsor you get:
+## Sponsorship via Open Collective
 
-* having your name or company logo placed on this website, listed in the [Javers GitHub repository](https://github.com/javers/javers/),
-and listed on the [JaVers Open Collective](https://opencollective.com/javers) page,
-* bugs reported by you will be fixed with higher priority,
-* keeping your software dependencies in good health means more safety for your business.
+Via [JaVers Open Collective](https://opencollective.com/javers)
+you can make a one-time donation or become a backer for $5+ per month or a sponsor for $100+ per month.
 
-<br/>
-
+## Questions?
 Questions? Chat with us in [sponsors room](https://gitter.im/javers/sponsors)
 or talk directly to [Bartosz Walacik](https://gitter.im/bartoszwalacik) (JaVers project lead).
