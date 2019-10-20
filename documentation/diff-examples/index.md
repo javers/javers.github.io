@@ -640,14 +640,111 @@ In the example, we use the `FIELD` (default) mapping style.
 Since Groovy generates getters and setters on the fly, you
 can also use the `BEAN` mapping style without adding boilerplate code to domain classes.
 
-<h2 id="custom-comparators-example">Custom comparators example</h2>
+## Custom Value comparator example
 
-In this example, we show how to use a [CustomPropertyComparator](/documentation/diff-configuration/#custom-comparators).
+In this example, we show how to use 
+[Custom Value comparators](/documentation/diff-configuration/#custom-value-comparators)
+to play with `BigDecimals` equality.
 
-Our comparator is called `FunnyStringComparator`, and it compares Strings as character sets.
-The logic is simple. When two Strings are built from the same set of characters &mdash; we don’t see a difference.
-Otherwise, we log each added or removed character.
+Javers comes with two Custom comparators for `BigDecimals`,
+they are ready to use in your project:
 
+* [`CustomBigDecimalComparator`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomBigDecimalComparator.java)
+  compares BigDecimals after rounding to the required scale,
+* [`BigDecimalComparatorWithFixedEquals`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/BigDecimalComparatorWithFixedEquals.java)
+  compares BigDecimals in the correct (arithmetical) way &mdash; ignoring trailing zeros.
+
+
+[`CustomBigDecimalComparator.java`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomBigDecimalComparator.java):
+
+```java
+public class CustomBigDecimalComparator implements CustomValueComparator<BigDecimal>{
+    private int significantDecimalPlaces;
+
+    public CustomBigDecimalComparator(int significantDecimalPlaces) {
+        this.significantDecimalPlaces = significantDecimalPlaces;
+    }
+
+    @Override
+    public boolean equals(BigDecimal a, BigDecimal b) {
+        return round(a).equals(round(b));
+    }
+
+    @Override
+    public String toString(BigDecimal value) {
+        return round(value).toString();
+    }
+
+    private BigDecimal round(BigDecimal val) {
+        return val.setScale(significantDecimalPlaces, ROUND_HALF_UP);
+    }
+}
+```
+
+Comparing `BigDecimals` rounded to two decimal digits (Groovy):
+
+```groovy
+class ValueObject {
+    BigDecimal value
+    List<BigDecimal> values
+}
+
+def "should compare BigDecimal properties with desired precision"(){
+  given:
+  def javers = JaversBuilder.javers()
+         .registerValue(BigDecimal, new CustomBigDecimalComparator(2)).build()
+
+  expect:
+  javers.compare(new ValueObject(value: 1.123), new ValueObject(value: 1.124)).changes.size() == 0
+  javers.compare(new ValueObject(value: 1.12),  new ValueObject(value: 1.13)).changes.size()  == 1
+}
+```
+
+[`BigDecimalComparatorWithFixedEquals.java`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/BigDecimalComparatorWithFixedEquals.java):
+```java
+public class BigDecimalComparatorWithFixedEquals implements CustomValueComparator<BigDecimal> {
+    @Override
+    public boolean equals(BigDecimal a, BigDecimal b) {
+        return a.compareTo(b) == 0;
+    }
+
+    @Override
+    public String toString(BigDecimal value) {
+        return value.stripTrailingZeros().toString();
+    }
+}
+```
+
+Comparing `BigDecimals` in the correct, arithmetical way (Groovy): 
+
+```groovy
+def "should compare BigDecimal with fixed equals"() {
+    when: "comparing using BigDecimal.equals()"
+    def javers = JaversBuilder.javers().build()
+
+    then:
+    javers.compare(new ValueObject(value: 1.000), new ValueObject(value: 1.00)).changes.size() == 1
+
+    when: "comparing using arithmetical equals()"
+    javers = JaversBuilder.javers()
+            .registerValue(BigDecimal, new BigDecimalComparatorWithFixedEquals())
+            .build()
+
+    then:
+    javers.compare(new ValueObject(value: 1.000), new ValueObject(value: 1.00)).changes.size() == 0
+    javers.compare(new ValueObject(value: 1.100), new ValueObject(value: 1.20)).changes.size() == 1
+}
+```
+
+## Custom Property comparator example
+
+In this example, we show how to use a
+[Custom Property comparator](/documentation/diff-configuration/#custom-property-comparators)
+to calculate `SetChange`.
+Our comparator is called `FunnyStringComparator` and it compares Strings as character Sets.
+The logic is simple. When two Strings are built from the same set of characters &mdash;
+we don’t see a difference. Otherwise, we log each added or removed character.
+ 
 Check the full example implemented in
 [CustomPropertyComparatorExample.groovy](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/CustomPropertyComparatorExample.groovy)
 as a Spock test.
@@ -656,6 +753,9 @@ Here we show the most essential part.
 First, the comparator implementation:
 
 ```groovy
+/**
+ * Compares Strings as character sets
+ */
 class FunnyStringComparator implements CustomPropertyComparator<String, SetChange> {
     @Override
     Optional<SetChange> compare(String left, String right, PropertyChangeMetadata metadata, Property property) {
@@ -670,46 +770,46 @@ class FunnyStringComparator implements CustomPropertyComparator<String, SetChang
         Sets.difference(leftSet, rightSet).forEach{c -> changes.add(new ValueRemoved(c))}
         Sets.difference(rightSet, leftSet).forEach{c -> changes.add(new ValueAdded(c))}
 
-        return Optional.of(new SetChange(metadata, property.getName(), changes))
+        return Optional.of(new SetChange(metadata, changes))
     }
 
     @Override
     boolean equals(String a, String b) {
         a.toCharArray().toSet() == b.toCharArray().toSet()
     }
+
+    @Override
+    String toString(String value) {
+        return value;
+    }
 }
 ```
 
-In all tests, we compare two `Entity` objects
-which have a `String` property and also a `List<String>` property:
+In the test, we compare two Value Objects with a `String` property:
 
 ```groovy
-class Entity {
+class ValueObject {
     String value
-    List<String> values
 }
 ```
 
-This distinction is important because JaVers compares list items using simple `equals(a, b)`
-method and property values using more sophisticated  `compare(...)` method.
-
-Ok, let’s see how `FunnyStringComparator` compares String properties:
+Let’s see how `FunnyStringComparator` compares String properties:
 
 ```groovy
 def "should use FunnyStringComparator to compare String properties"(){
     given:
     def javers = JaversBuilder.javers()
-            .registerCustomComparator(new FunnyStringComparator(), String).build()
+            .registerCustomType(String, new FunnyStringComparator()).build()
 
     when:
-    def diff = javers.compare(new Entity(value: "aaa"), new Entity(value: "a"))
+    def diff = javers.compare(new ValueObject(value: "aaa"), new ValueObject(value: "a"))
     println "first diff: "+ diff
 
     then:
     diff.changes.size() == 0
 
     when:
-    diff = javers.compare(new Entity(value: "aaa"), new Entity(value: "b"))
+    diff = javers.compare(new ValueObject(value: "aaa"), new ValueObject(value: "b"))
     println "second diff: "+ diff
 
     then:
@@ -729,41 +829,4 @@ second diff: Diff:
   - 'value' collection changes :
     . 'a' removed
     . 'b' added
-```
-
-`FunnyStringComparator` can also compare Strings when they are stored in a list:
-
-```groovy
-def "should use FunnyStringComparator to compare Strings in lists"(){
-    given:
-    def javers = JaversBuilder.javers()
-            .registerCustomComparator(new FunnyStringComparator(), String).build()
-
-    when:
-    def diff = javers.compare(new Entity(values: ["aaa"]), new Entity(values: ["a"]))
-    println "first diff: "+ diff
-
-    then:
-    diff.changes.size() == 0
-
-    when:
-    diff = javers.compare(new Entity(values: ["aaa"]), new Entity(values: ["a", "bb"]))
-    println "second diff: "+ diff
-
-    then:
-    diff.changes.size() == 1
-    diff.changes[0] instanceof ListChange
-    diff.changes[0].changes.size() == 1 // one item change in this ListChange
-}
-```
-
-output:
-
-```text
-first diff: Diff:
-
-second diff: Diff:
-* changes on org.javers.core.examples.CustomPropertyComparatorExample$Entity/ :
-  - 'values' collection changes :
-    1. 'bb' added
 ```
