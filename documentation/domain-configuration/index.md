@@ -211,35 +211,89 @@ the path in an object subtree.
 (as a part of an Aggregate). JaVers is not so radical and supports both embedded and dangling Value Objects.
 So in JaVers, Value Object is just an Entity without identity.
 
-**Examples** of Value Objects: Address, Point.
+**Example** Value Object class:
+
+```java
+// Value Object is the default type in Javers, so @ValueObject annotation can be omitted
+public class Address {
+    private final String city;
+    private final String street;
+    private final String zipCode;
+
+    public Address(String city, String street, String zipCode) {
+        this.city = city;
+        this.street = street;
+        this.zipCode = zipCode;
+    }
+
+    // Value Object instances are compared property-by-property,
+    // so the Object.equals() method is ignored by Javers
+    @Override
+    public boolean equals(Object o) {
+        ...
+    }
+}
+```
 
 <h3 id="ValueType">Value</h3>
-JaVers [`Value`]({{ site.github_core_main_url }}org/javers/core/metamodel/type/ValueType.java)
-is a simple (scalar) value holder.
+Javers [`Value`]({{ site.github_core_main_url }}org/javers/core/metamodel/type/ValueType.java)
+is a simple value holder.
+A Value class could have more than one field, but they are treated as an internal state.
+For the rest of the world, a Value is a ... single value. 
+<br/>
+A few **examples** of well-known Value types: `BigDecimal`, `LocalDate`, `String`, `URL`. 
 
-**Comparing strategy** for Values is (by default) based on the **`Object.equals()`**.
+**Comparing strategy** for Values is (by default) based on **`Object.equals()`**.
 So it’s highly important to implement this method properly,
 it should compare the underlying state of given objects.
 
-Well-known Value types like BigDecimal or LocalDate have it already.
+Values defined in `java.*` packages, like `BigDecimal` or `LocalDate` have it already.
 Remember to implement `equals()` for all your Value classes.
 
 If you don’t control the Value implementation, 
 you can still change the comparing strategy by registering a
-[`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
-function.
-For example, if you want to compare BigDecimals using only the integer part:
+[`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java).
+
+For example, if you want to compare `BigDecimals` rounded to two decimal places:
  
 ```java
-Javers javers = JaversBuilder.javers()
-        .registerValue(BigDecimal.class, (a, b) -> a.intValue() == b.intValue()).build();
-
+JaversBuilder.javers()
+    .registerValue(BigDecimal.class, new CustomBigDecimalComparator(2))
+    .build();
 ``` 
 
-**Examples** of Values: BigDecimal, LocalDate.
+Read more about [Custom comparators](/documentation/diff-configuration/#custom-comparators).
 
 For Values, it’s advisable to customize JSON serialization by implementing *Type Adapters*
 (see [custom JSON serialization](/documentation/repository-configuration/#custom-json-serialization)).
+
+**Example** Value class with proper `equals()` and `hashCode()`:
+
+```java
+@Value
+class Point {
+    private final int x;
+    private final int y;
+
+    Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Point)) return false;
+
+        Point that = (Point) o;
+        return this.x == that.x && this.y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+}
+```
 
 <h2 id="mapping-configuration">Mapping configuration</h2>
 Your task is to identify *Entities*, *Value Objects* and *Values* in your domain model

@@ -6,11 +6,13 @@ submenu: diff-configuration
 sidebar-url: docs-sidebar.html
 ---
 
-JaVers’ diff algorithm has a pluggable construction.
-It consists of the core comparators suite and optionally, [custom comparators](#custom-comparators).
+Javers’ diff algorithm has a pluggable construction.
+Each Java type is mapped to exact one [Javers type](/documentation/domain-configuration/#javers-types).
+Each Javers type is mapped to exact one *comparator*.
 
-You can fine-tune how the whole algorithm works by registering custom comparators
-for certain types (custom comparators overrides core comparators).
+In most cases, you will rely on Javers’ core comparators.
+Optionally, you can register [Custom comparators](#custom-comparators)
+for Value types and Custom Types.
 
 For [comparing Lists](#list-algorithms), JaVers has three core comparators:
  **Simple** (default), **Levenshtein** distance, and **Set**. Pick one.
@@ -126,77 +128,94 @@ the length of both compared lists).
 
 <h2 id="custom-comparators">Custom Comparators</h2>
 
-There are cases where JaVers’ diff algorithm isn’t appropriate,
-and you need to implement your own comparing strategy for certain types.
- 
-**Custom Property Comparators** come to the rescue.
-You can register them for any type (class or interface) to bypass the JaVers’ type system and diff algorithm. 
- 
-JaVers maps a class with a custom comparator to *Custom Type*,
-which means:
-*I don’t care what it is, all I know is that it should be compared using this custom comparator*.
+There are cases where Javers’ diff algorithm isn’t appropriate,
+and you need to implement your own *comparator* for certain types.
 
-All you have to do is implement the
+There are two types of Custom comparators: for Value types,
+you can register
+a [`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
+and for Custom types, you register 
+a [`CustomPropertyComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomPropertyComparator.java)
+.
+
+### Custom Value Comparators
+
+The natural way of providing a comparing strategy for [Value](/documentation/domain-configuration/#ValueType)
+classes is overriding the standard `Object.equals(Object)` method.
+
+If you don’t control the source code of a given Value class,
+you can still change its comparing strategy by registering
+a [`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java).
+
+It has two methods:
+
+```java
+public interface CustomValueComparator<T> {
+    boolean equals(T a, T b);
+    
+    String toString(T value);
+}
+```
+
+and it can be easily registered in JaversBuilder, 
+for example:
+
+```java
+JaversBuilder.javers()
+    .registerValue(BigDecimal.class, new BigDecimalComparatorWithFixedEquals())
+    .build();
+```
+
+or with lambdas:
+
+```java
+Javers javers = JaversBuilder.javers()
+    .registerValue(BigDecimal.class, (a, b) -> a.compareTo(b) == 0,
+                                          a -> a.stripTrailingZeros().toString())
+    .build();
+```
+
+Then, given `equals()` function is used instead of `Object.equals()` to compare Values 
+and given `toString()` function is used instead of `Object.hashCode()`
+when Values are compared in hashing contexts.
+  
+See the [full example](/documentation/diff-examples/#custom-value-comparator-example) 
+of Custom Value comparator in our examples chapter.
+
+### Custom Property Comparators
+     
+Unlike Custom Value comparators which are just a way to provide external `equals()`
+implementation for Value classes, 
+Custom Property comparators offer great flexibility.
+
+You can register them for any type (class or interface) to bypass the Javers’ type system and diff algorithm.
+  
+Javers maps a class with a Custom Property comparator to *Custom Type*,
+which means:<br/>
+*I don’t care what it is, all I know is that it should be compared using this comparator*.
+
+**Yet, Custom Types are not easy to manage, use it as a last resort,<br/>
+only for corner cases like comparing custom Collection types.**
+     
+To register a Custom Type, all you have to do is implement the
 [`CustomPropertyComparator`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomPropertyComparator.java)
 interface:
 
 ```java
-public interface CustomPropertyComparator<T, C extends PropertyChange> {
-    /**
-     * Called by JaVers to calculate property-to-property diff.
-     */
+public interface CustomPropertyComparator<T, C extends PropertyChange>
+    extends CustomValueComparator<T> 
+{
     Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
-
-    /**
-     * Called by JaVers to calculate collection-to-collection diff.
-     */
-    boolean equals(T a, T b);
 }
 ```
 
-and register your custom comparator instance in JaversBuilder:
-
-```java
-JaversBuilder.javers().registerCustomComparator(new MyClassComparator(), MyClass.class).build()
-```
-
-See the full [example of CustomPropertyComparator](/documentation/diff-examples/#custom-comparators-example) in our examples chapter.
-
-**Custom comparators for Values**<br/>
-
-The natural way of providing comparing strategy for [Value](/documentation/domain-configuration/#ValueType) classes is
-overriding the standard `Object.equals(Object)` method.
-
-If you don’t control the source code of a given Value class,
-you can still change its comparing strategy by registering a custom comparator.
-
-A [`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
-implements the single `boolean equals(a, b)` method:
-
-```java
-@FunctionalInterface
-public interface CustomValueComparator<T> {
-    boolean equals(T left, T right);
-}
-```
-
-and it can be super-easily registered in JaversBuilder, for example:
+and register it in JaversBuilder, for example:
 
 ```java
 Javers javers = JaversBuilder.javers()
-        .registerValue(BigDecimal.class, (a, b) -> a.intValue() == b.intValue()).build();
+    .registerCustomType(MyClass.class, new MyClassComparator())
+    .build();
+```
 
-``` 
-
-Given `equals()` method is used by JaVers to calculate both collection-to-collection diff
-and property-to-property diff.
-Note that for Value types, property-to-property diff is always a `ValueChange`.
-
-Unlike [`CustomPropertyComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomPropertyComparator.java)
-which offers great flexibility, 
-[`CustomValueComparator`]({{ site.github_core_main_url }}org/javers/core/diff/custom/CustomValueComparator.java)
-is just a way to provide other `equals()` implementation for given Value class. 
-
-
-
-
+See the [full example](/documentation/diff-examples/#custom-property-comparator-example) 
+of Custom Property comparator.
