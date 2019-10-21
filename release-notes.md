@@ -5,6 +5,84 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.1
+released on 2019-10-21
+
+**Major improvements and refactoring in Custom comparators**
+
+Now, a **`CustomValueComparator`** has to implement the `toString(T value)` method,
+which is used instead of `Object.hashCode()` when Values are compared in hashing contexts.
+Thanks to that, Values with Custom comparators can be correctly compared anywhere, also when
+they are Set items, Map keys or fields in Value Objects inside Sets. 
+      
+```java
+public interface CustomValueComparator<T> {
+     boolean equals(T a, T b);
+     
+     String toString(T value);
+}
+``` 
+
+Existing method for registering Custom Value comparators
+**<font color='red'>is deprecated</font>** and left only
+for backward compatibility. Please switch to the new method. 
+
+```java
+/**
+ * <b>Deprecated</b>, use {@link #registerValue(Class, CustomValueComparator)}.
+ *
+ * <br/><br/>
+ *
+ * Since this comparator is not aligned with {@link Object#hashCode()},
+ * it calculates incorrect results when a given Value is used in hashing context
+ * (when comparing Sets with Values or Maps with Values as keys).
+ *
+ * @see CustomValueComparator
+ */
+@Deprecated
+public <T> JaversBuilder registerValue(Class<T> valueClass, BiFunction<T, T, Boolean> equalsFunction) {
+    Validate.argumentsAreNotNull(valueClass, equalsFunction);
+
+    return registerValue(valueClass, new CustomValueComparator<T>() {
+        @Override
+        public boolean equals(T a, T b) {
+            return equalsFunction.apply(a,b);
+        }
+
+        @Override
+        public String toString(@Nonnull T value) {
+            return value.toString();
+        }
+    });
+}
+```     
+
+The same applies to **`CustomPropertyComparator`**, it also have to implement
+`toString(T value)` because it extends `CustomValueComparator`.
+ 
+This is the **<font color='red'>breaking change</font>**,
+if you are using a `CustomPropertyComparator` you have add `toString(T value)` implementation.
+
+```java
+public interface CustomPropertyComparator<T, C extends PropertyChange>
+    extends CustomValueComparator<T> 
+{
+    Optional<C> compare(T left, T right, PropertyChangeMetadata metadata, Property property);
+} 
+```
+
+Since this version, we stop recommending `CustomPropertyComparators` and Custom Types.
+This warning is added to docs: 
+
+
+    Custom Types are not easy to manage, use it as a last resort,<br/>
+    only for corner cases like comparing custom Collection types.</b>
+    
+    In most cases, it's better to customize the Javers' diff algorithm using
+    much more simpler `CustomValueComparator`.
+
+See updated documentation of [Custom comparators](/documentation/diff-configuration/#custom-property-comparators).
+
 ### 5.7.7
 released on 2019-10-03
 * [888](https://github.com/javers/javers/issues/888) Fixed bug 

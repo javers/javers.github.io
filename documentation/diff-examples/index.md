@@ -654,7 +654,6 @@ they are ready to use in your project:
 * [`BigDecimalComparatorWithFixedEquals`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/BigDecimalComparatorWithFixedEquals.java)
   compares BigDecimals in the correct (arithmetical) way &mdash; ignoring trailing zeros.
 
-
 [`CustomBigDecimalComparator.java`](https://github.com/javers/javers/blob/master/javers-core/src/main/java/org/javers/core/diff/custom/CustomBigDecimalComparator.java):
 
 ```java
