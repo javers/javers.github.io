@@ -8,7 +8,7 @@ submenu: release-notes
 ### 5.8.1
 released on 2019-10-21
 
-**Major improvements and refactoring in Custom comparators**
+**Custom comparators reinvented**
 
 Now, a **`CustomValueComparator`** has to implement the `toString(T value)` method,
 which is used instead of `Object.hashCode()` when Values are compared in hashing contexts.
