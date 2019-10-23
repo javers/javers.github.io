@@ -5,6 +5,21 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.2
+released on 2019-10-23
+* [894](https://github.com/javers/javers/issues/894) Better Shadows sorting.
+ Using `SYNCHRONIZED_SEQUENCE` CommitId generator for distributed apps can cause duplicated `CommitId`.
+ In this fix, Shadows sorting is unified to be
+ based on `CommitDateInstant` for both CommitId generators.
+
+* Removed throwing `CANT_SAVE_ALREADY_PERSISTED_COMMIT` in SQL repository. It was thrown
+  only in some scenarios when `SYNCHRONIZED_SEQUENCE` generator was used, not ensuring
+  the full protections against duplicated CommitId. <br/>
+  After this fix, duplicated CommitIds when using `SYNCHRONIZED_SEQUENCE` generator
+  are considered as not harmful (although not elegant).
+  To ensure unique CommitIds for distributed apps 
+  we recommend switching to `RANDOM` generator (when your app runs more than one Javers instance).
+
 ### 5.8.1
 released on 2019-10-21
 
