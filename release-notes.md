@@ -5,8 +5,35 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.3
+released on 2019-11-02
+
+* [878](https://github.com/javers/javers/issues/878)
+ Added property to disabling Global Id cache in SQL repository
+ when using JaVers Spring Boot starter:
+ 
+```
+javers:
+  sqlGlobalIdCacheDisabled: true
+```
+
+* [878](https://github.com/javers/javers/issues/708)
+ Added property to provide custom implementation of the `ObjectAccessHook`
+ when using JaVers Spring Boot starter:
+ 
+```
+javers:
+  objectAccessHook: com.example.MyObjectAccessHook
+```
+
+* [886](https://github.com/javers/javers/issues/886) Fixed bug causing
+`JsonSyntaxException`: Expected BEGIN_OBJECT but was STRING.
+The exception was thrown on attempt to read Shadows with a ShallowReference with EmbeddedId
+(a ShallowReference with an Id-property type mapped to Value Object). 
+
 ### 5.8.2
 released on 2019-10-23
+
 * [894](https://github.com/javers/javers/issues/894) Better Shadows sorting.
  Using `SYNCHRONIZED_SEQUENCE` CommitId generator for distributed apps can cause duplicated `CommitId`.
  In this fix, Shadows sorting is unified to be

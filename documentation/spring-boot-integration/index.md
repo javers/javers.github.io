@@ -64,6 +64,8 @@ javers:
   springDataAuditableRepositoryAspectEnabled: true
   sqlSchema:
   sqlSchemaManagementEnabled: true
+  sqlGlobalIdCacheDisabled: false
+  objectAccessHook:
   prettyPrintDateFormats:
     localDateTime: "dd MMM yyyy, HH:mm:ss"
     zonedDateTime: "dd MMM yyyy, HH:mm:ssZ"
@@ -71,19 +73,22 @@ javers:
     localTime: "HH:mm:ss"  
 ```  
 
-Additional properties available in SQL starter:
+Properties active in SQL starter:
 
 ```
 javers:
   sqlSchema:
   sqlSchemaManagementEnabled: true
+  sqlGlobalIdCacheDisabled: false
+  objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
 ```   
 
-Additional properties available in MongoDB starter:
+Properties active in MongoDB starter:
 
 ```
 javers:
   documentDbCompatibilityEnabled: false
+  objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
 ```   
 
 Each property in the Spring `application.yml` file has the corresponding `with*()`
