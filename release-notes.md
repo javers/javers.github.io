@@ -17,7 +17,7 @@ javers:
   sqlGlobalIdCacheDisabled: true
 ```
 
-* [878](https://github.com/javers/javers/issues/708)
+* [709](https://github.com/javers/javers/issues/708)
  Added property to provide custom implementation of the `ObjectAccessHook`
  when using JaVers Spring Boot starter:
  
