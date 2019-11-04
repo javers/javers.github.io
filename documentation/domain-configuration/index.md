@@ -398,7 +398,12 @@ There are six class level annotations in JaVers:
   a convenient way to name Entities and Value Objects.
   We recommend using this annotation for all Entities and Value Objects.
   Otherwise, Javers uses fully-qualified class names 
-  in GlobalIds, which hinders refactoring classes committed to JaversRepository.  
+  in GlobalIds, which hinders refactoring classes committed to JaversRepository. 
+  <br/>**Important!** All classes with
+  [`@TypeName`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/TypeName.java)
+  should be registered in 
+  [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java)
+  using `withPackagesToScan(String)` or `javers.packagesToScan` Spring Boot starter property.
 
 Three **JPA** Class level annotations are interpreted as synonyms of JaVers annotations:
 

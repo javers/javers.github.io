@@ -5,6 +5,21 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.4
+released on 2019-11-04
+
+* [897](https://github.com/javers/javers/issues/897)
+ Added warning when `@TypeName` is used on a class without declaring its package name
+ in `packagesToScan`. Improved javadocs for `TypeName` and `JaversBuilder.withPackagesToScan()`. 
+ 
+```
+07:12:58.253 [main] WARN  o.j.core.metamodel.type.UnknownType - Missing class definition with @TypeName 'Agreement', 
+cant't properly deserialize its Snapshots from JaversRepository.
+To fix this issue provide the fully-qualified package name of the class named 'Agreement' in the packagesToScan property.
+``` 
+ 
+
+
 ### 5.8.3
 released on 2019-11-02
 
