@@ -17,8 +17,6 @@ released on 2019-11-04
 cant't properly deserialize its Snapshots from JaversRepository.
 To fix this issue provide the fully-qualified package name of the class named 'Agreement' in the packagesToScan property.
 ``` 
- 
-
 
 ### 5.8.3
 released on 2019-11-02
