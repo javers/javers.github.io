@@ -7,7 +7,7 @@ category: page_center
 JaVers is an Apache-licensed open source project and it’s completely free to use.
  
 JaVers is gaining momentum, the number of downloads from The Central is growing.
-In October 2019, `javers-core` was downloaded 90,000 times.
+In October 2019, `javers-core` was downloaded 60,000 times.
  
 {% include fancy-image.html image="/img/javers-downloads-2019-10.png" alt="downloads from The Central chart" %}
 
