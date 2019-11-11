@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.5
+released on 2019-11-10
+
+* [910](https://github.com/javers/javers/issues/910)
+  Fixed `ConcurrentModificationException` in MongoDB `MapKeyDotReplacer`.
+
 ### 5.8.4
 released on 2019-11-04
 
