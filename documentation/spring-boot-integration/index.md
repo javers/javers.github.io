@@ -220,7 +220,7 @@ class UserRepository {
 ```    
 
 
-<h3 id="boot-manual-commis">Manual commits</h3>
+<h3 id="boot-manual-commits">Manual commits</h3>
 If you need more fine-grained control over JaVers commits,
 use JaVers instance directly (which is available as a Spring bean).
 
