@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.6
+released on 2019-12-16
+* [925](https://github.com/javers/javers/issues/925)
+  Fixed bug which caused `CustomValueComparator` not being invoked for
+  `ZonedDateTime`.
+
 ### 5.8.5
 released on 2019-11-10
 
