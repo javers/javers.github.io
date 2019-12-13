@@ -5,11 +5,22 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.7
+released on 2019-12-13
+* [921](https://github.com/javers/javers/issues/921)
+Added support for deleting by Id with the `@JaversAuditableDelete` aspect:
+
+```java
+@JaversAuditableDelete(entity = DummyEntity)
+void deleteById(String id) {    
+    ...
+}
+```
+
 ### 5.8.6
-released on 2019-12-16
+released on 2019-12-06
 * [925](https://github.com/javers/javers/issues/925)
-  Fixed bug which caused `CustomValueComparator` not being invoked for
-  `ZonedDateTime`.
+  Fixed bug which caused `CustomValueComparator` not being invoked for `ZonedDateTime`.
 
 ### 5.8.5
 released on 2019-11-10
