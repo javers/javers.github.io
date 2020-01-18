@@ -5,7 +5,7 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 5.8.6
+### 5.8.8
 released on 2020-01-18
 * [933](https://github.com/javers/javers/pull/933)
   Extend Spring props to allow setting size or disabling the 
