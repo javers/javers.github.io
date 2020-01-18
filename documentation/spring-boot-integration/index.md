@@ -89,6 +89,7 @@ Properties active in MongoDB starter:
 javers:
   documentDbCompatibilityEnabled: false
   objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
+  snapshotsCacheSize: 5000
 ```   
 
 Each property in the Spring `application.yml` file has the corresponding `with*()`
