@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.9
+released on 2020-02-07
+* [935](https://github.com/javers/javers/issues/935)
+  Fixed `ClassCastException`: MissingProperty cannot be cast to java.lang.Double<br/>
+  when using `CustomValueComparator`.
+  
 ### 5.8.8
 released on 2020-01-18
 * [933](https://github.com/javers/javers/pull/933)
