@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.10
+released on 2020-02-26
+* [938](https://github.com/javers/javers/pull/938)
+  Fixed bug in custom TypeAdapters priorities.
+  
 ### 5.8.9
 released on 2020-02-07
 * [935](https://github.com/javers/javers/issues/935)
