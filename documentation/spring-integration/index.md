@@ -471,7 +471,8 @@ public class JaversSpringMongoApplicationConfig {
     /**
      * MongoDB setup
      */
-    @Bean
+    @Bean(name="realMongoClient")
+    @ConditionalOnMissingBean
     public MongoClient mongo() {
         return new MongoClient();
     }
@@ -505,6 +506,32 @@ public class JaversSpringMongoApplicationConfig {
     public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
         return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
                 commitPropertiesProvider());
+    }
+
+    /**
+     * <b>INCUBATING - Javers Async API has incubating status.</b>
+     * <br/><br/>
+     *
+     * Enables asynchronous auto-audit aspect for ordinary repositories.<br/>
+     *
+     * Use {@link JaversAuditableAsync}
+     * to mark repository methods that you want to audit.
+     */
+    @Bean
+    public JaversAuditableAspectAsync javersAuditableAspectAsync() {
+        return new JaversAuditableAspectAsync(javers(), authorProvider(), commitPropertiesProvider(), javersAsyncAuditExecutor());
+    }
+
+    /**
+     * <b>INCUBATING - Javers Async API has incubating status.</b>
+     * <br/><br/>
+     */
+    @Bean
+    public ExecutorService javersAsyncAuditExecutor() {
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat("JaversAuditableAsync-%d")
+                .build();
+        return Executors.newFixedThreadPool(2, threadFactory);
     }
 
     /**
