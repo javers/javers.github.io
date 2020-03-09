@@ -5,6 +5,52 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.11
+released on 2020-03-08
+* [915](https://github.com/javers/javers/pull/915)
+  Added **experimental** asynchronous audit aspect for non Spring Data repositories.
+  The aspect asynchronously commits all arguments passed to methods annotated with
+  `@JaversAuditableAsync` annotation
+  by calling `Javers.commitAsync(String, Object, Executor)`.
+  
+Usage:   
+  
+```java
+@Repository
+class DummyAuditedAsyncRepository {
+
+    @JaversAuditableAsync
+    void save(DummyObject obj){
+      //... omitted
+    }
+}
+```
+
+Spring config:
+
+```java
+/**
+ * Enables asynchronous auto-audit aspect for ordinary repositories.<br/>
+ *
+ * Use {@link JaversAuditableAsync}
+ * to mark repository methods that you want to audit.
+ */
+@Bean
+public JaversAuditableAspectAsync javersAuditableAspectAsync() {
+    return new JaversAuditableAspectAsync(javers(), authorProvider(), commitPropertiesProvider(), javersAsyncAuditExecutor());
+}
+
+@Bean
+public ExecutorService javersAsyncAuditExecutor() {
+    ThreadFactory threadFactory = new ThreadFactoryBuilder()
+            .setNameFormat("JaversAuditableAsync-%d")
+            .build();
+    return Executors.newFixedThreadPool(2, threadFactory);
+}
+```   
+
+See the [full test case](https://github.com/javers/javers/blob/master/javers-spring/src/test/groovy/org/javers/spring/auditable/integration/JaversAuditableAspectAsyncIntegrationTest.groovy).
+  
 ### 5.8.10
 released on 2020-02-26
 * [938](https://github.com/javers/javers/pull/938)
