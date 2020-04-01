@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 
+released on 2020-03-31
+* [951](https://github.com/javers/javers/issues/951)
+  Dependencies management fix in `javers-core`. Guava and joda-time
+  are now correctly marked as optional in `pom.xml`.
+
 ### 5.8.11
 released on 2020-03-08
 * [915](https://github.com/javers/javers/pull/915)

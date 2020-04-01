@@ -34,8 +34,7 @@ This is the niche that JaVers fills. In JaVers, *version* and *change* are **fir
 * JaVers is meant to keep its data versioning records (snapshots) in the application’s primary database, along with main data.
 * We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects, pretty much how JPA does. We believe that this is the right way to describe data.
 * JaVers is written in Java 8 and can be run only on JRE 8 or higher.
-  If you still use Java 7, the last JaVers version compatible with Java 7 is {{site.javers_java7_version}}. 
-
+ 
 <h2 id="licence">Licence</h2>
 JaVers is available under open source
 [Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0").
