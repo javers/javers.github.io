@@ -5,6 +5,39 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.8.13
+released on 2020-04-07
+* [948](https://github.com/javers/javers/issues/948)
+  Better support for properties with unknown types (with type tokens), like:
+  
+```java
+class Pair<L, R> {
+        L left;
+        R right;
+}
+```  
+
+* All JaVers’ dependencies are bumped to the latest versions:
+
+```text
+springVersion           =5.2.5.RELEASE
+springBootVersion       =2.2.6.RELEASE
+springDataCommonsVersion=2.2.6.RELEASE
+springDataMongoVersion  =2.2.6.RELEASE
+springDataJPAVersion    =2.2.6.RELEASE
+springSecurityVersion   =5.3.1.RELEASE
+mongoDbDriverVersion    =3.11.2
+hibernateVersion        =5.4.12.Final
+guavaVersion            =28.2-jre
+gsonVersion             =2.8.6
+classgraphVersion       =4.8.66
+jodaVersion             =2.10.5
+polyjdbcVersion         =0.7.6
+aspectjweaverVersion    =1.9.5
+slf4jApiVersion         =1.7.28
+jbossTransactionApiVersion=1.1.1.Final
+```
+
 ### 5.8.12
 released on 2020-03-31
 * [951](https://github.com/javers/javers/issues/951)
