@@ -5,6 +5,26 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.9.0
+released on 2020-05-03
+* [962](https://github.com/javers/javers/issues/962)
+Changes in dedicated Mongo database configuration in 
+[JaVers Spring Boot starter for MongoDB](/documentation/spring-boot-integration/#starter-repository-configuration).
+Additional client's properties (like SSL or timeouts)
+should now be provided using the new `MongoClientSettings` API
+(instead of deprecated `MongoClientOptions` API). For example:
+
+```java
+@Bean("javersMongoClientSettings")
+public MongoClientSettings clientSettings() {
+    return MongoClientSettings.builder()
+            .applyToSslSettings(builder -> builder.enabled(true))
+            .applyToSocketSettings(
+                builder -> builder.connectTimeout(500, TimeUnit.MILLISECONDS))
+            .build();
+}
+```
+
 ### 5.8.13
 released on 2020-04-07
 * [948](https://github.com/javers/javers/issues/948)

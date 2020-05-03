@@ -155,25 +155,25 @@ javers:
 If `javers.mongodb` property is defined, either `host` or `uri` has to set.
 If so, an application’s data and JaVers data are stored in different databases.
   
-#### MongoClientOptions
+#### MongoClientSettings
 If you need more control over Javers’ dedicated `MongoClient`,
-you can configure a `MongoClientOptions` bean named `javersMongoClientOptions`.
+you can configure a `MongoClientSettings` bean named `javersMongoClientSettings`.
 If there is no such bean, default client options are used. 
   
-For example, if you want to enable SSL and set socket timeout value,
-define this bean:
+For example, if you want to enable SSL and set socket timeout, define this bean:
   
 ```java
-@Bean("javersMongoClientOptions")
-public MongoClientOptions clientOptions() {
-  return MongoClientOptions.builder()
-  .sslEnabled(true)
-  .socketTimeout(1500)
-  .build();
+@Bean("javersMongoClientSettings")
+public MongoClientSettings clientSettings() {
+    return MongoClientSettings.builder()
+            .applyToSslSettings(builder -> builder.enabled(true))
+            .applyToSocketSettings(
+                builder -> builder.connectTimeout(500, TimeUnit.MILLISECONDS))
+            .build();
 }
 ```  
-Remember, the `javersMongoClientOptions` bean is used only when JaVers connects to dedicated Mongo
-database defined in `javers.mongodb` property.
+Remember, the `javersMongoClientSettings` bean is used only when JaVers connects
+to dedicated Mongo database defined in `javers.mongodb` property.
  
 <h2 id="starter-boot">Boot it!</h2>
 
