@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.9.1
+released on 2020-05-26
+* [973](https://github.com/javers/javers/issues/973)
+Fixed strange bug in Gradle build: `index 9730 out of bounds for length 8192`
+caused probably by `classgraph 4.8.66`.
+
 ### 5.9.0
 released on 2020-05-03
 * [962](https://github.com/javers/javers/issues/962)
