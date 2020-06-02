@@ -280,7 +280,7 @@ JaVers supports two families of TypeAdapters.
      Register your adapters using
      [`JaversBuilder.registerValueTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
-    [com.google.gson.TypeAdapter](https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/TypeAdapter.html) interface.
+    [com.google.gson.TypeAdapter](https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/TypeAdapter.java) interface.
      Register your adapters with
      [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
