@@ -5,6 +5,36 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.9.2
+released on 2020-06-13
+* [982](https://github.com/javers/javers/issues/982)
+Fixed issue with `MongoClient` on on Spring Boot 2.3.0.
+
+Dependencies aligned with Spring Boot 2.3.0:
+
+```txt
+springVersion           =5.2.6.RELEASE
+springBootVersion       =2.3.0.RELEASE
+springDataCommonsVersion=2.3.0.RELEASE
+springDataMongoVersion  =3.0.0.RELEASE
+springSecurityVersion   =5.3.1.RELEASE
+mongoDbDriverVersion    =4.0.3
+hibernateVersion        =5.4.12.Final
+guavaVersion            =28.2-jre
+gsonVersion             =2.8.6
+classgraphVersion       =4.8.78
+jodaVersion             =2.10.5
+polyjdbcVersion         =0.7.6
+aspectjweaverVersion    =1.9.5
+slf4jApiVersion         =1.7.28
+jbossTransactionApiVersion=1.1.1.Final
+```
+
+* [981](https://github.com/javers/javers/issues/981)
+Added `@Arder(0)` annotation to all Javers' aspects.
+This change allows users to execute their own aspects before
+or after Javers' aspects (by choosing positive ot negative order numbers).
+  
 ### 5.9.1
 released on 2020-05-26
 * [973](https://github.com/javers/javers/issues/973)
