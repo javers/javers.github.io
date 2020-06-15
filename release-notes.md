@@ -5,8 +5,8 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 5.9.2
-released on 2020-06-13
+### 5.9.3
+released on 2020-06-15
 * [982](https://github.com/javers/javers/issues/982)
 Fixed issue with `MongoClient` on on Spring Boot 2.3.0.
 
