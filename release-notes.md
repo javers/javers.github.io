@@ -20,6 +20,11 @@ Unfortunately, Mongo Drivers 4.x has a lot of problematic and braking changes, e
 If you have explicit dependency to `org.mongodb:mongo-java-driver:3.x` &mdash; remove it
 and rely on Mongo 4.x drivers provided by a Spring Boot MongoDB starter.
 
+If you are using old Spring Boot version 
+(like 2.1 or older) &mdash; you need to upgrade to Spring Boot 2.3.0,
+otherwise you will probably experience a versions clash between your Spring Boot version
+and the Spring Boot version imported by the Javers starter.   
+
 * [982](https://github.com/javers/javers/issues/982)
 Fixed issue with `MongoClient` on on Spring Boot 2.3.0.
 
