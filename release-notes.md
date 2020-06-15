@@ -7,6 +7,19 @@ submenu: release-notes
 
 ### 5.9.3
 released on 2020-06-15
+
+**<font color='red'>Important warning for Spring Boot users!</font>**
+
+This version of Javers has all dependencies aligned with Spring Boot MongoDB 2.3.0
+which has moved to MongoDB Java Drivers 4.x.
+Unfortunately, Mongo Drivers 4.x has a lot of problematic and braking changes, especially renamed 
+`com.mongodb.MongoClient` to `com.mongodb.client.MongoClient`
+(see [mongodb.github.io/mongo-java-driver/4.0/upgrading](https://mongodb.github.io/mongo-java-driver/4.0/upgrading/))
+.
+
+If you have explicit dependency to `org.mongodb:mongo-java-driver:3.x` &mdash; remove it
+and rely on Mongo 4.x drivers provided by a Spring Boot MongoDB starter.
+
 * [982](https://github.com/javers/javers/issues/982)
 Fixed issue with `MongoClient` on on Spring Boot 2.3.0.
 
