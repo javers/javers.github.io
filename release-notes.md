@@ -5,15 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 5.9.3
+### <font color="red">5.10.0</font>
 released on 2020-06-15
 
-**<font color='red'>Important warning for Spring Boot users!</font>**
+** <font color='red'>Important warning for Spring Boot MongoDB users!</font>**
 
 This version of Javers has all dependencies aligned with Spring Boot MongoDB 2.3.0
-which has moved to MongoDB Java Drivers 4.x.
-Unfortunately, Mongo Drivers 4.x has a lot of problematic and braking changes, especially renamed 
-`com.mongodb.MongoClient` to `com.mongodb.client.MongoClient`
+which has upgraded to MongoDB Java Drivers 4.x.
+Unfortunately, Mongo Drivers 4.x has a lot of problematic and braking changes,
+especially renaming `com.mongodb.MongoClient` to `com.mongodb.client.MongoClient`
 (see [mongodb.github.io/mongo-java-driver/4.0/upgrading](https://mongodb.github.io/mongo-java-driver/4.0/upgrading/))
 .
 
@@ -21,8 +21,8 @@ If you have explicit dependency to `org.mongodb:mongo-java-driver:3.x` &mdash; r
 and rely on Mongo 4.x drivers provided by a Spring Boot MongoDB starter.
 
 If you are using old Spring Boot version 
-(like 2.1 or older) &mdash; you need to upgrade to Spring Boot 2.3.0,
-otherwise you will probably experience a versions clash between your Spring Boot version
+(2.1 or older) &mdash; you need to upgrade to Spring Boot 2.3.0,
+otherwise you will probably experience versions clash between your Spring Boot version,
 and the Spring Boot version imported by the Javers starter.   
 
 * [982](https://github.com/javers/javers/issues/982)
@@ -47,6 +47,14 @@ aspectjweaverVersion    =1.9.5
 slf4jApiVersion         =1.7.28
 jbossTransactionApiVersion=1.1.1.Final
 ```
+
+### 5.9.4
+released on 2020-06-15
+
+** <font color='red'>Important for Spring Boot MongoDB users</font>**
+
+This is the last version of Javers compatible with 
+Spring Boot MongoDB 2.1.x and 2.2.x    
 
 * [981](https://github.com/javers/javers/issues/981)
 Added `@Arder(0)` annotation to all Javers' aspects.
