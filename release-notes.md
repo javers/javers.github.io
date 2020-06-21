@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.10.1
+released on 2020-06-20
+* [988](https://github.com/javers/javers/issues/988)
+Fixed: MissingProperty cannot be cast to class java.util.Map
+
 ### <font color="red">5.10.0</font>
 released on 2020-06-15
 
