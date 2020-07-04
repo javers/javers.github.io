@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.10.3
+released on 2020-07-04
+* Fixes for [996](https://github.com/javers/javers/issues/996) and
+  [692](https://github.com/javers/javers/issues/692) &mdash; removed redundant Guava dependency.
+
 ### 5.10.2
 released on 2020-07-04
 * [991](https://github.com/javers/javers/pull/991)
