@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.10.2
+released on 2020-07-04
+* [991](https://github.com/javers/javers/pull/991)
+Api vs Implementation &mdash; mastering dependencies. 
+
 ### 5.10.1
 released on 2020-06-20
 * [988](https://github.com/javers/javers/issues/988)
