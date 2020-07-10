@@ -29,12 +29,12 @@ These starters provide default configuration and create the Javers instance as a
 You can start using Javers with almost no configuration.  
 
 Read more about [Javers’ Spring Boot integration](/documentation/spring-boot-integration/)
-and [Javers’ Spring integration](/documentation/spring-integration/)
+and [Javers’ Spring integration](/documentation/spring-integration/).
 
 <h2 id="getting-started-Baeldung">Javers tutorial on baeldung.com</h2>
 
-Recently, Eugen Baeldung wrote an excellent [quick start tutorial](https://www.baeldung.com/spring-data-javers-audit )
-about Javers and Spring Data.
+Recently, Eugen Baeldung wrote an excellent tutorial &mdash; [Using JaVers for Data Model Auditing in Spring Data](https://www.baeldung.com/spring-data-javers-audit )
+
 We recommend reading it in the first place.
 
 ## Vanilla Javers
