@@ -6,9 +6,7 @@ submenu: getting-started
 sidebar-url: docs-sidebar.html
 ---
 
-<h2 id="get-javers">Get JaVers</h2>
-
-JaVers artifacts are published to [Maven Central](https://search.maven.org/search?q=org.javers).
+All JaVers artifacts are published to [Maven Central](https://search.maven.org/search?q=org.javers).
 
 <h2 id="getting-started-boot">Spring Boot Starter</h2>
 
@@ -27,14 +25,16 @@ If you are using an SQL database:
 compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
 ```
 
-These starters provide default configuration and create a Javers instance as a Spring bean.
-You can start using it with almost no configuration.  
+These starters provide default configuration and create the Javers instance as a Spring bean.
+You can start using Javers with almost no configuration.  
 
 Read more about [Javers’ Spring Boot integration](/documentation/spring-boot-integration/)
+and [Javers’ Spring integration](/documentation/spring-integration/)
 
 <h2 id="getting-started-Baeldung">Javers tutorial on baeldung.com</h2>
 
-Recently, Eugen Baeldung wrote an excellent [quick start tutorial](https://www.baeldung.com/spring-data-javers-audit ) about Javers.
+Recently, Eugen Baeldung wrote an excellent [quick start tutorial](https://www.baeldung.com/spring-data-javers-audit )
+about Javers and Spring Data.
 We recommend reading it in the first place.
 
 ## Vanilla Javers
@@ -67,8 +67,8 @@ If you are using an SQL database &mdash; add:
 compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
-<h2 id="create-javers-instance">Create a JaVers instance</h2>
-Use JaversBuilder to create a JaVers instance:
+### Create a JaVers instance
+Use `JaversBuilder` to create a JaVers instance:
 
 ```java
 import org.javers.core.Javers;
