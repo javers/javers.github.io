@@ -8,8 +8,38 @@ sidebar-url: docs-sidebar.html
 
 <h2 id="get-javers">Get JaVers</h2>
 
-JaVers artifacts are published to [Maven Central](https://search.maven.org/#artifactdetails%7Corg.javers%7Cjavers-core%7C{{site.javers_current_version}}%7C).
-To get JaVers, add `javers-core`
+JaVers artifacts are published to [Maven Central](https://search.maven.org/search?q=org.javers).
+
+<h2 id="getting-started-boot">Spring Boot Starter</h2>
+
+The easiest and recommended way to start with Javers
+is adding one of our Spring Boot starters to your project dependencies.
+
+If you are using MongoDB &mdash; take:
+
+```groovy
+compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
+```
+
+If you are using an SQL database:
+
+```groovy
+compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
+```
+
+These starters provide default configuration and create a Javers instance as a Spring bean.
+You can start using it with almost no configuration.  
+
+Read more about [Javers’ Spring Boot integration](/documentation/spring-boot-integration/)
+
+<h2 id="getting-started-Baeldung">Javers tutorial on baeldung.com</h2>
+
+Recently, Eugen Baeldung wrote an excellent [quick start tutorial](https://www.baeldung.com/spring-data-javers-audit ) about Javers.
+We recommend reading it in the first place.
+
+## Vanilla Javers
+
+If you are not using Spring, add `javers-core`
 to your project dependencies and (optionally) choose proper `javers-repository` module.
 
 ### javers-core
@@ -18,16 +48,6 @@ Gradle:
 ```groovy
 compile 'org.javers:javers-core:{{site.javers_current_version}}'
 ```   
-
-Maven: 
-
-```xml
-<dependency>
-    <groupId>org.javers</groupId>
-    <artifactId>javers-core</artifactId>
-    <version>{{site.javers_current_version}}</version>
-</dependency>
-```
 
 If you’re going to use JaVers as an object diff tool, this is the only dependency you need.
         
@@ -41,14 +61,10 @@ Gradle:
 compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
-Maven:
+If you are using an SQL database &mdash; add:
 
-```xml
-<dependency>
-    <groupId>org.javers</groupId>
-    <artifactId>javers-persistence-mongo</artifactId>
-    <version>{{site.javers_current_version}}</version>
-</dependency>
+```groovy
+compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
 <h2 id="create-javers-instance">Create a JaVers instance</h2>
@@ -88,3 +104,5 @@ Person robert = new Person("bob", "Robert Martin");
 javers.commit("user", robert);
 ```
 See more [audit examples](/documentation/repository-examples/).
+
+ 

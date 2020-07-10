@@ -28,7 +28,6 @@ Add JaVers MongoDB and Spring Data MongoDB starters to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
-compile 'org.springframework.boot:spring-boot-starter-data-mongodb:' + $SPRING_BOOT_VERSION   
 ```
 
 ### SQL starter ###
@@ -36,7 +35,6 @@ Add JaVers SQL and Spring Data JPA starters to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
-compile 'org.springframework.boot:spring-boot-starter-data-jpa:' + $SPRING_BOOT_VERSION   
 ```
 
 Check [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
