@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.10.4
+released on 2020-07-02
+* Fixed bug  [958](https://github.com/javers/javers/issues/958) 
+  when querying by `CommitId` with minor number (like 1.01) 
+  on MongoDB. 
+
 ### 5.10.3
 released on 2020-07-04
 * Fixes for [996](https://github.com/javers/javers/issues/996) and
