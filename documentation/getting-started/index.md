@@ -64,7 +64,7 @@ compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 If you are using an SQL database &mdash; add:
 
 ```groovy
-compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
+compile 'org.javers:javers-persistence-sql:{{site.javers_current_version}}'
 ```
 
 ### Create a JaVers instance
