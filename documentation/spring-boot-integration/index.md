@@ -79,10 +79,10 @@ javers:
   sqlSchemaManagementEnabled: true
   sqlGlobalIdCacheDisabled: false
   objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
-  sqlGlobalIdTableName: 'jv_global_id'
-  sqlCommitTableName: 'jv_commit'
-  sqlSnapshotTableName: 'jv_snapshot'
-  sqlCommitPropertyTableName: 'jv_commit_property'
+  sqlGlobalIdTableName: jv_global_id
+  sqlCommitTableName: jv_commit
+  sqlSnapshotTableName: jv_snapshot
+  sqlCommitPropertyTableName: jv_commit_property
 ```   
 
 Properties active in the MongoDB starter:

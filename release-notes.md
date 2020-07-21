@@ -14,10 +14,10 @@ released on 2020-07-16
   
 ```yaml
 javers:
-  sqlGlobalIdTableName: 'custom_jv_global_id'
-  sqlCommitTableName: 'custom_jv_commit'
-  sqlSnapshotTableName: 'custom_jv_snapshot'
-  sqlCommitPropertyTableName: 'custom_jv_commit_property'
+  sqlGlobalIdTableName: custom_jv_global_id
+  sqlCommitTableName: custom_jv_commit
+  sqlSnapshotTableName: custom_jv_snapshot
+  sqlCommitPropertyTableName: custom_jv_commit_property
 ```    
   
 ### 5.10.4
