@@ -71,7 +71,7 @@ javers:
     localTime: "HH:mm:ss"  
 ```  
 
-Properties active in SQL starter:
+Properties active in the SQL starter:
 
 ```
 javers:
@@ -79,9 +79,13 @@ javers:
   sqlSchemaManagementEnabled: true
   sqlGlobalIdCacheDisabled: false
   objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
+  sqlGlobalIdTableName: 'jv_global_id'
+  sqlCommitTableName: 'jv_commit'
+  sqlSnapshotTableName: 'jv_snapshot'
+  sqlCommitPropertyTableName: 'jv_commit_property'
 ```   
 
-Properties active in MongoDB starter:
+Properties active in the MongoDB starter:
 
 ```
 javers:

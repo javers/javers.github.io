@@ -5,6 +5,21 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.10.5
+released on 2020-07-16
+* [941](https://github.com/javers/javers/issues/941)
+  Added configuration for customizing Javers' table names in SQL repository.
+  
+`application.yaml`:
+  
+```yaml
+javers:
+  sqlGlobalIdTableName: 'custom_jv_global_id'
+  sqlCommitTableName: 'custom_jv_commit'
+  sqlSnapshotTableName: 'custom_jv_snapshot'
+  sqlCommitPropertyTableName: 'custom_jv_commit_property'
+```    
+  
 ### 5.10.4
 released on 2020-07-02
 * Fixed bug  [958](https://github.com/javers/javers/issues/958) 
