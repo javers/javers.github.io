@@ -5,6 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.11.1
+released on 2020-07-27
+* [940](https://github.com/javers/javers/issues/940) 
+  New method in `JaversBuilder` to registering a strategy 
+  for dynamic marking classes as ignored.  
+  For example, you can define a custom rule to ignore classes by package name:
+  
+```java
+Javers javers = JaversBuilder.javers()
+        .registerIgnoredClassesStrategy(c -> c.getName().startsWith("com.ignore.me"))
+        .build();                       
+```
+
 ### 5.10.5
 released on 2020-07-16
 * [941](https://github.com/javers/javers/issues/941)

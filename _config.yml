@@ -12,7 +12,7 @@ javadoc_url: /javadoc_5.x/
 github_core_main_url: https://github.com/javers/javers/blob/master/javers-core/src/main/java/
 github_spring_main_url: https://github.com/javers/javers/blob/master/javers-spring/src/main/java/
 github_core_test_url: https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/
-javers_current_version: "5.10.5"
+javers_current_version: "5.11.1"
 
 url: "https://javers.org"
 
