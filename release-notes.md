@@ -7,8 +7,8 @@ submenu: release-notes
 
 ### 5.11.2
 released on 2020-08-31
-* [1014](https://github.com/javers/javers/issues/1014)  
-  Fixed issue with Shadows with `boolean` properties.
+* [1014](https://github.com/javers/javers/issues/1014) Fixed
+  issue with Shadows with `boolean` properties.
 
 ### 5.11.1
 released on 2020-07-27
