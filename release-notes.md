@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.12.0
+released on 2020-09-27
+* [1022](https://github.com/javers/javers/pull/1022) 
+  Added filters in JQL to select snapshots crteated before/after
+  given UTC timestamp:
+  `QueryBuilder.fromInstant()` and `QueryBuilder.toInstant()`. 
+
 ### 5.11.2
 released on 2020-08-31
 * [1014](https://github.com/javers/javers/issues/1014) Fixed
