@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.13.0 Hacktoberfest 2020 Edition
+released on 2020-10-16
+* [1024](https://github.com/javers/javers/issues/1024) 
+  Added support for Groovy 3.0.
+  
+* [919](https://github.com/javers/javers/issues/919)  
+  Added multi-value filter for querying by changed property: 
+  `QueryBuilder.withChangedPropertyIn(String... propertyNames)`.
+
 ### 5.12.0
 released on 2020-09-27
 * [1019](https://github.com/javers/javers/issues/1019) 
