@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.13.2
+released on 2020-10-26
+* [1030](https://github.com/javers/javers/issues/1030) 
+  Fixed class cast exception.
+  
+* [998](https://github.com/javers/javers/issues/998)  
+  Better javadoc for `QueryBuilder.limit()`, 
+  `Javers.findShadows()`, and `Javers.findShadowsAndStream()`.
+
 ### 5.13.0 Hacktoberfest 2020 Edition
 released on 2020-10-16
 * [1024](https://github.com/javers/javers/issues/1024) 
