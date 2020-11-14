@@ -5,6 +5,35 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.14.0
+released on 2020-11-14
+* Dependencies alignment with Spring Boot 2.4.0:
+  
+```groovy
+springVersion           =5.3.1
+springBootVersion       =2.4.0
+springDataCommonsVersion=2.4.1
+springDataMongoVersion  =3.1.1
+springSecurityVersion   =5.3.1.RELEASE
+mongoDbDriverVersion    =4.1.1
+hibernateVersion        =5.4.23.Final
+guavaVersion            =28.2-jre
+gsonVersion             =2.8.6
+classgraphVersion       =4.8.78
+jodaVersion             =2.10.5
+polyjdbcVersion         =0.7.6
+aspectjweaverVersion    =1.9.6
+slf4jApiVersion         =1.7.30
+jbossTransactionApiVersion=1.1.1.Final
+spockVersion            =2.0-M3-groovy-3.0
+groovyVersion           =3.0.6
+embeddedMongo           =2.2.0
+testcontainers          =1.15.0-rc2
+```
+* [1034](https://github.com/javers/javers/issues/1034) 
+  Fixed compatibility issues (`ClassCastException` in `JpaHibernateConnectionProvider`)
+  with the latest Hibernate.
+
 ### 5.13.2
 released on 2020-10-26
 * [1030](https://github.com/javers/javers/issues/1030) 
