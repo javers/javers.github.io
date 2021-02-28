@@ -1078,31 +1078,34 @@ def '''should allow Entity class name change
     given:
     def javers = JaversBuilder.javers().build()
     javers.commit('author', new Person(id:1, name:'Bob'))
-
+    
     when: '''Refactoring happens here, Person.class is removed,
              new PersonRefactored.class appears'''
     javers.commit('author', new PersonRefactored(id:1, name:'Uncle Bob', city:'London'))
-
+    
     def changes =
-        javers.findChanges( QueryBuilder.byInstanceId(1, PersonRefactored.class).build() )
-
-    then: 'two ValueChanges are expected'
-    assert changes.size() == 2
-
-    with(changes.find{it.propertyName == "name"}){
-        assert left == 'Bob'
-        assert right == 'Uncle Bob'
-    }
-
-    with(changes.find{it.propertyName == "city"}){
-        assert left == null
-        assert right == 'London'
-    }
-
-    changes.each { assert it.affectedGlobalId.value() == 'Person/1' }
-
+            javers.findChanges( QueryBuilder.byInstanceId(1, PersonRefactored.class).build() )
     println changes.prettyPrint()
+    
+    then: 'three ValueChanges and one NewObject change is expected'
+    assert changes.size() == 4
+    
+    changes.each { assert it.affectedGlobalId.value() == 'Person/1' }
 }
+```
+
+Output:
+
+```txt
+Changes:
+Commit 2.00 done by author at 28 Feb 2021, 12:44:45 :
+* changes on Person/1 :
+  - 'city' value changed from '' to 'London'
+  - 'name' value changed from 'Bob' to 'Uncle Bob'
+Commit 1.00 done by author at 28 Feb 2021, 12:44:45 :
+* new object: Person/1
+* changes on Person/1 :
+  - 'name' value changed from '' to 'Bob'
 ```
 
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
@@ -1110,8 +1113,7 @@ objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
 **I forgot about @TypeName...** <br/>
 What if I forgot to use @TypeName, but my objects are already persisted
-in JaversRepository
-and I need to refactor now?
+in a JaversRepository and I need to refactor now?
 
 There are two possible solutions. The first is elegant but requires more work,
 the second is quick but somewhat dirty.
@@ -1160,20 +1162,33 @@ def '''should allow Entity class name change
   javers.commit('author', new PersonRetrofitted(id:1, name:'Uncle Bob'))
 
   def changes =
-      javers.findChanges( QueryBuilder.byInstanceId(1,PersonRetrofitted.class).build() )
+          javers.findChanges( QueryBuilder.byInstanceId(1,PersonRetrofitted.class).build() )
+  println changes.prettyPrint()
 
-  then: 'one ValueChange is expected'
-  assert changes.size() == 1
+  then: 'two ValueChange and one NewObject change is expected'
+  assert changes.size() == 3
   with(changes[0]){
-      assert left == 'Bob'
-      assert right == 'Uncle Bob'
-      assert affectedGlobalId.value() == 'org.javers.core.examples.PersonSimple/1'
+    assert left == 'Bob'
+    assert right == 'Uncle Bob'
+    assert affectedGlobalId.value() == 'org.javers.core.examples.PersonSimple/1'
   }
-  println changes[0]
 }
 ```
 
-In this case, `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
+Output:
+
+```txt
+Changes:
+Commit 2.00 done by author at 28 Feb 2021, 12:51:48 :
+* changes on org.javers.core.examples.PersonSimple/1 :
+  - 'name' value changed from 'Bob' to 'Uncle Bob'
+Commit 1.00 done by author at 28 Feb 2021, 12:51:48 :
+* new object: org.javers.core.examples.PersonSimple/1
+* changes on org.javers.core.examples.PersonSimple/1 :
+  - 'name' value changed from '' to 'Bob'
+```
+
+In this case, both `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
 — `'org.javers.core.examples.PersonSimple/1'`.
 They match but, well, it’s not very nice to have deprecated names in new code.
 
@@ -1240,25 +1255,34 @@ def 'should be very relaxed about ValueObject types'(){
 
   when:
   def changes =
-      javers.findChanges( QueryBuilder.byValueObjectId(1, Person.class, 'address').build() )
+          javers.findChanges( QueryBuilder.byValueObjectId(1, Person.class, 'address').build() )
+  println changes.prettyPrint()
 
-  changes.each { println it }
-
-  then: 'four ValueChanges are expected'
-  assert changes.size() == 4
-  assert changes.collect{ it.propertyName } as Set == ['street','verified','city'] as Set
+  then: 'six ValueChanges are expected'
+  assert changes.size() == 6
+  assert changes.collect{ it.propertyName } as Set ==
+          ['street','verified','city','email'] as Set
 }
 ```
 
-Test output:
+Output:
 
 ```text
-ValueChange{ 'address.street' changed from 'Green 50' to 'Green 55' }
-ValueChange{ 'address.city' changed from '' to 'London' }
-ValueChange{ 'address.street' changed from '' to 'Green 50' }
-ValueChange{ 'address.verified' changed from 'false' to 'true' }
+Changes:
+Commit 3.00 done by author at 28 Feb 2021, 12:56:17 :
+* changes on Person/1 :
+  - 'address.street' value changed from 'Green 50' to 'Green 55'
+Commit 2.00 done by author at 28 Feb 2021, 12:56:17 :
+* changes on Person/1 :
+  - 'address.city' value changed from '' to 'London'
+  - 'address.email' value changed from 'me@example.com' to ''
+  - 'address.street' value changed from '' to 'Green 50'
+  - 'address.verified' value changed from 'false' to 'true'
+Commit 1.00 done by author at 28 Feb 2021, 12:56:17 :
+* changes on Person/1 :
+  - 'address.email' value changed from '' to 'me@example.com'
 ```
 
 As you can see, all three versions of the ValueObject address share the same GlobalId
-— `'Person/1#address'`. Properties are matched by name, and their values are compared,
+— `'Person/1#address'`. Properties are matched by name, and their values are compared
 without paying much attention to the actual Address class.
