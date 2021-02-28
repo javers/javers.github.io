@@ -23,12 +23,12 @@ Run examples as unit tests:
 <h2 id="commit-changes">Commit and query</h2>
 
 This example shows how to persist changes done on a domain object and 
-then, how to fetch the history of this object from the JaversRepository.
+then, how to fetch the history of this object from a JaversRepository.
 
 **The case**<br/>
 We have an object of `Person` class, which represents a person called Robert.
 Our goal is to track changes done on the Robert object.
-Whenever the object is changed we want to save its state in JaversRepository.
+Whenever the object is changed we want to save its state in a JaversRepository.
 With JaVers, it can be done with a single `commit()` call:
 
     javers.commit("user", robert);
@@ -44,9 +44,10 @@ It’s enough to annotate the login field with `@Id` annotation.
 **What’s important** <br/>
 Person is a typical [Entity](/documentation/domain-configuration/#entity)
 (see [domain-model-mapping](/documentation/domain-configuration/#domain-model-mapping) for 
-more details about JaVers’ type system).
-[`GlobalId`]({{ site.github_core_main_url }}org/javers/core/metamodel/object/GlobalId.java)
-for identifying and querying Entities.
+more details about the JaVers’ type system).
+In Javers, Entity instances are identified by
+[`InstanceId`]({{ site.github_core_main_url }}org/javers/core/metamodel/object/InstanceId.java) 
+&mdash; a pair of local Id and Entity type. 
 In this case, it’s expressed as `instanceId("bob", Person.class)`.
 
 [`Person.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/model/Person.java):
@@ -68,13 +69,13 @@ public class Person {
 }
 ```
 
-The example test is in Groovy. First, we commit the initial version of Robert and
+The example test is written in Groovy. First, we commit the initial version of Robert, and
 then we commit the second version.
 
 [`BasicCommitAndQueryExample.groovy`](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/examples/BasicCommitAndQueryExample.groovy#L15):
 
 ```groovy
- def "should commit and query from JaversRepository"() {
+def "should commit and query from JaversRepository"() {
     given:
     // prepare JaVers instance. By default, JaVers uses InMemoryRepository,
     // it's useful for testing
@@ -126,9 +127,9 @@ you can fetch Robert’s object history in one of the three views:
 
     println changes.prettyPrint()
 
-    then: "there should be two Changes on Bob"
-    assert changes.size() == 2
- }
+    then: "there should be five Changes on Bob"
+    assert changes.size() == 5 
+}
 ```
 
 Output:
@@ -142,16 +143,20 @@ Person{login='bob', name='Robert C.', position=Developer}
 Person{login='bob', name='Robert Martin', position=null}
 
 Snapshots query:
-Snapshot{commit:2.0, id:...Person/bob, version:2, (login:bob, name:Robert C., position:Developer)}
-Snapshot{commit:1.0, id:...Person/bob, version:1, (login:bob, name:Robert Martin)}
+Snapshot{commit:2.00, id:...Person/bob, version:2, state:{login:bob, name:Robert C., position:Developer}}
+Snapshot{commit:1.00, id:...Person/bob, version:1, state:{login:bob, name:Robert Martin}}
 
 Changes query:
 Changes:
-Commit 2.0 done by user at 13 Apr 2018, 22:11:56 :
+Commit 2.00 done by user at 28 Feb 2021, 11:43:31 :
 * changes on org.javers.core.examples.model.Person/bob :
-  - 'name' changed from 'Robert Martin' to 'Robert C.'
-  - 'position' changed from '' to 'Developer'
-  
+  - 'name' value changed from 'Robert Martin' to 'Robert C.'
+  - 'position' value changed from '' to 'Developer'
+Commit 1.00 done by user at 28 Feb 2021, 11:43:31 :
+* new object: org.javers.core.examples.model.Person/bob
+* changes on org.javers.core.examples.model.Person/bob :
+  - 'login' value changed from '' to 'bob'
+  - 'name' value changed from '' to 'Robert Martin'
 ```
 
 This is just a simple example to show how Javers’ queries work.
