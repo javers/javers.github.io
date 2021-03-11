@@ -152,7 +152,7 @@ Scopes are defined in the
   &mdash; JaVers tries to restore full object graphs with
   (possibly) all objects loaded.
 
-The following example shows how all the scopes work &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L177):
+The following example shows how the scopes work &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L177):
 
 ```groovy
 def "should query for Shadows with different scopes"(){
@@ -623,10 +623,37 @@ Commit 1.00 done by me at 28 Feb 2021, 14:10:06 :
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
-Optional parameter for all queries, default limit is 100.
-It simply limits the number of snapshots to be read from JaversRepository.
-Always choose reasonable limits to improve performance of your queries and to save server heap size.
+Optional parameter for all queries, use it to set the maximum 
+number of Snapshots or Shadows loaded from a JaversRepository.
+Choose a reasonable limit to improve performance of your queries.
+By default, the limit is set to 100.
 
+There are four JQL `find*()` methods and the limit filter affects all of them, 
+but in a different way:
+
+* `Javers.findSnapshots()` &mdash; the limit works intuitively. 
+  It's the maximum size of the returned list.
+  It's applied directly to the underlying database query.
+  On SQL database, it limits the number of records loaded from the `jv_snapshots` table.
+  On MongoDB, it limits the number of documents loaded from the `jv_snapshots` collection.
+  
+* `Javers.findChanges()` &mdash; the limit is applied to 
+  the Snapshots query, which underlies the Changes query.
+  The size of the returned list can be **greater** than limit, 
+  because, typically a difference between any two Snapshots consists of many atomic Changes. 
+  
+* `Javers.findShadows()` &mdash; the limit is applied to Shadows,
+  it limits the size of the returned list.
+  The underlying Snapshots query uses its own limit &mdash; `QueryBuilder.snapshotQueryLimit()`.
+  Since one Shadow might be reconstructed from many Snapshots,
+  when `snapshotQueryLimit()` is hit, Javers repeats a given Shadow query
+  to load a next *frame* of Shadows until required limit is reached.
+  
+* `Javers.findShadowsAndStream()` &mdash;
+  the limit works like in `findShadows()`, it limits the size of the returned stream.
+  The main difference is that the stream is lazy loaded and subsequent *frame* queries, 
+  are executed gradually, during the stream consumption.
+  
 In the example we set limit to 2 so only Bob’s last 2 snapshots are taken into account,
 which means 2 (of 3) changes in the result list.
 
