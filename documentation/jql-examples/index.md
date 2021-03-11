@@ -104,7 +104,8 @@ def "should query for Shadows of an object"() {
       javers.commit("author", bob)       // second commit
 
   when:
-      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
+      List<Shadow<Employee>> shadows = javers.findShadows(
+              QueryBuilder.byInstance(bob).build())
 
   then:
       assert shadows.size() == 2
@@ -623,12 +624,12 @@ Commit 1.00 done by me at 28 Feb 2021, 14:10:06 :
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
-Optional parameter for all queries, use it to set the maximum 
+Use the limit parameter to set the maximum 
 number of Snapshots or Shadows loaded from a JaversRepository.
 Choose a reasonable limit to improve performance of your queries.
-By default, the limit is set to 100.
+By default, the limit is set to 100. It's optional for all queries.
 
-There are four JQL `find*()` methods and the limit filter affects all of them, 
+There are four JQL `find*()` methods, and the limit parameter affects all of them, 
 but in a different way:
 
 * `Javers.findSnapshots()` &mdash; the limit works intuitively. 
@@ -654,12 +655,12 @@ but in a different way:
   The main difference is that the stream is lazy loaded and subsequent *frame* queries 
   are executed gradually, during the stream consumption.
   
-In the following example we set the limit filter to 2,
+In the following example we set the limit parameter to 2,
 and we load Bob’s Snapshots and Changes. 
 Only the last 2 Snapshots are loaded which means 4 Changes:
 
 ```groovy
-def "Snapshot limit in findChanges and findShadows"() {
+def "Snapshots limit in findChanges and findShadows"() {
     given:
     def javers = JaversBuilder.javers().build()
     
@@ -707,7 +708,7 @@ Commit 9.00 done by author at 11 Mar 2021, 16:23:35 :
   - 'salary' value changed from '17000' to '18000'
 ```
 
-Then, we can use the limit filter to load the latest 2 Shadows of Bob.
+Then, we can use the limit parameter to load the latest 2 Shadows of Bob.
 In this case, each Bob’s Shadow is reconstructed from 3 Snapshots, because
 Bob has 2 addresses which are Value Objects:
 
@@ -766,54 +767,72 @@ query stats: JqlQuery {
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
-This is an optional parameter for all queries (the default skip is 0).
-It defines the offset of the first (most recent) snapshot that JaVers should fetch from a repository.
+Use the skip parameter to define the offset of the first (most recent) Snapshot or Shadow 
+that JaVers fetches from a repository.
+The default skip is 0. It's optional for all queries.
 
-Skip and limit parameters can be useful for implementing pagination.
+You can use skip and limit parameters together to implement pagination.
 
-In the example we set skip to 1 so only Bob’s first three snapshots are being compared,
-which means four changes
-(two changes between third and second commit and two changes between second and first commit).
+In the following example we use skip to omit the most recent Snapshots and
+Shadows of Bob:
 
 ```groovy
-def "should query for changes (and snapshots) with skip filter"() {
+def "Skip parameter in findChanges, findSnapshots, and findShadows"() {
     given:
     def javers = JaversBuilder.javers().build()
-
-    javers.commit( "me", new Employee(name:"bob", age:29, salary: 900) )
-    javers.commit( "me", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "me", new Employee(name:"bob", age:31, salary: 1100) )
-    javers.commit( "me", new Employee(name:"bob", age:32, salary: 1200) )
-
-    when:
-    def query = QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build()
+    
+    javers.commit( "me", new Employee(name:"bob", age:20, salary: 2000) )
+    javers.commit( "me", new Employee(name:"bob", age:30, salary: 3000) )
+    javers.commit( "me", new Employee(name:"bob", age:40, salary: 4000) )
+    javers.commit( "me", new Employee(name:"bob", age:50, salary: 5000) )
+    
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).skip(2).build()
+    
+    when: "findChanges()"
     Changes changes = javers.findChanges( query )
-
+    
     then:
     println changes.prettyPrint()
-    assert changes.size() == 8
-    assert javers.findSnapshots(query).size() == 3
+    assert changes.size() == 6
+    
+    when: "findSnapshots()"
+    List<CdoSnapshot> snapshots = javers.findSnapshots( query )
+    
+    then:
+    snapshots.each {println it}
+    assert snapshots.size() == 2
+    assert snapshots[0].getPropertyValue("salary") == 3000
+    
+    when: "findShadows()"
+    List<Shadow<Employee>> shadows = javers.findShadows( query )
+    
+    then:
+    shadows.each {println it}
+    assert shadows.size() == 2
+    assert shadows[0].get().salary == 3000
 }
 ```
 
-the query result:
+output:
 
 ```text
 Changes:
-Commit 3.00 done by me at 28 Feb 2021, 14:12:58 :
+Commit 2.00 done by me at 11 Mar 2021, 17:47:44 :
 * changes on Employee/bob :
-  - 'age' value changed from '30' to '31'
-  - 'salary' value changed from '1000' to '1100'
-Commit 2.00 done by me at 28 Feb 2021, 14:12:58 :
-* changes on Employee/bob :
-  - 'age' value changed from '29' to '30'
-  - 'salary' value changed from '900' to '1000'
-Commit 1.00 done by me at 28 Feb 2021, 14:12:58 :
+  - 'age' value changed from '20' to '30'
+  - 'salary' value changed from '2000' to '3000'
+Commit 1.00 done by me at 11 Mar 2021, 17:47:44 :
 * new object: Employee/bob
 * changes on Employee/bob :
-  - 'age' value changed from '0' to '29'
+  - 'age' value changed from '0' to '20'
   - 'name' value changed from '' to 'bob'
-  - 'salary' value changed from '0' to '900'
+  - 'salary' value changed from '0' to '2000'
+
+Snapshot{commit:2.00, id:Employee/bob, version:2, state:{age:30, name:bob, salary:3000, subordinates:[]}}
+Snapshot{commit:1.00, id:Employee/bob, version:1, state:{age:20, name:bob, salary:2000, subordinates:[]}}
+
+Shadow{it=Employee{ name: 'bob', salary: '3000' }, commitMetadata=CommitMetadata{ author: 'me', util: '11 Mar 2021, 17:47:44', id: '2.00' }}
+Shadow{it=Employee{ name: 'bob', salary: '2000' }, commitMetadata=CommitMetadata{ author: 'me', util: '11 Mar 2021, 17:47:44', id: '1.00' }}
 ```
 
 <h3 id="author-filter">Author filter</h3>
