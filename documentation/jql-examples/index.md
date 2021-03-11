@@ -651,43 +651,118 @@ but in a different way:
   
 * `Javers.findShadowsAndStream()` &mdash;
   the limit works like in `findShadows()`, it limits the size of the returned stream.
-  The main difference is that the stream is lazy loaded and subsequent *frame* queries, 
+  The main difference is that the stream is lazy loaded and subsequent *frame* queries 
   are executed gradually, during the stream consumption.
   
-In the example we set limit to 2 so only Bob’s last 2 snapshots are taken into account,
-which means 2 (of 3) changes in the result list.
+In the following example we set the limit filter to 2,
+and we load Bob’s Snapshots and Changes. 
+Only the last 2 Snapshots are loaded which means 4 Changes:
 
 ```groovy
-def "should query for changes (and snapshots) with limit filter"() {
+def "Snapshot limit in findChanges and findShadows"() {
     given:
     def javers = JaversBuilder.javers().build()
-
-    javers.commit( "me", new Employee(name:"bob", salary: 900) )
-    javers.commit( "me", new Employee(name:"bob", salary: 1000) )
-    javers.commit( "me", new Employee(name:"bob", salary: 1100) )
-    javers.commit( "me", new Employee(name:"bob", salary: 1200) )
-
-    when:
-    def query = QueryBuilder.byInstanceId("bob", Employee.class).limit(2).build()
-    Changes changes = javers.findChanges(query)
-
+    
+    def bob = new Employee("Bob", 9_000, "ScrumMaster")
+    bob.age = 20
+    
+    10.times {
+      bob.salary += 1_000
+      bob.age += 1
+      javers.commit("author", bob)
+    }
+    
+    def query = QueryBuilder.byInstanceId("Bob", Employee).limit(2).build()
+    
+    when: "findSnapshots - 2 latest snapshots are loaded and returned"
+    List<CdoSnapshot> snapshots = javers.findSnapshots(query)
+    snapshots.each {println(it)}
+    
     then:
+    snapshots.size() == 2
+    
+    when: "findChanges - two latest snapshots are loaded, 4 changes are returned"
+    Changes changes = javers.findChanges(query)
     println changes.prettyPrint()
-    assert changes.size() == 2
-    assert javers.findSnapshots(query).size() == 2
+    
+    then:
+    changes.size() == 4
 }
 ```
 
-the query result:
+output:
 
 ```text
+Snapshot{commit:10.00, id:Employee/Bob, version:10, state:{age:30, name:Bob, position:ScrumMaster, salary:19000, subordinates:[]}}
+Snapshot{commit:9.00, id:Employee/Bob, version:9, state:{age:29, name:Bob, position:ScrumMaster, salary:18000, subordinates:[]}}
+
 Changes:
-Commit 4.0 done by me at 14 Apr 2018, 11:51:30 :
-* changes on Employee/bob :
-  - 'salary' changed from '1100' to '1200'
-Commit 3.0 done by me at 14 Apr 2018, 11:51:29 :
-* changes on Employee/bob :
-  - 'salary' changed from '1000' to '1100'
+Commit 10.00 done by author at 11 Mar 2021, 16:23:35 :
+* changes on Employee/Bob :
+  - 'age' value changed from '29' to '30'
+  - 'salary' value changed from '18000' to '19000'
+Commit 9.00 done by author at 11 Mar 2021, 16:23:35 :
+* changes on Employee/Bob :
+  - 'age' value changed from '28' to '29'
+  - 'salary' value changed from '17000' to '18000'
+```
+
+Then, we can use the limit filter to load the latest 2 Shadows of Bob.
+In this case, each Bob’s Shadow is reconstructed from 3 Snapshots, because
+Bob has 2 addresses which are Value Objects:
+
+```groovy
+def "Shadows limit in findShadows and findShadowsAndStream"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    def bob = new Employee("Bob", 9_000, "ScrumMaster")
+    bob.primaryAddress = new Address("London")
+    bob.postalAddress = new Address("Paris")
+
+    3.times {
+        bob.salary += 1_000
+        bob.primaryAddress.city = "London $it"
+        bob.postalAddress.city = "Paris $it"
+        javers.commit("author", bob)
+    }
+
+    def query = QueryBuilder.byInstanceId("Bob", Employee).limit(2).build()
+
+    when : "findShadows() - 9 snapshots are loaded, 2 Shadows are returned"
+    List<Employee> shadows = javers.findShadows(query)
+    shadows.each {println(it)}
+
+    then:
+    shadows.size() == 2
+    println("query stats: " + query)
+
+    when : "findShadowsAndStream() - 9 snapshots are loaded, 2 Shadows are returned"
+    Stream<Shadow<Employee>> shadowsStream = javers.findShadowsAndStream(query)
+
+    then:
+    shadowsStream.count() == 2
+}
+```
+
+output:
+
+```text
+Shadow{it=Employee{ name: 'Bob', salary: '12000', primaryAddress: 'Address{ city: 'London 2' }' }, commitMetadata=CommitMetadata{ author: 'author', util: '11 Mar 2021, 16:36:58', id: '3.00' }}
+Shadow{it=Employee{ name: 'Bob', salary: '11000', primaryAddress: 'Address{ city: 'London 1' }' }, commitMetadata=CommitMetadata{ author: 'author', util: '11 Mar 2021, 16:36:58', id: '2.00' }}
+
+query stats: JqlQuery {
+  IdFilterDefinition{ globalId: 'org.javers.core.examples.model.Employee/Bob' }
+  QueryParams{ aggregate: 'true', limit: '2' }
+  shadowScope: SHALLOW
+  ShadowStreamStats{  
+    executed in millis: '19'  
+    DB queries: '1'  
+    snapshots loaded: '9'  
+    SHALLOW snapshots: '9'  
+    Shadow stream frame queries: '1'  
+  }
+}
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
