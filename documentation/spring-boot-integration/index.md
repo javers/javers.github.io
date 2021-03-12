@@ -97,7 +97,7 @@ javers:
 Each property in the Spring `application.yml` file has the corresponding `with*()`
 method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
-### Registering Custom JSON TypeAdapters
+<h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
 
 Your [JSON TypeAdapters](/documentation/repository-configuration/#json-type-adapters)
 will be automatically registered if you configure 
