@@ -296,7 +296,7 @@ public class MongoStoredEntity {
 }
 ```
 
-First, we need to implement the `JsonTypeAdapter` interface.
+First, we need to implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface.
 In this case, we recommend extending the
 [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
 abstract class.
@@ -328,7 +328,8 @@ public class ObjectIdTypeAdapter extends BasicStringTypeAdapter {
 }
 ```
 
-Then, our TypeAdapter should be registered in `JaversBuilder`, and that’s it.
+Then, our TypeAdapter should be registered in
+[`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java), and that’s it.
 
 See how it works in the test case &mdash; [`JsonTypeAdapterExample.java`]({{ site.github_core_test_java_url }}org/javers/core/examples/JsonTypeAdapterExample.java):
 

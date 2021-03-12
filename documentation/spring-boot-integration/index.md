@@ -99,11 +99,47 @@ method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/Javer
 
 ### Registering Custom JSON TypeAdapters
 
-<h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
-Thanks to Spring Boot magic, starters available on the classpath are automatically picked up
-and launched. 
+Your [JSON TypeAdapters](/documentation/repository-configuration/#json-type-adapters) are automatically registered if configured 
+as Spring beans anywhere in your ApplicationContext.
 
-See the complete list of JaVers beans added to your Spring ApplicationContext:
+For example:
+
+```groovy
+    public static class DummyBigDecimalEntity {
+        BigDecimal value;
+
+        DummyBigDecimalEntity(BigDecimal value) {
+            this.value = value;
+        }
+    }
+
+    @Bean
+    JsonTypeAdapter dummyEntityJsonTypeAdapter () {
+
+        return new BasicStringTypeAdapter<DummyBigDecimalEntity>() {
+            @Override
+            public String serialize(DummyBigDecimalEntity sourceValue) {
+                return sourceValue.value.toString();
+            }
+
+            @Override
+            public DummyBigDecimalEntity deserialize(String serializedValue) {
+                return new DummyBigDecimalEntity(new BigDecimal(serializedValue));
+            }
+
+            @Override
+            public Class getValueType() {
+                return DummyBigDecimalEntity.class;
+            }
+        };
+    }
+```
+
+<h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
+Thanks to Spring Boot magic, Javers AutoConfiguration available on the classpath is automatically picked up
+and loaded. 
+
+Check the complete list of JaVers' beans added to your Spring ApplicationContext:
 
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
 * for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
