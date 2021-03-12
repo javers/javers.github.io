@@ -14,7 +14,7 @@ We strive to make it robust and easy to use.
 great place for JaVers users to ask for help and to share knowledge with the community.
 Most answers are given by the JaVers core team. 
  
-2\. [Gitter chat](https://gitter.im/javers/contributors) &mdash;
+2\. [Discussions](https://github.com/javers/javers/discussions) &mdash;
 conversations about JaVers internals and design.
 For our contributors who work directly on enhancing JaVers itself. 
 
