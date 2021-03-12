@@ -1,7 +1,7 @@
 var team_logins = ['bartoszwalacik'];
 
 var github = new Github({
-    token: "3d1c2318c1010a34478749bfb3b9da714fb896de",
+    token: "0de5d4347b6abac7a9d0032d027cd04362aa9f47",
     auth: "oauth"
 });
 
