@@ -227,7 +227,7 @@ for any kind of your data. Hence, we use JSON format to serialize your objects i
 JaVers uses the [Gson](http://sites.google.com/site/gson/) library which provides neat
 and pretty JSON representation for well known Java types.
 But sometimes Gson’s defaults isn’t what you like.
-This happens many times when dealing with `Values` like Date, Money or ObjectId.
+That happens many times when dealing with `Values` like Date, Money or ObjectId.
 
 Consider the [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
 often used as Id-property for objects persisted in MongoDB.
@@ -307,7 +307,7 @@ In this case, we recommend extending the
 [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
 abstract class.
 
-[`ObjectIdTypeAdapter.class`]({{ site.github_core_test_url }}org/javers/core/examples/ObjectIdTypeAdapter.java):
+[`ObjectIdTypeAdapter.class`]({{ site.github_core_test_java_url }}org/javers/core/examples/ObjectIdTypeAdapter.java):
 
 ```java
 package org.javers.core.examples.adapter;
@@ -336,7 +336,7 @@ public class ObjectIdTypeAdapter extends BasicStringTypeAdapter {
 
 Then, our TypeAdapter should be registered in `JaversBuilder`, and that’s it.
 
-See how it works &mdash; [`JsonTypeAdapterExample.class`]({{ site.github_core_test_url }}org/javers/core/examples/JsonTypeAdapterExample.java):
+See how it works &mdash; [`JsonTypeAdapterExample.class`]({{ site.github_core_test_java_url }}org/javers/core/examples/JsonTypeAdapterExample.java):
 
 ```java
 @Test
