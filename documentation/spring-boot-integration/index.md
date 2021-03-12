@@ -97,6 +97,8 @@ javers:
 Each property in the Spring `application.yml` file has the corresponding `with*()`
 method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
+### Registering Custom JSON TypeAdapters
+
 <h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
 Thanks to Spring Boot magic, starters available on the classpath are automatically picked up
 and launched. 
