@@ -1,8 +1,6 @@
 var team_logins = ['bartoszwalacik'];
 
 var github = new Github({
-    token: "194ee433b21f684ce71e94c5134e4c8929c8614c",
-    auth: "oauth"
 });
 
 var repo = github.getRepo('javers', 'javers');
