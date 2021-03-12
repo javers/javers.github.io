@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 5.15.0
+released on 2021-03-12
+
+* [939](https://github.com/javers/javers/issues/939) Added possibility to register
+  Custom JSON TypeAdapters in Spring Boot Starters.
+  See [Registering JSON TypeAdapters](https://javers.org/documentation/spring-boot-integration/#registering-json-type-adapters).
+
 ### 5.14.0
 released on 2020-11-14
 * Dependencies alignment with Spring Boot 2.4.0:
