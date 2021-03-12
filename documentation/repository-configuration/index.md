@@ -343,38 +343,53 @@ See how it works in the test case &mdash; [`JsonTypeAdapterExample.java`]({{ sit
 public void shouldSerializeValueToJsonWithTypeAdapter() {
     //given
     Javers javers = JaversBuilder.javers()
-            .registerValueTypeAdapter(new ObjectIdTypeAdapter())
-            .build();
+    .registerValueTypeAdapter(new ObjectIdTypeAdapter())
+    .build();
 
     //when
     ObjectId id = ObjectId.get();
-    MongoStoredEntity entity1 = new MongoStoredEntity(id, "alg1", "1.0", "name");
-    MongoStoredEntity entity2 = new MongoStoredEntity(id, "alg1", "1.0", "another");
-    Diff diff = javers.compare(entity1, entity2);
+    MongoStoredEntity entity = new MongoStoredEntity(id, "alg1", "1.0", "name");
+    javers.commit("author", entity);
+    CdoSnapshot snapshot = javers.getLatestSnapshot(id, MongoStoredEntity.class).get();
 
     //then
-    String json = javers.getJsonConverter().toJson(diff);
+    String json = javers.getJsonConverter().toJson(snapshot);
     Assertions.assertThat(json).contains(id.toString());
 
     System.out.println(json);
 }
 ```
 
+
+
 The output:
 
 <pre>
 {
-  "changes": [
-    {
-      "changeType": "ValueChange",
-      "globalId": {
-        "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
-        <span class='s2'>"cdoId": "54876f694b9d4135b0b179ec"</span>
-      },
-      "property": "_name",
-      "left": "name",
-      "right": "another"
-    }
-  ]
+  "commitMetadata": {
+    "author": "author",
+    "properties": [],
+    "commitDate": "2021-03-12T15:50:17.663813",
+    "commitDateInstant": "2021-03-12T14:50:17.663813Z",
+    "id": 1.00
+  },
+  "globalId": {
+    "entity": "org.javers.core.cases.MongoStoredEntity",
+    "cdoId": <span class='s2'>"54876f694b9d4135b0b179ec"</span>
+  },
+  "state": {
+    "_algorithm": "alg1",
+    "_name": "name",
+    "_id": <span class='s2'>"54876f694b9d4135b0b179ec"</span>,
+    "_version": "1.0"
+  },
+  "changedProperties": [
+    "_algorithm",
+    "_name",
+    "_id",
+    "_version"
+  ],
+  "type": "INITIAL",
+  "version": 1
 }
 </pre>
