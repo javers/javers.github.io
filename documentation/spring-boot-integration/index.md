@@ -99,40 +99,41 @@ method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/Javer
 
 ### Registering Custom JSON TypeAdapters
 
-Your [JSON TypeAdapters](/documentation/repository-configuration/#json-type-adapters) are automatically registered if configured 
-as Spring beans anywhere in your ApplicationContext.
+Your [JSON TypeAdapters](/documentation/repository-configuration/#json-type-adapters)
+will be automatically registered if you configure 
+them as Spring beans anywhere in your ApplicationContext.
 
 For example:
 
-```groovy
-    public static class DummyBigDecimalEntity {
-        BigDecimal value;
+```java
+public static class DummyBigDecimalEntity {
+    BigDecimal value;
 
-        DummyBigDecimalEntity(BigDecimal value) {
-            this.value = value;
+    DummyBigDecimalEntity(BigDecimal value) {
+        this.value = value;
+    }
+}
+
+@Bean
+JsonTypeAdapter dummyEntityJsonTypeAdapter () {
+
+    return new BasicStringTypeAdapter<DummyBigDecimalEntity>() {
+        @Override
+        public String serialize(DummyBigDecimalEntity sourceValue) {
+            return sourceValue.value.toString();
         }
-    }
 
-    @Bean
-    JsonTypeAdapter dummyEntityJsonTypeAdapter () {
+        @Override
+        public DummyBigDecimalEntity deserialize(String serializedValue) {
+            return new DummyBigDecimalEntity(new BigDecimal(serializedValue));
+        }
 
-        return new BasicStringTypeAdapter<DummyBigDecimalEntity>() {
-            @Override
-            public String serialize(DummyBigDecimalEntity sourceValue) {
-                return sourceValue.value.toString();
-            }
-
-            @Override
-            public DummyBigDecimalEntity deserialize(String serializedValue) {
-                return new DummyBigDecimalEntity(new BigDecimal(serializedValue));
-            }
-
-            @Override
-            public Class getValueType() {
-                return DummyBigDecimalEntity.class;
-            }
-        };
-    }
+        @Override
+        public Class getValueType() {
+            return DummyBigDecimalEntity.class;
+        }
+    };
+}
 ```
 
 <h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
