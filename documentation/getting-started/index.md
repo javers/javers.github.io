@@ -33,9 +33,16 @@ and [Javers’ Spring integration](/documentation/spring-integration/).
 
 <h2 id="getting-started-Baeldung">Javers tutorial on baeldung.com</h2>
 
-Recently, Eugen Baeldung has written an excellent tutorial &mdash; [Using JaVers for Data Model Auditing in Spring Data](https://www.baeldung.com/spring-data-javers-audit )
+**Eugen Baeldung** has written an excellent tutorial about Javers &mdash;
+[Using JaVers for Data Model Auditing in Spring Data](https://www.baeldung.com/spring-data-javers-audit )
 
 We recommend reading it in the first place.
+
+### Other Community Tutorials
+
+This [Getting Started](https://betterprojectsfaster.com/learn/talks-ljc-medium-talk-2020-javers-audit-log/#getting-started)
+written by Karsten Silz
+tells you how to get started with JaVers, how to query for one or more objects, how to query nested objects, and how to customize the versioning JSON.
 
 ## Vanilla Javers
 
