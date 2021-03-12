@@ -232,29 +232,23 @@ That happens many times when dealing with `Values` like Date, Money or ObjectId.
 Consider the [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
 often used as Id-property for objects persisted in MongoDB.
 
-By default, JaVers serializes ObjectId as follows:
+By default, Gson serializes ObjectId as follows:
 
-<pre>
-  "globalId": {
-    "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
-    "cdoId": <span class='s2'>{
+```json
+  "id": {
       "_time": 1417358422,
       "_machine": 1904935013,
       "_inc": 1615625682,
       "_new": true
-    }</span>
-  }
-</pre>
+  } 
+```
 
 As you can see, `ObjectId` is serialized using its 4 internal fields.
 The resulting JSON is verbose and ugly. You would rather expect neat and atomic value like this:
 
-<pre>
-  "globalId": {
-    "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
-    "cdoId": <span class='s2'>"54789e5cfb2ca07e65130e7c"</span>
-    },
-</pre>
+```json
+  "id": "54789e5cfb2ca07e65130e7c"
+```
 
 That’s where custom JSON `TypeAdapters` come into play.
 
