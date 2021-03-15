@@ -148,98 +148,28 @@ Snapshot{commit:1.00, id:...Person/bob, version:1, state:{login:bob, name:Robert
 
 Changes query:
 Changes:
-Commit 2.00 done by user at 28 Feb 2021, 11:43:31 :
+Commit 2.00 done by user at 14 Mar 2021, 19:59:46 :
 * changes on org.javers.core.examples.model.Person/bob :
-  - 'name' value changed from 'Robert Martin' to 'Robert C.'
-  - 'position' value changed from '' to 'Developer'
-Commit 1.00 done by user at 28 Feb 2021, 11:43:31 :
+  - 'name' changed: 'Robert Martin' -> 'Robert C.'
+  - 'position' = 'Developer'
+Commit 1.00 done by user at 14 Mar 2021, 19:59:46 :
 * new object: org.javers.core.examples.model.Person/bob
-* changes on org.javers.core.examples.model.Person/bob :
-  - 'login' value changed from '' to 'bob'
-  - 'name' value changed from '' to 'Robert Martin'
+  - 'login' = 'bob'
+  - 'name' = 'Robert Martin'  
 ```
 
 This is just a simple example to show how Javers’ queries work.
-The full JaVers’ Query Language specification is in the [Examples — JQL](/documentation/jql-examples/) chapter. 
+Find the full JaVers’ Query Language specification 
+in [Examples — JQL](/documentation/jql-examples/). 
 
 <h2 id="change-log">Changelog</h2>
-In this example, we show how to create a changelog &mdash;
-a formatted and sorted list of Changes.
 
-In JaVers, there are a few ways of processing Changes.
-
-**The simplest way** is to iterate over the list returned by `findChanges()`,
-which is sorted in reverse chronological order (the `Changes` class extends `List<Change>`).
-
-[`ChangeLogExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ChangeLogExample.java#L15):
+For a good start, you can use `Changes.prettyPrint()`,
+which is a nicely formatted, user-friendly changelog:
 
 ```java
-List<Change> changes = javers.findChanges(QueryBuilder.byClass(Employee.class)
-                             .withNewObjectChanges().build());
+Changes changes = javers.findChanges(QueryBuilder.byClass(Employee.class).build());
 
-System.out.println("Printing the flat list of Changes :");
-changes.forEach(change -> System.out.println("- " + change));
-```
-
-the output:
-
-```text
-Printing the flat list of Changes :
-- ValueChange{ 'salary' changed from '10000' to '11000' }
-- ListChange{ 'subordinates' collection changes :
-  0. 'Employee/Sam' added }
-- ValueChange{ 'name' changed from '' to 'Sam' }
-- ValueChange{ 'salary' changed from '0' to '2000' }
-- ReferenceChange{ 'boss' changed from '' to 'Employee/Frodo' }
-- NewObject{ new object: Employee/Sam }
-- ValueChange{ 'name' changed from '' to 'Frodo' }
-- ValueChange{ 'salary' changed from '0' to '10000' }
-- NewObject{ new object: Employee/Frodo }
-```
-
-The flat list is not very readable.<br/>
-**It’s better to group** Changes by commits and then by objects:
-
-```java
-Changes changes = javers.findChanges(QueryBuilder.byClass(Employee.class)
-                        .withNewObjectChanges().build());
-
-System.out.println("Printing Changes with grouping by commits and by objects :");
-changes.groupByCommit().forEach(byCommit -> {
-    System.out.println("commit " + byCommit.getCommit().getId());
-    byCommit.groupByObject().forEach(byObject -> {
-        System.out.println("  changes on " + byObject.getGlobalId().value() + " : ");
-        byObject.get().forEach(change -> {
-            System.out.println("  - " + change);
-        });
-    });
-});
-```       
-
-the output:
-
-```text
-Printing Changes with grouping by commits and by objects :
-commit 2.0
-  changes on Employee/Frodo : 
-  - ValueChange{ 'salary' changed from '10000' to '11000' }
-  - ListChange{ 'subordinates' collection changes :
-  0. 'Employee/Sam' added }
-  changes on Employee/Sam : 
-  - ValueChange{ 'name' changed from '' to 'Sam' }
-  - ValueChange{ 'salary' changed from '0' to '2000' }
-  - ReferenceChange{ 'boss' changed from '' to 'Employee/Frodo' }
-  - NewObject{ new object: Employee/Sam }
-commit 1.0
-  changes on Employee/Frodo : 
-  - ValueChange{ 'name' changed from '' to 'Frodo' }
-  - ValueChange{ 'salary' changed from '0' to '10000' }
-  - NewObject{ new object: Employee/Frodo }
-``` 
-    
-In fact, this kind of grouping is what **`prettyPrint()`** does.
-
-```java
 System.out.println("Changes prettyPrint :");
 System.out.println(changes.prettyPrint());
 ```
@@ -265,24 +195,103 @@ Commit 1.0 done by author at 15 Apr 2018, 22:50:15 :
   - 'name' changed from '' to 'Frodo'
   - 'salary' changed from '0' to '10000'
 ```    
+
+See full source code of this example: [`ChangeLogExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ChangeLogExample.java).
+
+
+**You can configure** the date formatters &mdash;
+see `prettyPrintDateFormats` in [JaVers configuration](/documentation/spring-boot-integration/#javers-configuration-properties).
+
+If you want to create your own changelog &mdash; choose one of the
+three ways of processing Changes. 
+In this example, we show all of them.
+
+
+### The simplest way
+The simplest way is no surprise.
+Just iterate over the list returned by `findChanges()`,
+which is sorted in reverse chronological order.
+The `Changes` class implements the `List<Change>` interface:
+
+```java
+Changes changes = javers.findChanges(QueryBuilder.byClass(Employee.class).build());
+
+System.out.println("Printing the flat list of Changes :");
+changes.forEach(change -> System.out.println("- " + change));
+```
+
+the output:
+
+```text
+Printing the flat list of Changes :
+- ValueChange{ property: 'salary', left:'10000',  right:'11000' }
+- ListChange{ property: 'subordinates', elementChanges:1 }
+- NewObject{ new object: Employee/Sam }
+- InitialValueChange{ property: 'name', left:'',  right:'Sam' }
+- InitialValueChange{ property: 'salary', left:'',  right:'2000' }
+- ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
+- NewObject{ new object: Employee/Frodo }
+- InitialValueChange{ property: 'name', left:'',  right:'Frodo' }
+- InitialValueChange{ property: 'salary', left:'',  right:'10000' }
+```
+
+Simple, but, the flat list is not very readable.
+
+### Grouping by commits and objects 
+
+To make our changelog more readable **it’s better to group** Changes
+by commits and then by objects.
+It's super-easy with `Changes.groupByCommit()`:
+
+```java
+Changes changes = javers.findChanges(QueryBuilder.byClass(Employee.class).build());
+
+System.out.println("Printing Changes grouped by commits and by objects :");
+changes.groupByCommit().forEach(byCommit -> {
+    System.out.println("commit " + byCommit.getCommit().getId());
+    byCommit.groupByObject().forEach(byObject -> {
+        System.out.println("* changes on " + byObject.getGlobalId().value() + " : ");
+        byObject.get().forEach(change -> System.out.println("  - " + change));
+    });
+});
+```
+
+the output:
+
+```text
+Printing Changes grouped by commits and by objects :
+commit 2.00
+* changes on Employee/Frodo : 
+  - ValueChange{ property: 'salary', left:'10000',  right:'11000' }
+  - ListChange{ property: 'subordinates', elementChanges:1 }
+* changes on Employee/Sam : 
+  - NewObject{ new object: Employee/Sam }
+  - InitialValueChange{ property: 'name', left:'',  right:'Sam' }
+  - InitialValueChange{ property: 'salary', left:'',  right:'2000' }
+  - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
+commit 1.00
+* changes on Employee/Frodo : 
+  - NewObject{ new object: Employee/Frodo }
+  - InitialValueChange{ property: 'name', left:'',  right:'Frodo' }
+  - InitialValueChange{ property: 'salary', left:'',  right:'10000' }
+``` 
     
-**You can configure** the date formats &mdash; 
-see `prettyPrintDateFormats` in [JaVers configuration](/documentation/spring-boot-integration/#javers-configuration-properties).    
-      
+In fact, this is exactly what `Changes.devPrint()` does.
+ 
 ### ChangeProcessor    
 [`ChangeProcessor`]({{ site.github_core_main_url }}org/javers/core/changelog/ChangeProcessor.java) 
 is the general-purpose method for processing a Change list.
 It’s the callback-based approach.
-JaVers processes a list of Changes and fires callbacks provided by you when particular events occur.
+JaVers processes Changes one-by-one
+and fires callbacks provided by you when a particular event occur.
 
-ChangeProcessor is an interface. You can implement it from scratch or use `AbstractTextChangeLog` &mdash;
+`ChangeProcessor` is the interface. You can implement it from scratch or use `AbstractTextChangeLog` &mdash;
 the scaffolding class designed to be extended by a concrete changelog renderer.
 
 JaVers comes with one concrete ChangeProcessor implementation &mdash; `SimpleTextChangeLog`.
 We use it in this example, but of course, you can provide a custom implementation.
-    
 
-[`ChangeLogExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ChangeLogExample.java#L53)
+[`ChangeLogExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ChangeLogExample.java#L52)
 
 ```java
 public void shouldPrintTextChangeLog() {
@@ -301,7 +310,7 @@ public void shouldPrintTextChangeLog() {
 
     // when:
     List<Change> changes = javers.findChanges(
-        QueryBuilder.byInstanceId("Bob", Employee.class).build());
+    QueryBuilder.byInstanceId("Bob", Employee.class).build());
     String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
 
     // then:
@@ -312,13 +321,18 @@ public void shouldPrintTextChangeLog() {
 the output:
 
 ```text
-commit 3.0, author: hr.manager, 16 Apr 2018, 00:04:21
+commit 3.00, author: hr.manager, 15 Mar 2021, 20:44:10
   changed object: Employee/Bob
     list changed on 'subordinates' property: [0. 'Employee/Trainee One' added, 1. 'Employee/Trainee Two' added]
-commit 2.0, author: hr.director, 16 Apr 2018, 00:04:21
+commit 2.00, author: hr.director, 15 Mar 2021, 20:44:10
   changed object: Employee/Bob
     value changed on 'position' property: 'ScrumMaster' -> 'Developer'
     value changed on 'salary' property: '9000' -> '11000'
+commit 1.00, author: hr.manager, 15 Mar 2021, 20:44:10
+    new object: Employee/Bob
+    value changed on 'name' property: '' -> 'Bob'
+    value changed on 'position' property: '' -> 'ScrumMaster'
+    value changed on 'salary' property: '' -> '9000'
 ```
 
 <h2 id="json-type-adapter">JSON TypeAdapter</h2>
