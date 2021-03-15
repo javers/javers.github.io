@@ -698,14 +698,14 @@ Snapshot{commit:10.00, id:Employee/Bob, version:10, state:{age:30, name:Bob, pos
 Snapshot{commit:9.00, id:Employee/Bob, version:9, state:{age:29, name:Bob, position:ScrumMaster, salary:18000, subordinates:[]}}
 
 Changes:
-Commit 10.00 done by author at 11 Mar 2021, 16:23:35 :
+Commit 10.00 done by author at 15 Mar 2021, 22:51:16 :
 * changes on Employee/Bob :
-  - 'age' value changed from '29' to '30'
-  - 'salary' value changed from '18000' to '19000'
-Commit 9.00 done by author at 11 Mar 2021, 16:23:35 :
+  - 'age' changed: '29' -> '30'
+  - 'salary' changed: '18000' -> '19000'
+Commit 9.00 done by author at 15 Mar 2021, 22:51:16 :
 * changes on Employee/Bob :
-  - 'age' value changed from '28' to '29'
-  - 'salary' value changed from '17000' to '18000'
+  - 'age' changed: '28' -> '29'
+  - 'salary' changed: '17000' -> '18000'
 ```
 
 Then, we can use the limit parameter to load the latest 2 Shadows of Bob.
