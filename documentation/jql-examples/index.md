@@ -66,8 +66,8 @@ Queries can have one or more optional [filters](#query-filters):
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
 * [snapshot version](#version-filter),
-* [childValueObjects](#child-value-objects-filter),
-* [newObject changes](#new-object-filter).
+* [child ValueObjects](#child-value-objects-filter),
+* [initial Changes](#initial-changes-filter).
 
 JQL can adapt when you refactor your domain classes:
 
@@ -276,19 +276,16 @@ the query result:
 
 ```text
 Changes:
-Commit 2.00 done by author at 28 Feb 2021, 13:37:35 :
+Commit 2.00 done by author at 16 Mar 2021, 22:04:09 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' value changed from 'London' to 'Paris'
-  - 'salary' value changed from '1000' to '1200'
-Commit 1.00 done by author at 28 Feb 2021, 13:37:35 :
+  - 'primaryAddress.city' changed: 'London' -> 'Paris'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:04:09 :
 * new object: Employee/bob
-* changes on Employee/bob :
-  - 'name' value changed from '' to 'bob'
-  - 'primaryAddress.city' value changed from '' to 'London'
-  - 'salary' value changed from '0' to '1000'
+  - 'name' = 'bob'
+  - 'primaryAddress.city' = 'London'
+  - 'salary' = '1000'
 ```
-
-You can also load Changes generated from an initial Snapshot (see [NewObject Filter](#new-object-filter)).
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
@@ -384,16 +381,15 @@ the query result:
 
 ```text
 Changes:
-Commit 2.00 done by author at 28 Feb 2021, 13:43:47 :
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'age' value changed from '30' to '31'
-  - 'salary' value changed from '1000' to '1200'
-Commit 1.00 done by author at 28 Feb 2021, 13:43:47 :
+  - 'age' changed: '30' -> '31'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:04:10 :
 * new object: Employee/bob
-* changes on Employee/bob :
-  - 'age' value changed from '0' to '30'
-  - 'name' value changed from '' to 'bob'
-  - 'salary' value changed from '0' to '1000'
+  - 'age' = '30'
+  - 'name' = 'bob'
+  - 'salary' = '1000'
 ```
 
 <h3 id="by-value-object-query">Querying for Value Object changes</h3>
@@ -444,27 +440,27 @@ the query result:
 ```text
 query for ValueObject changes by owning Entity instance Id
 Changes:
-Commit 3.00 done by author at 28 Feb 2021, 13:49:24 :
+Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' value changed from 'London' to 'Paris'
-Commit 2.00 done by author at 28 Feb 2021, 13:49:24 :
+  - 'primaryAddress.city' changed: 'London' -> 'Paris'
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' value changed from '' to 'London'
+  - 'primaryAddress.city' = 'London'
 
 query for ValueObject changes by owning Entity class
 Changes:
-Commit 5.00 done by author at 28 Feb 2021, 13:49:24 :
+Commit 5.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/lucy :
-  - 'primaryAddress.city' value changed from 'New York' to 'Washington'
-Commit 4.00 done by author at 28 Feb 2021, 13:49:24 :
+  - 'primaryAddress.city' changed: 'New York' -> 'Washington'
+Commit 4.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/lucy :
-  - 'primaryAddress.city' value changed from '' to 'New York'
-Commit 3.00 done by author at 28 Feb 2021, 13:49:24 :
+  - 'primaryAddress.city' = 'New York'
+Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' value changed from 'London' to 'Paris'
-Commit 2.00 done by author at 28 Feb 2021, 13:49:24 :
+  - 'primaryAddress.city' changed: 'London' -> 'Paris'
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' value changed from '' to 'London'
+  - 'primaryAddress.city' = 'London'
 ```
 
 <h3 id="by-class-query">Querying for any object changes by class</h3>
@@ -501,18 +497,18 @@ the query result:
 
 ```text
 Changes:
-Commit 4.00 done by me at 28 Feb 2021, 14:02:36 :
+Commit 4.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.SnapshotEntity/2 :
-  - 'valueObjectRef.city' value changed from 'Rome' to 'Palma'
-Commit 3.00 done by me at 28 Feb 2021, 14:02:36 :
+  - 'valueObjectRef.city' changed: 'Rome' -> 'Palma'
+Commit 3.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.SnapshotEntity/2 :
-  - 'valueObjectRef.city' value changed from '' to 'Rome'
-Commit 2.00 done by me at 28 Feb 2021, 14:02:36 :
+  - 'valueObjectRef.city' = 'Rome'
+Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.DummyUserDetails/1 :
-  - 'dummyAddress.city' value changed from 'London' to 'Paris'
-Commit 1.00 done by me at 28 Feb 2021, 14:02:36 :
+  - 'dummyAddress.city' changed: 'London' -> 'Paris'
+Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.DummyUserDetails/1 :
-  - 'dummyAddress.city' value changed from '' to 'London'
+  - 'dummyAddress.city' = 'London'
 ```
 
 <h3 id="any-domain-object-query">Querying for any domain object changes</h3>
@@ -547,22 +543,20 @@ the query result:
 
 ```text
 Changes:
-Commit 4.00 done by author at 28 Feb 2021, 14:05:33 :
+Commit 4.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.DummyUserDetails/1 :
-  - 'someValue' value changed from 'old' to 'new'
-Commit 3.00 done by author at 28 Feb 2021, 14:05:33 :
+  - 'someValue' changed: 'old' -> 'new'
+Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
 * new object: org.javers.core.model.DummyUserDetails/1
-* changes on org.javers.core.model.DummyUserDetails/1 :
-  - 'id' value changed from '' to '1'
-  - 'someValue' value changed from '' to 'old'
-Commit 2.00 done by author at 28 Feb 2021, 14:05:33 :
+  - 'id' = '1'
+  - 'someValue' = 'old'
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'age' value changed from '30' to '31'
-Commit 1.00 done by author at 28 Feb 2021, 14:05:33 :
+  - 'age' changed: '30' -> '31'
+Commit 1.00 done by author at 16 Mar 2021, 22:04:10 :
 * new object: Employee/bob
-* changes on Employee/bob :
-  - 'age' value changed from '0' to '30'
-  - 'name' value changed from '' to 'bob'
+  - 'age' = '30'
+  - 'name' = 'bob'
 ```
 
 <h2 id="query-filters">Query filters</h2>
@@ -575,8 +569,8 @@ For each query you can add one or more optional filters:
 [commitDate](#commit-date-filter),
 [commitId](#commit-id-filter),
 [snapshot version](#version-filter),
-[childValueObjects](#child-value-objects-filter) and
-[newObject changes](#new-object-filter) filter.
+[child ValueObjects](#child-value-objects-filter) and
+[initial Changes](#initial-changes-filter).
 
 All examples are in [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy).
 
@@ -612,15 +606,15 @@ the query result:
 
 ```text
 Changes:
-Commit 3.00 done by me at 28 Feb 2021, 14:10:06 :
+Commit 3.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'salary' value changed from '1100' to '1200'
-Commit 2.00 done by me at 28 Feb 2021, 14:10:06 :
+  - 'salary' changed: '1100' -> '1200'
+Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'salary' value changed from '1000' to '1100'
-Commit 1.00 done by me at 28 Feb 2021, 14:10:06 :
+  - 'salary' changed: '1000' -> '1100'
+Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'salary' value changed from '0' to '1000'
+  - 'salary' = '1000'
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
@@ -817,16 +811,15 @@ output:
 
 ```text
 Changes:
-Commit 2.00 done by me at 11 Mar 2021, 17:47:44 :
+Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'age' value changed from '20' to '30'
-  - 'salary' value changed from '2000' to '3000'
-Commit 1.00 done by me at 11 Mar 2021, 17:47:44 :
+  - 'age' changed: '20' -> '30'
+  - 'salary' changed: '2000' -> '3000'
+Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
 * new object: Employee/bob
-* changes on Employee/bob :
-  - 'age' value changed from '0' to '20'
-  - 'name' value changed from '' to 'bob'
-  - 'salary' value changed from '0' to '2000'
+  - 'age' = '20'
+  - 'name' = 'bob'
+  - 'salary' = '2000'
 
 Snapshot{commit:2.00, id:Employee/bob, version:2, state:{age:30, name:bob, salary:3000, subordinates:[]}}
 Snapshot{commit:1.00, id:Employee/bob, version:1, state:{age:20, name:bob, salary:2000, subordinates:[]}}
@@ -1127,66 +1120,92 @@ the query result:
 
 ```text
 Changes:
-Commit 2.00 done by author at 28 Feb 2021, 14:21:27 :
+Commit 2.00 done by author at 16 Mar 2021, 22:20:41 :
 * changes on Employee/bob :
-  - 'age' value changed from '30' to '31'
-  - 'primaryAddress.city' value changed from 'Paris' to 'London'
-Commit 1.00 done by author at 28 Feb 2021, 14:21:27 :
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:20:41 :
 * new object: Employee/bob
+  - 'age' = '30'
+  - 'name' = 'bob'
+  - 'salary' = '1000'
+  
+Changes:
+Commit 2.00 done by author at 16 Mar 2021, 22:20:41 :
 * changes on Employee/bob :
-  - 'age' value changed from '0' to '30'
-  - 'name' value changed from '' to 'bob'
-  - 'postalAddress.city' value changed from '' to 'Paris'
-  - 'primaryAddress.city' value changed from '' to 'Paris'
-  - 'salary' value changed from '0' to '1000'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:20:41 :
+* new object: Employee/bob  
 ```
 
-Results are similar when the `childValueObjects` filter is applied to a Snapshot query.
+Results are similar when the child Value Objects filter is applied to a Snapshot query.
 Snapshots of **changed** child Value Objects are returned together with the owning Entity snapshot.
 
-<h3 id="new-object-filter">NewObject changes filter</h3>
-This filter only affects queries for Changes, by default it’s disabled.
-When enabled, a query produces additional changes for initial Snapshots.
-An initial Snapshot is taken when an object is committed to JaversRepository for the first time.
+<h3 id="initial-changes-filter">Initial Changes switch</h3>
+This switch affects queries for Changes and also `javers.compare()`.
+Since Javers 6.0, the Initial Changes switch
+is controlled on the Javers instance level
+by `JaversBuilder.withInitialValueChanges()` and it is **enabled by default**.
 
-With this filter, you can query for the initial state of an object.
-It’s represented as a NewObject change, followed by a list of property changes from null to something.
+When the switch is enabled, Javers generates additional set of Initial Changes for each
+property of a NewObject to capture its state.
+Internally, Javers generates Initial Changes by comparing a virtual, totally empty object
+with a real NewObject.
 
-Let’s see how it works in the example:
+Let’s see how the Initial Changes switch works when on and off:
 
 ```groovy
-def "should query for changes with NewObject filter"() {
-    given:
-    def javers = JaversBuilder.javers().build()
+def "should query for changes with/without InitialValueChanges"() {
+  when:
+  def javers = JaversBuilder.javers().build()
 
-    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
 
-    when:
-    def changes = javers
-        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
-        .withNewObjectChanges(true).build() )
+  Changes changes = javers
+          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
 
-    then:
-    println changes.prettyPrint()
-    assert changes.size() == 5
-    assert changes[4] instanceof NewObject
-}
+  then:
+  println "with InitialValueChanges:"
+  println changes.prettyPrint()
+  assert changes.size() == 5
+
+  when:
+  javers = JaversBuilder.javers()
+          .withInitialValueChanges(false).build() // !
+
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
+
+  changes = javers
+          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
+
+  then:
+  println "without InitialValueChanges:"
+  println changes.prettyPrint()
+  assert changes.size() == 2
 ```
 
-the query result:
+the query results:
 
 ```text
+with InitialValueChanges:
 Changes:
-Commit 2.0 done by author at 14 Apr 2018, 12:13:24 :
+Commit 2.00 done by author at 16 Mar 2021, 22:22:34 :
 * changes on Employee/bob :
-  - 'salary' changed from '1000' to '1200'
-Commit 1.0 done by author at 14 Apr 2018, 12:13:24 :
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:22:34 :
 * new object: Employee/bob
+  - 'age' = '30'
+  - 'name' = 'bob'
+  - 'salary' = '1000'
+
+without InitialValueChanges:
+Changes:
+Commit 2.00 done by author at 16 Mar 2021, 22:22:34 :
 * changes on Employee/bob :
-  - 'age' changed from '0' to '30'
-  - 'name' changed from '' to 'bob'
-  - 'salary' changed from '0' to '1000'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:22:34 :
+* new object: Employee/bob
 ```
 
 <h2 id="entity-refactoring">Refactoring Entities with @TypeName</h2>
