@@ -1144,7 +1144,7 @@ Snapshots of **changed** child Value Objects are returned together with the owni
 This switch affects queries for Changes and also `javers.compare()`.
 Since Javers 6.0, the Initial Changes switch
 is controlled on the Javers instance level
-by `JaversBuilder.withInitialValueChanges()` and it is **enabled by default**.
+by `JaversBuilder.withInitialChanges()` and it is **enabled by default**.
 
 When the switch is enabled, Javers generates additional set of Initial Changes for each
 property of a NewObject to capture its state.
@@ -1154,7 +1154,7 @@ with a real NewObject.
 Let’s see how the Initial Changes switch works when on and off:
 
 ```groovy
-def "should query for changes with/without InitialValueChanges"() {
+def "should query for changes with/without initialChanges"() {
   when:
   def javers = JaversBuilder.javers().build()
 
@@ -1165,13 +1165,13 @@ def "should query for changes with/without InitialValueChanges"() {
           .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
 
   then:
-  println "with InitialValueChanges:"
+  println "with initialChanges:"
   println changes.prettyPrint()
   assert changes.size() == 5
 
   when:
   javers = JaversBuilder.javers()
-          .withInitialValueChanges(false).build() // !
+          .withInitialChanges(false).build() // !
 
   javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
   javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
@@ -1180,31 +1180,32 @@ def "should query for changes with/without InitialValueChanges"() {
           .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
 
   then:
-  println "without InitialValueChanges:"
+  println "without initialChanges:"
   println changes.prettyPrint()
   assert changes.size() == 2
+}
 ```
 
 the query results:
 
 ```text
-with InitialValueChanges:
+with initialChanges:
 Changes:
-Commit 2.00 done by author at 16 Mar 2021, 22:22:34 :
+Commit 2.00 done by author at 20 Mar 2021, 16:09:28 :
 * changes on Employee/bob :
   - 'salary' changed: '1000' -> '1200'
-Commit 1.00 done by author at 16 Mar 2021, 22:22:34 :
+Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
 * new object: Employee/bob
   - 'age' = '30'
   - 'name' = 'bob'
   - 'salary' = '1000'
 
-without InitialValueChanges:
+without initialChanges:
 Changes:
-Commit 2.00 done by author at 16 Mar 2021, 22:22:34 :
+Commit 2.00 done by author at 20 Mar 2021, 16:09:28 :
 * changes on Employee/bob :
   - 'salary' changed: '1000' -> '1200'
-Commit 1.00 done by author at 16 Mar 2021, 22:22:34 :
+Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
 * new object: Employee/bob
 ```
 
@@ -1293,14 +1294,13 @@ Output:
 
 ```txt
 Changes:
-Commit 2.00 done by author at 28 Feb 2021, 12:44:45 :
+Commit 2.00 done by author at 20 Mar 2021, 15:57:13 :
 * changes on Person/1 :
-  - 'city' value changed from '' to 'London'
-  - 'name' value changed from 'Bob' to 'Uncle Bob'
-Commit 1.00 done by author at 28 Feb 2021, 12:44:45 :
+  - 'city' = 'London'
+  - 'name' changed: 'Bob' -> 'Uncle Bob'
+Commit 1.00 done by author at 20 Mar 2021, 15:57:13 :
 * new object: Person/1
-* changes on Person/1 :
-  - 'name' value changed from '' to 'Bob'
+  - 'name' = 'Bob'
 ```
 
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
@@ -1374,13 +1374,12 @@ Output:
 
 ```txt
 Changes:
-Commit 2.00 done by author at 28 Feb 2021, 12:51:48 :
+Commit 2.00 done by author at 20 Mar 2021, 15:57:56 :
 * changes on org.javers.core.examples.PersonSimple/1 :
-  - 'name' value changed from 'Bob' to 'Uncle Bob'
-Commit 1.00 done by author at 28 Feb 2021, 12:51:48 :
+  - 'name' changed: 'Bob' -> 'Uncle Bob'
+Commit 1.00 done by author at 20 Mar 2021, 15:57:56 :
 * new object: org.javers.core.examples.PersonSimple/1
-* changes on org.javers.core.examples.PersonSimple/1 :
-  - 'name' value changed from '' to 'Bob'
+  - 'name' = 'Bob'
 ```
 
 In this case, both `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
@@ -1464,18 +1463,18 @@ Output:
 
 ```text
 Changes:
-Commit 3.00 done by author at 28 Feb 2021, 12:56:17 :
+Commit 3.00 done by author at 20 Mar 2021, 15:58:48 :
 * changes on Person/1 :
-  - 'address.street' value changed from 'Green 50' to 'Green 55'
-Commit 2.00 done by author at 28 Feb 2021, 12:56:17 :
+  - 'address.street' changed: 'Green 50' -> 'Green 55'
+Commit 2.00 done by author at 20 Mar 2021, 15:58:48 :
 * changes on Person/1 :
-  - 'address.city' value changed from '' to 'London'
-  - 'address.email' value changed from 'me@example.com' to ''
-  - 'address.street' value changed from '' to 'Green 50'
-  - 'address.verified' value changed from 'false' to 'true'
-Commit 1.00 done by author at 28 Feb 2021, 12:56:17 :
+  - 'address.city' = 'London'
+  - 'address.email' value 'me@example.com' unset
+  - 'address.street' = 'Green 50'
+  - 'address.verified' changed: 'false' -> 'true'
+Commit 1.00 done by author at 20 Mar 2021, 15:58:48 :
 * changes on Person/1 :
-  - 'address.email' value changed from '' to 'me@example.com'
+  - 'address.email' = 'me@example.com'
 ```
 
 As you can see, all three versions of the ValueObject address share the same GlobalId

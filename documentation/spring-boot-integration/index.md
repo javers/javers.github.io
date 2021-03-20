@@ -56,8 +56,8 @@ javers:
   commitIdGenerator: synchronized_sequence
   prettyPrint: true
   typeSafeValues: false
-  initialValueChanges: true
-  terminalValueChanges: true
+  initialChanges: true
+  terminalChanges: true
   packagesToScan:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
