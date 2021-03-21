@@ -179,21 +179,19 @@ the output:
 ```text
 Changes prettyPrint :
 Changes:
-Commit 2.0 done by author at 15 Apr 2018, 22:50:15 :
+Commit 2.00 done by author at 21 Mar 2021, 19:34:49 :
 * changes on Employee/Frodo :
-  - 'salary' changed from '10000' to '11000'
+  - 'salary' changed: '10000' -> '11000'
   - 'subordinates' collection changes :
-    0. 'Employee/Sam' added
+     0. 'Employee/Sam' added
 * new object: Employee/Sam
-* changes on Employee/Sam :
-  - 'boss' changed from '' to 'Employee/Frodo'
-  - 'name' changed from '' to 'Sam'
-  - 'salary' changed from '0' to '2000'
-Commit 1.0 done by author at 15 Apr 2018, 22:50:15 :
+  - 'boss' = 'Employee/Frodo'
+  - 'name' = 'Sam'
+  - 'salary' = '2000'
+Commit 1.00 done by author at 21 Mar 2021, 19:34:49 :
 * new object: Employee/Frodo
-* changes on Employee/Frodo :
-  - 'name' changed from '' to 'Frodo'
-  - 'salary' changed from '0' to '10000'
+  - 'name' = 'Frodo'
+  - 'salary' = '10000'
 ```    
 
 See full source code of this example: [`ChangeLogExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/ChangeLogExample.java).

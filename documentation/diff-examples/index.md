@@ -127,7 +127,7 @@ public void shouldCompareTwoEntities() {
   Diff diff = javers.compare(frodoOld, frodoNew);
 
   //then
-  assertThat(diff.getChanges()).hasSize(9);
+  assertThat(diff.getChanges()).hasSize(14);
 }
 ```
 
@@ -154,41 +154,95 @@ PropertyChange has the following subtypes:
 * [ValueChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java)
   &mdash; changed Primitive or Value.
     
-**You can print** the list of Changes using pretty `toString()`:
+**You can print** the list of Changes using `prettyPrint()()`:
 
 ```java
-System.out.println(diff);
+System.out.println("diff pretty print:");
+System.out.println(diff.prettyPrint());
 ```
 
+output: 
+
 ```text
+diff pretty print:
 Diff:
 * new object: Employee/Sméagol
+  - 'boss' = 'Employee/Frodo'
+  - 'name' = 'Sméagol'
+  - 'salary' = '10000'
 * new object: Employee/Gandalf
+  - 'name' = 'Gandalf'
+  - 'salary' = '10000'
 * changes on Employee/Frodo :
-  - 'age' changed from '40' to '41'
-  - 'boss' changed from '' to 'Employee/Gandalf'
-  - 'position' changed from 'Townsman' to 'Hero'
-  - 'primaryAddress.city' changed from 'Shire' to 'Mordor'
-  - 'salary' changed from '10000' to '12000'
+  - 'age' changed: '40' -> '41'
+  - 'boss' = 'Employee/Gandalf'
+  - 'position' changed: 'Townsman' -> 'Hero'
+  - 'primaryAddress.city' changed: 'Shire' -> 'Mordor'
+  - 'salary' changed: '10000' -> '12000'
   - 'skills' collection changes :
-    . 'agile coaching' added
+     · 'agile coaching' added
   - 'subordinates' collection changes :
-    0. 'Employee/Sméagol' added
+     0. 'Employee/Sméagol' added
 ```
 
 **Iterating** over the list of Changes:
 
 ```java
+System.out.println("iterating over changes:");
 diff.getChanges().forEach(change -> System.out.println("- " + change));
+```
+
+output:
+
+```
+iterating over changes:
+- NewObject{ new object: Employee/Gandalf }
+- NewObject{ new object: Employee/Sméagol }
+- InitialValueChange{ property: 'name', left:'',  right:'Gandalf' }
+- InitialValueChange{ property: 'salary', left:'',  right:'10000' }
+- InitialValueChange{ property: 'name', left:'',  right:'Sméagol' }
+- InitialValueChange{ property: 'salary', left:'',  right:'10000' }
+- ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
+- ValueChange{ property: 'position', left:'Townsman',  right:'Hero' }
+- ValueChange{ property: 'salary', left:'10000',  right:'12000' }
+- ValueChange{ property: 'age', left:'40',  right:'41' }
+- ReferenceChange{ property: 'boss', left:'',  right:'Employee/Gandalf' }
+- ListChange{ property: 'subordinates', elementChanges:1 }
+- SetChange{ property: 'skills', elementChanges:1 }
+- ValueChange{ property: 'city', left:'Shire',  right:'Mordor' }
 ```
 
 Iterating over the list of Changes **grouped by objects**:
 
 ```java
+System.out.println("iterating over changes grouped by objects");
 diff.groupByObject().forEach(byObject -> {
-  System.out.println("* changes on " +byObject.getGlobalId().value() + " : ");
-  byObject.get().forEach(change -> System.out.println("  - " + change));
+    System.out.println("* changes on " +byObject.getGlobalId().value() + " : ");
+    byObject.get().forEach(change -> System.out.println("  - " + change));
 });
+```
+
+output:
+
+```
+iterating over changes grouped by objects
+* changes on Employee/Sméagol : 
+  - NewObject{ new object: Employee/Sméagol }
+  - InitialValueChange{ property: 'name', left:'',  right:'Sméagol' }
+  - InitialValueChange{ property: 'salary', left:'',  right:'10000' }
+  - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
+* changes on Employee/Gandalf : 
+  - NewObject{ new object: Employee/Gandalf }
+  - InitialValueChange{ property: 'name', left:'',  right:'Gandalf' }
+  - InitialValueChange{ property: 'salary', left:'',  right:'10000' }
+* changes on Employee/Frodo : 
+  - ValueChange{ property: 'position', left:'Townsman',  right:'Hero' }
+  - ValueChange{ property: 'salary', left:'10000',  right:'12000' }
+  - ValueChange{ property: 'age', left:'40',  right:'41' }
+  - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Gandalf' }
+  - ListChange{ property: 'subordinates', elementChanges:1 }
+  - SetChange{ property: 'skills', elementChanges:1 }
+  - ValueChange{ property: 'city', left:'Shire',  right:'Mordor' }
 ```
 
 Diff can be easily **serialized to JSON**:
@@ -215,32 +269,15 @@ System.out.println(javers.getJsonConverter().toJson(diff));
       }
     },
     {
-      "changeType": "ValueChange",
-      "globalId": {
-        "valueObject": "org.javers.core.examples.model.Address",
-        "ownerId": {
-          "entity": "Employee",
-          "cdoId": "Frodo"
-        },
-        "fragment": "primaryAddress"
-      },
-      "property": "city",
-      "left": "Shire",
-      "right": "Mordor"
-    },
-    {
-      "changeType": "ValueChange",
+      "changeType": "InitialValueChange",
       "globalId": {
         "entity": "Employee",
-        "cdoId": "Frodo"
+        "cdoId": "Gandalf"
       },
-      "property": "position",
-      "left": "Townsman",
-      "right": "Hero"
-    },
-    ...
-  ]
-}
+      "property": "name",
+      "propertyChangeType": "PROPERTY_VALUE_CHANGED"
+    }
+...
 ```
 
 <h2 id="compare-graphs">Compare graphs</h2>

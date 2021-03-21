@@ -860,15 +860,14 @@ the query result:
 
 ```text
 Changes:
-Commit 4.0 done by Pam at 14 Apr 2018, 11:59:35 :
+Commit 4.00 done by Pam at 21 Mar 2021, 19:36:50 :
 * changes on Employee/bob :
-  - 'age' changed from '31' to '32'
-  - 'salary' changed from '1100' to '1200'
-Commit 2.0 done by Pam at 14 Apr 2018, 11:59:35 :
+  - 'age' changed: '31' -> '32'
+  - 'salary' changed: '1100' -> '1200'
+Commit 2.00 done by Pam at 21 Mar 2021, 19:36:50 :
 * changes on Employee/bob :
-  - 'age' changed from '29' to '30'
-  - 'salary' changed from '900' to '1000'
-
+  - 'age' changed: '29' -> '30'
+  - 'salary' changed: '900' -> '1000'
 ```
 
 <h3 id="commit-property-filter">CommitProperty filter</h3>
