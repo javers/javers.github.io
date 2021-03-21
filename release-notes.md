@@ -8,7 +8,7 @@ submenu: release-notes
 ### <font color="red">6.0.0-RC1</font>
 released on 2021-03-21
 
-**Javers 6.0 comes with the important improvements in the diff algorithm:**
+**Javers 6.0 comes with the important upgrade of the diff algorithm:**
 
 We have redesigned the Javers' core algorithm &mdash; the object diff.
 Now, it gives better, more meaningful, and consistent results in
@@ -69,7 +69,7 @@ or in `application.yml`, if you are using Javers Spring Boot:
 See the [Initial Changes example](/documentation/jql-examples/#initial-changes-filter).<br/>
 See `JaversBuilder.withInitialChanges()` javadoc.
 
-**Other features and improvements added in Javers 6.0**
+**All features and improvements added in Javers 6.0**
 
 * [822](https://github.com/javers/javers/issues/822)
   Fixed **problem with paging** in Shadow queries.
