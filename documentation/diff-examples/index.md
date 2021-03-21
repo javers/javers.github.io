@@ -154,7 +154,7 @@ PropertyChange has the following subtypes:
 * [ValueChange]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java)
   &mdash; changed Primitive or Value.
     
-**You can print** the list of Changes using `prettyPrint()()`:
+**You can print** the list of Changes using `prettyPrint()`:
 
 ```java
 System.out.println("diff pretty print:");

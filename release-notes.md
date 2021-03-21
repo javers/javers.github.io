@@ -11,7 +11,7 @@ released on 2021-03-21
 **Javers 6.0 comes with the important improvements in the diff algorithm:**
 
 We have redesigned the Javers' core algorithm &mdash; the object diff.
-Now it gives better, more meaningful, and consistent results in
+Now, it gives better, more meaningful, and consistent results in
 both `Javers.compare()` and `Javers.findChanges()`.
 
 The new approach improves the diff results for New and Removed Objects
@@ -55,8 +55,8 @@ So, in Javers 6.0, Value Objects (like `Address`) are treated more like containe
 owned by Entities and less like objects with their own indentity and type.
 
 Calculating Initial and Terminal Changes is enabled by default.
-You can disable it using `JaversBuilder.withTerminalChanges(false)`
-and `JaversBuilder.withInitialChanges(false)`,
+You can disable it using `JaversBuilder.withTerminalChanges()`
+and `JaversBuilder.withInitialChanges()`,
 
 or in `application.yml`, if you are using Javers Spring Boot:
 
@@ -66,8 +66,8 @@ or in `application.yml`, if you are using Javers Spring Boot:
    terminalChanges: false
  </pre>
 
-See `JaversBuilder.withInitialChanges()` javadoc.<br/>
-See //TODO doc LINK
+See the [Initial Changes example](/documentation/jql-examples/#initial-changes-filter).<br/>
+See `JaversBuilder.withInitialChanges()` javadoc.
 
 **Other features and improvements added in Javers 6.0**
 
