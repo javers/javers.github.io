@@ -17,7 +17,7 @@ both `Javers.compare()` and `Javers.findChanges()`.
 The new approach improves the diff results for New and Removed Objects
 thanks to the explicitly modeled and unified concepts of **Initial** and **Terminal** Changes.
 
-Now, Javers generates additional set of **Initial Changes** for each 
+Now, Javers generates additional set of **Initial Changes** for each
 property of a New Object to capture its state.
 Internally, Javers calculates Initial Changes by comparing a virtual, totally empty object
 with a real New Object.
@@ -89,9 +89,9 @@ See //TODO doc limit() LINK
 * New or removed Value Objects no longer generate
   `NewObject`, `ObjectRemoved`, nor `ReferenceChange`.
   These changes were considered rather useless.
-  Instead, a state of a new or removed Value Object 
+  Instead, a state of a new or removed Value Object
   is captured by Initial and Terminal Changes.
-  
+
 * New or removed Entities always generate `NewObject`/`ObjectRemoved` changes (it can't be disabled).
 
 * The `javers.newObjectSnapshot` flag is renamed to `javers.initialChanges` and it's enabled by default.
@@ -105,6 +105,13 @@ See //TODO doc limit() LINK
 
 * [911](https://github.com/javers/javers/issues/911) Minor bug fixed, this WARNING
   is no longer shown: An illegal reflective access operation has occurred.
+
+### 5.15.0
+released on 2021-03-12
+
+* [939](https://github.com/javers/javers/issues/939) Added possibility to register
+  Custom JSON TypeAdapters in Spring Boot Starters.
+  See [Registering JSON TypeAdapters](https://javers.org/documentation/spring-boot-integration/#registering-json-type-adapters).
 
 ### 5.14.0
 released on 2020-11-14

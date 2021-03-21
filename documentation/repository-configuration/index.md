@@ -221,48 +221,39 @@ If a table is missing, JaVers simply creates it, together with a sequence and in
 There’s no schema-update, so if you drop a column, index or sequence, it wouldn’t be recreated automatically.
 
 <h2 id="custom-json-serialization">Custom JSON serialization</h2>
-JaVers is meant to support various persistence stores for
-any kind of client’s data. Hence we use JSON format to serialize client’s domain objects.
+JaVers is meant to support various persistence stores (MongoDB, SQL)
+for any kind of your data. Hence, we use JSON format to serialize your objects in a JaversRepository.
 
 JaVers uses the [Gson](http://sites.google.com/site/gson/) library which provides neat
 and pretty JSON representation for well known Java types.
-
-But sometimes Gson’s default JSON representation isn’t what you like.
-This happens when dealing with `Values` like Date, Money or ObjectId.
+But sometimes Gson’s defaults isn’t what you like.
+That happens many times when dealing with `Values` like Date, Money or ObjectId.
 
 Consider the [`org.bson.types.ObjectId`](http://api.mongodb.org/java/2.0/org/bson/types/ObjectId.html) class,
 often used as Id-property for objects persisted in MongoDB.
 
-By default, JaVers serializes ObjectId as follows:
+By default, Gson serializes ObjectId as follows:
 
-<pre>
-  "globalId": {
-    "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
-    "cdoId": <span class='s2'>{
+```json
+  "id": {
       "_time": 1417358422,
       "_machine": 1904935013,
       "_inc": 1615625682,
       "_new": true
-    }</span>
-  }
-</pre>
+  } 
+```
 
-As you can see, ObjectId is serialized using its 4 internal fields.
+As you can see, `ObjectId` is serialized using its 4 internal fields.
 The resulting JSON is verbose and ugly. You would rather expect neat and atomic value like this:
 
-<pre>
-  "globalId": {
-    "entity": "org.javers.core.cases.morphia.MongoStoredEntity",
-    "cdoId": <span class='s2'>"54789e5cfb2ca07e65130e7c"</span>
-    },
-</pre>
+```json
+  "id": "54789e5cfb2ca07e65130e7c"
+```
 
 That’s where custom JSON `TypeAdapters` come into play.
 
-<h2 id="json-type-adapters">JSON TypeAdapters</h2>
-You can easily customize JaVers serialization/deserialization behavior
-by providing TypeAdapters for your `Value` types.  <br/>
-See [TypeAdapter example](/documentation/repository-examples#json-type-adapter) for ObjectId.
+<h3 id="json-type-adapters">JSON TypeAdapters</h3>
+JSON TypeAdapters allows customizing JSON serialization of your Value types.
 
 JaVers supports two families of TypeAdapters.
 
@@ -284,5 +275,116 @@ JaVers supports two families of TypeAdapters.
      Register your adapters with
      [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
-JaVers provides JsonTypeAdapters for some well-known Values like
-`org.joda.time.LocalDate`.
+
+<h3 id="json-type-adapter-example">JSON TypeAdapter example</h3>
+
+Consider the following domain Entity:
+
+```java
+package org.javers.core.cases.morphia;
+
+import org.bson.types.ObjectId;
+... // omitted
+
+@Entity
+public class MongoStoredEntity {
+    @Id
+    private ObjectId _id;
+
+    private String name;
+    ... // omitted
+}
+```
+
+First, we need to implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface.
+In this case, we recommend extending the
+[`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
+abstract class.
+
+[`ObjectIdTypeAdapter.java`]({{ site.github_core_test_java_url }}org/javers/core/examples/ObjectIdTypeAdapter.java):
+
+```java
+package org.javers.core.examples.adapter;
+
+import org.bson.types.ObjectId;
+import org.javers.core.json.BasicStringTypeAdapter;
+
+public class ObjectIdTypeAdapter extends BasicStringTypeAdapter {
+
+    @Override
+    public String serialize(Object sourceValue) {
+        return sourceValue.toString();
+    }
+
+    @Override
+    public Object deserialize(String serializedValue) {
+        return new ObjectId(serializedValue);
+    }
+
+    @Override
+    public Class getValueType() {
+        return ObjectId.class;
+    }
+}
+```
+
+Then, our TypeAdapter should be registered in
+[`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java), and that’s it.
+
+See how it works in the test case &mdash; [`JsonTypeAdapterExample.java`]({{ site.github_core_test_java_url }}org/javers/core/examples/JsonTypeAdapterExample.java):
+
+```java
+@Test
+public void shouldSerializeValueToJsonWithTypeAdapter() {
+    //given
+    Javers javers = JaversBuilder.javers()
+    .registerValueTypeAdapter(new ObjectIdTypeAdapter())
+    .build();
+
+    //when
+    ObjectId id = ObjectId.get();
+    MongoStoredEntity entity = new MongoStoredEntity(id, "alg1", "1.0", "name");
+    javers.commit("author", entity);
+    CdoSnapshot snapshot = javers.getLatestSnapshot(id, MongoStoredEntity.class).get();
+
+    //then
+    String json = javers.getJsonConverter().toJson(snapshot);
+    Assertions.assertThat(json).contains(id.toString());
+
+    System.out.println(json);
+}
+```
+
+
+
+The output:
+
+<pre>
+{
+  "commitMetadata": {
+    "author": "author",
+    "properties": [],
+    "commitDate": "2021-03-12T15:50:17.663813",
+    "commitDateInstant": "2021-03-12T14:50:17.663813Z",
+    "id": 1.00
+  },
+  "globalId": {
+    "entity": "org.javers.core.cases.MongoStoredEntity",
+    "cdoId": <span class='s2'>"54876f694b9d4135b0b179ec"</span>
+  },
+  "state": {
+    "_algorithm": "alg1",
+    "_name": "name",
+    "_id": <span class='s2'>"54876f694b9d4135b0b179ec"</span>,
+    "_version": "1.0"
+  },
+  "changedProperties": [
+    "_algorithm",
+    "_name",
+    "_id",
+    "_version"
+  ],
+  "type": "INITIAL",
+  "version": 1
+}
+</pre>
