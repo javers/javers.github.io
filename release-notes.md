@@ -34,7 +34,7 @@ def diff = javers.compare(new Employee(id: "1", address: null),
 println diff.prettyPrint()
 ```
 
-**Javers 5.x** calculates this (which is not very useful):
+Javers **5.x** calculates this (which is not very useful):
 
 ```
 Diff:
@@ -43,7 +43,7 @@ Diff:
   - 'address' reference changed from '' to '...Sample$Employee/1#address'
 ```
 
-**Javers 6.x** calculates the essentially better diff:
+Javers **6.x** calculates the essentially better diff:
 ```
 Diff:
 * changes on org.javers.core.NewObjectChangesE2ETest$Employee/1 :
@@ -74,13 +74,13 @@ See `JaversBuilder.withInitialChanges()` javadoc.
 * [822](https://github.com/javers/javers/issues/822)
   Fixed **problem with paging** in Shadow queries.
   <br/>
-  Now, `QueryBuilder.skip()` and `QueryBuilder,limit()` works intuitively in `Javers.findShadows()`
+  Now, `QueryBuilder.skip()` and `QueryBuilder,limit()` works intuitively in both `Javers.findShadows()`
   and `Javers.findShadowsAndStream()`.
-  <br/>Both querying methods are unified and generate the same results
+  <br/>Both query methods are unified and generate the same results
   (now, `findShadows()` is only the facade for `findShadowsAndStream()`).
-
-See the [Limit example](/documentation/jql-examples/#limit-filter).<br/>
-See `QueryBuilder.limit()` javadoc.
+  <br/>
+  See the [Limit example](/documentation/jql-examples/#limit-filter).
+  and `QueryBuilder.limit()` javadoc.
 
 * More pretty and concise `Changes.prettyPrint()`,
   see the [changelog example](/documentation/repository-examples/#change-log).<br/>
