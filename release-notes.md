@@ -5,6 +5,107 @@ category: Documentation
 submenu: release-notes
 ---
 
+### <font color="red">6.0.0-RC1</font>
+released on 2021-03-21
+
+**Javers 6.0 comes with the important improvements in the diff algorithm:**
+
+We have redesigned the Javers' core algorithm &mdash; the object diff.
+Now it gives better, more meaningful, and consistent results in
+both `Javers.compare()` and `Javers.findChanges()`.
+
+The new approach improves the diff results for New and Removed Objects
+thanks to the explicitly modeled and unified concepts of **Initial** and **Terminal** Changes.
+
+Now, Javers generates additional set of **Initial Changes** for each
+property of a New Object to capture its state.
+Internally, Javers calculates Initial Changes by comparing a virtual, totally empty object
+with a real New Object.
+
+Symmetrically, additional set of **Terminal Changes** is generated
+for each property of a Removed Object.
+
+For example, consider the diff of two Entities:
+
+```groovy
+def diff = javers.compare(new Employee(id: "1", address: null),
+                          new Employee(id: "1", address: new Address(street: "x", city:"Paris")))
+
+println diff.prettyPrint()
+```
+
+**Javers 5.x** calculates this (which is not very useful):
+
+```
+Diff:
+* new object: org.javers.core.Sample$Employee/1#address
+* changes on org.javers.core.Sample$Employee/1 :
+  - 'address' reference changed from '' to '...Sample$Employee/1#address'
+```
+
+**Javers 6.x** calculates the essentially better diff:
+```
+Diff:
+* changes on org.javers.core.NewObjectChangesE2ETest$Employee/1 :
+  - 'address.city' = 'Paris'
+  - 'address.street' = 'x'
+```
+
+So, in Javers 6.0, Value Objects (like `Address`) are treated more like containers for nested properties
+owned by Entities and less like objects with their own indentity and type.
+
+Calculating Initial and Terminal Changes is enabled by default.
+You can disable it using `JaversBuilder.withTerminalChanges(false)`
+and `JaversBuilder.withInitialChanges(false)`,
+
+or in `application.yml`, if you are using Javers Spring Boot:
+
+ <pre>
+ javers:
+   initialChanges: false
+   terminalChanges: false
+ </pre>
+
+See `JaversBuilder.withInitialChanges()` javadoc.<br/>
+See //TODO doc LINK
+
+**Other features and improvements added in Javers 6.0**
+
+* [822](https://github.com/javers/javers/issues/822)
+  Fixed **problem with paging** in Shadow queries.
+  <br/>
+  Now, `QueryBuilder.skip()` and `QueryBuilder,limit()` works intuitively in `Javers.findShadows()`
+  and `Javers.findShadowsAndStream()`.
+  <br/>Both querying methods are unified and generate the same results
+  (now, `findShadows()` is only the facade for `findShadowsAndStream()`).
+
+See `QueryBuilder.limit()` javadoc.<br/>
+See //TODO doc limit() LINK
+
+* More pretty and concise `Changes.prettyPrint()`, see //TODO doc LINK
+
+* The new `Changes.devPrint()` method for printing Changes in a technical style.
+
+* New or removed Value Objects no longer generate
+  `NewObject`, `ObjectRemoved`, nor `ReferenceChange`.
+  These changes were considered rather useless.
+  Instead, a state of a new or removed Value Object
+  is captured by Initial and Terminal Changes.
+
+* New or removed Entities always generate `NewObject`/`ObjectRemoved` changes (it can't be disabled).
+
+* The `javers.newObjectSnapshot` flag is renamed to `javers.initialChanges` and it's enabled by default.
+
+* The `javers.terminalChanges` flag is added, and it's enabled by default.
+
+* In `Javers.findChanges()`, a `NewObject` change is always generated for each initial Snapshot,
+  it can't be disabled by the `javers.initialChanges` flag.
+
+* The `QueryBuilder.withNewObjectChanges()` method is deprecated and has no effect.
+
+* [911](https://github.com/javers/javers/issues/911) Minor bug fixed, this WARNING
+  is no longer shown: An illegal reflective access operation has occurred.
+
 ### 5.15.0
 released on 2021-03-12
 

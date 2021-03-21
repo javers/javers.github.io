@@ -46,7 +46,7 @@ Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/
 and configure JaVers in the same way as your application (typically by YAML property files).
 
 Here is an example `application.yml` file
-with the full list of JaVers core properties and their default values.
+with the full list of JaVers core properties, and their default values.
 You don’t need to add anything to your configuration, if these defaults are OK for you.
 
 ```
@@ -56,7 +56,8 @@ javers:
   commitIdGenerator: synchronized_sequence
   prettyPrint: true
   typeSafeValues: false
-  newObjectSnapshot: false
+  initialChanges: true
+  terminalChanges: true
   packagesToScan:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true

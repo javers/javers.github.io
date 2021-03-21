@@ -66,8 +66,8 @@ Queries can have one or more optional [filters](#query-filters):
 * [commitDate](#commit-date-filter),
 * [commitId](#commit-id-filter),
 * [snapshot version](#version-filter),
-* [childValueObjects](#child-value-objects-filter),
-* [newObject changes](#new-object-filter).
+* [child ValueObjects](#child-value-objects-filter),
+* [initial Changes](#initial-changes-filter).
 
 JQL can adapt when you refactor your domain classes:
 
@@ -104,7 +104,8 @@ def "should query for Shadows of an object"() {
       javers.commit("author", bob)       // second commit
 
   when:
-      def shadows = javers.findShadows(QueryBuilder.byInstance(bob).build())
+      List<Shadow<Employee>> shadows = javers.findShadows(
+              QueryBuilder.byInstance(bob).build())
 
   then:
       assert shadows.size() == 2
@@ -152,7 +153,7 @@ Scopes are defined in the
   &mdash; JaVers tries to restore full object graphs with
   (possibly) all objects loaded.
 
-The following example shows how all the scopes work &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L177):
+The following example shows how the scopes work &mdash; [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy#L177):
 
 ```groovy
 def "should query for Shadows with different scopes"(){
@@ -246,27 +247,28 @@ def "should query for Changes made on any object"() {
     given:
     def javers = JaversBuilder.javers().build()
     def bob = new Employee(name: "bob",
-                           salary: 1000,
-                           primaryAddress: new Address("London"))
+            salary: 1000,
+            primaryAddress: new Address("London"))
     javers.commit("author", bob)       // initial commit
-
+    
     bob.salary = 1200                  // changes
     bob.primaryAddress.city = "Paris"  //
+    
     javers.commit("author", bob)       // second commit
-
+    
     when:
     Changes changes = javers.findChanges( QueryBuilder.anyDomainObject().build() )
+    println changes.prettyPrint()
     
     then:
-    assert changes.size() == 2
-    ValueChange salaryChange = changes.find{it.propertyName == "salary"}
-    ValueChange cityChange = changes.find{it.propertyName == "city"}
+    def lastCommitChanges = changes.groupByCommit()[0].changes
+    assert lastCommitChanges.size() == 2
+    ValueChange salaryChange = lastCommitChanges.find{it.propertyName == "salary"}
+    ValueChange cityChange = lastCommitChanges.find{it.propertyName == "city"}
     assert salaryChange.left ==  1000
     assert salaryChange.right == 1200
     assert cityChange.left ==  "London"
     assert cityChange.right == "Paris"
-    
-    println changes.prettyPrint()
 }
 ```
 
@@ -274,13 +276,16 @@ the query result:
 
 ```text
 Changes:
-Commit 2.0 done by author at 13 Apr 2018, 23:27:38 :
+Commit 2.00 done by author at 16 Mar 2021, 22:04:09 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' changed from 'London' to 'Paris'
-  - 'salary' changed from '1000' to '1200
+  - 'primaryAddress.city' changed: 'London' -> 'Paris'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:04:09 :
+* new object: Employee/bob
+  - 'name' = 'bob'
+  - 'primaryAddress.city' = 'London'
+  - 'salary' = '1000'
 ```
-
-You can also load Changes generated from an initial Snapshot (see [NewObject Filter](#new-object-filter)).
 
 <h3 id="query-for-snapshots">Querying for Snapshots</h3>
 
@@ -357,17 +362,18 @@ Here is the Groovy spec:
 def "should query for Entity changes by instance Id"() {
     given:
     def javers = JaversBuilder.javers().build()
-
+    
     javers.commit("author", new Employee(name:"bob", age:30, salary:1000) )
     javers.commit("author", new Employee(name:"bob", age:31, salary:1200) )
     javers.commit("author", new Employee(name:"john",age:25) )
-
+    
     when:
-    Changes changes = javers.findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
-
-    then:
+    Changes changes = javers.
+            findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
     println changes.prettyPrint()
-    assert changes.size() == 2
+    
+    then:
+    assert changes.size() == 6
 }
 ```
 
@@ -375,10 +381,15 @@ the query result:
 
 ```text
 Changes:
-Commit 2.0 done by author at 13 Apr 2018, 23:33:42 :
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'age' changed from '30' to '31'
-  - 'salary' changed from '1000' to '1200'
+  - 'age' changed: '30' -> '31'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:04:10 :
+* new object: Employee/bob
+  - 'age' = '30'
+  - 'name' = 'bob'
+  - 'salary' = '1000'
 ```
 
 <h3 id="by-value-object-query">Querying for Value Object changes</h3>
@@ -397,30 +408,30 @@ Let’s see how it works:
 def "should query for ValueObject changes by owning Entity instance and class"() {
     given:
     def javers = JaversBuilder.javers().build()
-
+    
     javers.commit("author", new Employee(name:"bob",  postalAddress:  new Address(city:"Paris")))
     javers.commit("author", new Employee(name:"bob",  primaryAddress: new Address(city:"London")))
     javers.commit("author", new Employee(name:"bob",  primaryAddress: new Address(city:"Paris")))
     javers.commit("author", new Employee(name:"lucy", primaryAddress: new Address(city:"New York")))
     javers.commit("author", new Employee(name:"lucy", primaryAddress: new Address(city:"Washington")))
-
+    
     when:
     println "query for ValueObject changes by owning Entity instance Id"
     Changes changes = javers
-        .findChanges( QueryBuilder.byValueObjectId("bob",Employee.class,"primaryAddress").build())
-
-    then:
+            .findChanges( QueryBuilder.byValueObjectId("bob",Employee.class,"primaryAddress").build())
     println changes.prettyPrint()
-    assert changes.size() == 1
-
+    
+    then:
+    assert changes.size() == 2
+    
     when:
     println "query for ValueObject changes by owning Entity class"
     changes = javers
-        .findChanges( QueryBuilder.byValueObject(Employee.class,"primaryAddress").build())
-
-    then:
+            .findChanges( QueryBuilder.byValueObject(Employee.class,"primaryAddress").build())
     println changes.prettyPrint()
-    assert changes.size() == 2
+    
+    then:
+    assert changes.size() == 4
 }
 ```
 
@@ -429,18 +440,27 @@ the query result:
 ```text
 query for ValueObject changes by owning Entity instance Id
 Changes:
-Commit 3.0 done by author at 13 Apr 2018, 23:39:49 :
+Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' changed from 'London' to 'Paris'
+  - 'primaryAddress.city' changed: 'London' -> 'Paris'
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
+* changes on Employee/bob :
+  - 'primaryAddress.city' = 'London'
 
 query for ValueObject changes by owning Entity class
 Changes:
-Commit 5.0 done by author at 13 Apr 2018, 23:39:49 :
+Commit 5.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/lucy :
-  - 'primaryAddress.city' changed from 'New York' to 'Washington'
-Commit 3.0 done by author at 13 Apr 2018, 23:39:49 :
+  - 'primaryAddress.city' changed: 'New York' -> 'Washington'
+Commit 4.00 done by author at 16 Mar 2021, 22:04:10 :
+* changes on Employee/lucy :
+  - 'primaryAddress.city' = 'New York'
+Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'primaryAddress.city' changed from 'London' to 'Paris'
+  - 'primaryAddress.city' changed: 'London' -> 'Paris'
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
+* changes on Employee/bob :
+  - 'primaryAddress.city' = 'London'
 ```
 
 <h3 id="by-class-query">Querying for any object changes by class</h3>
@@ -469,7 +489,7 @@ def "should query for Object changes by its class"() {
 
   then:
   println changes.prettyPrint()
-  assert changes.size() == 2
+  assert changes.size() == 4
 }
 ```
 
@@ -477,12 +497,18 @@ the query result:
 
 ```text
 Changes:
-Commit 4.0 done by me at 13 Apr 2018, 23:53:41 :
+Commit 4.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.SnapshotEntity/2 :
-  - 'valueObjectRef.city' changed from 'Rome' to 'Palma'
-Commit 2.0 done by me at 13 Apr 2018, 23:53:41 :
+  - 'valueObjectRef.city' changed: 'Rome' -> 'Palma'
+Commit 3.00 done by me at 16 Mar 2021, 22:04:10 :
+* changes on org.javers.core.model.SnapshotEntity/2 :
+  - 'valueObjectRef.city' = 'Rome'
+Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.DummyUserDetails/1 :
-  - 'dummyAddress.city' changed from 'London' to 'Paris'
+  - 'dummyAddress.city' changed: 'London' -> 'Paris'
+Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
+* changes on org.javers.core.model.DummyUserDetails/1 :
+  - 'dummyAddress.city' = 'London'
 ```
 
 <h3 id="any-domain-object-query">Querying for any domain object changes</h3>
@@ -509,7 +535,7 @@ def "should query for any domain object changes"() {
 
     then:
     println changes.prettyPrint()
-    assert changes.size() == 2
+    assert changes.size() == 8
 }
 ```
 
@@ -517,12 +543,20 @@ the query result:
 
 ```text
 Changes:
-Commit 4.0 done by author at 14 Apr 2018, 11:44:47 :
+Commit 4.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on org.javers.core.model.DummyUserDetails/1 :
-  - 'someValue' changed from 'old' to 'new'
-Commit 2.0 done by author at 14 Apr 2018, 11:44:47 :
+  - 'someValue' changed: 'old' -> 'new'
+Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
+* new object: org.javers.core.model.DummyUserDetails/1
+  - 'id' = '1'
+  - 'someValue' = 'old'
+Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'age' changed from '30' to '31'
+  - 'age' changed: '30' -> '31'
+Commit 1.00 done by author at 16 Mar 2021, 22:04:10 :
+* new object: Employee/bob
+  - 'age' = '30'
+  - 'name' = 'bob'
 ```
 
 <h2 id="query-filters">Query filters</h2>
@@ -535,8 +569,8 @@ For each query you can add one or more optional filters:
 [commitDate](#commit-date-filter),
 [commitId](#commit-id-filter),
 [snapshot version](#version-filter),
-[childValueObjects](#child-value-objects-filter) and
-[newObject changes](#new-object-filter) filter.
+[child ValueObjects](#child-value-objects-filter) and
+[initial Changes](#initial-changes-filter).
 
 All examples are in [`JqlExample.groovy`]({{ site.github_core_test_url }}org/javers/core/examples/JqlExample.groovy).
 
@@ -563,7 +597,7 @@ def "should query for changes (and snapshots) with property filter"() {
 
     then:
     println changes.prettyPrint()
-    assert changes.size() == 2
+    assert changes.size() == 3
     assert javers.findSnapshots(query).size() == 3
 }
 ```
@@ -572,98 +606,226 @@ the query result:
 
 ```text
 Changes:
-Commit 3.0 done by me at 14 Apr 2018, 11:49:38 :
+Commit 3.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'salary' changed from '1100' to '1200'
-Commit 2.0 done by me at 14 Apr 2018, 11:49:38 :
+  - 'salary' changed: '1100' -> '1200'
+Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'salary' changed from '1000' to '1100'
+  - 'salary' changed: '1000' -> '1100'
+Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
+* changes on Employee/bob :
+  - 'salary' = '1000'
 ```
 
 <h3 id="limit-filter">Limit filter</h3>
-Optional parameter for all queries, default limit is 100.
-It simply limits the number of snapshots to be read from JaversRepository.
-Always choose reasonable limits to improve performance of your queries and to save server heap size.
+Use the limit parameter to set the maximum 
+number of Snapshots or Shadows loaded from a JaversRepository.
+Choose a reasonable limit to improve performance of your queries.
+By default, the limit is set to 100. It's optional for all queries.
 
-In the example we set limit to 2 so only Bob’s last 2 snapshots are taken into account,
-which means 2 (of 3) changes in the result list.
+There are four JQL `find*()` methods, and the limit parameter affects all of them, 
+but in a different way:
+
+* `Javers.findSnapshots()` &mdash; the limit works intuitively. 
+  It's the maximum size of the returned list.
+  It's applied directly to the underlying database query.
+  On SQL database, it limits the number of records loaded from the `jv_snapshots` table.
+  On MongoDB, it limits the number of documents loaded from the `jv_snapshots` collection.
+  
+* `Javers.findChanges()` &mdash; the limit is applied to 
+  the Snapshots query, which underlies the Changes query.
+  The size of the returned list can be **greater** than limit, 
+  because, typically a difference between any two Snapshots consists of many atomic Changes. 
+  
+* `Javers.findShadows()` &mdash; the limit is applied to Shadows,
+  it limits the size of the returned list.
+  The underlying Snapshots query uses its own limit &mdash; `QueryBuilder.snapshotQueryLimit()`.
+  Since one Shadow might be reconstructed from many Snapshots,
+  when `snapshotQueryLimit()` is hit, Javers repeats a given Shadow query
+  to load a next *frame* of Shadows until required limit is reached.
+  
+* `Javers.findShadowsAndStream()` &mdash;
+  the limit works like in `findShadows()`, it limits the size of the returned stream.
+  The main difference is that the stream is lazy loaded and subsequent *frame* queries 
+  are executed gradually, during the stream consumption.
+  
+In the following example we set the limit parameter to 2,
+and we load Bob’s Snapshots and Changes. 
+Only the last 2 Snapshots are loaded which means 4 Changes:
 
 ```groovy
-def "should query for changes (and snapshots) with limit filter"() {
+def "Snapshots limit in findChanges and findShadows"() {
     given:
     def javers = JaversBuilder.javers().build()
-
-    javers.commit( "me", new Employee(name:"bob", salary: 900) )
-    javers.commit( "me", new Employee(name:"bob", salary: 1000) )
-    javers.commit( "me", new Employee(name:"bob", salary: 1100) )
-    javers.commit( "me", new Employee(name:"bob", salary: 1200) )
-
-    when:
-    def query = QueryBuilder.byInstanceId("bob", Employee.class).limit(2).build()
-    Changes changes = javers.findChanges(query)
-
+    
+    def bob = new Employee("Bob", 9_000, "ScrumMaster")
+    bob.age = 20
+    
+    10.times {
+      bob.salary += 1_000
+      bob.age += 1
+      javers.commit("author", bob)
+    }
+    
+    def query = QueryBuilder.byInstanceId("Bob", Employee).limit(2).build()
+    
+    when: "findSnapshots - 2 latest snapshots are loaded and returned"
+    List<CdoSnapshot> snapshots = javers.findSnapshots(query)
+    snapshots.each {println(it)}
+    
     then:
+    snapshots.size() == 2
+    
+    when: "findChanges - two latest snapshots are loaded, 4 changes are returned"
+    Changes changes = javers.findChanges(query)
     println changes.prettyPrint()
-    assert changes.size() == 2
-    assert javers.findSnapshots(query).size() == 2
+    
+    then:
+    changes.size() == 4
 }
 ```
 
-the query result:
+output:
 
 ```text
+Snapshot{commit:10.00, id:Employee/Bob, version:10, state:{age:30, name:Bob, position:ScrumMaster, salary:19000, subordinates:[]}}
+Snapshot{commit:9.00, id:Employee/Bob, version:9, state:{age:29, name:Bob, position:ScrumMaster, salary:18000, subordinates:[]}}
+
 Changes:
-Commit 4.0 done by me at 14 Apr 2018, 11:51:30 :
-* changes on Employee/bob :
-  - 'salary' changed from '1100' to '1200'
-Commit 3.0 done by me at 14 Apr 2018, 11:51:29 :
-* changes on Employee/bob :
-  - 'salary' changed from '1000' to '1100'
+Commit 10.00 done by author at 15 Mar 2021, 22:51:16 :
+* changes on Employee/Bob :
+  - 'age' changed: '29' -> '30'
+  - 'salary' changed: '18000' -> '19000'
+Commit 9.00 done by author at 15 Mar 2021, 22:51:16 :
+* changes on Employee/Bob :
+  - 'age' changed: '28' -> '29'
+  - 'salary' changed: '17000' -> '18000'
+```
+
+Then, we can use the limit parameter to load the latest 2 Shadows of Bob.
+In this case, each Bob’s Shadow is reconstructed from 3 Snapshots, because
+Bob has 2 addresses which are Value Objects:
+
+```groovy
+def "Shadows limit in findShadows and findShadowsAndStream"() {
+    given:
+    def javers = JaversBuilder.javers().build()
+
+    def bob = new Employee("Bob", 9_000, "ScrumMaster")
+    bob.primaryAddress = new Address("London")
+    bob.postalAddress = new Address("Paris")
+
+    3.times {
+        bob.salary += 1_000
+        bob.primaryAddress.city = "London $it"
+        bob.postalAddress.city = "Paris $it"
+        javers.commit("author", bob)
+    }
+
+    def query = QueryBuilder.byInstanceId("Bob", Employee).limit(2).build()
+
+    when : "findShadows() - 9 snapshots are loaded, 2 Shadows are returned"
+    List<Employee> shadows = javers.findShadows(query)
+    shadows.each {println(it)}
+
+    then:
+    shadows.size() == 2
+    println("query stats: " + query)
+
+    when : "findShadowsAndStream() - 9 snapshots are loaded, 2 Shadows are returned"
+    Stream<Shadow<Employee>> shadowsStream = javers.findShadowsAndStream(query)
+
+    then:
+    shadowsStream.count() == 2
+}
+```
+
+output:
+
+```text
+Shadow{it=Employee{ name: 'Bob', salary: '12000', primaryAddress: 'Address{ city: 'London 2' }' }, commitMetadata=CommitMetadata{ author: 'author', util: '11 Mar 2021, 16:36:58', id: '3.00' }}
+Shadow{it=Employee{ name: 'Bob', salary: '11000', primaryAddress: 'Address{ city: 'London 1' }' }, commitMetadata=CommitMetadata{ author: 'author', util: '11 Mar 2021, 16:36:58', id: '2.00' }}
+
+query stats: JqlQuery {
+  IdFilterDefinition{ globalId: 'org.javers.core.examples.model.Employee/Bob' }
+  QueryParams{ aggregate: 'true', limit: '2' }
+  shadowScope: SHALLOW
+  ShadowStreamStats{  
+    executed in millis: '19'  
+    DB queries: '1'  
+    snapshots loaded: '9'  
+    SHALLOW snapshots: '9'  
+    Shadow stream frame queries: '1'  
+  }
+}
 ```
 
 <h3 id="skip-filter">Skip filter</h3>
-This is an optional parameter for all queries (the default skip is 0).
-It defines the offset of the first (most recent) snapshot that JaVers should fetch from a repository.
+Use the skip parameter to define the offset of the first (most recent) Snapshot or Shadow 
+that JaVers fetches from a repository.
+The default skip is 0. It's optional for all queries.
 
-Skip and limit parameters can be useful for implementing pagination.
+You can use skip and limit parameters together to implement pagination.
 
-In the example we set skip to 1 so only Bob’s first three snapshots are being compared,
-which means four changes
-(two changes between third and second commit and two changes between second and first commit).
+In the following example we use skip to omit the most recent Snapshots and
+Shadows of Bob:
 
 ```groovy
-def "should query for changes (and snapshots) with skip filter"() {
+def "Skip parameter in findChanges, findSnapshots, and findShadows"() {
     given:
     def javers = JaversBuilder.javers().build()
-
-    javers.commit( "me", new Employee(name:"bob", age:29, salary: 900) )
-    javers.commit( "me", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "me", new Employee(name:"bob", age:31, salary: 1100) )
-    javers.commit( "me", new Employee(name:"bob", age:32, salary: 1200) )
-
-    when:
-    def query = QueryBuilder.byInstanceId("bob", Employee.class).skip(1).build()
+    
+    javers.commit( "me", new Employee(name:"bob", age:20, salary: 2000) )
+    javers.commit( "me", new Employee(name:"bob", age:30, salary: 3000) )
+    javers.commit( "me", new Employee(name:"bob", age:40, salary: 4000) )
+    javers.commit( "me", new Employee(name:"bob", age:50, salary: 5000) )
+    
+    def query = QueryBuilder.byInstanceId("bob", Employee.class).skip(2).build()
+    
+    when: "findChanges()"
     Changes changes = javers.findChanges( query )
-
+    
     then:
     println changes.prettyPrint()
-    assert changes.size() == 4
-    assert javers.findSnapshots(query).size() == 3
+    assert changes.size() == 6
+    
+    when: "findSnapshots()"
+    List<CdoSnapshot> snapshots = javers.findSnapshots( query )
+    
+    then:
+    snapshots.each {println it}
+    assert snapshots.size() == 2
+    assert snapshots[0].getPropertyValue("salary") == 3000
+    
+    when: "findShadows()"
+    List<Shadow<Employee>> shadows = javers.findShadows( query )
+    
+    then:
+    shadows.each {println it}
+    assert shadows.size() == 2
+    assert shadows[0].get().salary == 3000
 }
 ```
 
-the query result:
+output:
 
 ```text
 Changes:
-Commit 3.0 done by me at 14 Apr 2018, 11:57:43 :
+Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
 * changes on Employee/bob :
-  - 'age' changed from '30' to '31'
-  - 'salary' changed from '1000' to '1100'
-Commit 2.0 done by me at 14 Apr 2018, 11:57:43 :
-* changes on Employee/bob :
-  - 'age' changed from '29' to '30'
-  - 'salary' changed from '900' to '1000'
+  - 'age' changed: '20' -> '30'
+  - 'salary' changed: '2000' -> '3000'
+Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
+* new object: Employee/bob
+  - 'age' = '20'
+  - 'name' = 'bob'
+  - 'salary' = '2000'
+
+Snapshot{commit:2.00, id:Employee/bob, version:2, state:{age:30, name:bob, salary:3000, subordinates:[]}}
+Snapshot{commit:1.00, id:Employee/bob, version:1, state:{age:20, name:bob, salary:2000, subordinates:[]}}
+
+Shadow{it=Employee{ name: 'bob', salary: '3000' }, commitMetadata=CommitMetadata{ author: 'me', util: '11 Mar 2021, 17:47:44', id: '2.00' }}
+Shadow{it=Employee{ name: 'bob', salary: '2000' }, commitMetadata=CommitMetadata{ author: 'me', util: '11 Mar 2021, 17:47:44', id: '1.00' }}
 ```
 
 <h3 id="author-filter">Author filter</h3>
@@ -939,78 +1101,112 @@ def "should query for changes made on Entity and its ValueObjects by InstanceId 
 
   when: "query by instance Id"
   def query = QueryBuilder.byInstanceId("bob", Employee.class).withChildValueObjects().build()
-  def changes = javers.findChanges( query )
+  Changes changes = javers.findChanges( query )
 
   then:
   println changes.prettyPrint()
-  assert changes.size() == 2
+  assert changes.size() == 8
 
   when: "query by Entity class"
   query = QueryBuilder.byClass(Employee.class).withChildValueObjects().build()
   changes = javers.findChanges( query )
 
   then:
+  assert changes.size() == 8
+}
+```
+
+the query result:
+
+```text
+Changes:
+Commit 2.00 done by author at 16 Mar 2021, 22:20:41 :
+* changes on Employee/bob :
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:20:41 :
+* new object: Employee/bob
+  - 'age' = '30'
+  - 'name' = 'bob'
+  - 'salary' = '1000'
+  
+Changes:
+Commit 2.00 done by author at 16 Mar 2021, 22:20:41 :
+* changes on Employee/bob :
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 16 Mar 2021, 22:20:41 :
+* new object: Employee/bob  
+```
+
+Results are similar when the child Value Objects filter is applied to a Snapshot query.
+Snapshots of **changed** child Value Objects are returned together with the owning Entity snapshot.
+
+<h3 id="initial-changes-filter">Initial Changes switch</h3>
+This switch affects queries for Changes and also `javers.compare()`.
+Since Javers 6.0, the Initial Changes switch
+is controlled on the Javers instance level
+by `JaversBuilder.withInitialChanges()` and it is **enabled by default**.
+
+When the switch is enabled, Javers generates additional set of Initial Changes for each
+property of a NewObject to capture its state.
+Internally, Javers generates Initial Changes by comparing a virtual, totally empty object
+with a real NewObject.
+
+Let’s see how the Initial Changes switch works when on and off:
+
+```groovy
+def "should query for changes with/without initialChanges"() {
+  when:
+  def javers = JaversBuilder.javers().build()
+
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
+
+  Changes changes = javers
+          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
+
+  then:
+  println "with initialChanges:"
+  println changes.prettyPrint()
+  assert changes.size() == 5
+
+  when:
+  javers = JaversBuilder.javers()
+          .withInitialChanges(false).build() // !
+
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
+  javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
+
+  changes = javers
+          .findChanges( QueryBuilder.byInstanceId("bob", Employee.class).build() )
+
+  then:
+  println "without initialChanges:"
+  println changes.prettyPrint()
   assert changes.size() == 2
 }
 ```
 
-the query result:
+the query results:
 
 ```text
+with initialChanges:
 Changes:
-Commit 2.0 done by author at 14 Apr 2018, 12:07:12 :
+Commit 2.00 done by author at 20 Mar 2021, 16:09:28 :
 * changes on Employee/bob :
-  - 'age' changed from '30' to '31'
-  - 'primaryAddress.city' changed from 'Paris' to 'London'
-```
-
-Results are similar when the `childValueObjects` filter is applied to Snapshot queries.
-Snapshots of **changed** child Value Objects are returned together with
-owning Entity snapshot.
-
-<h3 id="new-object-filter">NewObject changes filter</h3>
-This filter only affects queries for Changes, by default it’s disabled.
-When enabled, a query produces additional changes for initial Snapshots.
-An initial Snapshot is taken when an object is committed to JaversRepository for the first time.
-
-With this filter, you can query for the initial state of an object.
-It’s represented as a NewObject change, followed by a list of property changes from null to something.
-
-Let’s see how it works in the example:
-
-```groovy
-def "should query for changes with NewObject filter"() {
-    given:
-    def javers = JaversBuilder.javers().build()
-
-    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1000) )
-    javers.commit( "author", new Employee(name:"bob", age:30, salary: 1200) )
-
-    when:
-    def changes = javers
-        .findChanges( QueryBuilder.byInstanceId("bob", Employee.class)
-        .withNewObjectChanges(true).build() )
-
-    then:
-    println changes.prettyPrint()
-    assert changes.size() == 5
-    assert changes[4] instanceof NewObject
-}
-```
-
-the query result:
-
-```text
-Changes:
-Commit 2.0 done by author at 14 Apr 2018, 12:13:24 :
-* changes on Employee/bob :
-  - 'salary' changed from '1000' to '1200'
-Commit 1.0 done by author at 14 Apr 2018, 12:13:24 :
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
 * new object: Employee/bob
+  - 'age' = '30'
+  - 'name' = 'bob'
+  - 'salary' = '1000'
+
+without initialChanges:
+Changes:
+Commit 2.00 done by author at 20 Mar 2021, 16:09:28 :
 * changes on Employee/bob :
-  - 'age' changed from '0' to '30'
-  - 'name' changed from '' to 'bob'
-  - 'salary' changed from '0' to '1000'
+  - 'salary' changed: '1000' -> '1200'
+Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
+* new object: Employee/bob
 ```
 
 <h2 id="entity-refactoring">Refactoring Entities with @TypeName</h2>
@@ -1078,31 +1274,33 @@ def '''should allow Entity class name change
     given:
     def javers = JaversBuilder.javers().build()
     javers.commit('author', new Person(id:1, name:'Bob'))
-
+    
     when: '''Refactoring happens here, Person.class is removed,
              new PersonRefactored.class appears'''
     javers.commit('author', new PersonRefactored(id:1, name:'Uncle Bob', city:'London'))
-
+    
     def changes =
-        javers.findChanges( QueryBuilder.byInstanceId(1, PersonRefactored.class).build() )
-
-    then: 'two ValueChanges are expected'
-    assert changes.size() == 2
-
-    with(changes.find{it.propertyName == "name"}){
-        assert left == 'Bob'
-        assert right == 'Uncle Bob'
-    }
-
-    with(changes.find{it.propertyName == "city"}){
-        assert left == null
-        assert right == 'London'
-    }
-
-    changes.each { assert it.affectedGlobalId.value() == 'Person/1' }
-
+            javers.findChanges( QueryBuilder.byInstanceId(1, PersonRefactored.class).build() )
     println changes.prettyPrint()
+    
+    then: 'three ValueChanges and one NewObject change is expected'
+    assert changes.size() == 4
+    
+    changes.each { assert it.affectedGlobalId.value() == 'Person/1' }
 }
+```
+
+Output:
+
+```txt
+Changes:
+Commit 2.00 done by author at 20 Mar 2021, 15:57:13 :
+* changes on Person/1 :
+  - 'city' = 'London'
+  - 'name' changed: 'Bob' -> 'Uncle Bob'
+Commit 1.00 done by author at 20 Mar 2021, 15:57:13 :
+* new object: Person/1
+  - 'name' = 'Bob'
 ```
 
 As you can see, both `Person(id:1)` and `PersonRefactored(id:1)`
@@ -1110,8 +1308,7 @@ objects share the same GlobalId &mdash; `'Person/1'`, so they match perfectly.
 
 **I forgot about @TypeName...** <br/>
 What if I forgot to use @TypeName, but my objects are already persisted
-in JaversRepository
-and I need to refactor now?
+in a JaversRepository and I need to refactor now?
 
 There are two possible solutions. The first is elegant but requires more work,
 the second is quick but somewhat dirty.
@@ -1160,20 +1357,32 @@ def '''should allow Entity class name change
   javers.commit('author', new PersonRetrofitted(id:1, name:'Uncle Bob'))
 
   def changes =
-      javers.findChanges( QueryBuilder.byInstanceId(1,PersonRetrofitted.class).build() )
+          javers.findChanges( QueryBuilder.byInstanceId(1,PersonRetrofitted.class).build() )
+  println changes.prettyPrint()
 
-  then: 'one ValueChange is expected'
-  assert changes.size() == 1
+  then: 'two ValueChange and one NewObject change is expected'
+  assert changes.size() == 3
   with(changes[0]){
-      assert left == 'Bob'
-      assert right == 'Uncle Bob'
-      assert affectedGlobalId.value() == 'org.javers.core.examples.PersonSimple/1'
+    assert left == 'Bob'
+    assert right == 'Uncle Bob'
+    assert affectedGlobalId.value() == 'org.javers.core.examples.PersonSimple/1'
   }
-  println changes[0]
 }
 ```
 
-In this case, `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
+Output:
+
+```txt
+Changes:
+Commit 2.00 done by author at 20 Mar 2021, 15:57:56 :
+* changes on org.javers.core.examples.PersonSimple/1 :
+  - 'name' changed: 'Bob' -> 'Uncle Bob'
+Commit 1.00 done by author at 20 Mar 2021, 15:57:56 :
+* new object: org.javers.core.examples.PersonSimple/1
+  - 'name' = 'Bob'
+```
+
+In this case, both `PersonSimple(id:1)` and `PersonRetrofitted(id:1)` objects share the same GlobalId
 — `'org.javers.core.examples.PersonSimple/1'`.
 They match but, well, it’s not very nice to have deprecated names in new code.
 
@@ -1240,25 +1449,34 @@ def 'should be very relaxed about ValueObject types'(){
 
   when:
   def changes =
-      javers.findChanges( QueryBuilder.byValueObjectId(1, Person.class, 'address').build() )
+          javers.findChanges( QueryBuilder.byValueObjectId(1, Person.class, 'address').build() )
+  println changes.prettyPrint()
 
-  changes.each { println it }
-
-  then: 'four ValueChanges are expected'
-  assert changes.size() == 4
-  assert changes.collect{ it.propertyName } as Set == ['street','verified','city'] as Set
+  then: 'six ValueChanges are expected'
+  assert changes.size() == 6
+  assert changes.collect{ it.propertyName } as Set ==
+          ['street','verified','city','email'] as Set
 }
 ```
 
-Test output:
+Output:
 
 ```text
-ValueChange{ 'address.street' changed from 'Green 50' to 'Green 55' }
-ValueChange{ 'address.city' changed from '' to 'London' }
-ValueChange{ 'address.street' changed from '' to 'Green 50' }
-ValueChange{ 'address.verified' changed from 'false' to 'true' }
+Changes:
+Commit 3.00 done by author at 20 Mar 2021, 15:58:48 :
+* changes on Person/1 :
+  - 'address.street' changed: 'Green 50' -> 'Green 55'
+Commit 2.00 done by author at 20 Mar 2021, 15:58:48 :
+* changes on Person/1 :
+  - 'address.city' = 'London'
+  - 'address.email' value 'me@example.com' unset
+  - 'address.street' = 'Green 50'
+  - 'address.verified' changed: 'false' -> 'true'
+Commit 1.00 done by author at 20 Mar 2021, 15:58:48 :
+* changes on Person/1 :
+  - 'address.email' = 'me@example.com'
 ```
 
 As you can see, all three versions of the ValueObject address share the same GlobalId
-— `'Person/1#address'`. Properties are matched by name, and their values are compared,
+— `'Person/1#address'`. Properties are matched by name, and their values are compared
 without paying much attention to the actual Address class.
