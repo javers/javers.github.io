@@ -79,10 +79,11 @@ See `JaversBuilder.withInitialChanges()` javadoc.
   <br/>Both querying methods are unified and generate the same results
   (now, `findShadows()` is only the facade for `findShadowsAndStream()`).
 
-See `QueryBuilder.limit()` javadoc.<br/>
-See //TODO doc limit() LINK
+See the [Limit example](/documentation/jql-examples/#limit-filter).<br/>
+See `QueryBuilder.limit()` javadoc.
 
-* More pretty and concise `Changes.prettyPrint()`, see //TODO doc LINK
+* More pretty and concise `Changes.prettyPrint()`,
+  see the [changelog example](/documentation/repository-examples/#change-log).<br/>
 
 * The new `Changes.devPrint()` method for printing Changes in a technical style.
 
