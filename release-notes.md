@@ -5,8 +5,8 @@ category: Documentation
 submenu: release-notes
 ---
 
-### <font color="red">6.0.0-RC1</font>
-released on 2021-03-21
+### <font color="red">6.0.0-RC2</font>
+released on 2021-03-24
 
 **Javers 6.0 comes with the important upgrade of the diff algorithm:**
 
@@ -107,6 +107,9 @@ See `JaversBuilder.withInitialChanges()` javadoc.
 * [911](https://github.com/javers/javers/issues/911) Minor bug fixed, this WARNING
   is no longer shown: An illegal reflective access operation has occurred.
 
+* [1077](https://github.com/javers/javers/issues/1077)
+  Added support for Composite Id with the `IdClass` annotation.
+  
 ### 5.15.0
 released on 2021-03-12
 
@@ -116,7 +119,7 @@ released on 2021-03-12
 
 ### 5.14.0
 released on 2020-11-14
-* Dependencies alignment with Spring Boot 2.4.0:
+* Dependencies aligned with Spring Boot 2.4.0:
   
 ```groovy
 springVersion           =5.3.1
@@ -134,10 +137,6 @@ polyjdbcVersion         =0.7.6
 aspectjweaverVersion    =1.9.6
 slf4jApiVersion         =1.7.30
 jbossTransactionApiVersion=1.1.1.Final
-spockVersion            =2.0-M3-groovy-3.0
-groovyVersion           =3.0.6
-embeddedMongo           =2.2.0
-testcontainers          =1.15.0-rc2
 ```
 * [1034](https://github.com/javers/javers/issues/1034) 
   Fixed compatibility issues (`ClassCastException` in `JpaHibernateConnectionProvider`)
