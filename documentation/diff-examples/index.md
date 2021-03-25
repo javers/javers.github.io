@@ -500,7 +500,9 @@ It’s just a complex value holder.
 We have two objects, `address1` and `address2`. These objects represent two different addresses.
 To find out what the difference is, just call:
 
-    javers.compare(address1, address2)
+```java
+javers.compare(address1, address2)
+```
 
 **What’s important**<br/>
 When JaVers knows nothing about a class, it treats it as Value Object.
@@ -525,31 +527,31 @@ public class Address {
 [`BasicValueObjectDiffExample.java`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/BasicValueObjectDiffExample.java):
 
 ```java
-  @Test
-  public void shouldCompareTwoObjects() {
+@Test
+public void shouldCompareTwoObjects() {
 
-    //given
-    Javers javers = JaversBuilder.javers().build();
+  //given
+  Javers javers = JaversBuilder.javers().build();
 
-    Address address1 = new Address("New York","5th Avenue");
-    Address address2 = new Address("New York","6th Avenue");
+  Address address1 = new Address("New York","5th Avenue");
+  Address address2 = new Address("New York","6th Avenue");
 
-    //when
-    Diff diff = javers.compare(address1, address2);
+  //when
+  Diff diff = javers.compare(address1, address2);
 
-    //then
-    //there should be one change of type {@link ValueChange}
-    ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
+  //then
+  //there should be one change of type {@link ValueChange}
+  ValueChange change = diff.getChangesByType(ValueChange.class).get(0);
 
-    assertThat(diff.getChanges()).hasSize(1);
-    assertThat(change.getAffectedGlobalId().value())
-              .isEqualTo("org.javers.core.examples.model.Address/");
-    assertThat(change.getPropertyName()).isEqualTo("street");
-    assertThat(change.getLeft()).isEqualTo("5th Avenue");
-    assertThat(change.getRight()).isEqualTo("6th Avenue");
+  assertThat(diff.getChanges()).hasSize(1);
+  assertThat(change.getAffectedGlobalId().value())
+            .isEqualTo("org.javers.core.examples.model.Address/");
+  assertThat(change.getPropertyName()).isEqualTo("street");
+  assertThat(change.getLeft()).isEqualTo("5th Avenue");
+  assertThat(change.getRight()).isEqualTo("6th Avenue");
 
-    System.out.println(diff);
-  }
+  System.out.println(diff);
+}
 ```    
 
 The output of running this program is:
@@ -557,7 +559,7 @@ The output of running this program is:
 ```
 Diff:
 * changes on org.javers.core.examples.model.Address/ :
-  - 'street' changed from '5th Avenue' to '6th Avenue'
+  - 'street' changed: '5th Avenue' -> '6th Avenue'
 ```
 
 <h2 id="compare-collections">Compare top-level collections</h2>

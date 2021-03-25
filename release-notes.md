@@ -25,16 +25,19 @@ with a real New Object.
 Symmetrically, additional set of **Terminal Changes** is generated
 for each property of a Removed Object.
 
-For example, consider the diff of two Entities:
+For example, consider the case when a Value Object is added:
 
 ```groovy
-def diff = javers.compare(new Employee(id: "1", address: null),
-                          new Employee(id: "1", address: new Address(street: "x", city:"Paris")))
+def diff = javers.compare(
+    new Employee(id: "1", address: null),
+    new Employee(id: "1", address: new Address(street: "x", city:"Paris"))
+)
 
 println diff.prettyPrint()
 ```
 
-Javers **5.x** calculates this (which is not very useful):
+Javers **5.x** calculates a diff
+without information about the state of the new Address:
 
 ```
 Diff:
