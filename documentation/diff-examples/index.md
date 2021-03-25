@@ -319,12 +319,10 @@ There are no limitations on the number of nodes in the graph.
     //given
     Javers javers = JaversBuilder.javers().build();
 
-    Employee oldBoss = new Employee("Big Boss")
-        .addSubordinates(
+    Employee oldBoss = new Employee("Big Boss").addSubordinates(
             new Employee("Great Developer"));
 
-    Employee newBoss = new Employee("Big Boss")
-        .addSubordinates(
+    Employee newBoss = new Employee("Big Boss").addSubordinates(
             new Employee("Great Developer"),
             new Employee("Hired One"),
             new Employee("Hired Second"));
@@ -345,11 +343,17 @@ There are no limitations on the number of nodes in the graph.
 ```text
 Diff:
 * new object: Employee/Hired One
+  - 'boss' = 'Employee/Big Boss'
+  - 'name' = 'Hired One'
+  - 'salary' = '10000'
 * new object: Employee/Hired Second
+  - 'boss' = 'Employee/Big Boss'
+  - 'name' = 'Hired Second'
+  - 'salary' = '10000'
 * changes on Employee/Big Boss :
   - 'subordinates' collection changes :
-    1. 'Employee/Hired One' added
-    2. 'Employee/Hired Second' added  
+     1. 'Employee/Hired One' added
+     2. 'Employee/Hired Second' added
 ```                      
 
 [`shouldDetectFired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L42):
@@ -394,7 +398,7 @@ Diff:
     1. 'Employee/To Be Fired' removed  
 ```
  
-[`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L72):
+[`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java):
 
 ```java
   /** {@link ValueChange} example */
