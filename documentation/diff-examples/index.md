@@ -296,10 +296,10 @@ Technically, we have a graph with cycles here (since the relationship between bo
 We are comparing two versions (historical states) of the employee hierarchy in order 
 to detect the four types of changes:
 
-- employee hired (NewObject),
-- employee fired (ObjectRemoved),
-- salary change (ValueChange),
-- boss change (ReferenceChange).
+- employee hired &mdash; `NewObject`,
+- employee fired &mdash; `ObjectRemoved`,
+- salary change &mdash; `ValueChange`,
+- boss change &mdash; `ReferenceChange`.
 
 **Configuration** <br/>
 JaVers needs to know that `Employee` class is an [Entity](/documentation/domain-configuration/#entity).
@@ -313,30 +313,31 @@ There are no limitations on the number of nodes in the graph.
 [`shouldDetectHired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L14):
 
 ```java
-  @Test
-  public void shouldDetectHired() {
-    //given
-    Javers javers = JaversBuilder.javers().build();
+/** NewObject example */
+@Test
+public void shouldDetectHired() {
+  //given
+  Javers javers = JaversBuilder.javers().build();
 
-    Employee oldBoss = new Employee("Big Boss").addSubordinates(
-            new Employee("Great Developer"));
+  Employee oldBoss = new Employee("Big Boss").addSubordinates(
+          new Employee("Great Developer"));
 
-    Employee newBoss = new Employee("Big Boss").addSubordinates(
-            new Employee("Great Developer"),
-            new Employee("Hired One"),
-            new Employee("Hired Second"));
+  Employee newBoss = new Employee("Big Boss").addSubordinates(
+          new Employee("Great Developer"),
+          new Employee("Hired One"),
+          new Employee("Hired Second"));
 
-    //when
-    Diff diff = javers.compare(oldBoss, newBoss);
+  //when
+  Diff diff = javers.compare(oldBoss, newBoss);
 
-    //then
-    assertThat(diff.getObjectsByChangeType(NewObject.class))
-        .hasSize(2)
-        .containsOnly(new Employee("Hired One"),
-                      new Employee("Hired Second"));
+  //then
+  assertThat(diff.getObjectsByChangeType(NewObject.class))
+      .hasSize(2)
+      .containsOnly(new Employee("Hired One"),
+                    new Employee("Hired Second"));
 
-    System.out.println(diff);
-  }
+  System.out.println(diff);
+}
 ``` 
 
 output:
@@ -357,9 +358,11 @@ Diff:
      2. 'Employee/Hired Second' added
 ```                      
 
-[`shouldDetectFired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L42):
+[`shouldDetectFired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java):
 
 ```java
+/** ObjectRemoved example */
+@Test
 public void shouldDetectFired() {
   //given
   Javers javers = JaversBuilder.javers().build();
@@ -403,88 +406,88 @@ Diff:
 [`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java):
 
 ```java
-  /** {@link ValueChange} example */
+  /** ValueChange example */
   @Test
   public void shouldDetectSalaryChange(){
     //given
     Javers javers = JaversBuilder.javers().build();
 
-    Employee oldBoss = new Employee("Big Boss")
-            .addSubordinates(
-                    new Employee("Noisy Manager"),
-                    new Employee("Great Developer", 10000));
+  Employee oldBoss = new Employee("Big Boss").addSubordinates(
+      new Employee("Noisy Manager"),
+      new Employee("Great Developer", 10000));
 
-    Employee newBoss = new Employee("Big Boss")
-            .addSubordinates(
-                    new Employee("Noisy Manager"),
-                    new Employee("Great Developer", 20000));
+  Employee newBoss = new Employee("Big Boss").addSubordinates(
+      new Employee("Noisy Manager"),
+      new Employee("Great Developer", 20000));
 
-    //when
-    Diff diff = javers.compare(oldBoss, newBoss);
+  //when
+  Diff diff = javers.compare(oldBoss, newBoss);
 
-    //then
-    ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
+  //then
+  ValueChange change =  diff.getChangesByType(ValueChange.class).get(0);
 
-    assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-    assertThat(change.getPropertyName()).isEqualTo("salary");
-    assertThat(change.getLeft()).isEqualTo(10000);
-    assertThat(change.getRight()).isEqualTo(20000);
+  assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
+  assertThat(change.getPropertyName()).isEqualTo("salary");
+  assertThat(change.getLeft()).isEqualTo(10000);
+  assertThat(change.getRight()).isEqualTo(20000);
 
-    System.out.println(diff);
-  }
+  System.out.println(diff);
+}
 ``` 
+
+output:
 
 ```text
 Diff:
 * changes on Employee/Great Developer :
-  - 'salary' changed from '10000' to '20000'
+  - 'salary' changed: '10000' -> '20000'
 ```
 
 [`shouldDetectBossChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L102):
 
 ```java
-  /** {@link ReferenceChange} example */
-  @Test
-  public void shouldDetectBossChange() {
-    //given
-    Javers javers = JaversBuilder.javers().build();
+/** ReferenceChange example */
+@Test
+public void shouldDetectBossChange() {
+  //given
+  Javers javers = JaversBuilder.javers().build();
 
-    Employee oldBoss = new Employee("Big Boss")
-        .addSubordinates(
-             new Employee("Manager One")
-                 .addSubordinate(new Employee("Great Developer")),
-             new Employee("Manager Second"));
+  Employee oldBoss = new Employee("Big Boss").addSubordinates(
+      new Employee("Manager One")
+         .addSubordinate(new Employee("Great Developer")),
+      new Employee("Manager Second"));
 
-    Employee newBoss = new Employee("Big Boss")
-        .addSubordinates(
-             new Employee("Manager One"),
-             new Employee("Manager Second")
-                 .addSubordinate(new Employee("Great Developer")));
+  Employee newBoss = new Employee("Big Boss").addSubordinates(
+      new Employee("Manager One"),
+      new Employee("Manager Second")
+         .addSubordinate(new Employee("Great Developer")));
 
-    //when
-    Diff diff = javers.compare(oldBoss, newBoss);
+  //when
+  Diff diff = javers.compare(oldBoss, newBoss);
 
-    //then
-    ReferenceChange change = diff.getChangesByType(ReferenceChange.class).get(0);
+  //then
+  ReferenceChange change = diff.getChangesByType(ReferenceChange.class).get(0);
 
-    assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
-    assertThat(change.getLeft().value()).endsWith("Manager One");
-    assertThat(change.getRight().value()).endsWith("Manager Second");
+  assertThat(change.getAffectedLocalId()).isEqualTo("Great Developer");
+  assertThat(change.getLeft().value()).endsWith("Manager One");
+  assertThat(change.getRight().value()).endsWith("Manager Second");
 
-    System.out.println(diff);
-  }
+  System.out.println(diff);
+}
 ``` 
+
+output:
 
 ```text
 Diff:
 * changes on Employee/Manager One :
   - 'subordinates' collection changes :
-    0. 'Employee/Great Developer' removed
+     0. 'Employee/Great Developer' removed
 * changes on Employee/Great Developer :
-  - 'boss' changed from 'Employee/Manager One' to 'Employee/Manager Second'
+  - 'boss' reference changed: 'Employee/Manager One' -> 'Employee/Manager Second'
 * changes on Employee/Manager Second :
   - 'subordinates' collection changes :
-    0. 'Employee/Great Developer' added  
+     0. 'Employee/Great Developer' added
 ```
 
 <h2 id="compare-valueobjects">Compare top-level Value Objects</h2>
