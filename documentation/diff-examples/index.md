@@ -313,7 +313,6 @@ There are no limitations on the number of nodes in the graph.
 [`shouldDetectHired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L14):
 
 ```java
-  /** {@link NewObject} example */
   @Test
   public void shouldDetectHired() {
     //given
@@ -340,6 +339,8 @@ There are no limitations on the number of nodes in the graph.
   }
 ``` 
 
+output:
+
 ```text
 Diff:
 * new object: Employee/Hired One
@@ -359,43 +360,44 @@ Diff:
 [`shouldDetectFired()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java#L42):
 
 ```java
-  /** {@link ObjectRemoved} example */
-  @Test
-  public void shouldDetectFired() {
-    //given
-    Javers javers = JaversBuilder.javers().build();
+public void shouldDetectFired() {
+  //given
+  Javers javers = JaversBuilder.javers().build();
 
-    Employee oldBoss = new Employee("Big Boss")
-            .addSubordinates(
-                    new Employee("Great Developer"),
-                    new Employee("Team Lead").addSubordinates(
-                            new Employee("Another Dev"),
-                            new Employee("To Be Fired")
-                    ));
+  Employee oldBoss = new Employee("Big Boss").addSubordinates(
+      new Employee("Great Developer"),
+      new Employee("Team Lead").addSubordinates(
+              new Employee("Another Dev"),
+              new Employee("To Be Fired")
+      ));
 
-    Employee newBoss = new Employee("Big Boss")
-            .addSubordinates(
-                    new Employee("Great Developer"),
-                    new Employee("Team Lead").addSubordinates(
-                            new Employee("Another Dev")
-                    ));
+  Employee newBoss = new Employee("Big Boss").addSubordinates(
+      new Employee("Great Developer"),
+      new Employee("Team Lead").addSubordinates(
+              new Employee("Another Dev")
+      ));
 
-    //when
-    Diff diff = javers.compare(oldBoss, newBoss);
+  //when
+  Diff diff = javers.compare(oldBoss, newBoss);
 
-    //then
-    assertThat(diff.getChangesByType(ObjectRemoved.class)).hasSize(1);
+  //then
+  assertThat(diff.getChangesByType(ObjectRemoved.class)).hasSize(1);
 
-    System.out.println(diff);
-  }
+  System.out.println(diff);
+}
 ```
+
+output:
 
 ```text
 Diff:
 * object removed: Employee/To Be Fired
+  - 'boss' reference 'Employee/Team Lead' unset
+  - 'name' value 'To Be Fired' unset
+  - 'salary' value '10000' unset
 * changes on Employee/Team Lead :
   - 'subordinates' collection changes :
-    1. 'Employee/To Be Fired' removed  
+     1. 'Employee/To Be Fired' removed
 ```
  
 [`shouldDetectSalaryChange()`](https://github.com/javers/javers/blob/master/javers-core/src/test/java/org/javers/core/examples/EmployeeHierarchiesDiffExample.java):
