@@ -913,10 +913,10 @@ the query result:
 
 ```text
 Changes:
-Commit 2.0 done by author at 14 Apr 2018, 12:00:34 :
+Commit 2.00 done by author at 04 Apr 2021, 20:36:53 :
 * changes on Employee/bob :
-  - 'position' changed from 'Assistant' to 'Specialist'
-  - 'salary' changed from '900' to '1600'
+  - 'position' changed: 'Assistant' -> 'Specialist'
+  - 'salary' changed: '900' -> '1600'
 ```
 
 Note that when you are using JaVers’ [auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect)
@@ -963,22 +963,22 @@ def "should query for changes (and snapshots) with commitDate filter"(){
 the output:
 
 ```text
-comitting bob on 2015-01-01
-comitting bob on 2016-01-01
-comitting bob on 2017-01-01
-comitting bob on 2018-01-01
-comitting bob on 2019-01-01
-comitting bob on 2020-01-01
+committing bob on 2015-01-01
+committing bob on 2016-01-01
+committing bob on 2017-01-01
+committing bob on 2018-01-01
+committing bob on 2019-01-01
+committing bob on 2020-01-01
 Changes:
-Commit 4.0 done by author at 01 Jan 2018, 00:00:00 :
+Commit 4.00 done by author at 01 Jan 2018, 00:00:00 :
 * changes on Employee/bob :
-  - 'age' changed from '22' to '23'
-Commit 3.0 done by author at 01 Jan 2017, 00:00:00 :
+  - 'age' changed: '22' -> '23'
+Commit 3.00 done by author at 01 Jan 2017, 00:00:00 :
 * changes on Employee/bob :
-  - 'age' changed from '21' to '22'
-Commit 2.0 done by author at 01 Jan 2016, 00:00:00 :
+  - 'age' changed: '21' -> '22'
+Commit 2.00 done by author at 01 Jan 2016, 00:00:00 :
 * changes on Employee/bob :
-  - 'age' changed from '20' to '21'
+  - 'age' changed: '20' -> '21'
 ```
 
 <h3 id="commit-id-filter">CommitId filter</h3>
@@ -1019,9 +1019,9 @@ the query result:
 
 ```text
 Changes:
-Commit 4.0 done by author at 14 Apr 2018, 12:04:54 :
+Commit 4.00 done by author at 04 Apr 2021, 20:40:01 :
 * changes on Employee/bob :
-  - 'age' changed from '21' to '22'
+  - 'age' changed: '21' -> '22'
 ```
 
 <h3 id="version-filter">Snapshot version filter</h3>
@@ -1063,9 +1063,9 @@ the query result:
 
 ```text
 Changes:
-Commit 8.0 done by author at 14 Apr 2018, 12:06:01 :
+Commit 8.00 done by author at 04 Apr 2021, 20:40:28 :
 * changes on Employee/bob :
-  - 'age' changed from '23' to '24'
+  - 'age' changed: '23' -> '24'
 ```
 
 <h3 id="child-value-objects-filter">ChildValueObjects filter</h3>

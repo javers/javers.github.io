@@ -629,12 +629,12 @@ and gives you exactly the same diff result for top-level collections as if they 
   }
 ```
 
-The output of running this program is:
+The output:
 
 ```text
 Diff:
 * changes on org.javers.core.examples.model.Person/tommy :
-  - 'name' changed from 'Tommy Smart' to 'Tommy C. Smart'
+  - 'name' changed: 'Tommy Smart' -> 'Tommy C. Smart'
 ```
 
 <h2 id="groovy-diff-example">Groovy diff example</h2>
