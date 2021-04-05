@@ -5,8 +5,8 @@ category: Documentation
 submenu: release-notes
 ---
 
-### <font color="red">6.0.0-RC2</font>
-released on 2021-03-24
+### <font color="red">6.0.0</font>
+released on 2021-04-05
 
 **Javers 6.0 comes with the important upgrade of the diff algorithm:**
 
