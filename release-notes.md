@@ -10,7 +10,7 @@ released on 2021-04-07
 
 [1082](https://github.com/javers/javers/pull/1082/files) Changes in Spring dependencies management. <br/> 
 In order to lower the risk of versions clash between 
-transitive dependencies added by Javers' and dependencies required by an application (you),
+dependencies required by Javers' and dependencies required by an application (you),
 all Spring dependencies in Javers' artifacts are marked as optional.
   
 It means that Spring and Spring Boot versions are now managed 
