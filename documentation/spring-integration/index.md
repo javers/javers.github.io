@@ -189,7 +189,27 @@ From now, all objects passed to the annotated methods will be automatically vers
 TODO
 
 <h4 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
-TODO
+
+If you’re using any kind of reposity, and have delete methods with conditions, you can put `@JaversAuditableConditionalDelete` annotation on the methods to audit these events.
+
+For example:
+
+```java
+@Repository
+class UserRepository {
+    @JaversAuditableConditionalDelete
+    public User deleteByLogin(String login) {
+        ...//
+    }
+
+    @JaversAuditableConditionalDelete
+    public List<User> deleteAllByLogin(String login) {
+        ...//
+    }
+}
+```
+
+These delete methods must return either an Entity or a collection of Entity.
 
 <h3 id="auto-audit-aspects-spring-configuration">Spring configuration of auto-audit aspects</h3>
 
