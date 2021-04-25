@@ -5,6 +5,33 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.1.0
+released on 2021-04-25
+
+* [1080](https://github.com/javers/javers/issues/1080)
+  New annotation for auto-audit aspect &mdash; `@JaversAuditableConditionalDelete`.
+  It allows to call `Javers.commitShallowDelete()` on objects returned by method,
+  for example:
+
+```java
+@JaversAuditableConditionalDelete
+List<DummyEntity> deleteByName(String name) {
+    ...
+}
+```
+
+or
+
+```java
+@JaversAuditableConditionalDelete
+DummyEntity deleteById(String id) {
+    ...
+}
+```
+
+* [1055](https://github.com/javers/javers/issues/1055)
+  Fixed `MalformedJsonException` on Oracle.
+
 ### 6.0.1
 released on 2021-04-07
 

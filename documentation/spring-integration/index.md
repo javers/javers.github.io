@@ -6,30 +6,40 @@ submenu: spring-integration
 sidebar-url: docs-sidebar.html
 ---
 
-We made JaVers easy to use for applications based on Spring Framework.
-There are two modules for Spring integration.
+We made JaVers easy to use in applications based on the Spring Framework.
+There are two modules for Spring integration:
 
-**`javers-spring`** module provides two auto-audit aspects:
+**`javers-spring`** module provides the auto-audit aspects:
 
-* [@JaversAuditable](#at-javers-auditable) for any kind of repositories,
-* [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) for Spring Data `CrudRepositories`.
-   
-**`javers-spring-jpa`** module &mdash; a superset of `javers-spring` &mdash; provides:
+* [@JaversSpringDataAuditable](#at-javers-spring-data-auditable)
+  &mdash; choose it if your persistence layer relies on Spring Data.
+  It's the class level annotation which adds the auto-audit aspect to a Spring Data
+  [CrudRepository](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/repository/CrudRepository.html).
+  This is the easiest and recommended way to auto-audit your domain objects.
+  
+* [@JaversAuditable](#at-javers-auditable),
+  `@JaversAuditableDelete`, and
+  `@JaversAuditableConditionalDelete` &mdash;
+  it's the family of method level annotations to configure  
+  the auto-audit aspect for any kind of repository (non Spring Data).
+  
+**`javers-spring-jpa`** module &mdash; a superset of `javers-spring` which provides:
 
 * [JPA & Hibernate integration](#jpa-entity-manager-integration) for SQL databases,
-* support for Spring Data `JpaRepository.saveAndFlush()`.
+* extension for [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) to 
+  support Spring Data [JpaRepository](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.repositories).
 
 ### Dependencies ###
 
 If you are using [Spring Boot](http://projects.spring.io/spring-boot/),
-simplify your [JaVers setup with our Spring Boot starters](/documentation/spring-boot-integration/). This is
-**the recommended way** of using JaVers in Spring-based applications.
+simply use one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/). This is
+**the recommended way** of integrating JaVers with Spring-based applications.
 Our starters give you the right configuration out of the box.
-
 
 #### Non Spring Boot applications
 
-Take `javers-spring-jpa` if you are using JaVers with SQL database and JPA & Hibernate:
+Take `javers-spring-jpa` if you are using JaVers with 
+an SQL database with JPA & Hibernate:
 
 ```groovy
 compile 'org.javers:javers-spring-jpa:{{site.javers_current_version}}'
@@ -47,7 +57,7 @@ for other build tools snippets.
 
 <h2 id="auto-audit-aspect">Auto-audit aspect</h2>
 The auto-audit aspect is based on Spring AOP. It can automatically call
-proper `javers.commit(...)` methods whenever your domain object are saved or deleted.
+proper `javers.commit*(...)` methods whenever your domain object are saved or deleted.
 
 There are two variants of the auto-audit aspect:
 
