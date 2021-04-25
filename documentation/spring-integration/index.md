@@ -68,27 +68,28 @@ There are three auto-audit aspects:
   [`CrudRepository`](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/repository/CrudRepository.html)
   configured with the class-level [@JaversSpringDataAuditable](#at-javers-spring-data-auditable)
   annotation. Use it together with
-  [`MongoRepository`](/documentation/repository-configuration/#mongodb-configuration)
+  [`MongoRepository`](/documentation/repository-configuration/#mongodb-configuration).
   
 * `JaversSpringDataJpaAuditableRepositoryAspect` for Spring Data
   [`JpaRepository`](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.repositories)
-  configured also with [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
+  (configured also with [@JaversSpringDataAuditable](#at-javers-spring-data-auditable)).
   Use it together with [`JaversSqlRepository`](/documentation/repository-configuration/#sql-databases).
   
 * `JaversAuditableAspect` for any kind of repository (non Spring Data),
-  configured with the methd-level annotation:
+  configured with the methd-level family of annotations:
   [@JaversAuditable](#at-javers-auditable),
   [@JaversAuditableDelete](#at-auditable-delete), and
   [@JaversAuditableConditionalDelete](#at-javers-auditable-conditional-delete).
 
-**How auto-audit aspects work?** <br/>
+**How the auto-audit aspects work?** <br/>
 
 After an advised method is executed, 
 its arguments or results are automatically saved to JaversRepository. <br/>
 If an argument is an `Iterable`, JaVers iterates over it and commits each object separately.
 
+**How the auto-audit are enabled?** <br/>
 The auto-audit aspects will work only if you configure the proper
-[Spring beans](/documentation/spring-integration/#javers-beans)
+[Javers Spring beans](/documentation/spring-integration/#javers-beans)
 or if you use one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/).
 
 <h3 id="javers-spring-annotations">Annotations</h3>
@@ -160,6 +161,47 @@ TODO
 <h4 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
 TODO
 
+<h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
+Transaction management is the important issue for applications backed by SQL databases.
+Generally, all SQL statements executed by `JaversSQLRepository`
+should be executed in the context of the current application's transaction
+(called Persistence Context in JPA terminology).
+
+Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
+and JaVers’ approach to transaction management.
+
+<h3 id="spring-configuration-for-transactional-javers">Spring configuration for SQL</h3>
+**First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
+Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
+
+**Second**, you need to register a transactional ConnectionProvider.
+If you’re using JPA with **Hibernate**, choose `JpaHibernateConnectionProvider` implementation
+which is Persistence Context aware and plays along with Spring JpaTransactionManager.
+
+**Third**, if you are using Hibernate, you need to deal with lazy-loading proxies.
+Hibernate silently wraps them around your Entities loaded from database.
+We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
+It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
+
+<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
+
+JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
+and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
+
+To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
+
+```java
+TransactionalJaversBuilder
+    .javers()
+    .withTxManager(txManager)
+    .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
+```
+
+Feel free to provide your own implementation of `object-access` hook if you need better control over
+the unproxing process.
+
+See below for the full Spring configuration example [for JPA & Hibernate](#spring-jpa-example).
+
 <h3 id="javers-beans">JaVers Spring beans</h3>
 
 <h4 id="javers-instance-as-a-bean">JaVers instance as a Spring bean</h4>
@@ -189,12 +231,12 @@ public MongoClient mongo() {
 There are three beans that you can add to Context to enable the auto-audit feature:
 
 **`JaversSpringDataAuditableRepositoryAspect`**
-  for Spring Data `CrudRepositories`.
-  <br/>
-  It defines the pointcut on `save(..)` and `delete(..)` methods
-  within `CrudRepositories` annotated with the class-level
-  [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) annotation.
-  Choose it if you **are not using** JPA.
+for Spring Data `CrudRepositories`.
+<br/>
+It defines the pointcut on `save(..)` and `delete(..)` methods
+within `CrudRepositories` annotated with the class-level
+[@JaversSpringDataAuditable](#at-javers-spring-data-auditable) annotation.
+Choose it if you **are not using** JPA.
 
 ```java
 @Bean
@@ -204,13 +246,13 @@ public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect
 }
 ```
 
-**`JaversSpringDataJpaAuditableRepositoryAspect`** 
-  for Spring Data `JpaRepositories`.
-  <br/>
-  It extends the first aspect with the pointcut on `JpaRepository.saveAndFlush()`
-  and it is triggered by the same annotation &mdash; [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
-  Choose it if you **are using** JPA.
-  
+**`JaversSpringDataJpaAuditableRepositoryAspect`**
+for Spring Data `JpaRepositories`.
+<br/>
+It extends the first aspect with the pointcut on `JpaRepository.saveAndFlush()`
+and it is triggered by the same annotation &mdash; [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
+Choose it if you **are using** JPA.
+
 ```java
 @Bean
 public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAuditableAspect(Javers javers) {
@@ -218,13 +260,13 @@ public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAuditableAsp
         commitPropertiesProvider());
 }
 ```  
- 
+
 **`JaversAuditableAspect`**
-  for any kind of repository.
-  <br/>
-  It defines the pointcut on any method annotated with the method-level
-  [@JaversAuditable](#at-javers-auditable) annotation.
-  Choose it if you have repositories that are not managed by Spring Data.
+for any kind of repository.
+<br/>
+It defines the pointcut on any method annotated with the method-level
+[@JaversAuditable](#at-javers-auditable) annotation.
+Choose it if you have repositories that are not managed by Spring Data.
 
 ```java
 @Bean
@@ -240,7 +282,7 @@ Note that these aspects are based on Spring `@AspectJ`.<br/>
 **Remember to enable** `@AspectJ` support by putting the `@EnableAspectJAutoProxy`
 annotation in your Spring configuration.
 
-For more info refer to 
+For more info refer to
 [Spring @AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
 
 <h4 id="author-provider-bean">AuthorProvider bean</h4>
@@ -252,7 +294,7 @@ with the SQL commit command (finalizing an SQL transaction).
 
 You need to register an implementation of the
 [`AuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/AuthorProvider.java) interface,
-which should return a current user name. It’s required by auto-audit aspects. 
+which should return a current user name. It’s required by auto-audit aspects.
 For example:
 
 ```java
@@ -297,48 +339,6 @@ in the aspect constructor or pass `new EmptyPropertiesProvider()`.
 That’s the last bean in your Application Context required to run auto-audit aspects.
 See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
 for [JPA & Hibernate](#spring-jpa-example)
-
-
-<h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
-Transaction management is the important issue for applications backed by SQL databases.
-Generally, all SQL statements executed by `JaversSQLRepository`
-should be executed in the context of the current application's transaction
-(called Persistence Context in JPA terminology).
-
-Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
-and JaVers’ approach to transaction management.
-
-<h3 id="spring-configuration-for-transactional-javers">Spring configuration for SQL</h3>
-**First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
-Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
-
-**Second**, you need to register a transactional ConnectionProvider.
-If you’re using JPA with **Hibernate**, choose `JpaHibernateConnectionProvider` implementation
-which is Persistence Context aware and plays along with Spring JpaTransactionManager.
-
-**Third**, if you are using Hibernate, you need to deal with lazy-loading proxies.
-Hibernate silently wraps them around your Entities loaded from database.
-We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
-It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
-
-<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
-
-JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
-and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
-
-To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
-
-```java
-TransactionalJaversBuilder
-    .javers()
-    .withTxManager(txManager)
-    .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
-```
-
-Feel free to provide your own implementation of `object-access` hook if you need better control over
-the unproxing process.
-
-See below for the full Spring configuration example [for JPA & Hibernate](#spring-jpa-example).
 
 <h2 id="spring-jpa-example">Spring configuration example for JPA & Hibernate</h2>
 
