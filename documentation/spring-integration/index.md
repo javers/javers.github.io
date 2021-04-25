@@ -75,7 +75,7 @@ There are three auto-audit aspects:
   configured also with [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
   Use it together with [`JaversSqlRepository`](/documentation/repository-configuration/#sql-databases).
   
-* `JaversAuditableAspect`** for any kind of repository (non Spring Data),
+* `JaversAuditableAspect` for any kind of repository (non Spring Data),
   configured with the methd-level annotation:
   [@JaversAuditable](#at-javers-auditable),
   [@JaversAuditableDelete](#at-auditable-delete), and
@@ -154,10 +154,10 @@ It could be a Service, Repository or anything which modifies domain objects.
 
 From now, all objects passed to the annotated methods will be automatically versioned by JaVers.
 
-<h4 id="#at-auditable-delete">@JaversAuditableDelete</h4>
+<h4 id="at-auditable-delete">@JaversAuditableDelete</h4>
 TODO
 
-<h4 id="#at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
+<h4 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
 TODO
 
 <h3 id="javers-beans">JaVers Spring beans</h3>
