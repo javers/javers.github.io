@@ -192,7 +192,7 @@ TODO
 <h4 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
 TODO
 
-<h3 id="auto-audit-aspects-spring-configuration">Spring configuration</h3>
+<h3 id="auto-audit-aspects-spring-configuration">Spring configuration of auto-audit aspects</h3>
 
 If you want to manually configure the auto-audit aspects 
 &mdash; here is the list of beans you need:
@@ -335,6 +335,8 @@ which is Persistence Context aware and plays along with Spring JpaTransactionMan
 Hibernate silently wraps them around your Entities loaded from database.
 We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
 It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
+
+See example the full Spring configuration example for [JPA & Hibernate](#spring-jpa-example).
 
 <h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
 
