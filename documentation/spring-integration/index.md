@@ -311,7 +311,7 @@ for example:
 If you don’t use commit properties, simply skip `commitPropertiesProvider` argument
 in the aspect constructor or pass `new EmptyPropertiesProvider()`.
 
-That’s the last bean in your Application Context required to run the auto-audit aspects.
+That’s the last bean in your Spring context required to run the auto-audit aspects.
 
 
 <h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
@@ -324,7 +324,7 @@ Read more about [ConnectionProvider](/documentation/repository-configuration/#co
 and JaVers’ approach to transaction management.
 
 <h3 id="spring-configuration-for-transactional-javers">Spring configuration for JPA</h3>
-**First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
+**First**, you need to register exactly one **transactional** JaVers instance in your Spring context.
 Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
 
 **Second**, you need to register a transactional ConnectionProvider.
@@ -506,7 +506,7 @@ public class JaversSpringJpaApplicationConfig {
 <h2 id="auto-audit-example-mongo">Spring configuration example for MongoDB</h2>
 
 Here is a working example of Spring Application Context
-with JaVers instance, JaVers auto-audit aspect and Spring Data MongoDB.
+with a JaVers instance, JaVers auto-audit aspects, and Spring Data MongoDB.
 
 ```java
 package org.javers.spring.example;
