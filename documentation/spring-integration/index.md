@@ -323,7 +323,7 @@ should be executed in the context of the current application's transaction
 Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
 and JaVers’ approach to transaction management.
 
-<h3 id="spring-configuration-for-transactional-javers">Spring configuration for SQL</h3>
+<h3 id="spring-configuration-for-transactional-javers">Spring configuration for JPA</h3>
 **First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
 Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
 
