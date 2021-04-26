@@ -63,8 +63,8 @@ We recommend integrating Spring-based applications
 with Javers using one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/).
 
 If for some reason, you don't want to use a Javers' starter &mdash;
-configure a Javers bean and auto-audit aspects beans manually. 
-As a good start you can copy the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
+you can configure all the Javers beans manually
+or copy the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
 for [JPA & Hibernate](#spring-jpa-example).
 
 You need to have a JaVers instance registered as a Spring bean.
@@ -119,8 +119,8 @@ its arguments or results are automatically committed to `JaversRepository`. <br/
 If an argument is an `Iterable`, JaVers iterates over it and commits each object separately.
 
 **How the auto-audit are enabled?** <br/>
-The auto-audit aspects will work only if you configure the proper
-[Javers Spring beans](/documentation/spring-integration/#javers-beans)
+The auto-audit aspects will work only if you
+[configure them](#auto-audit-aspects-spring-configuration) in your Spring context
 or if you use one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/).
 
 <h3 id="javers-spring-annotations">Annotations</h3>
