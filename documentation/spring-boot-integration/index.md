@@ -223,16 +223,16 @@ Once you’ve added the JaVers starter to the classpath, you can use all JaVers 
 
 <h3 id="boot-Auto-audit">Auto-audit aspect annotations</h3>
 
-JaVers [auto-audit](/documentation/spring-integration/#auto-audit-aspect)
-aspect is based on annotations: `@JaversSpringDataAuditable` and `@JaversAuditable`.
+JaVers [auto-audit aspects](/documentation/spring-integration/#auto-audit-aspect)
+are based on annotations.
 
 Basically, choose Entities you want to be audited by JaVers and
 add `@JaversSpringDataAuditable` to corresponding Spring Data CRUD repositories.
 
-For example, if you want to audit the Person Entity, annotate `PersonRepository`:
+For example, if you want to audit a Person Entity, annotate `PersonRepository`:
 
 ```java
-import org.javers.spring.annotation.JaversSpringDataAuditable
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.javers.organization.structure.domain.Person;
 
@@ -241,10 +241,10 @@ public interface PersonRepository extends MongoRepository<Person, String> {
 }
 ```
 
-and all changes made to Person objects will be committed to JaVersRepository.
+and all changes made to Person objects will be automatically committed to JaVersRepository.
 
 If you aren’t using Spring Data repositories,
-annotate all data-changing methods with `@JaversAuditable`.
+annotate data-changing methods with `@JaversAuditable`.
 
 For example:
 
@@ -262,6 +262,8 @@ class UserRepository {
 }
 ```    
 
+More [annotations](/documentation/spring-integration/#javers-spring-annotations)
+are available.
 
 <h3 id="boot-manual-commits">Manual commits</h3>
 If you need more fine-grained control over JaVers commits,
