@@ -142,10 +142,11 @@
     <a {% if currentSubPage == 'spring-integration' %}class='active'{% endif %} href="/documentation/spring-integration">
     Spring integration</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'spring-integration' %} hidden {% endif %}">
+        <li><a href="#javers-instance-as-spring-bean">JaVers instance as a Spring bean</a></li>
         <li><a href="#auto-audit-aspect">Auto-audit aspects</a></li>
 
-        <li class="nested"><a href="#javers-spring-annotations">Annotations</a>
-        </li>
+        <li class="nested"><a href="#javers-spring-annotations">Annotations</a></li>
+        <li class="nested"><a href="#javers-spring-annotations">Spring Configuration</a></li>
 
         <li><a href="#jpa-entity-manager-integration">JPA EntityManager integration</a></li>
         <li class="nested"><a href="#spring-configuration-for-transactional-javers">Spring configuration for SQL</a></li>

@@ -21,10 +21,11 @@ the auto-audit aspects:
 * [@JaversAuditable](#at-javers-auditable),
   [@JaversAuditableDelete](#at-auditable-delete), and
   [@JaversAuditableConditionalDelete](#at-javers-auditable-conditional-delete) &mdash;
-  it's the family of method-level annotations to configure  
-  the auto-audit aspect for any kind of repository (non Spring Data).
+  it's the family of method-level annotations to configure the auto-audit aspect
+  for any kind of repository (non Spring Data).
   
-The **`javers-spring-jpa`** module &mdash; a superset of `javers-spring` which provides:
+The **`javers-spring-jpa`** module (a superset of the `javers-spring` module)
+which provides:
 
 * [JPA & Hibernate integration](#jpa-entity-manager-integration) for SQL databases,
 * extension for [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) to 
@@ -56,6 +57,36 @@ Check
 [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
 for other build tools snippets.
 
+<h3 id="javers-instance-as-spring-bean">JaVers instance as a Spring bean</h3>
+
+We recommend integrating Spring-based applications
+with Javers using one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/).
+
+If for some reason, you don't want to use a Javers' starter &mdash;
+configure a Javers bean and auto-audit aspects beans manually. 
+As a good start you can copy the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
+for [JPA & Hibernate](#spring-jpa-example).
+
+You need to have a JaVers instance registered as a Spring bean.
+For example, if you’re using MongoDB, setup JaVers as follows:
+
+```java
+@Bean
+public Javers javers() {
+    MongoRepository javersMongoRepository =
+            new MongoRepository(mongo().getDatabase("mydatabase"));
+
+    return JaversBuilder.javers()
+            .registerJaversRepository(javersMongoRepository)
+            .build();
+}
+
+@Bean
+public MongoClient mongo() {
+    return new MongoClient();
+}
+```
+
 <h2 id="auto-audit-aspect">Auto-audit aspects</h2>
 
 The auto-audit aspects are based on Spring AOP. They can automatically call
@@ -65,17 +96,17 @@ The aspects are configured with annotations.
 There are three auto-audit aspects:
 
 * `JaversSpringDataAuditableRepositoryAspect` for Spring Data 
-  [`CrudRepository`](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/repository/CrudRepository.html)
+  [`CrudRepositories`](https://docs.spring.io/spring-data/data-commons/docs/current/api/org/springframework/data/repository/CrudRepository.html)
   configured with the class-level [@JaversSpringDataAuditable](#at-javers-spring-data-auditable)
-  annotation. Use it together with
+  annotation. Use it together with Javers
   [`MongoRepository`](/documentation/repository-configuration/#mongodb-configuration).
   
 * `JaversSpringDataJpaAuditableRepositoryAspect` for Spring Data
-  [`JpaRepository`](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.repositories)
+  [`JpaRepositories`](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.repositories)
   (configured also with [@JaversSpringDataAuditable](#at-javers-spring-data-auditable)).
   Use it together with [`JaversSqlRepository`](/documentation/repository-configuration/#sql-databases).
   
-* `JaversAuditableAspect` for any kind of repository (non Spring Data),
+* `JaversAuditableAspect` for any kind of repositories (non Spring Data),
   configured with the methd-level family of annotations:
   [@JaversAuditable](#at-javers-auditable),
   [@JaversAuditableDelete](#at-auditable-delete), and
@@ -84,7 +115,7 @@ There are three auto-audit aspects:
 **How the auto-audit aspects work?** <br/>
 
 After an advised method is executed, 
-its arguments or results are automatically saved to JaversRepository. <br/>
+its arguments or results are automatically committed to `JaversRepository`. <br/>
 If an argument is an `Iterable`, JaVers iterates over it and commits each object separately.
 
 **How the auto-audit are enabled?** <br/>
@@ -161,99 +192,25 @@ TODO
 <h4 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
 TODO
 
-<h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
-Transaction management is the important issue for applications backed by SQL databases.
-Generally, all SQL statements executed by `JaversSQLRepository`
-should be executed in the context of the current application's transaction
-(called Persistence Context in JPA terminology).
+<h3 id="auto-audit-aspects-spring-configuration">Spring configuration</h3>
 
-Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
-and JaVers’ approach to transaction management.
-
-<h3 id="spring-configuration-for-transactional-javers">Spring configuration for SQL</h3>
-**First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
-Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
-
-**Second**, you need to register a transactional ConnectionProvider.
-If you’re using JPA with **Hibernate**, choose `JpaHibernateConnectionProvider` implementation
-which is Persistence Context aware and plays along with Spring JpaTransactionManager.
-
-**Third**, if you are using Hibernate, you need to deal with lazy-loading proxies.
-Hibernate silently wraps them around your Entities loaded from database.
-We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
-It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
-
-<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
-
-JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
-and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
-
-To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
-
-```java
-TransactionalJaversBuilder
-    .javers()
-    .withTxManager(txManager)
-    .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
-```
-
-Feel free to provide your own implementation of `object-access` hook if you need better control over
-the unproxing process.
-
-See below for the full Spring configuration example [for JPA & Hibernate](#spring-jpa-example).
-
-<h3 id="javers-beans">JaVers Spring beans</h3>
-
-We recommend integrating Spring-based applications
-with Javers using one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/).
-
-If you want to manually configure
-the Spring integration features &mdash; below is the list of beans you need:
+If you want to manually configure the auto-audit aspects 
+&mdash; here is the list of beans you need:
 
 <ul>
-  <li><a href="#javers-instance-as-a-bean">Javers</a> instance bean</li>
-  <li>Auto-audit aspect beans for Spring Data:
-    <ul>
       <li><a href="#javers-spring-data-auditable-repository-aspect">JaversSpringDataAuditableRepositoryAspect</a>
          or <a href="#javers-spring-data-jpa-auditable-repository-aspect">JaversSpringDataJpaAuditableRepositoryAspect</a> 
       </li>
       <li><a href="#javers-auditable-aspect">JaversAuditableAspect</a></li>
       <li><a href="#author-provider-bean">AuthorProvider</a> </li>
       <li><a href="#commit-properties-provider-bean">CommitPropertiesProvider</a> (optionally)</li>
-    </ul>
-  </li>
 </ul>
 
-
-See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
-for [JPA & Hibernate](#spring-jpa-example).
 
 Note that the auto-audit aspects are based on Spring `@AspectJ`.<br/>
 Remember **to enable** `@AspectJ` support by putting the `@EnableAspectJAutoProxy`
 annotation in your Spring configuration.
 For more info refer to Spring [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
-
-<h4 id="javers-instance-as-a-bean">JaVers instance as a Spring bean</h4>
-
-You need to register exactly one JaVers instance in your Application Context.
-For example, if you’re using MongoDB, setup JaVers as follows:
-
-```java
-@Bean
-public Javers javers() {
-    MongoRepository javersMongoRepository =
-            new MongoRepository(mongo().getDatabase("mydatabase"));
-
-    return JaversBuilder.javers()
-            .registerJaversRepository(javersMongoRepository)
-            .build();
-}
-
-@Bean
-public MongoClient mongo() {
-    return new MongoClient();
-}
-```
 
 <h4 id="javers-spring-data-auditable-repository-aspect">JaversSpringDataAuditableRepositoryAspect bean</h4>
 
@@ -355,6 +312,48 @@ If you don’t use commit properties, simply skip `commitPropertiesProvider` arg
 in the aspect constructor or pass `new EmptyPropertiesProvider()`.
 
 That’s the last bean in your Application Context required to run the auto-audit aspects.
+
+
+<h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
+Transaction management is the important issue for applications backed by SQL databases.
+Generally, all SQL statements executed by `JaversSQLRepository`
+should be executed in the context of the current application's transaction
+(called Persistence Context in JPA terminology).
+
+Read more about [ConnectionProvider](/documentation/repository-configuration/#connection-provider)
+and JaVers’ approach to transaction management.
+
+<h3 id="spring-configuration-for-transactional-javers">Spring configuration for SQL</h3>
+**First**, you need to register exactly one **transactional** JaVers instance in your Application Context.
+Simply use `TransactionalJaversBuilder` instead of standard JaversBuilder.
+
+**Second**, you need to register a transactional ConnectionProvider.
+If you’re using JPA with **Hibernate**, choose `JpaHibernateConnectionProvider` implementation
+which is Persistence Context aware and plays along with Spring JpaTransactionManager.
+
+**Third**, if you are using Hibernate, you need to deal with lazy-loading proxies.
+Hibernate silently wraps them around your Entities loaded from database.
+We strongly encourage to get rid of lazy-loading proxies before committing Entities to JaversRepository.
+It can be easily obtained with [HibernateUnproxyObjectAccessHook](#hibernate-unproxy-hook). 
+
+<h3 id="hibernate-unproxy-hook">Hibernate unproxy hook</h3>
+
+JaVers provides `HibernateUnproxyObjectAccessHook` which is a way to unproxy
+and initialize your Hibernate Entities just before processing them by JaVers diff & commit algorithms. 
+
+To use HibernateUnproxyObjectAccessHook simply bind it to your JaVers instance using `JaversBuilder.withObjectAccessHook()` method:
+
+```java
+TransactionalJaversBuilder
+    .javers()
+    .withTxManager(txManager)
+    .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()).build()
+```
+
+Feel free to provide your own implementation of `object-access` hook if you need better control over
+the unproxing process.
+
+See below for the full Spring configuration example [for JPA & Hibernate](#spring-jpa-example).
 
 <h2 id="spring-jpa-example">Spring configuration example for JPA & Hibernate</h2>
 
