@@ -204,6 +204,34 @@ See below for the full Spring configuration example [for JPA & Hibernate](#sprin
 
 <h3 id="javers-beans">JaVers Spring beans</h3>
 
+We recommend integrating Spring-based applications
+with Javers using one of the [JaVers Spring Boot starters](/documentation/spring-boot-integration/).
+
+If you want to manually configure
+the Spring integration features &mdash; below is the list of beans you need:
+
+<ul>
+  <li>[`Javers`](#javers-instance-as-a-bean) instance bean</li>
+  <li>Auto-audit aspect beans for Spring Data:
+    <ul>
+      <li>[`JaversSpringDataAuditableRepositoryAspect`](#javers-spring-data-auditable-repository-aspect)
+         or [`JaversSpringDataJpaAuditableRepositoryAspect`](#javers-spring-data-jpa-auditable-repository-aspect) 
+      </li>
+      <li>[`JaversAuditableAspect`](#javers-auditable-aspect)</li>
+      <li>[`AuthorProvider`](#author-provider-bean) </li>
+      <li>[`CommitPropertiesProvider`](#commit-properties-provider-bean) (optionally)</li>
+    </ul>
+  </li>
+</ul>
+
+See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
+for [JPA & Hibernate](#spring-jpa-example).
+
+Note that the auto-audit aspects are based on Spring `@AspectJ`.<br/>
+Remember **to enable** `@AspectJ` support by putting the `@EnableAspectJAutoProxy`
+annotation in your Spring configuration.
+For more info refer to Spring [@AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
+
 <h4 id="javers-instance-as-a-bean">JaVers instance as a Spring bean</h4>
 
 You need to register exactly one JaVers instance in your Application Context.
@@ -226,17 +254,12 @@ public MongoClient mongo() {
 }
 ```
 
-<h4 id="javers-auto-audit-aspects">Aspect beans</h4>
+<h4 id="javers-spring-data-auditable-repository-aspect">JaversSpringDataAuditableRepositoryAspect bean</h4>
 
-There are three beans that you can add to Context to enable the auto-audit feature:
-
-**`JaversSpringDataAuditableRepositoryAspect`**
-for Spring Data `CrudRepositories`.
-<br/>
-It defines the pointcut on `save(..)` and `delete(..)` methods
+It defines pointcuts on `save*(..)` and `delete*(..)` methods
 within `CrudRepositories` annotated with the class-level
 [@JaversSpringDataAuditable](#at-javers-spring-data-auditable) annotation.
-Choose it if you **are not using** JPA.
+Choose it if you are **not using** JPA.
 
 ```java
 @Bean
@@ -246,27 +269,31 @@ public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect
 }
 ```
 
-**`JaversSpringDataJpaAuditableRepositoryAspect`**
-for Spring Data `JpaRepositories`.
-<br/>
-It extends the first aspect with the pointcut on `JpaRepository.saveAndFlush()`
-and it is triggered by the same annotation &mdash; [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
-Choose it if you **are using** JPA.
+<h4 id="javers-spring-data-jpa-auditable-repository-aspect">JaversSpringDataJpaAuditableRepositoryAspect bean</h4>
+
+It extends the main aspect with the pointcuts on `JpaRepository.saveAndFlush()`
+and `JpaRepository.deleteInBatch()`.
+It's triggered by the same annotation &mdash; [@JaversSpringDataAuditable](#at-javers-spring-data-auditable).
+Choose it if you **are using** `JpaRepositories`.
 
 ```java
 @Bean
 public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAuditableAspect(Javers javers) {
-    return new JaversSpringDataJpaAuditableRepositoryAspect(javers, authorProvider(),
-        commitPropertiesProvider());
+    return new JaversSpringDataJpaAuditableRepositoryAspect(
+            javers, authorProvider(), commitPropertiesProvider());
 }
 ```  
 
-**`JaversAuditableAspect`**
-for any kind of repository.
-<br/>
-It defines the pointcut on any method annotated with the method-level
-[@JaversAuditable](#at-javers-auditable) annotation.
-Choose it if you have repositories that are not managed by Spring Data.
+<h4 id="javers-auditable-aspect">JaversAuditableAspect bean</h4>
+
+Register it if you want to add the auto-audit feature for any kind of repository
+(not managed by Spring Data).
+
+It defines the pointcuts on methods with these
+annotations:
+[@JaversAuditable](#at-javers-auditable),
+[@JaversAuditableDelete](#at-auditable-delete), or
+[@JaversAuditableConditionalDelete](#at-javers-auditable-conditional-delete).
 
 ```java
 @Bean
@@ -275,26 +302,16 @@ public JaversAuditableAspect javersAuditableAspect() {
 }
 ```
 
-Aspects require one more bean &mdash; [`AuthorProvider`](#author-provider-bean)
-and optionally [`CommitPropertiesProvider`](#commit-properties-provider-bean) bean.
-
-Note that these aspects are based on Spring `@AspectJ`.<br/>
-**Remember to enable** `@AspectJ` support by putting the `@EnableAspectJAutoProxy`
-annotation in your Spring configuration.
-
-For more info refer to
-[Spring @AspectJ documentation](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-ataspectj).
-
 <h4 id="author-provider-bean">AuthorProvider bean</h4>
 
-Every JaVers commit (a data change) should be connected to its author, i.e. the
-user who made the change.
+Every JaVers commit (a data change) should be linked to its author, i.e. the
+user who has made the change.
 Please don’t confuse JaVers commit (a bunch of data changes)
-with the SQL commit command (finalizing an SQL transaction).
+with SQL commit (finalizing an SQL transaction).
 
 You need to register an implementation of the
 [`AuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/AuthorProvider.java) interface,
-which should return a current user name. It’s required by auto-audit aspects.
+which should return a current user name. It’s required by all auto-audit aspects.
 For example:
 
 ```java
@@ -306,15 +323,15 @@ For example:
 
 JaVers comes with [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
 &mdash;
-suitable implementation when using Spring Security.
-If you don’t care about commit author, use
+suitable if you are using Spring Security.
+If you don’t care about commit authors, use
 [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java).
 
 <h4 id="commit-properties-provider-bean">CommitPropertiesProvider bean</h4>
 Every JaVers commit may have one or more commit properties, useful for querying
 (see [CommitProperty filter example](/documentation/jql-examples/#commit-property-filter)).
 
-In auto-audit aspect, commit properties are supplied by an implementation of the
+In the auto-audit aspects, commit properties are supplied by an implementation of the
 [`CommitPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/CommitPropertiesProvider.java) interface,
 for example:
 
@@ -336,9 +353,7 @@ for example:
 If you don’t use commit properties, simply skip `commitPropertiesProvider` argument
 in the aspect constructor or pass `new EmptyPropertiesProvider()`.
 
-That’s the last bean in your Application Context required to run auto-audit aspects.
-See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
-for [JPA & Hibernate](#spring-jpa-example)
+That’s the last bean in your Application Context required to run the auto-audit aspects.
 
 <h2 id="spring-jpa-example">Spring configuration example for JPA & Hibernate</h2>
 
