@@ -49,7 +49,7 @@ Here is an example `application.yml` file
 with the full list of JaVers core properties, and their default values.
 You don’t need to add anything to your configuration, if these defaults are OK for you.
 
-```
+```yaml
 javers:
   mappingStyle: FIELD
   algorithm: SIMPLE
@@ -74,7 +74,7 @@ javers:
 
 Properties active in the SQL starter:
 
-```
+```yaml
 javers:
   sqlSchema:
   sqlSchemaManagementEnabled: true
@@ -88,7 +88,7 @@ javers:
 
 Properties active in the MongoDB starter:
 
-```
+```yaml
 javers:
   documentDbCompatibilityEnabled: false
   objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
