@@ -211,18 +211,19 @@ If you want to manually configure
 the Spring integration features &mdash; below is the list of beans you need:
 
 <ul>
-  <li>[`Javers`](#javers-instance-as-a-bean) instance bean</li>
+  <li><a href="#javers-instance-as-a-bean">Javers</a> instance bean</li>
   <li>Auto-audit aspect beans for Spring Data:
     <ul>
-      <li>[`JaversSpringDataAuditableRepositoryAspect`](#javers-spring-data-auditable-repository-aspect)
-         or [`JaversSpringDataJpaAuditableRepositoryAspect`](#javers-spring-data-jpa-auditable-repository-aspect) 
+      <li><a href="#javers-spring-data-auditable-repository-aspect">JaversSpringDataAuditableRepositoryAspect</a>
+         or <a href="#javers-spring-data-jpa-auditable-repository-aspect">JaversSpringDataJpaAuditableRepositoryAspect</a> 
       </li>
-      <li>[`JaversAuditableAspect`](#javers-auditable-aspect)</li>
-      <li>[`AuthorProvider`](#author-provider-bean) </li>
-      <li>[`CommitPropertiesProvider`](#commit-properties-provider-bean) (optionally)</li>
+      <li><a href="#javers-auditable-aspect">JaversAuditableAspect</a></li>
+      <li><a href="#author-provider-bean">AuthorProvider</a> </li>
+      <li><a href="#commit-properties-provider-bean">CommitPropertiesProvider</a> (optionally)</li>
     </ul>
   </li>
 </ul>
+
 
 See the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
 for [JPA & Hibernate](#spring-jpa-example).
