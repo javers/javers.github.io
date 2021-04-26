@@ -64,7 +64,7 @@ with Javers using one of the [JaVers Spring Boot starters](/documentation/spring
 
 If for some reason, you don't want to use a Javers' starter &mdash;
 you can configure all the Javers beans manually
-or copy the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) and
+or copy the full Spring configuration examples for [MongoDB](#auto-audit-example-mongo) or
 for [JPA & Hibernate](#spring-jpa-example).
 
 You need to have a JaVers instance registered as a Spring bean.
