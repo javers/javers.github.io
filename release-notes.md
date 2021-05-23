@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.1.1
+released on 2021-05-23
+
+* [1092](https://github.com/javers/javers/issues/1092) Fixed bug when deserializing 
+ Diff from JSON: `MALFORMED_CHANGE_TYPE_FIELD`: no such Change type - `InitialChange`.
+
 ### 6.1.0
 released on 2021-04-25
 
