@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.2.0
+released on 2021-06-13
+
+* [1091](https://github.com/javers/javers/issues/1091)
+  Added support for Java 16. Fixed `InaccessibleObjectException`
+  when serializing core Java types (like `Optional` or `LocalDate`).
+
 ### 6.1.1
 released on 2021-05-23
 
