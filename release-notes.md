@@ -5,7 +5,7 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 6.2.0
+### 6.2.1
 released on 2021-06-13
 
 * [1091](https://github.com/javers/javers/issues/1091)
