@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.2.2
+released on 2021-06-19
+* [1108](https://github.com/javers/javers/issues/1108)
+ Added possibility to call `commitShallowDelete()`
+ for objects which not exists in JaversRepository. 
+ Exception `CANT_DELETE_OBJECT_NOT_FOUND` is no longer thrown. 
+  
 ### 6.2.1
 released on 2021-06-13
 
