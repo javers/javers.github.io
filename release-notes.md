@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.2.3
+released on 2021-07-04
+* Another fix for [1091](https://github.com/javers/javers/issues/1091),
+  solved problem with `java.util.Locale` on Java 16.
+
 ### 6.2.2
 released on 2021-06-19
 * [1108](https://github.com/javers/javers/issues/1108)
