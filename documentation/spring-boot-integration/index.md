@@ -61,7 +61,7 @@ javers:
   packagesToScan:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
-  sqlSchema:
+  sqlSchema: 'my_test_schema'
   sqlSchemaManagementEnabled: true
   sqlGlobalIdCacheDisabled: false
   objectAccessHook:
