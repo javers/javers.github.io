@@ -66,10 +66,10 @@ javers:
   sqlGlobalIdCacheDisabled: false
   objectAccessHook:
   prettyPrintDateFormats:
-    localDateTime: "dd MMM yyyy, HH:mm:ss"
-    zonedDateTime: "dd MMM yyyy, HH:mm:ssZ"
-    localDate: "dd MMM yyyy"
-    localTime: "HH:mm:ss"  
+    localDateTime: 'dd MMM yyyy, HH:mm:ss'
+    zonedDateTime: 'dd MMM yyyy, HH:mm:ssZ'
+    localDate: 'dd MMM yyyy'
+    localTime: 'HH:mm:ss'  
 ```  
 
 Properties active in the SQL starter:
