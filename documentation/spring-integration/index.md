@@ -314,6 +314,29 @@ in the aspect constructor or pass `new EmptyPropertiesProvider()`.
 That’s the last bean in your Spring context required to run the auto-audit aspects.
 
 
+<h3 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete for any kind of repositories</h3>
+
+If you’re using any kind of reposity, and have delete methods with conditions, you can put `@JaversAuditableConditionalDelete` annotation on the methods to audit these events.
+
+For example:
+
+```java
+@Repository
+class UserRepository {
+    @JaversAuditableConditionalDelete
+    public User deleteByLogin(String login) {
+        ...//
+    }
+
+    @JaversAuditableConditionalDelete
+    public List<User> deleteAllByLogin(String login) {
+        ...//
+    }
+}
+```
+
+These delete methods must return either an Entity or a collection of Entity.
+
 <h2 id="jpa-entity-manager-integration">JPA EntityManager integration</h2>
 Transaction management is the important issue for applications backed by SQL databases.
 Generally, all SQL statements executed by `JaversSQLRepository`
