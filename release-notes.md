@@ -7,7 +7,8 @@ submenu: release-notes
 ### 6.2.4
 released on 2021-08-24
 * [1096](https://github.com/javers/javers/issues/1096) 
-  added option for querying commit properties with `LIKE` operator.
+  added `withCommitPropertyLike()` 
+  method to query for commit properties with `LIKE` operator.
   
 ```groovy
 @Unroll
