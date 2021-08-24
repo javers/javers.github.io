@@ -4,6 +4,31 @@ title: Release notes
 category: Documentation
 submenu: release-notes
 ---
+### 6.2.4
+released on 2021-08-24
+* [1096](https://github.com/javers/javers/issues/1096) 
+  added option for querying commit properties with `LIKE` operator.
+  
+```groovy
+@Unroll
+def "should query for commit property containing partial text - #value"() {
+    given:
+    javers.commit('author', new SnapshotEntity(),
+            [name:'John Marcus Doe', x:'y'])
+
+    when:
+    def snapshots = javers
+            .findSnapshots(byInstanceId(1, SnapshotEntity)
+            .withCommitPropertyLike('name',value).build())
+
+    then:
+    snapshots.size() == 1
+
+    where:
+    value << ["John","Doe","Marcus"]
+}
+```
+
 
 ### 6.2.3
 released on 2021-07-04
