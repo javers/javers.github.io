@@ -1119,21 +1119,17 @@ the query result:
 
 ```text
 Changes:
-Commit 2.00 done by author at 16 Mar 2021, 22:20:41 :
+Commit 2.00 done by author at 02 wrz 2021, 15:19:45 :
 * changes on Employee/bob :
-  - 'salary' changed: '1000' -> '1200'
-Commit 1.00 done by author at 16 Mar 2021, 22:20:41 :
+  - 'age' changed: '30' -> '31'
+  - 'primaryAddress.city' changed: 'Paris' -> 'London'
+Commit 1.00 done by author at 02 wrz 2021, 15:19:45 :
 * new object: Employee/bob
   - 'age' = '30'
   - 'name' = 'bob'
+  - 'postalAddress.city' = 'Paris'
+  - 'primaryAddress.city' = 'Paris'
   - 'salary' = '1000'
-  
-Changes:
-Commit 2.00 done by author at 16 Mar 2021, 22:20:41 :
-* changes on Employee/bob :
-  - 'salary' changed: '1000' -> '1200'
-Commit 1.00 done by author at 16 Mar 2021, 22:20:41 :
-* new object: Employee/bob  
 ```
 
 Results are similar when the child Value Objects filter is applied to a Snapshot query.
