@@ -4,6 +4,15 @@ title: Release notes
 category: Documentation
 submenu: release-notes
 ---
+
+### 6.2.5
+released on 2021-09-05
+* [1134](https://github.com/javers/javers/issues/1134)
+  Fixed compatibility issue with the latest Hibernate version 5.6.0.beta1.
+
+* [1130](https://github.com/javers/javers/issues/1130)
+  Fixed bug in `Change.getAffectedObject()`. It returns now the right (new) version of an object.
+
 ### 6.2.4
 released on 2021-08-24
 * [1096](https://github.com/javers/javers/issues/1096) 
