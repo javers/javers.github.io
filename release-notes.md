@@ -5,6 +5,20 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.3.0
+released on 2021-10-09
+* [1099](https://github.com/javers/javers/issues/1099)
+  Fixed `NullPointerException` when comparing complex Map types with
+  Collections of objects, like:
+  
+  ```groovy
+      class A {
+            Map<String, List<Person>> map
+      }
+  ```
+  
+  Since this version, these structures are fully supported. 
+  
 ### 6.2.5
 released on 2021-09-05
 * [1134](https://github.com/javers/javers/issues/1134)
