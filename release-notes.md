@@ -5,6 +5,34 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.4.0
+released on 2021-10-16
+* [1094](https://github.com/javers/javers/issues/1094)
+  Provided access to old and new Collection, Array, and Map values
+  within `CollectionChange`, `ArrayChange`, and `MapChange` types. For example:
+  
+```groovy
+def "should provide old and new Collection in Changes loaded from Repository" () {
+    given:
+    def s = new SnapshotEntity(id:1, listOfIntegers : [1,2])
+    javers.commit('author', s)
+    
+    s.listOfIntegers = [2,4]
+    javers.commit('author', s)
+
+    when:
+    def changes = javers.findChanges(byInstanceId(1, SnapshotEntity).build())
+    println(changes.prettyPrint())
+
+    then:
+    ListChange change = changes[0]
+    change.left instanceof List
+    change.left == [1,2]
+    change.right instanceof List
+    change.right == [2,4]
+}
+```
+
 ### 6.3.0
 released on 2021-10-09
 * [1099](https://github.com/javers/javers/issues/1099)

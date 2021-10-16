@@ -198,17 +198,17 @@ output:
 iterating over changes:
 - NewObject{ new object: Employee/Gandalf }
 - NewObject{ new object: Employee/Sméagol }
-- InitialValueChange{ property: 'name', left:'',  right:'Gandalf' }
-- InitialValueChange{ property: 'salary', left:'',  right:'10000' }
 - InitialValueChange{ property: 'name', left:'',  right:'Sméagol' }
 - InitialValueChange{ property: 'salary', left:'',  right:'10000' }
 - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
+- InitialValueChange{ property: 'name', left:'',  right:'Gandalf' }
+- InitialValueChange{ property: 'salary', left:'',  right:'10000' }
 - ValueChange{ property: 'position', left:'Townsman',  right:'Hero' }
 - ValueChange{ property: 'salary', left:'10000',  right:'12000' }
 - ValueChange{ property: 'age', left:'40',  right:'41' }
 - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Gandalf' }
-- ListChange{ property: 'subordinates', elementChanges:1 }
-- SetChange{ property: 'skills', elementChanges:1 }
+- ListChange{ property: 'subordinates', elementChanges:1, left.size: 1, right.size: 2}
+- SetChange{ property: 'skills', elementChanges:1, left.size: 1, right.size: 2}
 - ValueChange{ property: 'city', left:'Shire',  right:'Mordor' }
 ```
 
@@ -240,8 +240,8 @@ iterating over changes grouped by objects
   - ValueChange{ property: 'salary', left:'10000',  right:'12000' }
   - ValueChange{ property: 'age', left:'40',  right:'41' }
   - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Gandalf' }
-  - ListChange{ property: 'subordinates', elementChanges:1 }
-  - SetChange{ property: 'skills', elementChanges:1 }
+  - ListChange{ property: 'subordinates', elementChanges:1, left.size: 1, right.size: 2}
+  - SetChange{ property: 'skills', elementChanges:1, left.size: 1, right.size: 2}
   - ValueChange{ property: 'city', left:'Shire',  right:'Mordor' }
 ```
 
