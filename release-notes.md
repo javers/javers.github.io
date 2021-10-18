@@ -5,6 +5,30 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.4.1
+released on 2021-10-18
+* [912](https://github.com/javers/javers/issues/912)
+  Added support for
+  querying on a commit property with multiple values using "IN" semantics.
+  Usage:
+
+```groovy
+def "should query for entity with commit properties IN list"() {
+  given:
+  javers.commit('author', new SnapshotEntity(id: 1, intProperty: 2), [name: 'Steve'])
+  javers.commit('author', new SnapshotEntity(id: 1, intProperty: 3), [name: 'John'])
+
+  when:
+  def snapshots = javers.findSnapshots(byInstanceId(1, SnapshotEntity)
+          .withCommitPropertyIn('name', ['Steve', 'Bill'])
+          .build())
+
+  then:
+  snapshots.size() == 1
+  snapshots[0].getPropertyValue("intProperty") == 2
+}
+```
+
 ### 6.4.0
 released on 2021-10-16
 * [1094](https://github.com/javers/javers/issues/1094)
@@ -39,11 +63,11 @@ released on 2021-10-09
   Fixed `NullPointerException` when comparing complex Map types with
   Collections of objects, like:
   
-  ```groovy
-      class A {
-            Map<String, List<Person>> map
-      }
-  ```
+```groovy
+    class A {
+          Map<String, List<Person>> map
+    }
+```
   
   Since this version, these structures are fully supported. 
   
