@@ -7,15 +7,15 @@ sidebar-url: docs-sidebar.html
 ---
 
 [Spring Boot](http://projects.spring.io/spring-boot/)
-is the standard in the world of Java applications.
+is the standard in the world of enterprise Java.
 
 Our Spring Boot starters are the easiest 
 and strongly recommended way of integrating JaVers with your application.
 
 This is a plug-and-play solution.
 The JaVers Spring Boot starter automatically creates 
-all required JaVers beans and optimally adjusts them  
-according to your application configuration. 
+all required JaVers beans and optimally adjusts them
+according to your application configuration.
 
 There are two starters compatible with Spring Data MongoDB
 or with Spring Data JPA:
