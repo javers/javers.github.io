@@ -5,6 +5,36 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.5.0
+released on 2021-11-13
+
+* [1137](https://github.com/javers/javers/issues/1137)
+  Important new feature in MongoRepository.
+  Added support for MongoDB
+  multi-document ACID transactions introduced in MongoDB 4.0
+  and implemented in Spring Data MongoDB 2.1.
+  
+  See ...
+
+* [1121](https://github.com/javers/javers/issues/1121)
+  Fixed `IllegalArgumentException` when querying for object
+  with solely TERMINAL snapshot.
+  
+* Dependencies aligned with Spring Boot 2.5.5:
+  
+```groovy
+springVersion           =5.3.10
+springBootVersion       =2.5.5
+springDataCommonsVersion=2.5.5
+springDataMongoVersion  =3.2.5
+springSecurityVersion   =5.5.2
+mongoDbDriverVersion    =4.2.3
+hibernateVersion        =5.4.32.Final
+guavaVersion            =31.0-jre
+gsonVersion             =2.8.8
+classgraphVersion       =4.8.128
+```
+  
 ### 6.4.1
 released on 2021-10-18
 * [912](https://github.com/javers/javers/issues/912)

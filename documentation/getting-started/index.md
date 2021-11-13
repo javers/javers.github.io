@@ -10,7 +10,7 @@ All JaVers artifacts are published to [Maven Central](https://search.maven.org/s
 
 <h2 id="getting-started-boot">Spring Boot Starter</h2>
 
-The easiest and recommended way to start with Javers
+The easiest and strongly recommended way to start with Javers
 is adding one of our Spring Boot starters to your project dependencies.
 
 If you are using MongoDB &mdash; take:
