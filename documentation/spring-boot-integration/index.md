@@ -7,14 +7,18 @@ sidebar-url: docs-sidebar.html
 ---
 
 [Spring Boot](http://projects.spring.io/spring-boot/)
-has become a standard in the world of Java enterprise applications.
+is the standard in the world of Java applications.
 
-Our Spring Boot starters simplify integrating
-JaVers with your application. All required JaVers beans are 
-created and auto-configured with reasonable defaults.
+Our Spring Boot starters are the easiest 
+and strongly recommended way of integrating JaVers with your application.
 
-There are two starters compatible with Spring Data and 
-common persistence stacks:
+This is a plug-and-play solution.
+The JaVers Spring Boot starter automatically creates 
+all required JaVers beans and optimally adjusts them  
+according to your application configuration. 
+
+There are two starters compatible with Spring Data MongoDB
+or with Spring Data JPA:
 
 * **JaVers Spring Boot starter for MongoDB**,
   compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
@@ -24,14 +28,14 @@ common persistence stacks:
 <h2 id="get-javers-starters">Get JaVers Spring Boot starter</h2>
 
 ### MongoDB starter ###
-Add JaVers MongoDB and Spring Data MongoDB starters to your classpath:
+Add JaVers Spring Boot starter for MongoDB to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
 ```
 
 ### SQL starter ###
-Add JaVers SQL and Spring Data JPA starters to your classpath:
+Add JaVers Spring Boot starter for SQL to your classpath:
 
 ```groovy
 compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
@@ -47,7 +51,8 @@ and configure JaVers in the same way as your application (typically by YAML prop
 
 Here is an example `application.yml` file
 with the full list of JaVers core properties, and their default values.
-You don’t need to add anything to your configuration, if these defaults are OK for you.
+If these defaults are OK for you &mdash;
+you don’t need to add anything to your configuration.
 
 ```yaml
 javers:
