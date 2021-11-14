@@ -9,13 +9,9 @@ sidebar-url: docs-sidebar.html
 [Spring Boot](http://projects.spring.io/spring-boot/)
 is the standard in the world of enterprise Java.
 
-Our Spring Boot starters are the easiest 
-and strongly recommended way of integrating JaVers with your application.
-
-This is a plug-and-play solution.
-The JaVers Spring Boot starter automatically creates 
-all required JaVers beans and optimally adjusts them
-according to your application configuration.
+Javers’ Spring Boot starters are the easiest 
+and strongly recommended way of integrating Javers with your application.
+This is the truly plug-and-play solution.
 
 There are two starters compatible with Spring Data MongoDB
 or with Spring Data JPA:
@@ -44,10 +40,33 @@ compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version
 Check [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
 for other build tool snippets.
 
-<h2 id="javers-configuration-properties">JaVers configuration</h2>
+<h2 id="starters-auto-configuration">Spring Boot Auto-configuration</h2>
+
+Thanks to the Spring Boot magic, Javers’ auto-configuration
+when available on a classpath is automatically picked up and loaded.
+
+Javers’ auto-configuration creates
+all required Javers beans and optimally adjusts them
+according to your application configuration:
+
+- [JaVers instance bean](/documentation/spring-integration/#javers-instance-as-spring-bean)
+  with [JaversRepository](/documentation/repository-configuration)
+  configured to connect to your application’s database.
+- [Auto-audit aspects beans](/documentation/spring-integration/#auto-audit-aspects-spring-configuration)
+
+Check the complete list of JaVers’ beans added to your Spring Context:
+
+* for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
+* for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
+
+<h2 id="customizing-auto-configuration">Customizing the Auto-configuration</h2>
+
+Javers starters provides 
+
+<h3 id="javers-configuration-properties">JaVers Core configuration</h3>
 
 Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
-and configure JaVers in the same way as your application (typically by YAML property files).
+and configure Javers in the same way as your application (typically by YAML property files).
 
 Here is an example `application.yml` file
 with the full list of JaVers core properties, and their default values.
@@ -66,9 +85,6 @@ javers:
   packagesToScan:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
-  sqlSchema: 'my_test_schema'
-  sqlSchemaManagementEnabled: true
-  sqlGlobalIdCacheDisabled: false
   objectAccessHook:
   prettyPrintDateFormats:
     localDateTime: 'dd MMM yyyy, HH:mm:ss'
@@ -77,31 +93,29 @@ javers:
     localTime: 'HH:mm:ss'  
 ```  
 
-Properties active in the SQL starter:
-
-```yaml
-javers:
-  sqlSchema:
-  sqlSchemaManagementEnabled: true
-  sqlGlobalIdCacheDisabled: false
-  objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
-  sqlGlobalIdTableName: jv_global_id
-  sqlCommitTableName: jv_commit
-  sqlSnapshotTableName: jv_snapshot
-  sqlCommitPropertyTableName: jv_commit_property
-```   
-
-Properties active in the MongoDB starter:
-
-```yaml
-javers:
-  documentDbCompatibilityEnabled: false
-  objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
-  snapshotsCacheSize: 5000
-```   
-
 Each property in the Spring `application.yml` file has the corresponding `with*()`
 method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
+
+<h3 id="AuthorProvider-and-CommitPropertiesProvider">AuthorProvider and CommitPropertiesProvider beans</h3>
+
+These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
+For both, default implementations are created by JaVers starter:
+
+* For AuthorProvider &mdash;
+  if JaVers detects Spring Security on your classpath,
+  [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
+  is created.
+  Otherwise, JaVers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
+  which returns `"unknown"` author.
+* For CommitPropertiesProvider &mdash;
+  [`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java) which returns an empty Map.
+
+Register your own beans **only** if you need to override these defaults.
+
+See documentation of [AuthorProvider](/documentation/spring-integration/#author-provider-bean)
+and [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean)
+for more details.
+
 
 <h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
 
@@ -142,38 +156,37 @@ JsonTypeAdapter dummyEntityJsonTypeAdapter () {
 }
 ```
 
-<h2 id="starters-auto-configuration">Spring AutoConfiguration</h2>
-Thanks to Spring Boot magic, Javers AutoConfiguration available on the classpath is automatically picked up
-and loaded. 
-
-Check the complete list of JaVers' beans added to your Spring ApplicationContext:
-
-* for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
-* for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
-
-### AuthorProvider and CommitPropertiesProvider beans
-These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
-For both, default implementations are created by JaVers starter:
-
-* For AuthorProvider &mdash;
-if JaVers detects Spring Security on your classpath,
-[`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
-is created.
-Otherwise, JaVers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
-which returns `"unknown"` author.
-* For CommitPropertiesProvider &mdash;
-[`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java) which returns an empty Map.
-
-Register your own beans **only** if you need to override these defaults.
-
-See documentation of [AuthorProvider](/documentation/spring-integration/#author-provider-bean)
-and [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean)
-for more details.
-
 <h2 id="starter-repository-configuration">JaversRepository configuration</h2>
-JaVers starters rely on Spring Data starters.
-Proper JaversRepository implementation is created and configured to reuse an application’s
-database (managed by Spring Data starters).
+
+Javers starters rely on Spring Data starters
+to create a proper [JaversRepository](/documentation/repository-configuration)
+instance.
+JaversRepository is configured to reuse your application’s
+database managed by Spring Data starter.
+
+Properties active in the SQL starter:
+
+```yaml
+javers:
+  sqlSchema:
+  sqlSchemaManagementEnabled: true
+  sqlGlobalIdCacheDisabled: false
+  objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
+  sqlGlobalIdTableName: jv_global_id
+  sqlCommitTableName: jv_commit
+  sqlSnapshotTableName: jv_snapshot
+  sqlCommitPropertyTableName: jv_commit_property
+```   
+
+Properties active in the MongoDB starter:
+
+```yaml
+javers:
+  documentDbCompatibilityEnabled: false
+  objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
+  snapshotsCacheSize: 5000
+```   
+
   
 <h3 id="dedicated-mongo-database">Dedicated Mongo database for JaVers</h3>  
   

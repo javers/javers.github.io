@@ -516,8 +516,8 @@ added in MongoDB 4.0 and introduced in Spring Data MongoDB 2.1.
 
 If you are using MongoDB multi-document transactions in your application,
 we recommend configuring Javers to participate in the transactions game.
-Thanks to that, whenever a transaction which updates your domain objects is rolled back
-also corresponding Javers commits are rolled back.
+Thanks to that, whenever a transaction which updates your domain objects is rolled back,
+also corresponding Javers' commits are rolled back.
 
 MongoDB transactions are managed in Spring
 by the well-known Spring Transaction Management platform.
@@ -525,7 +525,7 @@ The central point of this platform is the `TransactionManager` abstraction
 , which for MongoDB is implemented by `MongoTransactionManager`.
 
 Once you have an instance of `MongoTransactionManager` you can easily build 
-the transactional version of Javers, which participates
+the transactional version of Javers, which is going to participate
 in your application's transactions managed by Spring.
 
 For example:
