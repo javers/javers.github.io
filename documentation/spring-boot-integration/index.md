@@ -27,14 +27,14 @@ or with Spring Data JPA:
 Add JaVers Spring Boot starter for MongoDB to your classpath:
 
 ```groovy
-compile 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
+implementation 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
 ```
 
 ### SQL starter ###
 Add JaVers Spring Boot starter for SQL to your classpath:
 
 ```groovy
-compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
+implementation 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
 ```
 
 Check [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
@@ -43,7 +43,7 @@ for other build tool snippets.
 <h2 id="starters-auto-configuration">Spring Boot Auto-configuration</h2>
 
 Thanks to the Spring Boot magic, Javers’ auto-configuration
-when available on a classpath is automatically picked up and loaded.
+when available on a classpath, is automatically picked up and loaded.
 
 Javers’ auto-configuration creates
 all required Javers beans and optimally adjusts them
@@ -51,17 +51,17 @@ according to your application configuration:
 
 - [JaVers instance bean](/documentation/spring-integration/#javers-instance-as-spring-bean)
   with [JaversRepository](/documentation/repository-configuration)
-  configured to connect to your application’s database.
-- [Auto-audit aspects beans](/documentation/spring-integration/#auto-audit-aspects-spring-configuration)
+  connected to your application’s database,
+- [Auto-audit aspects beans](/documentation/spring-integration/#auto-audit-aspects-spring-configuration).
 
 Check the complete list of JaVers’ beans added to your Spring Context:
 
-* for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java)
-* for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java)
+* for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java),
+* for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java).
 
 <h2 id="customizing-auto-configuration">Customizing the Auto-configuration</h2>
 
-First od all, Javers auto-configuration can be customized using the  
+First of all, Javers auto-configuration can be customized using the
 standard Spring Boot configuration files.
 
 Second, by adding the following beans to your Spring Context:
@@ -113,7 +113,8 @@ For both, default implementations are created by the JaVers starter:
   Otherwise, JaVers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
   which returns `"unknown"` author.
 * For CommitPropertiesProvider &mdash;
-  [`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java) which returns an empty Map.
+  [`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java)
+  is created. It returns an empty Map.
 
 Register your own beans **only** if you need to override these defaults.
 
