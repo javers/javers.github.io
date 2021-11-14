@@ -13,8 +13,8 @@ released on 2021-11-14
   Added support for MongoDB
   multi-document ACID transactions introduced in MongoDB 4.0
   and implemented in Spring Data MongoDB 2.1.
-  
-  See ...
+
+  See  [MongoDB transactions support](/documentation/spring-integration/#mongo-transactions).
 
   Minor breaking change: the `TransactionalJaversBuilder` class is renamed to 
   `TransactionalJpaJaversBuilder`.
