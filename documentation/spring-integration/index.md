@@ -512,17 +512,17 @@ public class JaversSpringJpaApplicationConfigExample {
 <h2 id="mongo-transactions">MongoDB transactions support</h2>
 
 Javers (since 6.5.1) supports multi-document ACID transactions
-added in MongoDB 4.0 and introduced in Spring Data MongoDB (since 2.1).
-
-MongoDB transactions are managed in Spring 
-by the well-known Spring Transaction Management platform.
-The central point of this platform is the `TransactionManager` abstraction
-, which for MongoDB is implemented by `MongoTransactionManager`.
+added in MongoDB 4.0 and introduced in Spring Data MongoDB 2.1.
 
 If you are using MongoDB multi-document transactions in your application,
 we recommend configuring Javers to participate in the transactions game.
 Thanks to that, whenever a transaction which updates your domain objects is rolled back
 also corresponding Javers commits are rolled back.
+
+MongoDB transactions are managed in Spring
+by the well-known Spring Transaction Management platform.
+The central point of this platform is the `TransactionManager` abstraction
+, which for MongoDB is implemented by `MongoTransactionManager`.
 
 Once you have an instance of `MongoTransactionManager` you can easily build 
 the transactional version of Javers, which participates
