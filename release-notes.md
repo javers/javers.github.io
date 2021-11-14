@@ -5,8 +5,8 @@ category: Documentation
 submenu: release-notes
 ---
 
-### 6.5.0
-released on 2021-11-13
+### 6.5.1
+released on 2021-11-14
 
 * [1137](https://github.com/javers/javers/issues/1137)
   Important new feature in MongoRepository.
@@ -15,6 +15,9 @@ released on 2021-11-13
   and implemented in Spring Data MongoDB 2.1.
   
   See ...
+
+  Minor breaking change: the `TransactionalJaversBuilder` class is renamed to 
+  `TransactionalJpaJaversBuilder`.
 
 * [1121](https://github.com/javers/javers/issues/1121)
   Fixed `IllegalArgumentException` when querying for object

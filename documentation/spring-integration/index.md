@@ -367,6 +367,8 @@ If you are not using Spring boot &mdash;
 here is a working example of vanilla Spring Application Context
 with all JaVers beans, JPA, Hibernate, Spring Data and Spring TransactionManager.
 
+[`JaversSpringJpaApplicationConfigExample.java`](https://github.com/javers/javers/blob/master/javers-spring-jpa/src/test/java/org/javers/spring/example/JaversSpringJpaApplicationConfigExample.java):
+
 ```java
 package org.javers.spring.example;
 
@@ -377,136 +379,139 @@ import ...
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
 @EnableJpaRepositories({"org.javers.spring.repository"})
-public class JaversSpringJpaApplicationConfig {
+public class JaversSpringJpaApplicationConfigExample {
 
-    //.. JaVers setup ..
+  //.. JaVers setup ..
 
-    /**
-     * Creates JaVers instance with {@link JaversSqlRepository}
-     */
-    @Bean
-    public Javers javers(PlatformTransactionManager txManager) {
-        JaversSqlRepository sqlRepository = SqlRepositoryBuilder
-                .sqlRepository()
-                .withConnectionProvider(jpaConnectionProvider())
-                .withDialect(DialectName.H2)
-                .build();
+  /**
+   * Creates JaVers instance with {@link JaversSqlRepository}
+   */
+  @Bean
+  public Javers javers(PlatformTransactionManager txManager) {
+    JaversSqlRepository sqlRepository = SqlRepositoryBuilder
+            .sqlRepository()
+            .withConnectionProvider(jpaConnectionProvider())
+            .withDialect(DialectName.H2)
+            .build();
 
-        return TransactionalJaversBuilder
-                .javers()
-                .withTxManager(txManager)
-                .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
-                .registerJaversRepository(sqlRepository)
-                .build();
-    }
+    return TransactionalJpaJaversBuilder
+            .javers()
+            .withTxManager(txManager)
+            .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
+            .registerJaversRepository(sqlRepository)
+            .build();
+  }
 
-    /**
-     * Enables auto-audit aspect for ordinary repositories.<br/>
-     *
-     * Use {@link org.javers.spring.annotation.JaversAuditable}
-     * to mark data writing methods that you want to audit.
-     */
-    @Bean
-    public JaversAuditableAspect javersAuditable(Javers javers) {
-        return new JaversAuditableAspect(javers, authorProvider(), commitPropertiesProvider());
-    }
+  /**
+   * Enables auto-audit aspect for ordinary repositories.<br/>
+   *
+   * Use {@link org.javers.spring.annotation.JaversAuditable}
+   * to mark data writing methods that you want to audit.
+   */
+  @Bean
+  public JaversAuditableAspect javersAuditableAspect(Javers javers) {
+    return new JaversAuditableAspect(javers, authorProvider(), commitPropertiesProvider());
+  }
 
-    /**
-     * Enables auto-audit aspect for Spring Data repositories. <br/>
-     *
-     * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
-     * to annotate CrudRepository, PagingAndSortingRepository or JpaRepository
-     * you want to audit.
-     */
-    @Bean
-    public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAspect(Javers javers) {
-        return new JaversSpringDataJpaAuditableRepositoryAspect(javers, authorProvider(),
-            commitPropertiesProvider());
-    }
+  /**
+   * Enables auto-audit aspect for Spring Data repositories. <br/>
+   *
+   * Use {@link org.javers.spring.annotation.JaversSpringDataAuditable}
+   * to annotate CrudRepository, PagingAndSortingRepository or JpaRepository
+   * you want to audit.
+   */
+  @Bean
+  public JaversSpringDataJpaAuditableRepositoryAspect javersSpringDataAuditableAspect(Javers javers) {
+    return new JaversSpringDataJpaAuditableRepositoryAspect(javers, authorProvider(), commitPropertiesProvider());
+  }
 
-    /**
-     * Required by auto-audit aspect. <br/><br/>
-     *
-     * Creates {@link SpringSecurityAuthorProvider} instance,
-     * suitable when using Spring Security
-     */
-    @Bean
-    public AuthorProvider authorProvider() {
-        return new SpringSecurityAuthorProvider();
-    }
+  /**
+   * Required by auto-audit aspect. <br/><br/>
+   *
+   * Creates {@link SpringSecurityAuthorProvider} instance,
+   * suitable when using Spring Security
+   */
+  @Bean
+  public AuthorProvider authorProvider() {
+    return new SpringSecurityAuthorProvider();
+  }
 
-    /**
-     * Optional for auto-audit aspect. <br/>
-     * @see CommitPropertiesProvider
-     */
-    @Bean
-    public CommitPropertiesProvider commitPropertiesProvider() {
-        return new CommitPropertiesProvider() {
-            @Override
-            public Map<String, String> provideForCommittedObject(Object domainObject) {
-                if (domainObject instanceof DummyObject) {
-                    return Maps.of("dummyObject.name", ((DummyObject)domainObject).getName());
-                }
-                return Collections.emptyMap();
-            }
-        };
-    }
+  /**
+   * Optional for auto-audit aspect. <br/>
+   * @see CommitPropertiesProvider
+   */
+  @Bean
+  public CommitPropertiesProvider commitPropertiesProvider() {
+    return new CommitPropertiesProvider() {
+      @Override
+      public Map<String, String> provideForCommittedObject(Object domainObject) {
+        if (domainObject instanceof DummyObject) {
+          return Maps.of("dummyObject.name", ((DummyObject)domainObject).getName());
+        }
+        return Collections.emptyMap();
+      }
+    };
+  }
 
-    /**
-     * Integrates {@link JaversSqlRepository} with Spring {@link JpaTransactionManager}
-     */
-    @Bean
-    public ConnectionProvider jpaConnectionProvider() {
-        return new JpaHibernateConnectionProvider();
-    }
-    //.. EOF JaVers setup ..
+  /**
+   * Integrates {@link JaversSqlRepository} with Spring {@link JpaTransactionManager}
+   */
+  @Bean
+  public ConnectionProvider jpaConnectionProvider() {
+    return new JpaHibernateConnectionProvider();
+  }
+  //.. EOF JaVers setup ..
 
 
-    //.. Spring-JPA-Hibernate setup ..
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
-        em.setPackagesToScan("org.javers.spring.model");
+  //.. Spring-JPA-Hibernate setup ..
+  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+    em.setDataSource(dataSource());
+    em.setPackagesToScan("org.javers.spring.model");
 
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
+    JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+    em.setJpaVendorAdapter(vendorAdapter);
+    em.setJpaProperties(additionalProperties());
 
-        return em;
-    }
+    return em;
+  }
 
-    @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
+  @Bean
+  public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+    JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(emf);
 
-        return transactionManager;
-    }
+    return transactionManager;
+  }
 
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
+  @Bean
+  public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    return new PersistenceExceptionTranslationPostProcessor();
+  }
 
-    @Bean
-    public DataSource dataSource(){
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
-        return dataSource;
-    }
+  @Bean
+  public DataSource dataSource(){
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    dataSource.setDriverClassName("org.h2.Driver");
+    dataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+    return dataSource;
+  }
 
-    Properties additionalProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
-        properties.setProperty("hibernate.connection.autocommit", "false");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        return properties;
-    }
-    //.. EOF Spring-JPA-Hibernate setup ..
+  Properties additionalProperties() {
+    Properties properties = new Properties();
+    properties.setProperty("hibernate.hbm2ddl.auto", "create");
+    properties.setProperty("hibernate.connection.autocommit", "false");
+    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+    return properties;
+  }
+  //.. EOF Spring-JPA-Hibernate setup ..
 }
 ```
+
+<h2 id="mongo-transactions">MongoDB transactions support</h2>
+
+...
 
 <h2 id="auto-audit-example-mongo">Spring configuration example for MongoDB</h2>
 
@@ -537,32 +542,19 @@ public class JaversSpringMongoApplicationConfigExample {
 
   /**
    * Creates JaVers instance backed by {@link MongoRepository}
+   * <br/><br/>
+   *
+   * If you are using multi-document ACID transactions
+   * introduced in MongoDB 4.0 -- you can configure
+   * Javers' to participate in your application's transactions
+   * managed by MongoTransactionManager.
    */
   @Bean
   public Javers javers() {
-    JaversMongoTransactionTemplate transactionTemplate = javersMongoTransactionTemplate();
-
-    MongoRepository mongoRepository = new MongoRepository(
-            mongo(),
-            5000,
-            MONGO_DB,
-            transactionTemplate);
-
-    return new TransactionalMongoJaversBuilder(transactionTemplate)
-            .registerJaversRepository(mongoRepository)
+    return TransactionalMongoJaversBuilder.javers()
+            .registerJaversRepository(new MongoRepository(mongo()))
+            .withTxManager(mongoTransactionManager.orElse(null))
             .build();
-  }
-
-  /**
-   * If you are using multi-document ACID transactions
-   * introduced in MongoDB 4.0 -- you can configure
-   * Javers' MongoRepository to participate in your application's transactions
-   * managed by MongoTransactionManager.
-   */
-  private JaversMongoTransactionTemplate javersMongoTransactionTemplate() {
-    return mongoTransactionManager
-            .map(it -> (JaversMongoTransactionTemplate)new SpringJaversMongoTransactionTemplate(it))
-            .orElseGet(() -> NoTransactionTemplate.instance());
   }
 
   /**

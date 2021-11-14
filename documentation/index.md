@@ -19,8 +19,10 @@ So we simply instantiate them, apply some changes and eventually, delete them, n
 
 The challenge arises when a new requirement is discovered.
 
-> As a User, I want to know who changed this status, <br/>
-> when the change was performed and what the previous status was.
+<i>
+   As a User, I want to know who changed this status, <br/>
+   when the change was performed and what the previous status was.
+</i>
 
 The problem is that both *version* and *change* notions are not easily expressible either in
 Java language or in the mainstream databases (although NoSQL document databases have an advantage here over relational databases).
