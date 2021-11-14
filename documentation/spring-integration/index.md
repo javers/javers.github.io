@@ -535,7 +535,8 @@ public Javers javers() {
         }
 ```
 
-See [Spring Data MongoDB Transactions by Baeldung](https://www.baeldung.com/spring-data-mongodb-transactions),
+See [Spring Data MongoDB Transactions by Baeldung](https://www.baeldung.com/spring-data-mongodb-transactions)
+and 
 [MongoDB 4 Update: Multi-Document ACID Transactions](https://www.mongodb.com/blog/post/mongodb-multi-document-acid-transactions-general-availability).
 
 
