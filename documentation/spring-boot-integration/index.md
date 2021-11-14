@@ -61,12 +61,17 @@ Check the complete list of JaVers’ beans added to your Spring Context:
 
 <h2 id="customizing-auto-configuration">Customizing the Auto-configuration</h2>
 
-Javers starters provides 
+First od all, Javers auto-configuration can be customized using the  
+standard Spring Boot configuration files.
+
+Second, by adding the following beans to your Spring Context:
+[AuthorProvider, CommitPropertiesProvider](#AuthorProvider-and-CommitPropertiesProvider), and
+[JSON TypeAdapters](#registering-json-type-adapters).
 
 <h3 id="javers-configuration-properties">JaVers Core configuration</h3>
 
 Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
-and configure Javers in the same way as your application (typically by YAML property files).
+and configure Javers in the same way as your application (typically by YAML files).
 
 Here is an example `application.yml` file
 with the full list of JaVers core properties, and their default values.
@@ -99,7 +104,7 @@ method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/Javer
 <h3 id="AuthorProvider-and-CommitPropertiesProvider">AuthorProvider and CommitPropertiesProvider beans</h3>
 
 These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
-For both, default implementations are created by JaVers starter:
+For both, default implementations are created by the JaVers starter:
 
 * For AuthorProvider &mdash;
   if JaVers detects Spring Security on your classpath,
@@ -116,47 +121,7 @@ See documentation of [AuthorProvider](/documentation/spring-integration/#author-
 and [CommitPropertiesProvider](/documentation/spring-integration/#commit-properties-provider-bean)
 for more details.
 
-
-<h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
-
-Your [JSON TypeAdapters](/documentation/repository-configuration/#json-type-adapters)
-will be automatically registered if you configure 
-them as Spring beans anywhere in your ApplicationContext.
-
-For example:
-
-```java
-public static class DummyBigDecimalEntity {
-    BigDecimal value;
-
-    DummyBigDecimalEntity(BigDecimal value) {
-        this.value = value;
-    }
-}
-
-@Bean
-JsonTypeAdapter dummyEntityJsonTypeAdapter () {
-
-    return new BasicStringTypeAdapter<DummyBigDecimalEntity>() {
-        @Override
-        public String serialize(DummyBigDecimalEntity sourceValue) {
-            return sourceValue.value.toString();
-        }
-
-        @Override
-        public DummyBigDecimalEntity deserialize(String serializedValue) {
-            return new DummyBigDecimalEntity(new BigDecimal(serializedValue));
-        }
-
-        @Override
-        public Class getValueType() {
-            return DummyBigDecimalEntity.class;
-        }
-    };
-}
-```
-
-<h2 id="starter-repository-configuration">JaversRepository configuration</h2>
+<h3 id="starter-repository-configuration">JaversRepository configuration</h3>
 
 Javers starters rely on Spring Data starters
 to create a proper [JaversRepository](/documentation/repository-configuration)
@@ -234,7 +199,46 @@ public MongoClientSettings clientSettings() {
 ```  
 Remember, the `javersMongoClientSettings` bean is used only when JaVers connects
 to dedicated Mongo database defined in `javers.mongodb` property.
- 
+
+<h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
+
+Your [JSON TypeAdapters](/documentation/repository-configuration/#json-type-adapters)
+will be automatically registered if you configure
+them as Spring beans anywhere in your Spring Context.
+
+For example:
+
+```java
+public static class DummyBigDecimalEntity {
+    BigDecimal value;
+
+    DummyBigDecimalEntity(BigDecimal value) {
+        this.value = value;
+    }
+}
+
+@Bean
+JsonTypeAdapter dummyEntityJsonTypeAdapter () {
+
+    return new BasicStringTypeAdapter<DummyBigDecimalEntity>() {
+        @Override
+        public String serialize(DummyBigDecimalEntity sourceValue) {
+            return sourceValue.value.toString();
+        }
+
+        @Override
+        public DummyBigDecimalEntity deserialize(String serializedValue) {
+            return new DummyBigDecimalEntity(new BigDecimal(serializedValue));
+        }
+
+        @Override
+        public Class getValueType() {
+            return DummyBigDecimalEntity.class;
+        }
+    };
+}
+```
+
 <h2 id="starter-boot">Boot it!</h2>
 
 Once you’ve added the JaVers starter to the classpath, you can use all JaVers features.
