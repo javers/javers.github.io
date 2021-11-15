@@ -104,17 +104,14 @@ method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/Javer
 <h3 id="AuthorProvider-and-CommitPropertiesProvider">AuthorProvider and CommitPropertiesProvider beans</h3>
 
 These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
-For both, default implementations are created by the JaVers starter:
+For both, default implementations are provided by JaVers starters:
 
-* For AuthorProvider &mdash;
-  if JaVers detects Spring Security on your classpath,
-  [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
-  is created.
+* [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
+  bean is created if JaVers detects Spring Security on your classpath.
   Otherwise, JaVers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
   which returns `"unknown"` author.
-* For CommitPropertiesProvider &mdash;
-  [`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java)
-  is created. It returns an empty Map.
+* [`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java)
+  bean is created. It returns an empty Map.
 
 Register your own beans **only** if you need to override these defaults.
 
@@ -124,13 +121,31 @@ for more details.
 
 <h3 id="starter-repository-configuration">JaversRepository configuration</h3>
 
-Javers starters rely on Spring Data starters
-to create a proper [JaversRepository](/documentation/repository-configuration)
-instance.
-JaversRepository is configured to reuse your application’s
-database managed by Spring Data starter.
+A [JaversRepository](/documentation/repository-configuration) instance created by Javers’ starter
+is configured to connect to your application’s database, 
+which is managed by a Spring Data starter.
 
-Properties active in the SQL starter:
+#### Transaction management in SQL starter
+
+The Javers’ SQL starter creates a transactional Javers instance using `TransactionalJpaJaversBuilder`,
+which depends on `PlatformTransactionManager` managed by Spring Data JPA.
+It should not come as a surprise, that transaction management is mandatory here. 
+
+#### Transaction management in MongoDB starter
+
+The Javers’ MongoDB starter supports both approaches: non-transactional (MongoDB classic)
+and transactional (introduced in MongoDB 4.0).
+
+The starter automatically detects which approach is used by your application
+by checking if a `MongoTransactionManager` bean is defined in your Spring Context.
+If so, `TransactionalMongoJaversBuilder` creates  a transactional Javers instance
+linked to `MongoTransactionManager` and  participates in your application’s transactions.
+
+See [MongoDB transactions support](/documentation/spring-integration/#mongo-transactions).
+
+#### Customising JaversSQLRepository
+
+Properties active in the SQL starter with their default values:
 
 ```yaml
 javers:
@@ -144,7 +159,7 @@ javers:
   sqlCommitPropertyTableName: jv_commit_property
 ```   
 
-Properties active in the MongoDB starter:
+Properties active in the MongoDB starter with their default values:
 
 ```yaml
 javers:
