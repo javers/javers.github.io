@@ -121,25 +121,29 @@ for more details.
 
 <h3 id="starter-repository-configuration">JaversRepository configuration</h3>
 
-A [JaversRepository](/documentation/repository-configuration) instance created by Javers’ starter
+A [JaversRepository](/documentation/repository-configuration) instance created by a Javers’ starter
 is configured to connect to your application’s database, 
 which is managed by a Spring Data starter.
 
-#### Transaction management in SQL starter
+#### Transaction management in the SQL starter
 
-The Javers’ SQL starter creates a transactional Javers instance using `TransactionalJpaJaversBuilder`,
-which depends on `PlatformTransactionManager` managed by Spring Data JPA.
+The Javers’ SQL starter creates a transactional Javers instance linked to
+`PlatformTransactionManager` managed by Spring Data JPA. 
 It should not come as a surprise, that transaction management is mandatory here. 
 
-#### Transaction management in MongoDB starter
+#### Transaction management in the MongoDB starter
 
 The Javers’ MongoDB starter supports both approaches: non-transactional (MongoDB classic)
 and transactional (introduced in MongoDB 4.0).
 
 The starter automatically detects which approach is used by your application
-by checking if a `MongoTransactionManager` bean is defined in your Spring Context.
-If so, `TransactionalMongoJaversBuilder` creates  a transactional Javers instance
-linked to `MongoTransactionManager` and  participates in your application’s transactions.
+by checking if `MongoTransactionManager` is defined in your Spring Context.
+If so, the starter creates a transactional Javers instance
+linked to your `MongoTransactionManager`.
+Then, the transactional Javers participates in your application’s transactions. Awesome!
+
+If `MongoTransactionManager` is missing &mdash; the starter simply creates
+a non-transactional Javers instance.
 
 See [MongoDB transactions support](/documentation/spring-integration/#mongo-transactions).
 
