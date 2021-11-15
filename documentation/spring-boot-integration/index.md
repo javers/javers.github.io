@@ -149,7 +149,8 @@ See [MongoDB transactions support](/documentation/spring-integration/#mongo-tran
 
 #### Customising JaversSQLRepository
 
-Properties active in the SQL starter with their default values:
+Database-related properties active in the Javers’ SQL starter with their defaults
+(please don’t change these defaults without a good reason):
 
 ```yaml
 javers:
@@ -163,20 +164,24 @@ javers:
   sqlCommitPropertyTableName: jv_commit_property
 ```   
 
-Properties active in the MongoDB starter with their default values:
+#### Customising MongoRepository
+
+Database-related properties active in the Javers’ MongoDB starter with their defaults:
 
 ```yaml
 javers:
   documentDbCompatibilityEnabled: false
   objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
   snapshotsCacheSize: 5000
-```   
+```
+  
+<h4 id="dedicated-mongo-database">Dedicated MongoDB database for Javers</h4>  
+  
+Optionally, you can store Javers’
+data in a dedicated MongoDB database. 
+If so, application’s data and Javers data are stored in different databases.
 
-  
-<h3 id="dedicated-mongo-database">Dedicated Mongo database for JaVers</h3>  
-  
-Optionally, you can use dedicated Mongo database for JaVers data,
-configure Javers as shown below:
+Configure a dedicated database for Javers as shown below:
 
 ```yaml
 javers:
@@ -197,8 +202,7 @@ javers:
     uri: mongodb://javers:password@localhost:27017/javers-audit&authSource=admin
 ```
 
-If `javers.mongodb` property is defined, either `host` or `uri` has to set.
-If so, an application’s data and JaVers data are stored in different databases.
+If the `javers.mongodb` property is defined, either `host` or `uri` has to be set.
   
 #### MongoClientSettings
 If you need more control over Javers’ dedicated `MongoClient`,
@@ -218,7 +222,7 @@ public MongoClientSettings clientSettings() {
 }
 ```  
 Remember, the `javersMongoClientSettings` bean is used only when JaVers connects
-to dedicated Mongo database defined in `javers.mongodb` property.
+to dedicated MongoDB database defined in `javers.mongodb` property.
 
 <h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
 
