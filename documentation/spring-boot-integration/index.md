@@ -9,28 +9,28 @@ sidebar-url: docs-sidebar.html
 [Spring Boot](http://projects.spring.io/spring-boot/)
 is the standard in the world of enterprise Java.
 
-Javers’ Spring Boot starters are the easiest 
+Javers Spring Boot starters are the easiest 
 and strongly recommended way of integrating Javers with your application.
 This is the truly plug-and-play solution.
 
-There are two Javers’ Spring Boot starters:
+There are two Javers Spring Boot starters:
 
-* **Javers’  Spring Boot starter for MongoDB**,
+* **Javers Spring Boot starter for MongoDB**,
   compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
-* **Javers’ Spring Boot starter for SQL**,
+* **Javers Spring Boot starter for SQL**,
   compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
-<h2 id="get-javers-starters">Get JaVers Spring Boot starter</h2>
+<h2 id="get-javers-starters">Get a Javers Spring Boot starter</h2>
 
 ### MongoDB starter ###
-Add JaVers Spring Boot starter for MongoDB to your classpath:
+Add the Javers Spring Boot starter for MongoDB to your classpath:
 
 ```groovy
 implementation 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
 ```
 
 ### SQL starter ###
-Add JaVers Spring Boot starter for SQL to your classpath:
+Add the Javers Spring Boot starter for SQL to your classpath:
 
 ```groovy
 implementation 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
@@ -44,7 +44,7 @@ for other build tool snippets.
 Thanks to the Spring Boot magic, Javers’ auto-configuration
 when available on a classpath, is automatically picked up and loaded.
 
-Javers’ auto-configuration creates
+Javers auto-configuration creates
 all required Javers beans and optimally adjusts them
 according to your application configuration:
 
@@ -53,7 +53,7 @@ according to your application configuration:
   connected to your application’s database,
 - [Auto-audit aspects beans](/documentation/spring-integration/#auto-audit-aspects-spring-configuration).
 
-Check the complete list of JaVers’ beans added to your Spring Context:
+Check the complete list of Javers beans added to your Spring Context:
 
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java),
 * for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java).
@@ -120,7 +120,7 @@ for more details.
 
 <h3 id="Javers-SQL-Repository">Javers SQL Repository</h3>
 
-The Javers’ SQL starter creates a [JaversSqlRepository](/documentation/repository-configuration/#sql-databases)
+The Javers SQL starter creates a [JaversSqlRepository](/documentation/repository-configuration/#sql-databases)
 instance connected to your application’s database, which is managed by the Spring Data starter.
 
 Here is the list of `JaversSqlRepository` properties with default values
@@ -140,13 +140,13 @@ javers:
 
 #### Transaction management in the SQL starter
 
-The Javers’ SQL starter creates a transactional Javers instance linked to
+The Javers SQL starter creates a transactional Javers instance linked to
 `PlatformTransactionManager` managed by Spring Data JPA. 
 It should not come as a surprise, that transaction management is mandatory here. 
 
 <h3 id="Javers-MongoDB-Repository">Javers MongoDB Repository</h3>
 
-By default, the Javers’ MongoDB starter creates a 
+By default, the Javers MongoDB starter creates a 
 [MongoRepository](/documentation/repository-configuration/#mongodb-configuration)
 instance connected to your application’s database,
 which is managed by the Spring MongoDB starter.
@@ -163,7 +163,7 @@ javers:
 
 #### Transaction management in the MongoDB starter
 
-The Javers’ MongoDB starter supports both approaches: non-transactional (MongoDB classic)
+The Javers MongoDB starter supports both approaches: non-transactional (MongoDB classic)
 and transactional (introduced in MongoDB 4.0).
 
 The starter automatically detects which approach is used by your application
