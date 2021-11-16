@@ -44,9 +44,8 @@ for other build tool snippets.
 Thanks to the Spring Boot magic, Javers auto-configuration
 when available on a classpath, is automatically picked up and loaded.
 
-Javers auto-configuration creates
-all required Javers beans and optimally adjusts them
-according to your application configuration:
+The Javers starter creates all required Javers beans and optimally adjusts them
+according to your application configuration. That is:
 
 - [JaVers instance bean](/documentation/spring-integration/#javers-instance-as-spring-bean)
   with [JaversRepository](/documentation/repository-configuration)
