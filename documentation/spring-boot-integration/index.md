@@ -101,8 +101,8 @@ method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/Javer
 
 <h3 id="AuthorProvider-and-CommitPropertiesProvider">AuthorProvider and CommitPropertiesProvider beans</h3>
 
-These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
-For both, default implementations are provided by Javers starters:
+These two beans are required by the [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
+Default implementations are provided by Javers starters:
 
 * [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
   bean is created if Javers detects Spring Security on your classpath.
