@@ -47,7 +47,7 @@ when available on a classpath, is automatically picked up and loaded.
 The Javers starter creates all required Javers beans and optimally adjusts them
 according to your application configuration. That is:
 
-- [JaVers instance bean](/documentation/spring-integration/#javers-instance-as-spring-bean)
+- [Javers instance bean](/documentation/spring-integration/#javers-instance-as-spring-bean)
   with [JaversRepository](/documentation/repository-configuration)
   connected to your application’s database,
 - [Auto-audit aspects beans](/documentation/spring-integration/#auto-audit-aspects-spring-configuration).
@@ -66,13 +66,13 @@ Second, by adding the following beans to your Spring Context:
 [AuthorProvider, CommitPropertiesProvider](#AuthorProvider-and-CommitPropertiesProvider), and
 [JSON TypeAdapters](#registering-json-type-adapters).
 
-<h3 id="javers-configuration-properties">JaVers Core configuration</h3>
+<h3 id="javers-configuration-properties">Javers Core configuration</h3>
 
 Use [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
 and configure Javers in the same way as your application (typically by YAML files).
 
 Here is an example `application.yml` file
-with the full list of JaVers core properties, and their default values.
+with the full list of Javers core properties, and their default values.
 If these defaults are OK for you &mdash;
 you don’t need to add anything to your configuration.
 
@@ -102,11 +102,11 @@ method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/Javer
 <h3 id="AuthorProvider-and-CommitPropertiesProvider">AuthorProvider and CommitPropertiesProvider beans</h3>
 
 These two beans are required by [Auto-audit aspect](/documentation/spring-integration/#auto-audit-aspect).
-For both, default implementations are provided by JaVers starters:
+For both, default implementations are provided by Javers starters:
 
 * [`SpringSecurityAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/SpringSecurityAuthorProvider.java)
-  bean is created if JaVers detects Spring Security on your classpath.
-  Otherwise, JaVers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
+  bean is created if Javers detects Spring Security on your classpath.
+  Otherwise, Javers creates [`MockAuthorProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/MockAuthorProvider.java)
   which returns `"unknown"` author.
 * [`EmptyPropertiesProvider`](https://github.com/javers/javers/blob/master/javers-spring/src/main/java/org/javers/spring/auditable/EmptyPropertiesProvider.java)
   bean is created. It returns an empty Map.
