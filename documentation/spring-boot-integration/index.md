@@ -96,7 +96,7 @@ javers:
     localTime: 'HH:mm:ss'  
 ```  
 
-Each property in the Spring `application.yml` file has the corresponding `with*()`
+Each of these properties have a corresponding `with*()`
 method in [`JaversBuilder`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
 <h3 id="AuthorProvider-and-CommitPropertiesProvider">AuthorProvider and CommitPropertiesProvider beans</h3>
