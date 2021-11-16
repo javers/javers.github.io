@@ -22,14 +22,14 @@ There are two Javers Spring Boot starters:
 
 <h2 id="get-javers-starters">Get a Javers Spring Boot starter</h2>
 
-### MongoDB starter ###
+### The MongoDB starter ###
 Add the Javers Spring Boot starter for MongoDB to your classpath:
 
 ```groovy
 implementation 'org.javers:javers-spring-boot-starter-mongo:{{site.javers_current_version}}'
 ```
 
-### SQL starter ###
+### The SQL starter ###
 Add the Javers Spring Boot starter for SQL to your classpath:
 
 ```groovy
@@ -41,7 +41,7 @@ for other build tool snippets.
 
 <h2 id="starters-auto-configuration">Spring Boot Auto-configuration</h2>
 
-Thanks to the Spring Boot magic, Javers’ auto-configuration
+Thanks to the Spring Boot magic, Javers auto-configuration
 when available on a classpath, is automatically picked up and loaded.
 
 Javers auto-configuration creates
