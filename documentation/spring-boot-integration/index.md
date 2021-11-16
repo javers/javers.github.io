@@ -13,12 +13,11 @@ Javers’ Spring Boot starters are the easiest
 and strongly recommended way of integrating Javers with your application.
 This is the truly plug-and-play solution.
 
-There are two starters compatible with Spring Data MongoDB
-or with Spring Data JPA:
+There are two Javers’ Spring Boot starters:
 
-* **JaVers Spring Boot starter for MongoDB**,
+* **Javers’  Spring Boot starter for MongoDB**,
   compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
-* **JaVers Spring Boot starter for SQL**,
+* **Javers’ Spring Boot starter for SQL**,
   compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
 <h2 id="get-javers-starters">Get JaVers Spring Boot starter</h2>
