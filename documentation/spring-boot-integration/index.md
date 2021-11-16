@@ -223,7 +223,7 @@ public MongoClientSettings clientSettings() {
             .build();
 }
 ```  
-Remember, the `javersMongoClientSettings` bean is used only when JaVers connects
+Remember, the `javersMongoClientSettings` bean is used only when Javers connects
 to dedicated MongoDB database defined in `javers.mongodb` property.
 
 <h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
@@ -267,14 +267,14 @@ JsonTypeAdapter dummyEntityJsonTypeAdapter () {
 
 <h2 id="starter-boot">Boot it!</h2>
 
-Once you’ve added the JaVers starter to the classpath, you can use all JaVers features.
+Once you’ve added the Javers starter to the classpath, you can use all Javers features.
 
 <h3 id="boot-Auto-audit">Auto-audit aspect annotations</h3>
 
-JaVers [auto-audit aspects](/documentation/spring-integration/#auto-audit-aspect)
+Javers [auto-audit aspects](/documentation/spring-integration/#auto-audit-aspect)
 are based on annotations.
 
-Basically, choose Entities you want to be audited by JaVers and
+Basically, choose Entities you want to be audited by Javers and
 add `@JaversSpringDataAuditable` to corresponding Spring Data CRUD repositories.
 
 For example, if you want to audit a Person Entity, annotate `PersonRepository`:
@@ -289,7 +289,7 @@ public interface PersonRepository extends MongoRepository<Person, String> {
 }
 ```
 
-and all changes made to Person objects will be automatically committed to JaVersRepository.
+and all changes made to Person objects will be automatically committed to JaversRepository.
 
 If you aren’t using Spring Data repositories,
 annotate data-changing methods with `@JaversAuditable`.
@@ -314,8 +314,8 @@ More [annotations](/documentation/spring-integration/#javers-spring-annotations)
 are available.
 
 <h3 id="boot-manual-commits">Manual commits</h3>
-If you need more fine-grained control over JaVers commits,
-use JaVers instance directly (which is available as a Spring bean).
+If you need more fine-grained control over Javers commits,
+use Javers instance directly (which is available as a Spring bean).
 
 For example, this service commits changes made to a fired 
 Person but only in Friday:
@@ -380,7 +380,7 @@ It manages the Organization Structure domain.
 The User can change salaries and positions of Employees and move them in the Structure.
 All changes are audited and easy to browse.
    
-Check out how easy it is to add the JaVers audit to the Spring Boot application.
+Check out how easy it is to add the Javers audit to the Spring Boot application.
 
 Clone it from github:
 
