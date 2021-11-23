@@ -5,6 +5,43 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.5.2
+released on 2021-11-23
+
+* [1160](https://github.com/javers/javers/issues/1160)
+  Fixed `IllegalStateException` when calling `Changes.groupByCommit()` created by `Javers.compare()`.
+  
+* [1075](https://github.com/javers/javers/issues/1075)
+  Added a new feature which allows `CustomValueComparators` to handle nulls:
+  
+```java
+public interface CustomValueComparator<T> {
+ 
+  ...
+
+  /**
+   * This flag is used to indicate to Javers whether
+   * a comparator implementation wants to handle nulls.
+   *
+   * By default, the flag is false and Javers
+   * checks if both values are non-null before calling a comparator.
+   * If any of given values is null &mdash; Javers compares them using the
+   * standard Java logic:
+   *   * null == null
+   *   * null != non-null
+   *
+   * If the flag is true &mdash; Javers skips that logic and
+   * allows a comparator to handle nulls on its own.
+   * In that case, a comparator holds responsibility for null-safety.
+   *
+   * @see NullAsBlankStringComparator
+   */
+  default boolean handlesNulls() {
+    return false;
+  }
+}
+```
+
 ### 6.5.1
 released on 2021-11-14
 
