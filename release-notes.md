@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.5.3
+released on 2021-12-04
+
+* [1157](https://github.com/javers/javers/issues/1157)
+  Fixed bug when comparing nested sets of Value Objects.
+
 ### 6.5.2
 released on 2021-11-23
 
