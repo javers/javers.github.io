@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.6.1
+released on 2022-01-26
+
+* [1177](https://github.com/javers/javers/pull/1177)
+  Added possibility to register `JaversBuilderPlugin`s
+  in Javers' Spring Boot Starters.
+  Thanks to that, you can easily call any JaversBuilder method and for example, register a `CustomValueComparator`.
+  See [https://github.com/javers/javers/pull/1177/files](https://github.com/javers/javers/pull/1177/files).
+
 ### 6.6.0
 released on 2022-01-23
 
