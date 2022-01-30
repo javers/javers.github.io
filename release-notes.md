@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.6.2
+released on 2022-01-30
+* [1180](https://github.com/javers/javers/issues/1180)
+  Fixed NPE in `GlobalIdTypeAdapter.parseValueObjectId()`.
+
 ### 6.6.1
 released on 2022-01-26
 
