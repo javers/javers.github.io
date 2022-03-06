@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.6.3
+released on 2022-03-06
+* [1188](https://github.com/javers/javers/issues/1188)
+  Fixed `NoClassDefFoundError`: `LinkedHashTreeMap` exception 
+  when Javers was used with Gson 2.9.0.
+
 ### 6.6.2
 released on 2022-01-30
 * [1180](https://github.com/javers/javers/issues/1180)
