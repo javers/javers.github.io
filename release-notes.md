@@ -12,7 +12,7 @@ released on 2022-04-10
   not created by the [Javers Spring Boot starter](https://javers.org/documentation/spring-boot-integration/#get-javers-starters) for MongoDB.  
   This bug was introduced in 6.5.1.
   It's enough to upgrade to the latest version and the
-* indexed will be automatically created.  
+  indexes will be automatically created.  
 
 ### 6.6.3
 released on 2022-03-06
