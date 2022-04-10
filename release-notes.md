@@ -5,6 +5,15 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.6.4
+released on 2022-04-10
+* [1192](https://github.com/javers/javers/issues/1192)
+  Fixed important performance issue for MongoDB. Indexes on the Snapshots collection were
+  not created by the [Javers Spring Boot starter](https://javers.org/documentation/spring-boot-integration/#get-javers-starters) for MongoDB.  
+  This bug was introduced in 6.5.1.
+  It's enough to upgrade to the latest version and the
+* indexed will be automatically created.  
+
 ### 6.6.3
 released on 2022-03-06
 * [1188](https://github.com/javers/javers/issues/1188)
