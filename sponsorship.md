@@ -7,9 +7,9 @@ category: page_center
 JaVers is an Apache-licensed open source project and it’s completely free to use.
  
 JaVers is gaining momentum, the number of downloads from The Central is growing.
-In October 2019, `javers-core` was downloaded 60,000 times.
+In October 2019, `javers-core` was downloaded 250,000 times.
  
-{% include fancy-image.html image="/img/javers-downloads-2021-03.png" alt="downloads from The Central chart" %}
+{% include fancy-image.html image="/img/javers-core-downloads-2022.png" alt="downloads from The Central chart" %}
 
 However, the amount of effort needed to maintain Javers and develop new features is also growing.
 Maintainers burnout is a serious risk in open source projects when we work for free.
@@ -44,5 +44,5 @@ Via [JaVers Open Collective](https://opencollective.com/javers)
 you can make a one-time donation or become a backer for $5+ per month or a sponsor for $100+ per month.
 
 ## Questions?
-Chat with us in the [sponsors room](https://gitter.im/javers/sponsors)
-or talk directly to [Bartosz Walacik](https://gitter.im/bartoszwalacik) (JaVers project lead).
+You can reach me (https://github.com/bartoszwalacik) 
+directly on [Discussions][https://github.com/javers/javers/discussions].
