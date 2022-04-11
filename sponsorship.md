@@ -44,5 +44,5 @@ Via [JaVers Open Collective](https://opencollective.com/javers)
 you can make a one-time donation or become a backer for $5+ per month or a sponsor for $100+ per month.
 
 ## Questions?
-You can reach me (https://github.com/bartoszwalacik) 
-directly on [Discussions][https://github.com/javers/javers/discussions].
+You can reach me ([bartosz.walacik](https://github.com/bartoszwalacik)) 
+directly on [Discussions](https://github.com/javers/javers/discussions).
