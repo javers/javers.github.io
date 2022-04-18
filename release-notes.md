@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 6.6.5
+released on 2022-04-18
+* [1200](https://github.com/javers/javers/issues/1200) Fixed `InaccessibleObjectException`
+  on Java 16 for `TimeZone`, `ZoneRules`, and `ZoneId`.
+
 ### 6.6.4
 released on 2022-04-10
 * [1192](https://github.com/javers/javers/issues/1192)
