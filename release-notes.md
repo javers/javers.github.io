@@ -6,6 +6,14 @@ submenu: release-notes
 ---
 
 
+### 6.7.0
+released on 2022-09-11
+* [1216](https://github.com/javers/javers/issues/1216)
+  Added a new switch in the diff algorithm: `usePrimitiveDefaults`.  
+  This switch affects how initial and terminal Value Changes
+  are calculated in the situation when a primitive property with a default value
+  appears (or disappears) in an object graph. See `JaversBuilder.withUsePrimitiveDefaults()`.
+
 ### 6.6.5
 released on 2022-04-18
 * [1200](https://github.com/javers/javers/issues/1200) Fixed `InaccessibleObjectException`

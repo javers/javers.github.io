@@ -89,6 +89,7 @@ javers:
   auditableAspectEnabled: true
   springDataAuditableRepositoryAspectEnabled: true
   objectAccessHook:
+  usePrimitiveDefaults: true
   prettyPrintDateFormats:
     localDateTime: 'dd MMM yyyy, HH:mm:ss'
     zonedDateTime: 'dd MMM yyyy, HH:mm:ssZ'
