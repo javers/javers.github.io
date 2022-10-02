@@ -5,6 +5,10 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.7.1
+released on 2022-10-02
+* [1222](https://github.com/javers/javers/pull/1222)
+  Fixed validation in `QueryParamsBuilder`.
 
 ### 6.7.0
 released on 2022-09-11
