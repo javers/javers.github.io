@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.8.0
+released on 2022-10-26
+* [1223](https://github.com/javers/javers/issues/1223)
+  Implemented partial and case-insensitive search
+  for Author and Commit Properties.
+
 ### 6.7.1
 released on 2022-10-02
 * [1222](https://github.com/javers/javers/pull/1222)

@@ -13,7 +13,7 @@ github_core_main_url: https://github.com/javers/javers/blob/master/javers-core/s
 github_spring_main_url: https://github.com/javers/javers/blob/master/javers-spring/src/main/java/
 github_core_test_url: https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/
 github_core_test_java_url: https://github.com/javers/javers/blob/master/javers-core/src/test/java/
-javers_current_version: "6.7.1"
+javers_current_version: "6.8.0"
 
 url: "https://javers.org"
 
