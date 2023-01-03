@@ -5,6 +5,26 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.8.2
+released on 2023-01-02
+* Dependencies aligned with Spring Boot 2.7.7:
+
+```groovy
+springVersion           =5.3.24
+springBootVersion       =2.7.7
+springDataCommonsVersion=2.7.6
+springDataMongoVersion  =3.4.6
+springSecurityVersion   =5.7.6
+mongoDbDriverVersion    =4.6.1
+hibernateVersion        =5.6.14.Final
+guavaVersion            =31.0-jre
+gsonVersion             =2.9.0
+classgraphVersion       =4.8.128
+```
+
+* In tests, `flapdoodle` Embedded MongoDB
+  is replaced with `testcontainers` dockerized MongoDB.
+
 ### 6.8.1
 released on 2022-12-24
 * [1168](https://github.com/javers/javers/issues/1168)
