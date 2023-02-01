@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.9.1
+released on 2023-02-01
+* [1254](https://github.com/javers/javers/issues/1254)
+  Added possibility to the HEAD collection name in MongoRepository.
+
 ### 6.8.2
 released on 2023-01-02
 * Dependencies aligned with Spring Boot 2.7.7:
