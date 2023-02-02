@@ -113,7 +113,7 @@ released on 2022-01-23
 
 * [1169](https://github.com/javers/javers/issues/1169)
   Added possibility to configure the name of the Snapshot collection in MongoDB.
-  See [EmbeddedMongoE2EWithCustomCollectionNameTest.groovy](https://github.com/javers/javers/blob/master/javers-persistence-mongo/src/test/groovy/org/javers/repository/mongo/EmbeddedMongoE2EWithCustomCollectionNameTest.groovy).
+  See [MongoE2EWithCustomCollectionNameTest.groovy](https://github.com/javers/javers/blob/master/javers-persistence-mongo/src/test/groovy/org/javers/repository/mongo/MongoE2EWithCustomCollectionNameTest.groovy).
 
 ### 6.5.3
 released on 2021-12-04
