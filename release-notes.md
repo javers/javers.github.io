@@ -10,6 +10,17 @@ released on 2023-02-01
 * [1254](https://github.com/javers/javers/issues/1254)
   Added possibility to customize the HEAD collection name in MongoRepository.
 
+  Usage:
+  ```Java
+        MongoRepository mongoRepository = new MongoRepository(getMongoDb(),
+                        mongoRepositoryConfiguration()
+                                .withSnapshotCollectionName("jv_custom_snapshots")
+                                .withHeadCollectionName("jv_custom_head_id")
+                                .build())
+  ```
+  
+  See also [MongoE2EWithCustomHeadCollectionNameTest.groovy](https://github.com/javers/javers/blob/master/javers-persistence-mongo/src/test/groovy/org/javers/repository/mongo/MongoE2EWithCustomHeadCollectionNameTest.groovy)
+
 ### 6.8.2
 released on 2023-01-02
 * Dependencies aligned with Spring Boot 2.7.7:
