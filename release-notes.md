@@ -20,12 +20,14 @@ released on 2023-02-03
   * `javers-spring-mongo`
   * `javers-spring-boot-starter-mongo`
   * `javers-spring-boot-starter-sql`
-    <br/>
+  
+  <br/>
   Javers Core and Javers persistence modules require Java 11:
   * `javers-core` 
   * `javers-persistence-mongo`
   * `javers-persistence-sql`:
-    <br/>
+  
+  <br/>
   Javers v. 6.9.1 is the last version compatible with Java 8 and Spring Boot 2.7.7.
 
 ### 6.9.1
