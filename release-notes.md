@@ -5,6 +5,29 @@ category: Documentation
 submenu: release-notes
 ---
 
+### <font color="red">7.0.0-RC3</font>
+released on 2023-02-03
+* [1238](https://github.com/javers/javers/issues/1238)
+  **Added compatibility with Spring Boot 3.0.**<br/>
+  <font color="red">Time to say goodbye to our beloved Java 8</font>.  
+  Spring Boot 3.0 has moved forward and is no longer compatible with Java 8.
+  Since Spring Boot 3.0 requires Java 17 &mdash;
+  we all need to catch up.
+
+  Since Javers 7.0, Javers Spring integration modules requires Java 17:
+  * `javers-spring`
+  * `javers-spring-jpa`
+  * `javers-spring-mongo`
+  * `javers-spring-boot-starter-mongo`
+  * `javers-spring-boot-starter-sql`
+    <br/>
+  Javers Core and Javers persistence modules require Java 11:
+  * `javers-core` 
+  * `javers-persistence-mongo`
+  * `javers-persistence-sql`:
+    <br/>
+  Javers v. 6.9.1 is the last version compatible with Java 8 and Spring Boot 2.7.7.
+
 ### 6.9.1
 released on 2023-02-01
 * [1254](https://github.com/javers/javers/issues/1254)
