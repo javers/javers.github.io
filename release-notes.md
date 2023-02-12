@@ -10,7 +10,7 @@ released on 2023-02-03
 
 [1238](https://github.com/javers/javers/issues/1238)
 **Added compatibility with Spring Boot 3.0.**
-<font color="red">**Time to say goodbye to our beloved Java 8**</font>.
+<font color="red"><b>Time to say goodbye to our beloved Java 8.</b></font>
 <br/>
 Spring Boot 3.0 has moved forward and is no longer compatible with Java 8.
 Since Spring Boot 3.0 requires Java 17 &mdash;
