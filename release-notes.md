@@ -8,9 +8,9 @@ submenu: release-notes
 ### <font color="red">7.0.0-RC3</font>
 released on 2023-02-03
 * [1238](https://github.com/javers/javers/issues/1238)
-  **Added compatibility with Spring Boot 3.0,
+  **Added compatibility with Spring Boot 3.0,**
   <br/>
-  <font color="red">time to say goodbye to our beloved Java 8</font>**.  
+  <font color="red">**time to say goodbye to our beloved Java 8**</font>.  
   Spring Boot 3.0 has moved forward and is no longer compatible with Java 8.
   Since Spring Boot 3.0 requires Java 17 &mdash;
   we all need to catch up.
