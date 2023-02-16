@@ -159,6 +159,9 @@ javers:
   documentDbCompatibilityEnabled: false
   objectAccessHook: org.javers.spring.mongodb.DBRefUnproxyObjectAccessHook
   snapshotsCacheSize: 5000
+  snapshotCollectionName: "jv_snapshots"
+  headCollectionName: "jv_head_id"
+  schemaManagementEnabled: true
 ```
 
 #### Transaction management in the MongoDB starter
