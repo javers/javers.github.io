@@ -28,7 +28,37 @@ Javers core and Javers persistence modules require Java 11:
 * `javers-persistence-mongo`
 * `javers-persistence-sql`:
 
-  Javers v. 6.9.1 is the last version compatible with Java 8 and Spring Boot 2.7.7.
+  Javers v. 6.10.0 is the last version compatible with Java 8 and Spring Boot 2.7.7.
+
+### 6.10.0
+released on 2023-02-15
+* [1254](https://github.com/javers/javers/issues/1260)
+  Added possibility to disable the schema management in Mongo Repository via application code.
+
+  Usage:
+  ```Java
+        MongoRepository mongoRepository = new MongoRepository(getMongoDb(),
+                mongoRepositoryConfiguration()
+                        .withSnapshotCollectionName("jv_custom_snapshots_")
+                        .withHeadCollectionName("jv_custom_head_id_")
+                        .withSchemaManagementEnabled(false)
+                        .build())
+  
+    ```
+
+  See also [MongoE2EWithSchemaEnabledTest.groovy](https://github.com/javers/javers/blob/master/javers-persistence-mongo/src/test/groovy/org/javers/repository/mongo/MongoE2EWithSchemaEnabledTest.groovy)
+
+* Made Mongo repository configuration parameters(_snapshotCollectionName, headCollectionName, schemaManagementEnabled_) configurable through Spring boot configuration files (`application.yml`)
+
+Usage:
+
+  ```yaml
+    javers:
+      snapshotCollectionName: "jv_custom_snapshots"
+      headCollectionName: "jv_custom_head_id"
+      schemaManagementEnabled: false
+  ```
+
 
 ### 6.9.1
 released on 2023-02-01
