@@ -19,18 +19,19 @@ released on 2023-02-17
 
   See also [MongoE2EWithSchemaEnabledTest.groovy](https://github.com/javers/javers/blob/master/javers-persistence-mongo/src/test/groovy/org/javers/repository/mongo/MongoE2EWithSchemaEnabledTest.groovy)
 
-* [1261](https://github.com/javers/javers/pull/1261)Added possibility to set Mongo Repository parameters
-  ( `snapshotCollectionName`, `headCollectionName`, `schemaManagementEnabled`)
+* [1261](https://github.com/javers/javers/pull/1261)
+  Added possibility to set Mongo Repository parameters: 
+  `snapshotCollectionName`, `headCollectionName`, and `schemaManagementEnabled`
   via Spring boot configuration. 
 
-Example usage in `application.yml:
-
-```yaml
-  javers:
-    snapshotCollectionName: "jv_custom_snapshots"
-    headCollectionName: "jv_custom_head_id"
-    schemaManagementEnabled: false
-```
+  Example usage in `application.yml:
+  
+  ```yaml
+    javers:
+      snapshotCollectionName: "jv_custom_snapshots"
+      headCollectionName: "jv_custom_head_id"
+      schemaManagementEnabled: false
+  ```
 
 ### <font color="red">7.0.0-RC3</font>
 released on 2023-02-03
