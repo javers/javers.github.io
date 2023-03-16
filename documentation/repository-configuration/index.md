@@ -47,7 +47,7 @@ compile 'org.javers:javers-persistence-mongo:{{site.javers_current_version}}'
 ```
 
 Check
-[Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-persistence-mongo|{{site.javers_current_version}}|jar)
+[Maven Central](https://central.sonatype.com/artifact/org.javers/javers-persistence-mongo/{{site.javers_current_version}}/versions)
 for other build tools snippets.
 
 **Usage**<br/>
