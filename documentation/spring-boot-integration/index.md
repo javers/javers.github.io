@@ -36,7 +36,7 @@ Add the Javers Spring Boot starter for SQL to your classpath:
 implementation 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
 ```
 
-Check [Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring-boot-starter-mongo|{{site.javers_current_version}}|jar)
+Check [Maven Central](https://central.sonatype.com/artifact/org.javers/javers-spring-boot-starter-sql/{{site.javers_current_version}}/versions)
 for other build tool snippets.
 
 <h2 id="starters-auto-configuration">Spring Boot Auto-configuration</h2>

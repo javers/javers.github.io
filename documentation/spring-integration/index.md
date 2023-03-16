@@ -53,8 +53,7 @@ Take `javers-spring` if you are using JaVers with MongoDB (or any persistence st
 compile 'org.javers:javers-spring:{{site.javers_current_version}}'
 ```
 
-Check
-[Maven Central](https://search.maven.org/#artifactdetails|org.javers|javers-spring|{{site.javers_current_version}}|jar)
+Check [Maven Central](https://central.sonatype.com/artifact/org.javers/javers-spring/{{site.javers_current_version}}/versions)
 for other build tools snippets.
 
 <h3 id="javers-instance-as-spring-bean">JaVers instance as a Spring bean</h3>
