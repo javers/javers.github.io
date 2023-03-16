@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.12.0
+released on 2023-03-17
+* [1258](https://github.com/javers/javers/pull/1258)
+  Added option for implementing application-Layer encryption of 
+  Snapshot State in SQL repository.
+  See usage in [Case1257ApplicationLayerEncryption.groovy](https://github.com/javers/javers/blob/master/javers-persistence-sql/src/test/groovy/org/javers/repository/sql/cases/Case1257ApplicationLayerEncryption.groovy)
+
 ### 6.10.0
 released on 2023-02-17
 * [1254](https://github.com/javers/javers/issues/1260)
