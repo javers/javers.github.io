@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.13.0
+released on 2023-03-22
+* [1252](https://github.com/javers/javers/issues/1252)
+  The internal GSON config is tuned to better map numeric values with Object type.
+
 ### 6.12.0
 released on 2023-03-17
 * [1257](https://github.com/javers/javers/issues/1257)
