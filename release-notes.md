@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 6.14.0
+released on 2023-03-31
+* [1230](https://github.com/javers/javers/issues/1230)
+  Fixed bug in JaversBuilder.
+  Scanned classes were ignoring custom value comparators for their properties.
+
 ### 6.13.0
 released on 2023-03-22
 * [1252](https://github.com/javers/javers/issues/1252)

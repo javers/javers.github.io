@@ -6,7 +6,7 @@ submenu: getting-started
 sidebar-url: docs-sidebar.html
 ---
 
-All JaVers artifacts are published to [Maven Central](https://central.sonatype.com/search?smo=true&namespace=org.javers).
+All JaVers artifacts are published to [Maven Central](https://central.sonatype.com/search?smo=true&namespace=org.javers&q=org.javers).
 
 <h2 id="getting-started-boot">Spring Boot Starter</h2>
 
