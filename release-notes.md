@@ -15,7 +15,7 @@ released on 2023-04-24
 Spring Boot 3.0 has moved forward and is **no longer compatible with Java 8**.
 Now, Spring Boot 3.0 requires Java 17 &mdash; so we all need to catch up.
 
-Since Javers 7.0, all Javers Spring integration modules requires Java 17:
+Since Javers 7.0, all Javers Spring integration modules require Java 17:
 * `javers-spring`
 * `javers-spring-jpa`
 * `javers-spring-mongo`

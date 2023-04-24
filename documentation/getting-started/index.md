@@ -25,6 +25,9 @@ If you are using an SQL database:
 compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
 ```
 
+**Please note** that Javers 7.x is compatible with Spring Boot 3,
+so all Javers Spring integration modules require **Java 17**.
+
 These starters provide default configuration and create the Javers instance as a Spring bean.
 You can start using Javers with almost no configuration.  
 
@@ -55,6 +58,8 @@ Gradle:
 ```groovy
 compile 'org.javers:javers-core:{{site.javers_current_version}}'
 ```   
+
+**Please note** that Javers core and Javers persistence modules require **Java 11**.
 
 If you’re going to use JaVers as an object diff tool, this is the only dependency you need.
         
