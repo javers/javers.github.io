@@ -326,8 +326,8 @@ Type inferring algorithm has the lowest priority.
   For example, if all of your Entities extend some abstract class,
   you can map only this class using [`@Entity`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/Entity.java).
 * JaVers automatically scans JPA annotations
-  and maps classes with `@javax.persistence.Entity` as Entities
-  and classes with `@javax.persistence.Embeddable` as Value Objects.
+  and maps classes with `@jakarta.persistence.Entity` as Entities
+  and classes with `@jakarta.persistence.Embeddable` as Value Objects.
   So if you are using frameworks like Hibernate, your mapping is probably almost done.
 * Use [`@TypeName`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/TypeName.java)
   annotation for Entities, it gives you freedom of class names refactoring. 
@@ -407,9 +407,9 @@ There are six class level annotations in JaVers:
 
 Three **JPA** Class level annotations are interpreted as synonyms of JaVers annotations:
 
-* `@javax.persistence.Entity` &mdash; synonym of JaVers’ [`@Entity`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/Entity.java),
-* `@javax.persistence.MappedSuperclass` &mdash; also the synonym of JaVers’ [`@Entity`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/Entity.java),
-* `@javax.persistence.Embeddable` &mdash; the synonym of JaVers’ [`@ValueObject`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/ValueObject.java).
+* `@jakarta.persistence.Entity` &mdash; synonym of JaVers’ [`@Entity`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/Entity.java),
+* `@jakarta.persistence.MappedSuperclass` &mdash; also the synonym of JaVers’ [`@Entity`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/Entity.java),
+* `@jakarta.persistence.Embeddable` &mdash; the synonym of JaVers’ [`@ValueObject`]({{ site.github_core_main_url }}org/javers/core/metamodel/annotation/ValueObject.java).
 
 <h3 id="property-level-annotations">Property level annotations</h3>
 
@@ -448,8 +448,8 @@ as Entity. So when you use @Id, class level @Entity is optional.
 
 Two **JPA** property level annotations are interpreted as synonyms of JaVers annotations:
 
-* `@javax.persistence.Id` is the synonym of JaVers `@Id`,
-* `@javax.persistence.Transient` is the synonym of `@DiffIgnore`.
+* `@jakarta.persistence.Id` is the synonym of JaVers `@Id`,
+* `@jakarta.persistence.Transient` is the synonym of `@DiffIgnore`.
 
 <h2 id="entity-mapping-example">Mapping example</h2>
  

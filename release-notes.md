@@ -5,6 +5,38 @@ category: Documentation
 submenu: release-notes
 ---
 
+### <font color="red">7.0.0</font>
+released on 2023-04-24
+
+[1238](https://github.com/javers/javers/issues/1238)
+**Added compatibility with Spring Boot 3.0.** <br/>
+<font color="red"><b>Time to say goodbye to our beloved Java 8.</b></font>
+<br/>
+Spring Boot 3.0 has moved forward and is **no longer compatible with Java 8**.
+Now, Spring Boot 3.0 requires Java 17 &mdash; so we all need to catch up.
+
+Since Javers 7.0, all Javers Spring integration modules requires Java 17:
+* `javers-spring`
+* `javers-spring-jpa`
+* `javers-spring-mongo`
+* `javers-spring-boot-starter-mongo`
+* `javers-spring-boot-starter-sql`
+
+Javers core and Javers persistence modules require Java 11:
+* `javers-core`
+* `javers-persistence-mongo`
+* `javers-persistence-sql`:
+
+**The last version of Javers that is compatible with Java 8 and Spring Boot 2 is
+6.14.0**.<br/> We strongly recommend to upgrade to Javers 7.x.
+You can still use Javers 6.14.0, but the 6.x line is frozen and no longer supported.
+
+**Migration from Javers 6.x to Javers 7.x**<br/>
+* No actions required from the Javer's perspective.
+* A friendly reminder if you are upgrading to Java 17 &mdash;
+  the built-in `javax.persistence` package disappeared 
+  and should be replaced with the `jakarta.persistence` package from `jakarta.persistence:jakarta.persistence-api:3.0.0`.
+
 ### 6.14.0
 released on 2023-03-31
 * [1230](https://github.com/javers/javers/issues/1230)
@@ -51,28 +83,10 @@ released on 2023-02-17
       schemaManagementEnabled: false
   ```
 
-### <font color="red">7.0.0-RC3</font>
+### 7.0.0-RC3
 released on 2023-02-03
 
-[1238](https://github.com/javers/javers/issues/1238)
-**Added compatibility with Spring Boot 3.0.**
-<font color="red"><b>Time to say goodbye to our beloved Java 8.</b></font>
-<br/>
-Spring Boot 3.0 has moved forward and is no longer compatible with Java 8.
-Since Spring Boot 3.0 requires Java 17 &mdash;
-we all need to catch up.
-
-Since Javers 7.0, Javers Spring integration modules requires Java 17:
-* `javers-spring`
-* `javers-spring-jpa`
-* `javers-spring-mongo`
-* `javers-spring-boot-starter-mongo`
-* `javers-spring-boot-starter-sql`
-
-Javers core and Javers persistence modules require Java 11:
-* `javers-core` 
-* `javers-persistence-mongo`
-* `javers-persistence-sql`:
+* RC for 7.0.0
 
 ### 6.9.1
 released on 2023-02-01
