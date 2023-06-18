@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.0.1
+released on 2023-06-18
+* [1298](https://github.com/javers/javers/issues/1298)
+  Guava version bump as Guava < 32.0 is marked as vulnerable to CVE-2023-2976.
+
 ### <font color="red">7.0.0</font>
 released on 2023-04-24
 
