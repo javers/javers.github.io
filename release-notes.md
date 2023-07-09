@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.0.2
+released on 2023-07-09
+* [1213](https://github.com/javers/javers/issues/1213)
+  Performance optimization in SQL repository.
+  The number of calls to `GlobalIdRepository.findGlobalIdPk()` is significantly reduced. Thanks to that --
+  less SQL queries are executed by Javers.
+
 ### 7.0.1
 released on 2023-06-18
 * [1298](https://github.com/javers/javers/issues/1298)
