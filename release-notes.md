@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.0.3
+released on 2023-07-11
+* [1287](https://github.com/javers/javers/issues/1287)
+  Fixed bug in interpreting the `@DiffIgnoreProperties` annotation.
+
 ### 7.0.2
 released on 2023-07-09
 * [1213](https://github.com/javers/javers/issues/1213)
