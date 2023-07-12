@@ -5,6 +5,25 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.1.0
+released on 2023-07-12
+* [1300](https://github.com/javers/javers/issues/1300)
+  Fixed issue with connecting to Mongo on Spring Boot 3.1.0.
+* Dependencies aligned with Spring Boot 3.1.0:
+
+```groovy
+springVersion           =6.0.3
+springBootVersion       =3.1.0
+springDataCommonsVersion=3.0.0
+springDataMongoVersion  =4.0.0
+springSecurityVersion   =6.0.1
+mongoDbDriverVersion    =4.9.1
+hibernateVersion        =6.1.6.Final
+guavaVersion            =32.0.1-jre
+gsonVersion             =2.10
+classgraphVersion       =4.8.154
+```
+
 ### 7.0.3
 released on 2023-07-11
 * [1287](https://github.com/javers/javers/issues/1287)
