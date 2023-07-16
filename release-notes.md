@@ -5,17 +5,30 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.0
+released on 2023-07-17
+* [1208](https://github.com/javers/javers/issues/1208)
+  Fixed WriteConflict when using transactional MongoRepository.
+  Writing to the `head_id` collection is now skipped when RANDOM commitId generator is selected.
+  The fix requires enabling the RANDOM CommitId generator. RANDOM CommitId generator
+  should always be used when multiple instances of Javers write to the same database.
+
+  ```yaml
+  javers:
+    commitIdGenerator: random
+  ```
+  
 ### 7.2.0
-released on 2023-07-12
+released on 2023-07-16
 * [1306](https://github.com/javers/javers/issues/1306)
   Added posibility to configure properties as shallow references via `EntityDefinitionBuilder`.
   Usage:
   ```java
-    Javers javers = javers().registerEntity(
-            EntityDefinitionBuilder.entityDefinition(MyEntity.class)
-                    .withShallowProperties(["myShallowProperty"])
-                    .build())
-            .build()
+  Javers javers = javers().registerEntity(
+          EntityDefinitionBuilder.entityDefinition(MyEntity.class)
+                  .withShallowProperties(["myShallowProperty"])
+                  .build())
+          .build()
   ```
 
 ### 7.1.0
