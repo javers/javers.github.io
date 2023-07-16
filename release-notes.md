@@ -5,6 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.2.0
+released on 2023-07-12
+* [1306](https://github.com/javers/javers/issues/1306)
+  Added posibility to configure properties as shallow references via `EntityDefinitionBuilder`.
+  Usage:
+  ```java
+    Javers javers = javers().registerEntity(
+            EntityDefinitionBuilder.entityDefinition(MyEntity.class)
+                    .withShallowProperties(["myShallowProperty"])
+                    .build())
+            .build()
+  ```
+
 ### 7.1.0
 released on 2023-07-12
 * [1300](https://github.com/javers/javers/issues/1300)
