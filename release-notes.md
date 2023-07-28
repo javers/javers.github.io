@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.1
+released on 2023-07-28
+* [1269](https://github.com/javers/javers/issues/1269)
+  Fixed `java.lang.IllegalArgumentException: argument should not be null`
+  when comparing objects with Map entries with null values.
+
 ### 7.3.0
 released on 2023-07-17
 * [1208](https://github.com/javers/javers/issues/1208)
