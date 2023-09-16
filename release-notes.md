@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.3
+released on 2023-09-16
+* [1324](https://github.com/javers/javers/issues/1324)
+  Fix in the `javers-spring-boot-starter-mongo` config that prevents the Spring Boot exception:
+  Field mongoProperties in `org.javers.spring.boot.mongo.JaversMongoAutoConfiguration` required a bean of type 'org.springframework.boot.autoconfigure.mongo.MongoProperties' that could not be found.
+
 ### 7.3.2
 released on 2023-08-09
 * [1314](https://github.com/javers/javers/issues/1314)
