@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.4
+released on 2023-10-12
+* [1327](https://github.com/javers/javers/issues/1327)
+  Fixed bug in the resolving of `ShallowProperties` registered via `javers().registerEntity()`.
+* [1206](https://github.com/javers/javers/issues/1206)
+  Fixed NPE when comparing arrays with nulls.
+
 ### 7.3.3
 released on 2023-09-16
 * [1324](https://github.com/javers/javers/issues/1324)
