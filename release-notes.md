@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.5
+released on 2023-10-13
+* [1279](https://github.com/javers/javers/issues/1279)
+  The deprecated, implicit JVM compiler `-debug` flag removed.  
+
 ### 7.3.4
 released on 2023-10-12
 * [1327](https://github.com/javers/javers/issues/1327)
