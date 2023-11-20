@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.6
+released on 2023-10-19
+* [1341](https://github.com/javers/javers/issues/1341)
+  Fixed `IllegalAccessException` on Java 16 for classes: `YearMonth`, `MonthDay`, and `OffsetTime`.
+
 ### 7.3.5
 released on 2023-10-13
 * [1279](https://github.com/javers/javers/issues/1279)
