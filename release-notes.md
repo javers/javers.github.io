@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.7
+released on 2023-12-31
+* [1350](https://github.com/javers/javers/issues/1350)
+  Fixed `InaccessibleObjectException` which was thrown while comparing objects
+  with the `java.nio.file.Path` type.
+
 ### 7.3.6
 released on 2023-10-19
 * [1341](https://github.com/javers/javers/issues/1341)
