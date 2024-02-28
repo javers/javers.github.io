@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.3.8
+released on 2024-02-28
+* [1355](https://github.com/javers/javers/pull/1355)
+  Source Snapshots are now available in Shadow objects.
+
 ### 7.3.7
 released on 2023-12-31
 * [1350](https://github.com/javers/javers/issues/1350)
