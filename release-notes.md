@@ -5,6 +5,21 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.4.0
+released on 2024-03-10
+* [1301](https://github.com/javers/javers/issues/1301)
+  Added option to use standard `hashCode()` to identify Value Objects inside Sets.
+
+  Usage:
+
+  ```Groovy
+  Javers javers = JaversBuilder.javers()
+          .registerObjectHasher(HashCodeObjectHasher.class)
+          .build()
+  ```
+  
+  See also [Case1301ObjectHasherSpec.groovy](https://github.com/javers/javers/blob/master/javers-core/src/test/groovy/org/javers/core/cases/Case1301ObjectHasherSpec.groovy)
+
 ### 7.3.8
 released on 2024-02-28
 * [1355](https://github.com/javers/javers/pull/1355)
