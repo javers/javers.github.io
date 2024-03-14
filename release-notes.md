@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.4.1
+released on 2024-03-14
+* [1039](https://github.com/javers/javers/issues/1039)
+  Performance optimizations in MongoRepository when finding changes by instanceId
+  with child ValueObjects.
+
 ### 7.4.0
 released on 2024-03-10
 * [1301](https://github.com/javers/javers/issues/1301)
