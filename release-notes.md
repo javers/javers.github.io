@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.4.2
+released on 2024-04-01
+* [1369](https://github.com/javers/javers/pull/1369)
+  Fixed issue with wrong mapping of `SortedMap` on Java 21.
+
 ### 7.4.1
 released on 2024-03-14
 * [1039](https://github.com/javers/javers/issues/1039)
