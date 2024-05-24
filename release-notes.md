@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.4.3
+released on 2024-05-24
+* [1377](https://github.com/javers/javers/issues/1377)
+  Added compatibility with Gson 2.11.0, Gson version bumped to 2.11.0.
+
 ### 7.4.2
 released on 2024-04-01
 * [1369](https://github.com/javers/javers/pull/1369)
