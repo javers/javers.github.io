@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.4.4
+released on 2024-06-03
+* [1358](https://github.com/javers/javers/issues/1358)
+  Fixed bug in the diff algorithm &mdash;
+  Javers finds differences in the object tree when the same instance of a  
+  nested Value Object is shared between parent and child.
+
 ### 7.4.3
 released on 2024-05-24
 * [1377](https://github.com/javers/javers/issues/1377)
