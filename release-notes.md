@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 7.4.5
+released on 2024-06-06
+* [1358](https://github.com/javers/javers/issues/1358)
+  Second try to fix a bug in the diff algorithm (the bug that wasn't completly fixed in 7.4.4).
+
 ### 7.4.4
 released on 2024-06-03
 * [1358](https://github.com/javers/javers/issues/1358)
