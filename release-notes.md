@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.4.6
+released on 2024-06-12
+* [1382](https://github.com/javers/javers/issues/1382)
+  Fixed bug: `@DiffIgnore` annotation on subclass fields is sometimes ignored.
+
 
 ### 7.4.5
 released on 2024-06-06
