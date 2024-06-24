@@ -11,7 +11,7 @@ released on 2024-06-23
 * [1240](https://github.com/javers/javers/issues/1240)
   The new feature available for providing commit properties in the auto-audit aspect. 
   It's called [`AdvancedCommitPropertiesProvider`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/AdvancedCommitPropertiesProvider.java)
-  and it's an extended version of the [`CommitPropertiesProvider.`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/CommitPropertiesProvider.java) interface.
+  and it's an extended version of the [`CommitPropertiesProvider`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/CommitPropertiesProvider.java) interface.
   The extended interface works similarly to the basic one,
   but additionally gives you access to an audited method execution context.
 
