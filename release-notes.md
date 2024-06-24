@@ -5,6 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 7.5.0
+released on 2024-06-23
+* [1240](https://github.com/javers/javers/issues/1240)
+  The new feature available for providing commit properties in the auto-audit aspect. 
+  It's called [`AdvancedCommitPropertiesProvider`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/AdvancedCommitPropertiesProvider.java)
+  and it's an extended version of the [`CommitPropertiesProvider.`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/CommitPropertiesProvider.java) interface.
+  The extended interface works similarly to the basic one,
+  but additionally gives you access to an audited method execution context.
+
+* [1391](https://github.com/javers/javers/issues/1391)
+  Fixed bug in the `skip()` method in the `MongoRepository` snapshot query.
+
 ### 7.4.6
 released on 2024-06-12
 * [1382](https://github.com/javers/javers/issues/1382)
