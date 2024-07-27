@@ -5,11 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.6.0
+released on 2024-07-26
+* [1395](https://github.com/javers/javers/issues/1395)
+  Added a new feature in JaVers Query for querying by snapshot version range.<br/>
+  Usage: 
+  ```Groovy
+  QueryBuilder.byClass(MyClass).fromVersion(5).toVersion(10).build()
+  ```
 
 ### 7.5.0
 released on 2024-06-23
 * [1240](https://github.com/javers/javers/issues/1240)
-  The new feature available for providing commit properties in the auto-audit aspect. 
+  Added a new feature for providing commit properties in the auto-audit aspect. 
   It's called [`AdvancedCommitPropertiesProvider`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/AdvancedCommitPropertiesProvider.java)
   and it's an extended version of the [`CommitPropertiesProvider`]({{ site.github_spring_main_url }}/org/javers/spring/auditable/CommitPropertiesProvider.java) interface.
   The extended interface works similarly to the basic one,
