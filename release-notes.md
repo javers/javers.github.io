@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 7.6.1
+released on 2024-08-01
+* [1400](https://github.com/javers/javers/issues/1400)
+  Fixed `ClassCastException` when comparing certain objetcs with `Optional`. 
+  
 ### 7.6.0
 released on 2024-07-26
 * [1395](https://github.com/javers/javers/issues/1395)
