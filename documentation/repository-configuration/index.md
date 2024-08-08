@@ -27,14 +27,106 @@ but for production environment you need something real.
 
 First, choose proper JaversRepository implementation.
 Currently, JaVers supports the following databases: **MongoDB**, **H2**, **PostgreSQL**, **MySQL**, **MariaDB**,
-**Oracle** and **Microsoft SQL Server**. 
+**Oracle**, **Microsoft SQL Server** and **Redis**.
 
 In JaVers 5.2.4, we have added experimental support for **Amazon DocumentDB** which claims to be
 almost fully compatible with MongoDB.
 
 **Hint.** If you are using Spring Boot, just add one of our
 [Spring Boot starters for Spring Data](/documentation/spring-boot-integration/)
-and let them automatically configure and boot a JaVers instance with proper JaversRepository implementation. 
+and let them automatically configure and boot a JaVers instance with proper JaversRepository implementation.
+
+<h2 id="redis-db">Redis</h2>
+
+**Redis persistence overview**<br/>
+
+When storing JaVers snapshots in Redis, selecting the right persistence model is essential for ensuring data durability and performance. Redis offers two main persistence models:
+
+- RDB (Redis Database) - Periodically saves the dataset to disk. This is less resource-intensive because it doesn't constantly write to disk but instead saves the state at certain intervals.
+- AOF (Append Only File) - Logs every write operation to disk as it happens. In case of a crash, Redis can replay the log to restore the data.
+
+Redis allows using both RDB and AOF simultaneously. This provides the advantage of faster recovery through RDB snapshots while maintaining high durability with AOF. Depending on the system's criticality, you may want to consider enabling both for your JaVers snapshot storage.
+
+For more information, check the [official Redis documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/).
+
+
+**Dependency**<br/>
+Add `javers-persistence-redis` module to your classpath:
+
+_Maven_<br/>
+
+```
+<dependency>
+    <groupId>org.javers</groupId>
+    <artifactId>javers-persistence-redis</artifactId>
+    <version>{{site.javers_current_version}}</version>
+</dependency>
+```
+
+_Gradle (short)_<br/>
+
+```
+implementation 'org.javers:javers-persistence-redis:{{site.javers_current_version}}'
+```
+
+Check
+[Maven Central](https://central.sonatype.com/artifact/org.javers/javers-persistence-redis/{{site.javers_current_version}}/versions)
+for other build tools snippets.
+
+<h3>Overview</h3>
+
+The idea of configuring `JaversRedisRepository` is simple, just provide a working Jedis (Java client for Redis). You can setup `JaversRedisRepository` as follows:
+
+```java
+import org.javers.repository.redis.JaversRedisRepository;
+import redis.clients.jedis.JedisPool;
+...
+
+private static final String REDIS_HOST = "localhost";
+private static final int REDIS_PORT = 6379;
+private static final Duration REDIS_KEY_EXPIRATION_TIME = Duration.ofSeconds(3600);
+
+
+final var jedisPool = new JedisPool();
+final var javersRedisRepository = new JaversRedisRepository(jedisPool, REDIS_KEY_EXPIRATION_TIME);
+final var javers = JaversBuilder.javers().registerJaversRepository(javersRedisRepository).build();
+```
+
+<h3>Schema</h3>
+JaVers creates several key-value pairs in Redis, with main keys being:
+
+- `jv_head_id` — A `String` that holds the value of the last `CommitId`.
+- `jv_snapshots_keys` — A `Set` that contains keys, where each key is a reference to another key of type `List`. These lists contain snapshots for specific entities and their properties.
+- `jv_snapshots_keys:<Entity Name>` — Domain-specific sets pointing to lists containing snapshots for specific objects of that entity type.
+
+<h3>Handling Redis Key Expiration</h3>
+
+In Redis, when a key expires, it is automatically removed from the database. However, additional cleanup may be required if the expired key is referenced in other structures, such as sets.
+
+**CdoSnapshotKeyExpireListener**
+
+The `CdoSnapshotKeyExpireListener` is an event listener designed to handle key expiration events in Redis. Its primary responsibility is to ensure that expired key entries are removed from all relevant sets.
+
+When an instance of `JaversRedisRepository` is created, it subscribes to keyspace events with the pattern `__key*__:jv_snapshots:*`. This subscription allows the `CdoSnapshotKeyExpireListener` to process key expiration events as they occur.
+
+Upon receiving a key expiration event, the `CdoSnapshotKeyExpireListener` identifies the expired key and removes its entries from all relevant sets, such as `jv_snapshots_keys` and `jv_snapshots_keys:<Entity Name>`.
+
+**Expired Keys Cleanup**
+
+A significant challenge arises if Redis keys expire when there is no active `CdoSnapshotKeyExpireListener` running. In this scenario, expired key entries will remain in the sets, leading to potential data inconsistencies.
+
+To address this challenge, we have introduced the public method `cleanExpiredSnapshotsKeysSets` in JaversRedisRepository that can be called to perform the necessary cleanup. This ensures that expired keys are properly removed from all relevant sets, even if the listener is not active at the time of expiration.
+
+<h3>Integrating JaversRedisRepository with JPA (Hibernate)</h3>
+
+The `JaversRedisRepository` can be seamlessly integrated with existing JPA repositories, enabling you to store JaVers audit data in Redis while continuing to use your JPA entities and repositories for application data.
+ 
+However, when working with Hibernate, it’s common for entities to be wrapped in proxies. To ensure proper handling of these proxies, you need to configure the `HibernateUnproxyObjectAccessHook` in your application. This can be done by setting the following property in your application configuration file:
+```yaml
+javers:
+  objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
+```
+This configuration ensures that JaVers can unproxy Hibernate entities effectively, allowing audit logging to work seamlessly with Redis and JPA.
 
 <h2 id="mongodb-configuration">MongoDB</h2>
 **Dependency**<br/>
@@ -59,7 +151,7 @@ import org.javers.repository.mongo.MongoRepository;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-... 
+...
 
 //by default, use the same database connection
 //which you are using for your primary database
@@ -94,6 +186,7 @@ Add `javers-persistence-sql` module to your classpath:
 ```groovy
 compile 'org.javers:javers-persistence-sql:{{site.javers_current_version}}'
 ```
+
 Check
 [Maven Central](https://central.sonatype.com/artifact/org.javers/javers-persistence-sql/{{site.javers_current_version}}/versions)
 for other build tools snippets.
@@ -354,8 +447,6 @@ public void shouldSerializeValueToJsonWithTypeAdapter() {
     System.out.println(json);
 }
 ```
-
-
 
 The output:
 
