@@ -25,7 +25,7 @@ Make a one-time or recurring contribution.
 
 ## Featured Sponsors
 
-<a class="a-img" href="https://github.com/AkrosAG">
+<a class="no-focus-style" href="https://github.com/AkrosAG">
 <img src="/img/akros_logo.png" width="160px" alt="Akros Logo"/>
 </a>
 

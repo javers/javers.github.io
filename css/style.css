@@ -660,12 +660,17 @@ li.github-user a {
     height: auto;
 }
 
-.a-img {
-    outline: none;
+.no-focus-style {
     text-decoration: none;
-}
-.a-img img {
-    user-select: none;
-    border: none;
     outline: none;
+}
+
+.no-focus-style:focus, .no-focus-style:active {
+    outline: none; /* Removes focus outline on the link */
+}
+
+.no-focus-style img {
+    border: none;     /* Removes any image border */
+    outline: none;    /* Removes focus outline from the image */
+    user-select: none; /* Prevents image selection */
 }
