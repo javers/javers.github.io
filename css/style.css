@@ -659,3 +659,11 @@ li.github-user a {
     width: 90%;
     height: auto;
 }
+
+.a-img {
+    outline: none;
+    text-decoration: none;
+}
+.a-img img {
+    user-select: none
+}
