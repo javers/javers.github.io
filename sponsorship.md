@@ -33,6 +33,6 @@ Make a one-time or recurring contribution.
 
 Bartosz Walacik
 
-[bwalacik\@gmail.com](mailto:bwalacik@gmail.com)
+[bwalacik@gmail.com](mailto:bwalacik@gmail.com)
 
 My [Github](https://github.com/bartoszwalacik) 
