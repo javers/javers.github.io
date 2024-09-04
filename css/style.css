@@ -665,5 +665,7 @@ li.github-user a {
     text-decoration: none;
 }
 .a-img img {
-    user-select: none
+    user-select: none;
+    border: none;
+    outline: none;
 }
