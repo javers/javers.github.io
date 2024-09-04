@@ -25,7 +25,7 @@ Make a one-time or recurring contribution.
 
 ## Featured Sponsors
 
-{% include fancy-image.html image="/img/akros_logo.png" alt="Akros Logo" %}
+{% include fancy-image.html image="/img/akros_logo.png" width="20em" alt="Akros Logo" %}
 
 ## Contact
 
