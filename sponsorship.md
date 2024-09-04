@@ -7,42 +7,30 @@ category: page_center
 JaVers is an Apache-licensed open source project and it’s completely free to use.
  
 JaVers is gaining momentum, the number of downloads from The Central is growing.
-In April 2022, `javers-core` was downloaded 250,000 times.
+In July 2024, `javers-core` was downloaded nearly 1,000,000 times.
  
-{% include fancy-image.html image="/img/javers-core-downloads-2022.png" alt="downloads from The Central chart" %}
+{% include fancy-image.html image="/img/javers-core-downloads-2024.png" alt="downloads from The Central chart" %}
 
-However, the amount of effort needed to maintain Javers and develop new features is also growing.
-Maintainers burnout is a serious risk in open source projects when we work for free.
+However, the effort required to maintain Javers and develop new features is also increasing.
+Burnout among maintainers is a serious risk in open source projects, especially when we work for free.
 
 **Our work is not sustainable without financial backing.**
 
-## Sponsorship via GitHub Sponsors
+## Sponsorship through GitHub Sponsors or Open Collective
 
-You can support JaVers development via [GitHub Sponsors](https://github.com/sponsors/bartoszwalacik/).
-Choose your tier.
+Currently, I'm the sole maintainer of Javers. <br/>
+You can support my work on Javers through [GitHub Sponsors](https://github.com/sponsors/bartoszwalacik/)
+or [Open Collective](https://opencollective.com/javers). <br/>
+Make a one-time or recurring contribution.
 
-### $2 a month 
-This shows your support for the Javers project. Any such support is very much appreciated!
+## Featured Sponsors
 
-### $10 a month 
-Your **name** will be featured in the Javers Github repository and on this website.
+{% include fancy-image.html image="/img/akros_logo.png" alt="Akros Logo" %}
 
-Javers Github repository and Javers website get about 10k views per month (combined).
+## Contact
 
-### $30 a month 
-Your **company logo** will be featured in the Javers Github repository and on this website.
+Bartosz Walacik
 
-### $100 a month 
-Your **company logo** will be featured in the Javers Github repository and on this website.
+[bwalacik\@gmail.com](mailto:bwalacik@gmail.com)
 
-**Access to up to 2 hours of support per month.**
-The support could be related to configuration, domain mapping hints or performance tuning of Javers in your project.
-
-## Sponsorship via Open Collective
-
-Via [JaVers Open Collective](https://opencollective.com/javers)
-you can make a one-time donation or become a backer for $5+ per month or a sponsor for $100+ per month.
-
-## Questions?
-You can reach me ([bartosz.walacik](https://github.com/bartoszwalacik)) 
-directly on [Discussions](https://github.com/javers/javers/discussions).
+My [Github](https://github.com/bartoszwalacik) 
