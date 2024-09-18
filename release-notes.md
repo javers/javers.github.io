@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.6.2
+released on 2024-09-18
+* [1366](https://github.com/javers/javers/issues/1366)
+  Fixed bug: added missing closure of `ResultSet` in SQL Repository.
+
 
 ### 7.6.1
 released on 2024-08-01
