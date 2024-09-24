@@ -27,14 +27,83 @@ but for production environment you need something real.
 
 First, choose proper JaversRepository implementation.
 Currently, JaVers supports the following databases: **MongoDB**, **H2**, **PostgreSQL**, **MySQL**, **MariaDB**,
-**Oracle** and **Microsoft SQL Server**. 
+**Oracle**, **Microsoft SQL Server** and **Redis**.
 
 In JaVers 5.2.4, we have added experimental support for **Amazon DocumentDB** which claims to be
 almost fully compatible with MongoDB.
 
 **Hint.** If you are using Spring Boot, just add one of our
 [Spring Boot starters for Spring Data](/documentation/spring-boot-integration/)
-and let them automatically configure and boot a JaVers instance with proper JaversRepository implementation. 
+and let them automatically configure and boot a JaVers instance with proper JaversRepository implementation.
+
+<h2 id="redis-db">Redis</h2>
+
+**Dependency**<br/>
+Add `javers-persistence-redis` module to your classpath:
+
+_Maven_<br/>
+
+```
+<dependency>
+    <groupId>org.javers</groupId>
+    <artifactId>javers-persistence-redis</artifactId>
+    <version>{{site.javers_current_version}}</version>
+</dependency>
+```
+
+_Gradle (short)_<br/>
+
+```
+implementation 'org.javers:javers-persistence-redis:{{site.javers_current_version}}'
+```
+
+Check
+[Maven Central](https://central.sonatype.com/artifact/org.javers/javers-persistence-redis/{{site.javers_current_version}}/versions)
+for other build tools snippets.
+
+<h3>Overview</h3>
+
+The idea of configuring `JaversRedisRepository` is simple, just provide a working Jedis (Java client for Redis). You can setup `JaversRedisRepository` as follows:
+
+```java
+import org.javers.repository.redis.JaversRedisRepository;
+import redis.clients.jedis.JedisPool;
+...
+
+private static final String REDIS_HOST = "localhost";
+private static final int REDIS_PORT = 6379;
+private static final Duration REDIS_KEY_EXPIRATION_TIME = Duration.ofSeconds(3600);
+
+
+final var jedisPool = new JedisPool();
+final var javersRedisRepository = new JaversRedisRepository(jedisPool, REDIS_KEY_EXPIRATION_TIME);
+final var javers = JaversBuilder.javers().registerJaversRepository(javersRedisRepository).build();
+```
+
+<h3>Schema</h3>
+JaVers creates several key-value pairs in Redis, with main keys being:
+
+- `jv_head_id` — A `String` that holds the value of the last `CommitId`.
+- `jv_snapshots_keys` — A `Set` that contains keys, where each key is a reference to another key of type `List`. These lists contain snapshots for specific entities and their properties.
+- `jv_snapshots_keys:<Entity Name>` — Domain-specific sets pointing to lists containing snapshots for specific objects of that entity type.
+
+<h3>Handling Redis Key Expiration</h3>
+
+In Redis, when a key expires, it is automatically removed from the database. However, additional cleanup may be required if the expired key is referenced in other structures, such as sets.
+
+**CdoSnapshotKeyExpireListener**
+
+The `CdoSnapshotKeyExpireListener` is an event listener designed to handle key expiration events in Redis. Its primary responsibility is to ensure that expired key entries are removed from all relevant sets.
+
+When an instance of `JaversRedisRepository` is created, it subscribes to keyspace events with the pattern `__key*__:jv_snapshots:*`. This subscription allows the `CdoSnapshotKeyExpireListener` to process key expiration events as they occur.
+
+Upon receiving a key expiration event, the `CdoSnapshotKeyExpireListener` identifies the expired key and removes its entries from all relevant sets, such as `jv_snapshots_keys` and `jv_snapshots_keys:<Entity Name>`.
+
+**Expired Keys Cleanup**
+
+A significant challenge arises if Redis keys expire when there is no active `CdoSnapshotKeyExpireListener` running. In this scenario, expired key entries will remain in the sets, leading to potential data inconsistencies.
+
+To address this challenge, we have introduced the public method `cleanExpiredSnapshotsKeysSets` in JaversRedisRepository that can be called to perform the necessary cleanup. This ensures that expired keys are properly removed from all relevant sets, even if the listener is not active at the time of expiration.
 
 <h2 id="mongodb-configuration">MongoDB</h2>
 **Dependency**<br/>
@@ -59,7 +128,7 @@ import org.javers.repository.mongo.MongoRepository;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-... 
+...
 
 //by default, use the same database connection
 //which you are using for your primary database
@@ -74,8 +143,8 @@ Here’s the [Spring Config example](/documentation/spring-integration/#auto-aud
 **Schema**<br/>
 JaVers creates two collections in MongoDB:
 
-* `jv_head_id` — one document with the last CommitId,
-* `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
+- `jv_head_id` — one document with the last CommitId,
+- `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
 
 <h3 id="documentdb-configuration">Amazon DocumentDB</h3>
 
@@ -94,6 +163,7 @@ Add `javers-persistence-sql` module to your classpath:
 ```groovy
 compile 'org.javers:javers-persistence-sql:{{site.javers_current_version}}'
 ```
+
 Check
 [Maven Central](https://central.sonatype.com/artifact/org.javers/javers-persistence-sql/{{site.javers_current_version}}/versions)
 for other build tools snippets.
@@ -136,7 +206,7 @@ a `ConnectionProvider` implementation and a JDBC driver on your classpath.
 
 In the following table, there is a summary of all supported SQL databases with corresponding
 dialect names.
- 
+
 You should provide a proper JDBC driver version on your classpath, which works bests for you
 (these versions are only a suggestion, we use them in JaVers integration tests)
 .
@@ -193,9 +263,9 @@ Probably it would be the same version which you already use for your application
 ConnectionProvider serves as the source of live JDBC connections for your JaversSQLRepository.
 JaversSqlRepository works in *passive* mode, which means:
 
-* JaVers doesn’t create JDBC connections on its own and uses connections provided by an application
+- JaVers doesn’t create JDBC connections on its own and uses connections provided by an application
   (via `ConnectionProvider.getConnection()`).
-* JaVers philosophy is to use application’s transactions
+- JaVers philosophy is to use application’s transactions
   and never to call SQL `commit` or `rollback` commands on its own.
 
 Thanks to this approach, data managed by an application (domain objects) and data managed by JaVers (object snapshots)
@@ -211,10 +281,10 @@ the current connection (thread-safely).
 <h3>Schema</h3>
 JaVers creates four tables in SQL database:
 
-*  `jv_global_id` — domain object identifiers,
-*  `jv_commit` — JaVers commits metadata,
-*  `jv_commit_property` — commit properties,
-*  `jv_snapshot` — domain object snapshots.
+- `jv_global_id` — domain object identifiers,
+- `jv_commit` — JaVers commits metadata,
+- `jv_commit_property` — commit properties,
+- `jv_snapshot` — domain object snapshots.
 
 JaVers has a basic schema-create implementation.
 If a table is missing, JaVers simply creates it, together with a sequence and indexes.
@@ -240,7 +310,7 @@ By default, Gson serializes ObjectId as follows:
       "_machine": 1904935013,
       "_inc": 1615625682,
       "_new": true
-  } 
+  }
 ```
 
 As you can see, `ObjectId` is serialized using its 4 internal fields.
@@ -262,19 +332,18 @@ JaVers supports two families of TypeAdapters.
    It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has a nice API and isolates you (to some extent) from low level Gson API.
-   * [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
+   - [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
      is a convenient scaffolding implementation of the JsonTypeAdapter interface.
      Extend it if you want to represent your Value type as atomic String
      (and when you don’t want to deal with JSON API).
-   * Implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface
+   - Implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface
      if you need full control over the JSON conversion process.
      Register your adapters using
      [`JaversBuilder.registerValueTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
-    [com.google.gson.TypeAdapter](https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/TypeAdapter.java) interface.
-     Register your adapters with
-     [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
-
+   [com.google.gson.TypeAdapter](https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/TypeAdapter.java) interface.
+   Register your adapters with
+   [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 
 <h3 id="json-type-adapter-example">JSON TypeAdapter example</h3>
 
@@ -354,8 +423,6 @@ public void shouldSerializeValueToJsonWithTypeAdapter() {
     System.out.println(json);
 }
 ```
-
-
 
 The output:
 

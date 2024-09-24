@@ -22,6 +22,13 @@ There are two Javers Spring Boot starters:
 
 <h2 id="get-javers-starters">Get a Javers Spring Boot starter</h2>
 
+### The Redis starter ###
+Add the Javers Spring Boot starter for Redis to your classpath:
+
+```groovy
+implementation 'org.javers:javers-spring-boot-starter-redis:{{site.javers_current_version}}'
+```
+
 ### The MongoDB starter ###
 Add the Javers Spring Boot starter for MongoDB to your classpath:
 
@@ -54,6 +61,7 @@ according to your application configuration. That is:
 
 Check the complete list of Javers beans added to your Spring Context:
 
+* for Redis: [JaversRedisAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-redis/src/main/java/org/javers/spring/boot/redis/JaversRedisAutoConfiguration.java)
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java),
 * for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java).
 
@@ -228,6 +236,215 @@ public MongoClientSettings clientSettings() {
 ```  
 Remember, the `javersMongoClientSettings` bean is used only when Javers connects
 to dedicated MongoDB database defined in `javers.mongodb` property.
+
+<h3 id="Javers-Redis-Repository">Javers Redis Repository</h3>
+
+The Javers Redis starter creates a [JaversRedisRepository](/documentation/repository-configuration/#redis-db)
+instance connected to your application’s database, which is managed by the Spring Data starter.
+This integration allows for easy configuration of Redis, leveraging Spring Boot’s properties management. 
+The support extends to both standalone Redis and Redis with Sentinel for high availability.
+
+<h4>Global Redis Configuration</h4>
+
+<div style="background-color: #F5F5F5; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+  <table style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Property Key</th>
+        <th>Description</th>
+        <th style="text-align:right;">Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>javers.redis.enabled</td>
+        <td>Enables or disables Redis support in JaVers.</td>
+        <td style="text-align:right;">true</td>
+      </tr>
+      <tr>
+        <td>javers.redis.audit-duration</td>
+        <td>The duration for keeping audit snapshots in Redis.</td>
+        <td style="text-align:right;">30d (30 days)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h4>Standalone Redis Properties</h4>
+
+For standalone Redis instances, you can configure the following properties as follows:
+
+<div style="background-color: #F5F5F5; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+  <table style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Property Key</th>
+        <th>Description</th>
+        <th style="text-align:right;">Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>javers.redis.jedis.user</td>
+        <td>The username for Redis authentication.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.password</td>
+        <td>The password for Redis authentication.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.database</td>
+        <td>The Redis database index.</td>
+        <td style="text-align:right;">0</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.client-name</td>
+        <td>The client name for identifying the connection.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.host</td>
+        <td>The Redis server host.</td>
+        <td style="text-align:right;">localhost</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.port</td>
+        <td>The Redis server port.</td>
+        <td style="text-align:right;">6379</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.timeout</td>
+        <td>Connection timeout in milliseconds.</td>
+        <td style="text-align:right;">2000</td>
+      </tr>
+      <tr>
+        <td>javers.redis.jedis.ssl</td>
+        <td>Enable SSL for the Redis connection.</td>
+        <td style="text-align:right;">false</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<h4>Sentinel Configuration Properties</h4>
+
+For high availability, JaVers supports Redis Sentinel, which you can configure with the following properties as follows:
+
+<div style="background-color: #F5F5F5; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+  <table style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Property Key</th>
+        <th>Description</th>
+        <th style="text-align:right;">Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>javers.redis.sentinel.master-name</td>
+        <td>The name of the Redis master managed by Sentinel.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.sentinels</td>
+        <td>A set of Sentinel nodes (host:port).</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.connection-timeout</td>
+        <td>Timeout for connecting to Redis, in milliseconds.</td>
+        <td style="text-align:right;">2000</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.so-timeout</td>
+        <td>Socket timeout for Redis connections, in milliseconds.</td>
+        <td style="text-align:right;">2000</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.sentinel-connection-timeout</td>
+        <td>Timeout for connecting to Sentinel, in milliseconds.</td>
+        <td style="text-align:right;">2000</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.sentinel-so-timeout</td>
+        <td>Socket timeout for Sentinel connections, in milliseconds.</td>
+        <td style="text-align:right;">2000</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.sentinel-user</td>
+        <td>The username for Sentinel authentication.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.sentinel-password</td>
+        <td>The password for Sentinel authentication.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+      <tr>
+        <td>javers.redis.sentinel.sentinel-client-name</td>
+        <td>The client name for identifying the Sentinel connection.</td>
+        <td style="text-align:right;">null</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<h4>Important Notes</h4>
+
+- **Global Configuration:** 
+
+    The enabled property controls whether Redis support is active. The audit-duration and object-access-hook properties provide additional control over auditing behavior.
+- **Jedis and Sentinel:** 
+
+    You can configure either jedis for standalone Redis or sentinel for high-availability setups. Ensure you set the correct properties based on your Redis deployment.
+- **Default Values:** 
+
+    Properties such as host, port, and timeout have default values but can be customized as needed.
+
+- **SSL Support:** 
+
+    If your Redis instance uses SSL, set the ssl property to true.
+
+<h4>Example Standalone Configuration</h4>
+
+```yaml
+javers:
+  redis:
+    enabled: true
+    audit-duration: 30d
+    jedis:
+      user: standaloneUser
+      password: secret
+      database: 1
+      client-name: myJaversClient
+      host: redis-server
+      port: 6379
+      timeout: 3000
+      ssl: true
+```   
+
+<h4>Example Sentinel Configuration</h4>
+
+```yaml
+javers:
+  redis:
+    enabled: true
+    audit-duration: 30d
+    sentinel:
+      master-name: mymaster
+      sentinels: redis-sentinel-1:26379,redis-sentinel-2:26379,redis-sentinel-3:26379
+      connection-timeout: 3000
+      so-timeout: 3000
+      sentinel-connection-timeout: 3000
+      sentinel-so-timeout: 3000
+      sentinel-user: sentinelUser
+      sentinel-password: secret
+      sentinel-client-name: mySentinelClient
+```   
 
 <h3 id="registering-json-type-adapters">Registering Custom JSON TypeAdapters</h3>
 
