@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 7.6.3
+released on 2024-10-13
+* [1415](https://github.com/javers/javers/issues/1415)
+  Fixed issue with serializing Double.NaN.
+
+
 ### 7.6.2
 released on 2024-09-18
 * [1366](https://github.com/javers/javers/issues/1366)
