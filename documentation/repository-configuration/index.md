@@ -38,6 +38,18 @@ and let them automatically configure and boot a JaVers instance with proper Jave
 
 <h2 id="redis-db">Redis</h2>
 
+**Redis persistence overview**<br/>
+
+When storing JaVers snapshots in Redis, selecting the right persistence model is essential for ensuring data durability and performance. Redis offers two main persistence models:
+
+- RDB (Redis Database) - Periodically saves the dataset to disk. This is less resource-intensive because it doesn't constantly write to disk but instead saves the state at certain intervals.
+- AOF (Append Only File) - Logs every write operation to disk as it happens. In case of a crash, Redis can replay the log to restore the data.
+
+Redis allows using both RDB and AOF simultaneously. This provides the advantage of faster recovery through RDB snapshots while maintaining high durability with AOF. Depending on the system's criticality, you may want to consider enabling both for your JaVers snapshot storage.
+
+For more information, check the [official Redis documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/).
+
+
 **Dependency**<br/>
 Add `javers-persistence-redis` module to your classpath:
 
@@ -281,10 +293,10 @@ the current connection (thread-safely).
 <h3>Schema</h3>
 JaVers creates four tables in SQL database:
 
-- `jv_global_id` — domain object identifiers,
-- `jv_commit` — JaVers commits metadata,
-- `jv_commit_property` — commit properties,
-- `jv_snapshot` — domain object snapshots.
+* `jv_global_id` — domain object identifiers,
+* `jv_commit` — JaVers commits metadata,
+* `jv_commit_property` — commit properties,
+* `jv_snapshot` — domain object snapshots.
 
 JaVers has a basic schema-create implementation.
 If a table is missing, JaVers simply creates it, together with a sequence and indexes.
