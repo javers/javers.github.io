@@ -155,8 +155,8 @@ Here’s the [Spring Config example](/documentation/spring-integration/#auto-aud
 **Schema**<br/>
 JaVers creates two collections in MongoDB:
 
-- `jv_head_id` — one document with the last CommitId,
-- `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
+* `jv_head_id` — one document with the last CommitId,
+* `jv_snapshots` — domain object snapshots. Each document contains snapshot data and commit metadata.
 
 <h3 id="documentdb-configuration">Amazon DocumentDB</h3>
 
@@ -218,7 +218,7 @@ a `ConnectionProvider` implementation and a JDBC driver on your classpath.
 
 In the following table, there is a summary of all supported SQL databases with corresponding
 dialect names.
-
+ 
 You should provide a proper JDBC driver version on your classpath, which works bests for you
 (these versions are only a suggestion, we use them in JaVers integration tests)
 .
@@ -275,9 +275,9 @@ Probably it would be the same version which you already use for your application
 ConnectionProvider serves as the source of live JDBC connections for your JaversSQLRepository.
 JaversSqlRepository works in *passive* mode, which means:
 
-- JaVers doesn’t create JDBC connections on its own and uses connections provided by an application
+* JaVers doesn’t create JDBC connections on its own and uses connections provided by an application
   (via `ConnectionProvider.getConnection()`).
-- JaVers philosophy is to use application’s transactions
+* JaVers philosophy is to use application’s transactions
   and never to call SQL `commit` or `rollback` commands on its own.
 
 Thanks to this approach, data managed by an application (domain objects) and data managed by JaVers (object snapshots)
@@ -293,10 +293,10 @@ the current connection (thread-safely).
 <h3>Schema</h3>
 JaVers creates four tables in SQL database:
 
-* `jv_global_id` — domain object identifiers,
-* `jv_commit` — JaVers commits metadata,
-* `jv_commit_property` — commit properties,
-* `jv_snapshot` — domain object snapshots.
+*  `jv_global_id` — domain object identifiers,
+*  `jv_commit` — JaVers commits metadata,
+*  `jv_commit_property` — commit properties,
+*  `jv_snapshot` — domain object snapshots.
 
 JaVers has a basic schema-create implementation.
 If a table is missing, JaVers simply creates it, together with a sequence and indexes.
@@ -322,7 +322,7 @@ By default, Gson serializes ObjectId as follows:
       "_machine": 1904935013,
       "_inc": 1615625682,
       "_new": true
-  }
+  } 
 ```
 
 As you can see, `ObjectId` is serialized using its 4 internal fields.
@@ -344,18 +344,19 @@ JaVers supports two families of TypeAdapters.
    It’s a thin abstraction over Gson native type adapters.
    We recommend using this family in most cases
    as it has a nice API and isolates you (to some extent) from low level Gson API.
-   - [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
+   * [`BasicStringTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/BasicStringTypeAdapter.java)
      is a convenient scaffolding implementation of the JsonTypeAdapter interface.
      Extend it if you want to represent your Value type as atomic String
      (and when you don’t want to deal with JSON API).
-   - Implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface
+   * Implement the [`JsonTypeAdapter`]({{ site.github_core_main_url }}org/javers/core/json/JsonTypeAdapter.java) interface
      if you need full control over the JSON conversion process.
      Register your adapters using
      [`JaversBuilder.registerValueTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
 1. **Gson family**, useful when you’re already using Gson and have adapters implementing the
-   [com.google.gson.TypeAdapter](https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/TypeAdapter.java) interface.
-   Register your adapters with
-   [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
+    [com.google.gson.TypeAdapter](https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/TypeAdapter.java) interface.
+     Register your adapters with
+     [`JaversBuilder.registerValueGsonTypeAdapter(...)`]({{ site.github_core_main_url }}org/javers/core/JaversBuilder.java).
+
 
 <h3 id="json-type-adapter-example">JSON TypeAdapter example</h3>
 
