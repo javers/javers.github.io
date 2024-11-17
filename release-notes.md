@@ -6,6 +6,13 @@ submenu: release-notes
 ---
 
 
+### 7.7.0
+released on 2024-11-17
+* [1295](https://github.com/javers/javers/issues/1295)
+  Added support for Spring AOT (Ahead-of-Time) & GraalVM Native Images.
+  See also the discussion in the [PR](https://github.com/javers/javers/pull/1421).
+
+
 ### 7.6.3
 released on 2024-10-13
 * [1415](https://github.com/javers/javers/issues/1415)
