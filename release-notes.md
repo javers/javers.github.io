@@ -6,6 +6,12 @@ submenu: release-notes
 ---
 
 
+### 7.7.1
+released on 2025-01-24
+* [1425](https://github.com/javers/javers/issues/1425)
+  Fixed the error ATTEMPT_TO_OVERWRITE_EXISTING_JAVERSTYPE_MAPPING, which was thrown in certain
+  scenarios during multithreaded execution.
+
 ### 7.7.0
 released on 2024-11-17
 * [1295](https://github.com/javers/javers/issues/1295)
