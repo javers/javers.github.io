@@ -16,9 +16,11 @@ This is the truly plug-and-play solution.
 There are two Javers Spring Boot starters:
 
 * **Javers Spring Boot starter for MongoDB**,
-  compatible with [Spring Boot starter for Spring Data MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
+  compatible with [Spring Data MongoDB](https://spring.io/projects/spring-data-mongodb)
 * **Javers Spring Boot starter for SQL**,
-  compatible with [Spring Boot starter for Spring Data JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+  compatible with [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+* **Javers Spring Boot starter for Redis**,
+  compatible with [Spring Data Redis](https://spring.io/projects/spring-data-redis)  
 
 <h2 id="get-javers-starters">Get a Javers Spring Boot starter</h2>
 

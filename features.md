@@ -80,13 +80,13 @@ who made it and what was the value before and after.
 * Take a look at [repository examples](/documentation/repository-examples).
   
 [`JaversRepository`]({{ site.github_core_main_url }}org/javers/repository/api/JaversRepository.java) is designed to be easily implemented for any kind of database.
-At the moment we provide **MongoDB** implementation and
-**SQL** implementation for the folowing dialects:
-H2, PostgreSQL, MySQL/MariaDB, Oracle and Microsoft SQL Server.<br/>
-See [repository configuratoin](/documentation/repository-configuration).
+Javers provides Repository implementations for **MongoDB**, **SQL**, and **Redis**.
+The SQL Repository supports the following dialects: 
+H2, PostgreSQL, MySQL/MariaDB, Oracle, and Microsoft SQL Server.<br/>
+See [repository configuration](/documentation/repository-configuration).
 
 If you are using another database, for example Cassandra, you are encouraged to implement
-the JaversRepository interface and contribute it to JaVers project.
+the JaversRepository interface and contribute it to Javers project.
 
 <h2 id="json-serialization">JSON serialization</h2>
 JaVers has a well-designed and customizable JSON serialization and deserialization module, based on
