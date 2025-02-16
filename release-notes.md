@@ -5,6 +5,17 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.8.0
+released on 2025-02-17
+* [1394](https://github.com/javers/javers/discussions/1394)
+  New JaversRepository Implementation for Redis 🎉  <br/>  
+  This great contribution comes from  
+  [@IvanSimeonov](https://github.com/IvanSimeonov),  
+  [@martindobrev](https://github.com/martindobrev),  
+  [@assen-sharlandjiev-akros-ch](https://github.com/assen-sharlandjiev-akros-ch), and  
+  [@assens](https://github.com/assens). <br/>  
+  They have developed an **entirely new implementation** of JaversRepository for Redis, unlocking new possibilities for Javers users. <br/> 
+  See [Redis persistence](https://javers.org/documentation/repository-configuration/#redis-db).
 
 ### 7.7.1
 released on 2025-01-24

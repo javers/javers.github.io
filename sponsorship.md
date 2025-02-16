@@ -9,7 +9,7 @@ JaVers is an Apache-licensed open source project and it’s completely free to u
 JaVers is gaining momentum, the number of downloads from The Central is growing.
 In July 2024, `javers-core` was downloaded nearly 1,000,000 times.
  
-{% include fancy-image.html image="/img/javers-core-downloads-2024.png" alt="downloads from The Central chart" %}
+{% include fancy-image.html image="/img/javers-core-downloads-2025.png" alt="downloads from The Central chart" %}
 
 However, the effort required to maintain Javers and develop new features is also increasing.
 Burnout among maintainers is a serious risk in open source projects, especially when we work for free.
