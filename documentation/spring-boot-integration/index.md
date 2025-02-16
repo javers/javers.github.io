@@ -22,13 +22,6 @@ There are two Javers Spring Boot starters:
 
 <h2 id="get-javers-starters">Get a Javers Spring Boot starter</h2>
 
-### The Redis starter ###
-Add the Javers Spring Boot starter for Redis to your classpath:
-
-```groovy
-implementation 'org.javers:javers-spring-boot-starter-redis:{{site.javers_current_version}}'
-```
-
 ### The MongoDB starter ###
 Add the Javers Spring Boot starter for MongoDB to your classpath:
 
@@ -46,6 +39,13 @@ implementation 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_
 Check [Maven Central](https://central.sonatype.com/artifact/org.javers/javers-spring-boot-starter-sql/{{site.javers_current_version}}/versions)
 for other build tool snippets.
 
+### The Redis starter ###
+Add the Javers Spring Boot starter for Redis to your classpath:
+
+```groovy
+implementation 'org.javers:javers-spring-boot-starter-redis:{{site.javers_current_version}}'
+```
+
 <h2 id="starters-auto-configuration">Spring Boot Auto-configuration</h2>
 
 Thanks to the Spring Boot magic, Javers auto-configuration
@@ -61,9 +61,9 @@ according to your application configuration. That is:
 
 Check the complete list of Javers beans added to your Spring Context:
 
-* for Redis: [JaversRedisAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-redis/src/main/java/org/javers/spring/boot/redis/JaversRedisAutoConfiguration.java)
 * for MongoDB: [JaversMongoAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-mongo/src/main/java/org/javers/spring/boot/mongo/JaversMongoAutoConfiguration.java),
 * for SQL: [JaversSqlAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-sql/src/main/java/org/javers/spring/boot/sql/JaversSqlAutoConfiguration.java).
+* for Redis: [JaversRedisAutoConfiguration.java](https://github.com/javers/javers/blob/master/javers-spring-boot-starter-redis/src/main/java/org/javers/spring/boot/redis/JaversRedisAutoConfiguration.java)
 
 <h2 id="customizing-auto-configuration">Customizing the Auto-configuration</h2>
 
