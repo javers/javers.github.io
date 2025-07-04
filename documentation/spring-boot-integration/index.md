@@ -648,8 +648,119 @@ cd organization-structure
 
 and check it out on [localhost:8080/view/person](http://localhost:8080/view/person).
 
+<h2 id="javers-faq">Frequently Asked Questions</h2>
+This section includes some recommendations for commonly asked questions.
 
+<h3 id="javers-faq-jackson">Jackson customization for REST API</h2>
+Q. The easiest way to expose changes via REST API
 
+A. Use `changes.groupByCommit()`. Example of a `/changes` endpoint:
+```java
+    @GetMapping("/{id}/changes")
+    public List<ChangesByCommit> findChanges(@PathVariable String id) {
 
+        JqlQuery query = QueryBuilder.byInstanceId(id, FooBar.class).build();
+        Changes changes = javers.findChanges(query);
 
+        return changes.groupByCommit();
+    }
+```
+Q. When returning JaVers `ChangesByCommit` from Spring Boot REST API, `changes` are not included in the JSON.
 
+A. Use a `MixIn` for `ChangesByCommit` that makes `changes` returned by non-standard `get()` method serializable by Jackson.
+```java
+@Configuration
+public class JaVersConfiguration {
+    
+    @Bean
+    Jackson2ObjectMapperBuilderCustomizer jacksonJaVersCustomizer() {
+        return (Jackson2ObjectMapperBuilder jacksonObjectMapperBuilder) ->
+                jacksonObjectMapperBuilder
+                        .mixIn(ChangesByCommit.class, JaVersChangesMixIn.class);
+    }
+
+    /**
+     * Makes `changes` returned by non-standard `get()` method serializable by Jackson.
+     */
+    abstract static class JaVersChangesMixIn {
+        @JsonProperty("changes")
+        abstract List<Change> get();
+    }
+}
+```
+
+Q. When `org.javers.core.diff.changetype.NewObject` is returned as part of the list of `Change` instances, its JSON representation
+does not include enough properties to identify what such `Change` represents.
+
+A. Use a `MixIn` to expose the `Change` subclass as `type` attribute.
+```java
+@Configuration
+public class JaVersConfiguration {
+    
+    @Bean
+    Jackson2ObjectMapperBuilderCustomizer jacksonJaVersCustomizer() {
+        return (Jackson2ObjectMapperBuilder jacksonObjectMapperBuilder) ->
+                jacksonObjectMapperBuilder
+                        .mixIn(Change.class, ClassNameTypeMixIn.class);
+    }
+
+    /**
+     * Instructs Jackson to serialize class name as `type` attribute.
+     * Useful for JaVers Change subclasses, especially org.javers.core.diff.changetype.NewObject.
+     */
+    @JsonTypeInfo(use = JsonTypeInfo.Id.SIMPLE_NAME, property = "type")
+    abstract static class ClassNameTypeMixIn {
+    }
+}
+```
+
+<h3 id="javers-faq-db">Database related customization</h2>
+Q. Java `Instant` precision is `9` while `PostgreSQL` timestamp precision is `6` (rounded). 
+As the result, JaVers reports `created` Instant as updated for an update after an insert (which JaVers records with nanos).
+
+A. Use custom `TypeAdapter` for Java `Instant`
+```java
+@Configuration
+public class JaVersConfiguration {
+
+    @Bean
+    InstantTruncatedTypeAdapter instantTruncatedTypeAdapter() {
+      return new InstantTruncatedTypeAdapter();
+    }
+
+    /**
+     * Truncated to microseconds {@link Instant} type adapter.
+     * Instant precision is 9 while PostgreSQL timestamp precision is 6 (rounded).
+     * See {@link org.javers.java8support.InstantTypeAdapter}.
+     */
+    static class InstantTruncatedTypeAdapter extends BasicStringTypeAdapter<Instant> {
+        
+      @Override
+      public String serialize(Instant sourceValue) {
+        return UtilTypeCoreAdapters.serialize(sourceValue
+                .with(ChronoField.MICRO_OF_SECOND,
+                        Math.round((double) sourceValue.get(ChronoField.NANO_OF_SECOND) / 1000)));
+      }
+  
+      @Override
+      public Instant deserialize(String serializedValue) {
+        return UtilTypeCoreAdapters.deserializeToInstant(serializedValue);
+      }
+  
+      @Override
+      public Class<?> getValueType() {
+        return Instant.class;
+      }
+  
+    }
+}
+```
+
+Q. Getting an error on startup: `Relation jv_commit already exists`.
+
+A. The following configuration is required unless a public schema is used by the application. See https://github.com/javers/javers/issues/934.
+```yml  
+javers:
+  # https://github.com/javers/javers/issues/934
+  sqlSchema: foobar
+```
