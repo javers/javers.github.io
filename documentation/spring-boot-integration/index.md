@@ -651,7 +651,7 @@ and check it out on [localhost:8080/view/person](http://localhost:8080/view/pers
 <h2 id="javers-faq">Frequently Asked Questions</h2>
 This section includes some recommendations for commonly asked questions.
 
-<h3 id="javers-faq-jackson">Jackson customization for REST API</h2>
+<h3 id="javers-faq-jackson">Jackson customization for REST API</h3>
 Q. The easiest way to expose changes via REST API
 
 A. Use `changes.groupByCommit()`. Example of a `/changes` endpoint:
