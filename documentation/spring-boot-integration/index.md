@@ -219,6 +219,8 @@ javers:
 
 If the `javers.mongodb` property is defined, either `host` or `uri` has to be set.
   
+If you use a transactional Javers instance (see [Transaction management in the MongoDB starter](#transaction-management-in-the-mongodb-starter)) the audit operations issued in the dedicated MongoDB database for Javers won't participate in the application's data transactions.
+
 #### MongoClientSettings
 If you need more control over Javers’ dedicated `MongoClient`,
 you can configure a `MongoClientSettings` bean named `javersMongoClientSettings`.
@@ -714,7 +716,7 @@ public class JaVersConfiguration {
 }
 ```
 
-<h3 id="javers-faq-db">Database related customization</h2>
+<h3 id="javers-faq-db">Database related customization</h3>
 Q. Java `Instant` precision is `9` while `PostgreSQL` timestamp precision is `6` (rounded). 
 As the result, JaVers reports `created` Instant as updated for an update after an insert (which JaVers records with nanos).
 
