@@ -5,6 +5,11 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.8.3
+released on 2025-08-13
+* [1444](https://github.com/javers/javers/issues/1444)
+  Fixed the NPE which was thrown in certain scenarios for a refactored class.
+
 ### 7.8.0
 released on 2025-02-17
 * [1394](https://github.com/javers/javers/discussions/1394)
