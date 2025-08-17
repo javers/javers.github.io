@@ -5,6 +5,19 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.8.4
+released on 2025-08-17
+* [1440](https://github.com/javers/javers/issues/1440)
+  Added possibility to customize the sequence names for Javers tables
+  in SQLRepository.
+
+```yml
+javers:
+  sqlGlobalIdSequenceName: 'cust_jv_global_id_pk_seq'
+  sqlCommitSequenceName: 'cust_jv_commit_pk_seq'
+  sqlSnapshotSequenceName: 'cust_jv_snapshot_pk_seq'
+```
+
 ### 7.8.3
 released on 2025-08-13
 * [1444](https://github.com/javers/javers/issues/1444)

@@ -146,6 +146,9 @@ javers:
   sqlCommitTableName: jv_commit
   sqlSnapshotTableName: jv_snapshot
   sqlCommitPropertyTableName: jv_commit_property
+  sqlGlobalIdSequenceName: jv_global_id_pk_seq
+  sqlCommitSequenceName: jv_commit_pk_seq
+  sqlSnapshotSequenceName: 'jv_snapshot_pk_seq
 ```   
 
 #### Transaction management in the SQL starter
