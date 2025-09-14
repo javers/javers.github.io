@@ -5,6 +5,20 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.8.6
+released on 2025-09-14
+* [1370](https://github.com/javers/javers/issues/1370)
+  Fix:
+  Resolved an issue where comparing collections of entities 
+  with global IDs producing duplicate hash values led to missing
+  NewObject changes. Collections with entities now correctly detect
+  new objects even when global IDs have hash collisions.
+
+* [1450](https://github.com/javers/javers/issues/1450) 
+  Improvement:
+  Javers now correctly detects key/value types for Map subclasses
+  without generic parameters, removing warnings and improving type handling.
+
 ### 7.8.4
 released on 2025-08-17
 * [1440](https://github.com/javers/javers/issues/1440)
