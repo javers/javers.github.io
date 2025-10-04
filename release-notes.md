@@ -5,6 +5,21 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.9.0
+released on 2025-10-4
+* [1372](https://github.com/javers/javers/issues/1372)
+  Feature: Introduced a new capability in JaversRepository --
+  Terminal Snapshot creation for Value Object removed from an Entity. 
+  Now, 
+  [javers.findChanges()](https://javers.org/documentation/jql-examples/#query-for-changes)
+  returns a `TerminalChange` for each property of the removed Value Object.
+
+
+* [1458](https://github.com/javers/javers/issues/1458)
+  Feature: Added metadata for Javers Spring Boot configuration properties.
+  See [spring-boot-configuration-processor](https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html).
+    
+
 ### 7.8.6
 released on 2025-09-14
 * [1370](https://github.com/javers/javers/issues/1370)
