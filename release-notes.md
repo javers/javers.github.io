@@ -14,47 +14,48 @@ released on 2025-10-4
   [javers.findChanges()](https://javers.org/documentation/jql-examples/#query-for-changes)
   returns a `TerminalChange` for each property of the removed Value Object.
 
-  For example, consider the following scenario:
-
-```groovy
-given:
-javers.commit("author", new SnapshotEntity(id:1, valueObjectRef: new DummyAddress(city:"London")))
-javers.commit("author", new SnapshotEntity(id:1))
-
-when:
-def changes = javers.
-        findChanges(QueryBuilder.byInstance(new SnapshotEntity(id:1))
-                .withChildValueObjects()
-                .build())
-then:
-println changes.prettyPrint()
-```
-
-  diff output in Javers before 7.9.0:
-
-```text
-Changes:
-Commit 1.00 done by author at 05 Oct 2025, 19:21:34 :
-* new object: org.javers.core.model.SnapshotEntity/1
-```
-
-  diff output in Javers 7.9.0:
-
-```text
-Changes:
-Commit 2.00 done by author at 05 Oct 2025, 19:17:40 :
-* changes in org.javers.core.model.SnapshotEntity/1 :
-  - 'valueObjectRef.city' value 'London' unset
-Commit 1.00 done by author at 05 Oct 2025, 19:17:40 :
-* new object: org.javers.core.model.SnapshotEntity/1
-```
-
   Thanks to that feature, `javers.findChanges()` now provides a diff experience
   for removed Value Objects similar to `javers.compare()`.
 
-  **Important**: Terminal Snapshots for removed Value Objects are generated only in
-  commits saved with JaVers 7.9.0 or later.
-  Older commits will retain the previous behavior when loaded by `javers.findChanges()`.
+  For example, consider the following scenario:
+
+    ```groovy
+    given:
+    javers.commit("author", new SnapshotEntity(id:1, valueObjectRef: new DummyAddress(city:"London")))
+    javers.commit("author", new SnapshotEntity(id:1))
+    
+    when:
+    def changes = javers.
+            findChanges(QueryBuilder.byInstance(new SnapshotEntity(id:1))
+                    .withChildValueObjects()
+                    .build())
+    then:
+    println changes.prettyPrint()
+    ```
+    
+    diff output in Javers before 7.9.0:
+
+    ```text
+    Changes:
+    Commit 1.00 done by author at 05 Oct 2025, 19:21:34 :
+    * new object: org.javers.core.model.SnapshotEntity/1
+    ```
+
+    diff output in Javers 7.9.0:
+
+    ```text
+    Changes:
+    Commit 2.00 done by author at 05 Oct 2025, 19:17:40 :
+    * changes in org.javers.core.model.SnapshotEntity/1 :
+      - 'valueObjectRef.city' value 'London' unset
+    Commit 1.00 done by author at 05 Oct 2025, 19:17:40 :
+    * new object: org.javers.core.model.SnapshotEntity/1
+    ```
+
+    **Important**: Terminal Snapshots for removed Value Objects are generated only in
+    commits saved with JaVers 7.9.0 or later.
+    Older commits will retain the previous behavior when loaded by `javers.findChanges()`.
+
 
 * [1458](https://github.com/javers/javers/issues/1458)
   Feature: Added metadata for Javers Spring Boot configuration properties.
