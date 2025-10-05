@@ -127,7 +127,7 @@ you can fetch Robert’s object history in one of the three views:
 
     println changes.prettyPrint()
 
-    then: "there should be five Changes on Bob"
+    then: "there should be five changes in Bob"
     assert changes.size() == 5 
 }
 ```
@@ -149,7 +149,7 @@ Snapshot{commit:1.00, id:...Person/bob, version:1, state:{login:bob, name:Robert
 Changes query:
 Changes:
 Commit 2.00 done by user at 14 Mar 2021, 19:59:46 :
-* changes on org.javers.core.examples.model.Person/bob :
+* changes in org.javers.core.examples.model.Person/bob :
   - 'name' changed: 'Robert Martin' -> 'Robert C.'
   - 'position' = 'Developer'
 Commit 1.00 done by user at 14 Mar 2021, 19:59:46 :
@@ -180,7 +180,7 @@ the output:
 Changes prettyPrint :
 Changes:
 Commit 2.00 done by author at 21 Mar 2021, 19:34:49 :
-* changes on Employee/Frodo :
+* changes in Employee/Frodo :
   - 'salary' changed: '10000' -> '11000'
   - 'subordinates' collection changes :
      0. 'Employee/Sam' added
@@ -248,7 +248,7 @@ System.out.println("Printing Changes grouped by commits and by objects :");
 changes.groupByCommit().forEach(byCommit -> {
     System.out.println("commit " + byCommit.getCommit().getId());
     byCommit.groupByObject().forEach(byObject -> {
-        System.out.println("* changes on " + byObject.getGlobalId().value() + " : ");
+        System.out.println("* changes in " + byObject.getGlobalId().value() + " : ");
         byObject.get().forEach(change -> System.out.println("  - " + change));
     });
 });
@@ -259,16 +259,16 @@ the output:
 ```text
 Printing Changes grouped by commits and by objects :
 commit 2.00
-* changes on Employee/Frodo : 
+* changes in Employee/Frodo : 
   - ValueChange{ property: 'salary', left:'10000',  right:'11000' }
   - ListChange{ property: 'subordinates', elementChanges:1 }
-* changes on Employee/Sam : 
+* changes in Employee/Sam : 
   - NewObject{ new object: Employee/Sam }
   - InitialValueChange{ property: 'name', left:'',  right:'Sam' }
   - InitialValueChange{ property: 'salary', left:'',  right:'2000' }
   - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
 commit 1.00
-* changes on Employee/Frodo : 
+* changes in Employee/Frodo : 
   - NewObject{ new object: Employee/Frodo }
   - InitialValueChange{ property: 'name', left:'',  right:'Frodo' }
   - InitialValueChange{ property: 'salary', left:'',  right:'10000' }

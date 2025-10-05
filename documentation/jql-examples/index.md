@@ -277,7 +277,7 @@ the query result:
 ```text
 Changes:
 Commit 2.00 done by author at 16 Mar 2021, 22:04:09 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'primaryAddress.city' changed: 'London' -> 'Paris'
   - 'salary' changed: '1000' -> '1200'
 Commit 1.00 done by author at 16 Mar 2021, 22:04:09 :
@@ -382,7 +382,7 @@ the query result:
 ```text
 Changes:
 Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '30' -> '31'
   - 'salary' changed: '1000' -> '1200'
 Commit 1.00 done by author at 16 Mar 2021, 22:04:10 :
@@ -441,25 +441,25 @@ the query result:
 query for ValueObject changes by owning Entity instance Id
 Changes:
 Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'primaryAddress.city' changed: 'London' -> 'Paris'
 Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'primaryAddress.city' = 'London'
 
 query for ValueObject changes by owning Entity class
 Changes:
 Commit 5.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/lucy :
+* changes in Employee/lucy :
   - 'primaryAddress.city' changed: 'New York' -> 'Washington'
 Commit 4.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/lucy :
+* changes in Employee/lucy :
   - 'primaryAddress.city' = 'New York'
 Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'primaryAddress.city' changed: 'London' -> 'Paris'
 Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'primaryAddress.city' = 'London'
 ```
 
@@ -498,16 +498,16 @@ the query result:
 ```text
 Changes:
 Commit 4.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on org.javers.core.model.SnapshotEntity/2 :
+* changes in org.javers.core.model.SnapshotEntity/2 :
   - 'valueObjectRef.city' changed: 'Rome' -> 'Palma'
 Commit 3.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on org.javers.core.model.SnapshotEntity/2 :
+* changes in org.javers.core.model.SnapshotEntity/2 :
   - 'valueObjectRef.city' = 'Rome'
 Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on org.javers.core.model.DummyUserDetails/1 :
+* changes in org.javers.core.model.DummyUserDetails/1 :
   - 'dummyAddress.city' changed: 'London' -> 'Paris'
 Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on org.javers.core.model.DummyUserDetails/1 :
+* changes in org.javers.core.model.DummyUserDetails/1 :
   - 'dummyAddress.city' = 'London'
 ```
 
@@ -544,14 +544,14 @@ the query result:
 ```text
 Changes:
 Commit 4.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on org.javers.core.model.DummyUserDetails/1 :
+* changes in org.javers.core.model.DummyUserDetails/1 :
   - 'someValue' changed: 'old' -> 'new'
 Commit 3.00 done by author at 16 Mar 2021, 22:04:10 :
 * new object: org.javers.core.model.DummyUserDetails/1
   - 'id' = '1'
   - 'someValue' = 'old'
 Commit 2.00 done by author at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '30' -> '31'
 Commit 1.00 done by author at 16 Mar 2021, 22:04:10 :
 * new object: Employee/bob
@@ -607,13 +607,13 @@ the query result:
 ```text
 Changes:
 Commit 3.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'salary' changed: '1100' -> '1200'
 Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'salary' changed: '1000' -> '1100'
 Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'salary' = '1000'
 ```
 
@@ -693,11 +693,11 @@ Snapshot{commit:9.00, id:Employee/Bob, version:9, state:{age:29, name:Bob, posit
 
 Changes:
 Commit 10.00 done by author at 15 Mar 2021, 22:51:16 :
-* changes on Employee/Bob :
+* changes in Employee/Bob :
   - 'age' changed: '29' -> '30'
   - 'salary' changed: '18000' -> '19000'
 Commit 9.00 done by author at 15 Mar 2021, 22:51:16 :
-* changes on Employee/Bob :
+* changes in Employee/Bob :
   - 'age' changed: '28' -> '29'
   - 'salary' changed: '17000' -> '18000'
 ```
@@ -812,7 +812,7 @@ output:
 ```text
 Changes:
 Commit 2.00 done by me at 16 Mar 2021, 22:04:10 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '20' -> '30'
   - 'salary' changed: '2000' -> '3000'
 Commit 1.00 done by me at 16 Mar 2021, 22:04:10 :
@@ -861,11 +861,11 @@ the query result:
 ```text
 Changes:
 Commit 4.00 done by Pam at 21 Mar 2021, 19:36:50 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '31' -> '32'
   - 'salary' changed: '1100' -> '1200'
 Commit 2.00 done by Pam at 21 Mar 2021, 19:36:50 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '29' -> '30'
   - 'salary' changed: '900' -> '1000'
 ```
@@ -914,7 +914,7 @@ the query result:
 ```text
 Changes:
 Commit 2.00 done by author at 04 Apr 2021, 20:36:53 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'position' changed: 'Assistant' -> 'Specialist'
   - 'salary' changed: '900' -> '1600'
 ```
@@ -971,13 +971,13 @@ committing bob on 2019-01-01
 committing bob on 2020-01-01
 Changes:
 Commit 4.00 done by author at 01 Jan 2018, 00:00:00 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '22' -> '23'
 Commit 3.00 done by author at 01 Jan 2017, 00:00:00 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '21' -> '22'
 Commit 2.00 done by author at 01 Jan 2016, 00:00:00 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '20' -> '21'
 ```
 
@@ -1020,7 +1020,7 @@ the query result:
 ```text
 Changes:
 Commit 4.00 done by author at 04 Apr 2021, 20:40:01 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '21' -> '22'
 ```
 
@@ -1064,7 +1064,7 @@ the query result:
 ```text
 Changes:
 Commit 8.00 done by author at 04 Apr 2021, 20:40:28 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '23' -> '24'
 ```
 
@@ -1120,7 +1120,7 @@ the query result:
 ```text
 Changes:
 Commit 2.00 done by author at 02 wrz 2021, 15:19:45 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'age' changed: '30' -> '31'
   - 'primaryAddress.city' changed: 'Paris' -> 'London'
 Commit 1.00 done by author at 02 wrz 2021, 15:19:45 :
@@ -1187,7 +1187,7 @@ the query results:
 with initialChanges:
 Changes:
 Commit 2.00 done by author at 20 Mar 2021, 16:09:28 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'salary' changed: '1000' -> '1200'
 Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
 * new object: Employee/bob
@@ -1198,7 +1198,7 @@ Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
 without initialChanges:
 Changes:
 Commit 2.00 done by author at 20 Mar 2021, 16:09:28 :
-* changes on Employee/bob :
+* changes in Employee/bob :
   - 'salary' changed: '1000' -> '1200'
 Commit 1.00 done by author at 20 Mar 2021, 16:09:28 :
 * new object: Employee/bob
@@ -1290,7 +1290,7 @@ Output:
 ```txt
 Changes:
 Commit 2.00 done by author at 20 Mar 2021, 15:57:13 :
-* changes on Person/1 :
+* changes in Person/1 :
   - 'city' = 'London'
   - 'name' changed: 'Bob' -> 'Uncle Bob'
 Commit 1.00 done by author at 20 Mar 2021, 15:57:13 :
@@ -1370,7 +1370,7 @@ Output:
 ```txt
 Changes:
 Commit 2.00 done by author at 20 Mar 2021, 15:57:56 :
-* changes on org.javers.core.examples.PersonSimple/1 :
+* changes in org.javers.core.examples.PersonSimple/1 :
   - 'name' changed: 'Bob' -> 'Uncle Bob'
 Commit 1.00 done by author at 20 Mar 2021, 15:57:56 :
 * new object: org.javers.core.examples.PersonSimple/1
@@ -1459,16 +1459,16 @@ Output:
 ```text
 Changes:
 Commit 3.00 done by author at 20 Mar 2021, 15:58:48 :
-* changes on Person/1 :
+* changes in Person/1 :
   - 'address.street' changed: 'Green 50' -> 'Green 55'
 Commit 2.00 done by author at 20 Mar 2021, 15:58:48 :
-* changes on Person/1 :
+* changes in Person/1 :
   - 'address.city' = 'London'
   - 'address.email' value 'me@example.com' unset
   - 'address.street' = 'Green 50'
   - 'address.verified' changed: 'false' -> 'true'
 Commit 1.00 done by author at 20 Mar 2021, 15:58:48 :
-* changes on Person/1 :
+* changes in Person/1 :
   - 'address.email' = 'me@example.com'
 ```
 

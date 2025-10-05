@@ -173,7 +173,7 @@ Diff:
 * new object: Employee/Gandalf
   - 'name' = 'Gandalf'
   - 'salary' = '10000'
-* changes on Employee/Frodo :
+* changes in Employee/Frodo :
   - 'age' changed: '40' -> '41'
   - 'boss' = 'Employee/Gandalf'
   - 'position' changed: 'Townsman' -> 'Hero'
@@ -217,7 +217,7 @@ Iterating over the list of Changes **grouped by objects**:
 ```java
 System.out.println("iterating over changes grouped by objects");
 diff.groupByObject().forEach(byObject -> {
-    System.out.println("* changes on " +byObject.getGlobalId().value() + " : ");
+    System.out.println("* changes in " +byObject.getGlobalId().value() + " : ");
     byObject.get().forEach(change -> System.out.println("  - " + change));
 });
 ```
@@ -226,16 +226,16 @@ output:
 
 ```
 iterating over changes grouped by objects
-* changes on Employee/Sméagol : 
+* changes in Employee/Sméagol : 
   - NewObject{ new object: Employee/Sméagol }
   - InitialValueChange{ property: 'name', left:'',  right:'Sméagol' }
   - InitialValueChange{ property: 'salary', left:'',  right:'10000' }
   - ReferenceChange{ property: 'boss', left:'',  right:'Employee/Frodo' }
-* changes on Employee/Gandalf : 
+* changes in Employee/Gandalf : 
   - NewObject{ new object: Employee/Gandalf }
   - InitialValueChange{ property: 'name', left:'',  right:'Gandalf' }
   - InitialValueChange{ property: 'salary', left:'',  right:'10000' }
-* changes on Employee/Frodo : 
+* changes in Employee/Frodo : 
   - ValueChange{ property: 'position', left:'Townsman',  right:'Hero' }
   - ValueChange{ property: 'salary', left:'10000',  right:'12000' }
   - ValueChange{ property: 'age', left:'40',  right:'41' }
@@ -352,7 +352,7 @@ Diff:
   - 'boss' = 'Employee/Big Boss'
   - 'name' = 'Hired Second'
   - 'salary' = '10000'
-* changes on Employee/Big Boss :
+* changes in Employee/Big Boss :
   - 'subordinates' collection changes :
      1. 'Employee/Hired One' added
      2. 'Employee/Hired Second' added
@@ -398,7 +398,7 @@ Diff:
   - 'boss' reference 'Employee/Team Lead' unset
   - 'name' value 'To Be Fired' unset
   - 'salary' value '10000' unset
-* changes on Employee/Team Lead :
+* changes in Employee/Team Lead :
   - 'subordinates' collection changes :
      1. 'Employee/To Be Fired' removed
 ```
@@ -439,7 +439,7 @@ output:
 
 ```text
 Diff:
-* changes on Employee/Great Developer :
+* changes in Employee/Great Developer :
   - 'salary' changed: '10000' -> '20000'
 ```
 
@@ -480,12 +480,12 @@ output:
 
 ```text
 Diff:
-* changes on Employee/Manager One :
+* changes in Employee/Manager One :
   - 'subordinates' collection changes :
      0. 'Employee/Great Developer' removed
-* changes on Employee/Great Developer :
+* changes in Employee/Great Developer :
   - 'boss' reference changed: 'Employee/Manager One' -> 'Employee/Manager Second'
-* changes on Employee/Manager Second :
+* changes in Employee/Manager Second :
   - 'subordinates' collection changes :
      0. 'Employee/Great Developer' added
 ```
@@ -558,7 +558,7 @@ The output of running this program is:
 
 ```
 Diff:
-* changes on org.javers.core.examples.model.Address/ :
+* changes in org.javers.core.examples.model.Address/ :
   - 'street' changed: '5th Avenue' -> '6th Avenue'
 ```
 
@@ -633,7 +633,7 @@ The output:
 
 ```text
 Diff:
-* changes on org.javers.core.examples.model.Person/tommy :
+* changes in org.javers.core.examples.model.Person/tommy :
   - 'name' changed: 'Tommy Smart' -> 'Tommy C. Smart'
 ```
 
@@ -872,7 +872,7 @@ output:
 first diff: Diff:
 
 second diff: Diff:
-* changes on org.javers.core.examples.CustomPropertyComparatorExample$Entity/ :
+* changes in org.javers.core.examples.CustomPropertyComparatorExample$Entity/ :
   - 'value' collection changes :
     . 'a' removed
     . 'b' added
