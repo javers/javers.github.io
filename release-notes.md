@@ -5,6 +5,30 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### <font color="red">7.10.0</font>
+released on 2025-12-28
+* [1465](https://github.com/javers/javers/issues/1465)
+  **Added support for Spring Boot 4.0.**<br/>
+  Aligned all dependency versions with Spring Boot 4.0.0.
+
+```groovy
+springVersion           =7.0.1
+springBootVersion       =4.0.0
+springDataCommonsVersion=4.0.0
+springDataMongoVersion  =5.0.0
+springDataRedisVersion  =4.0.0
+springSecurityVersion   =7.0.0
+mongoDbDriverVersion    =5.6.1
+hibernateVersion        =7.1.8.Final
+guavaVersion            =32.0.1-jre
+gsonVersion             =2.13.2
+classgraphVersion       =4.8.184
+aspectjweaverVersion    =1.9.25
+```
+
+**The last version of Javers that is compatible with Spring Boot 3 is 7.9.0.**
+  
 ### 7.9.0
 released on 2025-10-4
 * [1372](https://github.com/javers/javers/issues/1372)
