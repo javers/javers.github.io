@@ -25,11 +25,12 @@ If you are using an SQL database:
 compile 'org.javers:javers-spring-boot-starter-sql:{{site.javers_current_version}}'
 ```
 
-**Please note** that Javers 7.x is compatible with Spring Boot 3,
+**Please note** that Javers 7.10+ is compatible with Spring Boot 4,
 so all Javers Spring integration modules require **Java 17**.
 
-These starters provide default configuration and create the Javers instance as a Spring bean.
-You can start using Javers with almost no configuration.  
+These starters integrate Javers seamlessly with your existing Spring Boot configuration.
+They provide sensible defaults and automatically create the Javers instance as a Spring bean.
+You can start using Javers immediately with little to no additional configuration.
 
 Read more about [Javers’ Spring Boot integration](/documentation/spring-boot-integration/)
 and [Javers’ Spring integration](/documentation/spring-integration/).
