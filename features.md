@@ -35,21 +35,23 @@ fields and relationships. JaVers stores these updates as immutable Snapshots
 in dedicated tables or collections within your application database.
 This gives you full access to historical data for auditing, debugging, and compliance
 
-### Database-Independent Audit Model
+<h3 id="database-Independent-Audit-Model">Database-Independent Audit Model</h3>
 
 JaVers offers a database-agnostic approach to data auditing
 based on the [`JaversRepository`]({{ site.github_core_main_url }}org/javers/repository/api/JaversRepository.java) abstraction.
 
-*   **JSON-Based Snapshots:** Unlike table-oriented tools (like Envers), JaVers uses an **object-oriented approach**, storing snapshots as JSON documents in a unified structure.
-*   **Decoupled Persistence:** Because it relies on JSON serialization, audit data is decoupled from live data [7]. This allows you to store audit logs in a different database than the application data if desired (e.g., application in SQL, JaVers in MongoDB).
 *   **Supported Databases:** JaVers supports MongoDB and the following SQL databases: Oracle, PostgreSQL, Microsoft SQL Server, MySQL/MariaDB, and H2. 
+*   **JSON-Based Snapshots:** Unlike table-oriented tools (like Envers), JaVers uses an **object-oriented approach** and stores object Snapshots as JSON documents in a unified structure.
+*   **Decoupled Persistence:** Because it relies on JSON serialization, audit data is decoupled from live data [7]. This allows you to store audit logs in a different database than the application data if desired (e.g., application in SQL, JaVers in MongoDB).
+*   **Custom JSON serialization:** JaVers has a well-designed and customizable JSON serialization and deserialization module, based on
+      [`GSON`](https://code.google.com/p/google-gson/) and Java reflection, see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization).
 
 See [Repository Configuration](/documentation/repository-configuration) documentation.
 
 If you are using another database, for example Cassandra, you are encouraged to implement
 the `JaversRepository` interface and contribute it to Javers project.
 
-### Advanced Data Modeling
+<h3 id="Advanced-Domain-Modeling">Advanced Domain Modeling</h3>
 
 * **Domain Model Mapping:** JaVers identifies objects based on Domain-Driven Design (DDD) principles, distinguishing between **Entities** (with unique IDs) and **Value Objects** (identified by their path from a parent entity).
 * **Flexible Mapping Configuration**: JaVers provides multiple ways to configure how domain objects are audited (mapped to Snapshots) and compared. You can use annotations, fluent API configuration, or default conventions to fine-tune auditing behavior without modifying your persistence model.
@@ -59,7 +61,8 @@ the `JaversRepository` interface and contribute it to Javers project.
 
 See [Domain Configuration](/documentation/domain-configuration) documentation.
 
-### JaVers Query Language (JQL)
+<h3 id="jql">JaVers Query Language (JQL)</h3>
+
 With JaVers, you can easily browse the change history
 of your domain objects, seeing when a change occurred,
 who made it, and the values before and after.
@@ -72,7 +75,8 @@ who made it, and the values before and after.
 
 See the [JaVers Query Language](/documentation/jql-examples) documentation.
 
-### Excellent Spring and Spring Boot Integration**
+<h3 id="spring-integration">Excellent Spring and Spring Boot Integration</h3>
+
 *   **Spring Boot Starters**: JaVers offers Spring Boot starters for SQL and MongoDB with sensible default configurations. These starters let you integrate JaVers into your Spring Data applications with minimal manual setup.
 *   **Auto-Audit Aspects**: For Spring Data repositories, you can enable full data auditing with a single annotation: `@JaversSpringDataAuditable`. JaVers will then automatically track changes to objects whenever they are created, updated, or deleted. For non–Spring Data repositories, you can use the method-level `@JaversAuditable` annotation to capture changes automatically.
 *   **Transaction Management**: It integrates with Spring's transaction management, ensuring that audit logs are committed or rolled back alongside application data.
@@ -112,12 +116,6 @@ and [Spring Boot Integration](/documentation/spring-boot-integration) documentat
   methods to browse detailed history of a given class, object or property.
 
 * Take a look at [repository examples](/documentation/repository-examples).
-
-<h3 id="json-serialization">JSON serialization</h3>
-JaVers has a well-designed and customizable JSON serialization and deserialization module, based on
-[`GSON`](https://code.google.com/p/google-gson/) and Java reflection.
-Your data changes (object Snapshots) are stored in a database as JSON,
-with minimal mapping configuration (see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization)).
 
 <h2 id="object-diff">Object diff</h2>
 JaVers object diff is the easiest way to deeply compare two object graphs.
