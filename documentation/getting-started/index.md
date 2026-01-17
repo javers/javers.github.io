@@ -71,14 +71,14 @@ and [Javers’ Spring integration](/documentation/spring-integration/).
 
 - [[JaVers Blog] JaVers vs Envers Comparison](https://javers.org/blog/2017/12/javers-vs-envers-comparision.html)
     <br/>
-    **Teaser**: If you are debating between JaVers and Hibernate Envers, this article is essential reading.
+    **Teaser**: If you are debating between **JaVers** and Hibernate **Envers**, this article is essential reading.
     It provides a detailed technical breakdown of the object-oriented approach used by JaVers versus the table-oriented model of Envers, highlighting the benefits of technology independence.
 
 
 - [JaVers: Code Audit Logs Easily in Java](https://betterprojectsfaster.com/learn/talks-ljc-medium-talk-2020-javers-audit-log/#getting-started)
   <br/>
   **Teaser**:
-This article provides a comprehensive guide to implementing data audit logs using JaVers
+This article provides a comprehensive guide to implementing **Data Audit** trail using JaVers
 and Spring Boot. It describes the JaVers table structure for SQL repositories,
 specifically detailing how the `JV_COMMIT` table stores metadata like the author and commit date,
 while the `JV_SNAPSHOT` table stores the object's state as JSON.
