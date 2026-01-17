@@ -161,10 +161,10 @@ javers.commit("user", robert);
 
 See more [audit examples](/documentation/repository-examples/).
 
-<h2 id="getting-started-auto-audit">Auto audit aspects</h2>
+<h2 id="getting-started-auto-audit">Auto-audit aspects</h2>
 
-In order to automatically audit objects saved to Spring Data repositories
-use the `@JaversSpringDataAuditable` annotation:
+To automatically audit objects saved to your repositories, use the JaVers auto-audit aspect annotations.
+For example, apply `@JaversSpringDataAuditable` to Spring Data repositories:
 
 ```java
 @JaversSpringDataAuditable
@@ -172,4 +172,4 @@ public interface PersonRepository extends CrudRepository<Person, String> {
 }
 ```
 
-Read more about the [Auto audit aspects](/documentation/spring-integration/#auto-audit-aspect).
+Read more about the [Auto-audit aspects](/documentation/spring-integration/#auto-audit-aspect).
