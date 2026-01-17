@@ -6,7 +6,7 @@ submenu: features
 sidebar-url: features-sidebar.html
 ---
 
-**JaVers: The Complete Solution for Data Auditing and Compliance**
+**The Complete Solution for Data Auditing and Compliance**
 <br/>
 In today’s data-driven world, businesses need to know exactly what
 changed, when, and by whom. JaVers makes auditing your
