@@ -6,13 +6,19 @@ submenu: features
 sidebar-url: features-sidebar.html
 ---
 
-JaVers is designed as a framework for **auditing changes** in your object-oriented data.
+**JaVers: The Complete Solution for Data Auditing and Compliance**
+<br/>
+In today’s data-driven world, businesses need to know exactly what
+changed, when, and by whom. JaVers makes auditing your
+data effortless—tracking every change at the object level,
+whether you use **SQL** or **NoSQL** databases.
+This is especially critical in **regulated industries** like finance,
+healthcare, and legal sectors, where **compliance and accountability**
+aren’t optional—they’re essential. JaVers helps you maintain a clear,
+reliable history of your data, so you can make confident decisions,
+satisfy audits, and stay compliant.
 
-With JaVers you can easily commit changes performed on your object graph to a specialized repository
-(called JaversRepository).
-Then you can browse the detailed change history of a given object in two forms — diffs and snapshots.
-
-The data auditing framework is built on top of the **object diff engine**,
+JaVers is built on top of the **Object Diff** engine,
 which could be used as a standalone object diff tool for ad-hoc
 comparison of two object graphs.
 
@@ -20,33 +26,61 @@ All JaVers functions are exposed via a single Facade, the
 [Javers]({{ site.github_core_main_url }}org/javers/core/Javers.java) instance.
 As you can see, JaVers API is concise and simple.
 
-<h2 id="object-diff">Object diff</h2>
-JaVers object diff is the easiest way to deeply compare two object graphs.
+The main features of JaVers are described below.
 
-**How to use it?**
+<h2 id="data-audit">Data Audit</h2>
 
-* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
-  use [`javers.compare()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
-  to compare two object graphs.
+JaVers Data Audit lets you track every change to your domain objects. Using `javers.commit()`, you capture updates to object
+fields and relationships. JaVers stores these updates as immutable Snapshots
+in dedicated tables or collections within your application database.
+This gives you full access to historical data for auditing, debugging, and compliance
 
-* As the result, you get list of atomic [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
-  There are several types of Changes:
-  [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java),
-  [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java),
-  [`ListChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ListChange.java) and so on (see the inheritance hierarchy of
-  [`Change`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java)
-  class to get the complete list).
+### Database-Independent Audit Model
 
-* Take a look at [diff examples](/documentation/diff-examples).
+JaVers offers a database-agnostic approach to data auditing
+based on the [`JaversRepository`]({{ site.github_core_main_url }}org/javers/repository/api/JaversRepository.java) abstraction.
 
-<h2 id="javers-repository">JaVers Repository</h2>
-[`JaversRepository`]({{ site.github_core_main_url }}org/javers/repository/api/JaversRepository.java)
-is the central part of our data auditing engine.
+*   **JSON-Based Snapshots:** Unlike table-oriented tools (like Envers), JaVers uses an **object-oriented approach**, storing snapshots as JSON documents in a unified structure.
+*   **Decoupled Persistence:** Because it relies on JSON serialization, audit data is decoupled from live data [7]. This allows you to store audit logs in a different database than the application data if desired (e.g., application in SQL, JaVers in MongoDB).
+*   **Supported Databases:** JaVers supports MongoDB and the following SQL databases: Oracle, PostgreSQL, Microsoft SQL Server, MySQL/MariaDB, and H2. 
 
-It tracks every change made on your data (both values and relations) so you can easily identify when the change was made,
-who made it and what was the value before and after.
+See [Repository Configuration](/documentation/repository-configuration) documentation.
 
-**How to use it?**
+If you are using another database, for example Cassandra, you are encouraged to implement
+the `JaversRepository` interface and contribute it to Javers project.
+
+### Advanced Data Modeling
+
+* **Domain Model Mapping:** JaVers identifies objects based on Domain-Driven Design (DDD) principles, distinguishing between **Entities** (with unique IDs) and **Value Objects** (identified by their path from a parent entity).
+* **Flexible Mapping Configuration**: JaVers provides multiple ways to configure how domain objects are audited (mapped to Snapshots) and compared. You can use annotations, fluent API configuration, or default conventions to fine-tune auditing behavior without modifying your persistence model.
+* **Selective Property Auditing**: With mapping annotations such as `@DiffIgnore` and `@ShallowReference`, you can precisely control which fields are audited and how object references are handled.
+  This allows you to focus the audit on important business changes while ignoring technical data noise.
+* **Type Name Customization**: By default, JaVers identifies types using their fully qualified Java class names. For better stability and alignment with your domain’s ubiquitous language, you can explicitly define type names using the @TypeName annotation. This decouples audit data from class and package names, enabling safe refactoring without breaking historical data.
+
+See [Domain Configuration](/documentation/domain-configuration) documentation.
+
+### JaVers Query Language (JQL)
+With JaVers, you can easily browse the change history
+of your domain objects, seeing when a change occurred,
+who made it, and the values before and after.
+
+*   **Powerful Filtering:** JaVers provides its own query language (JQL) to browse data history.
+*   **Three View Modes:** Results can be retrieved as **Snapshots** (dehydrated data), **Changes** (atomic differences),
+*   or **Shadows** (historical objects restored to their domain state).
+*   **Shadow Scopes:** When querying historical data, JaVers can reconstruct object graphs using different scopes: **Shallow**, **Child-value-object**, **Commit-deep**, and **Deep+**.
+*   **Rich Filters:** Developers can filter history by instance ID, class, property, commit author, or specific dates.
+
+See the [JaVers Query Language](/documentation/jql-examples) documentation.
+
+### Excellent Spring and Spring Boot Integration**
+*   **Spring Boot Starters**: JaVers offers Spring Boot starters for SQL and MongoDB with sensible default configurations. These starters let you integrate JaVers into your Spring Data applications with minimal manual setup.
+*   **Auto-Audit Aspects**: For Spring Data repositories, you can enable full data auditing with a single annotation: `@JaversSpringDataAuditable`. JaVers will then automatically track changes to objects whenever they are created, updated, or deleted. For non–Spring Data repositories, you can use the method-level `@JaversAuditable` annotation to capture changes automatically.
+*   **Transaction Management**: It integrates with Spring's transaction management, ensuring that audit logs are committed or rolled back alongside application data.
+
+See the [Spring Integration](/documentation/spring-integration)
+and [Spring Boot Integration](/documentation/spring-boot-integration) documentation.
+
+**How to use JaVers Data Audit?**
 
 * Configure and build a
   JaVers instance (see [configuration](/documentation/domain-configuration)).
@@ -68,7 +102,7 @@ who made it and what was the value before and after.
   and take advantage of the [auto-audit aspect](/documentation/spring-integration#auto-audit-aspect).
 
 * Once your domain objects are being managed by JaVers, you can query
-  JaversRepository using powerful [JQL](/documentation/jql-examples) &mdash; JaVers Query Language.
+  [`JaversRepository`]({{ site.github_core_main_url }}org/javers/repository/api/JaversRepository.java) using powerful [JQL](/documentation/jql-examples) &mdash; JaVers Query Language.
   
 * JaVers provides [three views](/documentation/jql-examples/#data-history-views) on objects history:
   [Changes](/documentation/jql-examples/#query-for-changes),
@@ -78,19 +112,28 @@ who made it and what was the value before and after.
   methods to browse detailed history of a given class, object or property.
 
 * Take a look at [repository examples](/documentation/repository-examples).
-  
-[`JaversRepository`]({{ site.github_core_main_url }}org/javers/repository/api/JaversRepository.java) is designed to be easily implemented for any kind of database.
-Javers provides Repository implementations for **MongoDB**, **SQL**, and **Redis**.
-The SQL Repository supports the following dialects: 
-H2, PostgreSQL, MySQL/MariaDB, Oracle, and Microsoft SQL Server.<br/>
-See [repository configuration](/documentation/repository-configuration).
 
-If you are using another database, for example Cassandra, you are encouraged to implement
-the JaversRepository interface and contribute it to Javers project.
-
-<h2 id="json-serialization">JSON serialization</h2>
+<h3 id="json-serialization">JSON serialization</h3>
 JaVers has a well-designed and customizable JSON serialization and deserialization module, based on
 [`GSON`](https://code.google.com/p/google-gson/) and Java reflection.
-Your data are split into chunks (atomic changes) and persisted in a database as JSON
-with minimal mapping configuration effort
-(see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization)).
+Your data changes (object Snapshots) are stored in a database as JSON,
+with minimal mapping configuration (see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization)).
+
+<h2 id="object-diff">Object diff</h2>
+JaVers object diff is the easiest way to deeply compare two object graphs.
+
+**How to use it?**
+
+* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
+  use [`javers.compare()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
+  to compare two object graphs.
+
+* As the result, you get list of atomic [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
+  There are several types of Changes:
+  [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java),
+  [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java),
+  [`ListChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ListChange.java) and so on (see the inheritance hierarchy of
+  [`Change`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java)
+  class to get the complete list).
+
+* Take a look at [diff examples](/documentation/diff-examples).
