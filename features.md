@@ -8,11 +8,13 @@ sidebar-url: features-sidebar.html
 
 **The Complete Solution for Data Auditing and Compliance**
 <br/>
-In today’s data-driven world, businesses need to know exactly what
-changed, when, and by whom. JaVers makes auditing your
-data effortless—tracking every change at the object level,
+In today’s data-driven world, data audit is more important than ever.
+Businesses need to know exactly what changed in their data,
+when the change occurred, and who made it. JaVers makes auditing your
+data effortless — tracking every change at the object level,
 whether you use **SQL** or **NoSQL** databases.
-This is especially critical in **regulated industries** like finance,
+
+Data audit is especially critical in **regulated industries** like finance,
 healthcare, and legal sectors, where **compliance and accountability**
 aren’t optional—they’re essential. JaVers helps you maintain a clear,
 reliable history of your data, so you can make confident decisions,
@@ -75,7 +77,20 @@ who made it, and the values before and after.
 
 See the [JaVers Query Language](/documentation/jql-examples) documentation.
 
-<h3 id="spring-integration">Excellent Spring and Spring Boot Integration</h3>
+<h3 id="Customizable-Diff">Customizable Diff Logic</h3>
+JaVers lets you customize how changes in your domain data are detected
+when the default comparison logic isn’t sufficient.
+
+*   **Value Comparators:** Override default equality for specific Value types.
+
+*   **Property Comparators:** Implement your own comparison logic for complex structures.
+
+*   **List Comparing Algorithm:** Select the algorithm that fits your collection semantics.
+
+See the [Diff Configuration](/documentation/diff-configurations) documentation.
+
+
+<h3 id="spring-integration">Spring and Spring Boot Integration</h3>
 
 *   **Spring Boot Starters**: JaVers offers Spring Boot starters for SQL and MongoDB with sensible default configurations. These starters let you integrate JaVers into your Spring Data applications with minimal manual setup.
 *   **Auto-Audit Aspects**: For Spring Data repositories, you can enable full data auditing with a single annotation: `@JaversSpringDataAuditable`. JaVers will then automatically track changes to objects whenever they are created, updated, or deleted. For non–Spring Data repositories, you can use the method-level `@JaversAuditable` annotation to capture changes automatically.
@@ -84,7 +99,7 @@ See the [JaVers Query Language](/documentation/jql-examples) documentation.
 See the [Spring Integration](/documentation/spring-integration)
 and [Spring Boot Integration](/documentation/spring-boot-integration) documentation.
 
-**How to use JaVers Data Audit?**
+<h3 id="How-to-use-JaVers-Data-Audit">How to use JaVers Data Audit</h3>
 
 * Configure and build a
   JaVers instance (see [configuration](/documentation/domain-configuration)).
@@ -92,7 +107,7 @@ and [Spring Boot Integration](/documentation/spring-boot-integration) documentat
 * Integrate JaVers with your system by applying
   the [`javers.commit()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
   function in every place where
-  important data (domain objects) are being created and modified by application users.
+  important data (domain objects) are being created and modified.
 
 * You don’t need to commit every object. JaVers navigates through the object graph, starting from
   the object passed to

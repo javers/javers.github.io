@@ -97,6 +97,19 @@
 </section>
 
 <section>
+    <a {% if currentSubPage == 'diff-configuration' %}class='active'{% endif %}
+    href="/documentation/diff-configuration">Configuration &mdash; Diff</a>
+    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'diff-configuration' %} hidden {% endif %}">
+        <li><a href="#list-algorithms">List comparing algorithms</a></li>
+        <li><a href="#simple-vs-levenshtein">&nbsp; &nbsp;Simple vs Levenshtein algorithm</a></li>
+        <li><a href="#more-about-levenshtein">&nbsp; &nbsp;More about Levenshtein distance</a></li>
+        <li><a href="#custom-comparators">Custom comparators</a></li>
+        <li><a href="#custom-value-comparators">&nbsp; &nbsp;Custom Value comparators</a></li>
+        <li><a href="#custom-property-comparators">&nbsp; &nbsp;Custom Property comparators</a></li>
+    </ul>
+</section>
+
+<section>
     <a {% if currentSubPage == 'domain-configuration' %}class='active'{% endif %}
        href="/documentation/domain-configuration">Configuration &mdash; Domain</a>
     <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'domain-configuration' %} hidden {% endif %}">
@@ -126,19 +139,6 @@
         <li><a href="#custom-json-serialization">Custom JSON serialization</a>
         <li><a href="#json-type-adapters">&nbsp; &nbsp;JSON TypeAdapters</a>
         <li><a href="#json-type-adapter-example">&nbsp; &nbsp;JSON TypeAdapter Example</a>
-    </ul>
-</section>
-
-<section>
-    <a {% if currentSubPage == 'diff-configuration' %}class='active'{% endif %}
-    href="/documentation/diff-configuration">Configuration &mdash; Diff</a>
-    <ul class="nav nav-stacked list-unstyled {% if page.submenu != 'diff-configuration' %} hidden {% endif %}">
-        <li><a href="#list-algorithms">List comparing algorithms</a></li>
-        <li><a href="#simple-vs-levenshtein">&nbsp; &nbsp;Simple vs Levenshtein algorithm</a></li>
-        <li><a href="#more-about-levenshtein">&nbsp; &nbsp;More about Levenshtein distance</a></li>
-        <li><a href="#custom-comparators">Custom comparators</a></li>
-        <li><a href="#custom-value-comparators">&nbsp; &nbsp;Custom Value comparators</a></li>
-        <li><a href="#custom-property-comparators">&nbsp; &nbsp;Custom Property comparators</a></li>
     </ul>
 </section>
 
