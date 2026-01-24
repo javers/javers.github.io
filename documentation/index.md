@@ -36,8 +36,8 @@ This is the niche that JaVers fills. In JaVers, *version* and *change* are **fir
 * JaVers is meant to keep its data versioning records (snapshots) in the application’s primary database, along with main data.
 * We use some basic notions following Eric Evans DDD terminology like Entity or Value Objects, pretty much how JPA does. We believe that this is the right way to describe data.
 * Javers core modules require **Java 11**.
-* Javers Spring integration modules **require Java 17** and are compatible with Spring Boot 3.
-* The last version of Javers that is fully compatible with Java 8 and Spring Boot 2 is **6.14.0**.
+* Javers Spring integration modules **require Java 17** and are compatible with Spring Boot 4.
+* The last version of Javers that is compatible with Spring Boot 3 is **7.9.0**.
  
 <h2 id="licence">Licence</h2>
 JaVers is available under open source
