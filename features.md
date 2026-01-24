@@ -87,7 +87,7 @@ when the default comparison logic isn’t sufficient.
 
 *   **List Comparing Algorithm:** Select the algorithm that fits your collection semantics.
 
-See the [Diff Configuration](/documentation/diff-configurations) documentation.
+See the [Diff Configuration](/documentation/diff-configuration) documentation.
 
 
 <h3 id="spring-integration">Spring and Spring Boot Integration</h3>
