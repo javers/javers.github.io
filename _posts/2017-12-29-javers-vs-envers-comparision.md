@@ -2,7 +2,7 @@
 layout: page
 category: Blog
 image: /blog/javers-vs-envers/competition.png
-§title: JaVers vs Envers Comparision
+§title: JaVers vs Envers Comparison
 author: Bartosz Walacik
 authorTwitter: BartoszWalacik
 submenu: blog

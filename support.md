@@ -12,11 +12,15 @@ We strive to make it robust and easy to use.
 
 1\. [Stackoverflow](https://stackoverflow.com/questions/tagged/javers) &mdash; 
 great place for JaVers users to ask for help and to share knowledge with the community.
-Most answers are given by the JaVers core team. 
  
 2\. [Discussions](https://github.com/javers/javers/discussions) &mdash;
 conversations about JaVers internals and design.
 For our contributors who work directly on enhancing JaVers itself. 
+
+2\. [Issues](https://github.com/javers/javers/discussions) &mdash;
+you can report a Bug or a Feature Request to our Github Issues.
+Questions should be asked at stackoverflow.com.
+Before creating a new issue, please read our [Contributing Guidelines](https://github.com/javers/javers/tree/master?tab=contributing-ov-file#how-to-contribute).
 
 3\. [Twitter](https://twitter.com/javers_org) &mdash; announcements about new JaVers releases. 
 
