@@ -5,7 +5,8 @@ category: page_center
 submenu: Contact
 ---
 
-Whether you are a long-time user or just getting started with data auditing, we want to hear from you. Javers is evolving toward an **Open Core** model and will be offering **Professional Support** soon. Your insights are more valuable than ever.
+From individual developers to enterprise teams: we want to hear from you. Javers is entering a new chapter, evolving into an **Open Core** model with **Professional Support**
+services coming soon. Your insights help us ensure this transition serves our users' highest needs
 
 ### 💡 Feedback & Community
 Javers was built for the community, and it stays that way. Have thoughts on the roadmap, a feature request, or a success story to share?
