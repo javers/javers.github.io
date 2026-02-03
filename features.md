@@ -122,13 +122,12 @@ and [Spring Boot Integration](/documentation/spring-boot-integration) documentat
 
 <h3 id="How-to-use-JaVers-Data-Audit">How to use Data Audit</h3>
 
-* Configure and build a
-  JaVers instance (see [configuration](/documentation/domain-configuration)).
+* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)).
 
-* Integrate JaVers with your system by applying
+* Integrate JaVers with your application by applying
   the [`javers.commit()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
-  function in every place where
-  important data (domain objects) are being created and modified.
+  method in every place where
+  important data (domain objects) are being created or modified.
 
 * You don’t need to commit every object. JaVers navigates through the object graph, starting from
   the object passed to
