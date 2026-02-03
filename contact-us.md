@@ -8,6 +8,8 @@ submenu: Contact
 From individual developers to enterprise teams: we want to hear from you. Javers is entering a new chapter, evolving into an **Open Core** model with **Professional Support**
 services coming soon. Your insights help us ensure this transition serves our users' highest needs
 
+---
+
 ### 💡 Feedback & Community
 Javers was built for the community, and it stays that way. Have thoughts on the roadmap, a feature request, or a success story to share?
 * **Email us:** [contact@javers.org](mailto:contact@javers.org)
@@ -23,9 +25,6 @@ We are currently accepting inquiries for:
 * **Dedicated Support:** Priority response times and SLA-backed troubleshooting for critical systems.
 * **Architecture Reviews:** Custom consulting to optimize your Javers integration, performance tuning, and data modeling.
 * **Enterprise Features:** Early access to paid premium extensions designed for large-scale deployments.
-
-> **Working on a mission-critical project?**
-> Let’s ensure your implementation is robust, performant, and future-proof.
 
 ---
 
