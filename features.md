@@ -20,7 +20,7 @@ aren’t optional—they’re essential. JaVers helps you maintain a clear,
 reliable history of your data, so you can make confident decisions,
 satisfy audits, and stay compliant.
 
-JaVers is built on top of the **Object Diff** engine,
+JaVers **Data Audit** is built on top of the **Object Diff** engine,
 which could be used as a standalone object diff tool for ad-hoc
 comparison of two object graphs.
 
@@ -29,6 +29,41 @@ All JaVers functions are exposed via a single Facade, the
 As you can see, JaVers API is concise and simple.
 
 The main features of JaVers are described below.
+
+<h2 id="object-diff">Object diff</h2>
+
+JaVers provides a powerful object-diffing engine that identifies deep changes between two object graphs with zero configuration.
+
+* **DDD-Powered Domain Mapping:**
+  Align the diff engine with your Core Domain by categorizing classes as Entities (identity-based), Value Objects (state-based), or Values.
+* **Recursive Deep Comparison:**
+  Automatically performs a deep-scan of nested object graphs, collections, and arrays, identifying changes in complex structures. JaVers handles circular references and bidirectional relationships within the graph.
+* **Zero-Config Introspection:**
+  Works out of the box with standard POJOs, Maps, and Lists using smart defaults to understand your data model. JaVers automatically interprets JPA annotations to infer your domain mapping, requiring no extra setup for existing Hibernate or JPA projects.
+* **Rich Diff API:**
+  Provides a powerful `Diff` object to group changes by object, filter by change type, or generate human-readable summaries via the `prettyPrint()` method.
+* **Customizable Comparison Logic**: JaVers allows you to override equality for specific types using Cusom Comparators, and select specific List Comparing Algorithms (like Levenshtein or Simple) to match your collection's specific semantics.
+
+See the documentation for
+[Domain Configuration](/domain-configuration) and
+[Diff Configuration](/documentation/diff-configuration).
+
+
+**How to use it?**
+
+* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
+  use [`javers.compare()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
+  to compare two object graphs.
+
+* As the result, you get list of atomic [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
+  There are several types of Changes:
+  [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java),
+  [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java),
+  [`ListChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ListChange.java) and so on (see the inheritance hierarchy of
+  [`Change`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java)
+  class to get the complete list).
+
+* Take a look at [diff examples](/documentation/diff-examples).
 
 <h2 id="data-audit">Data Audit</h2>
 
@@ -77,19 +112,6 @@ who made it, and the values before and after.
 
 See the [JaVers Query Language](/documentation/jql-examples) documentation.
 
-<h3 id="Customizable-Diff">Customizable Diff Logic</h3>
-JaVers lets you customize how changes in your domain data are detected
-when the default comparison logic isn’t sufficient.
-
-*   **Value Comparators:** Override default equality for specific Value types.
-
-*   **Property Comparators:** Implement your own comparison logic for complex structures.
-
-*   **List Comparing Algorithm:** Select the algorithm that fits your collection semantics.
-
-See the [Diff Configuration](/documentation/diff-configuration) documentation.
-
-
 <h3 id="spring-integration">Spring and Spring Boot Integration</h3>
 
 *   **Spring Boot Starters**: JaVers offers Spring Boot starters for SQL and MongoDB with sensible default configurations. These starters let you integrate JaVers into your Spring Data applications with minimal manual setup.
@@ -132,21 +154,3 @@ and [Spring Boot Integration](/documentation/spring-boot-integration) documentat
 
 * Take a look at [repository examples](/documentation/repository-examples).
 
-<h2 id="object-diff">Object diff</h2>
-JaVers object diff is the easiest way to deeply compare two object graphs.
-
-**How to use it?**
-
-* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
-  use [`javers.compare()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
-  to compare two object graphs.
-
-* As the result, you get list of atomic [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
-  There are several types of Changes:
-  [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java),
-  [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java),
-  [`ListChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ListChange.java) and so on (see the inheritance hierarchy of
-  [`Change`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java)
-  class to get the complete list).
-
-* Take a look at [diff examples](/documentation/diff-examples).
