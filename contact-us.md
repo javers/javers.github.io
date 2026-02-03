@@ -2,7 +2,6 @@
 layout: page
 title: Contact Us
 category: page_center
-submenu: Contact
 ---
 
 From individual developers to enterprise teams: we want to hear from you. Javers is entering a new chapter, evolving into an **Open Core** model with **Professional Support**
