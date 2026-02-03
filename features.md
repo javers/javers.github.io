@@ -37,7 +37,7 @@ JaVers provides a powerful object-diffing engine that identifies deep changes be
 * **DDD-Powered Domain Mapping:**
   Align the diff engine with your Core Domain by categorizing classes as Entities (identity-based), Value Objects (state-based), or Values.
 * **Recursive Deep Comparison:**
-  Automatically performs a deep-scan of nested object graphs, collections, and arrays, identifying changes in complex structures. JaVers handles circular references and bidirectional relationships within the graph.
+  JaVers performs a deep-scan of nested object graphs, collections, and arrays, identifying changes in complex structures. JaVers handles circular references and bidirectional relationships within the graph.
 * **Zero-Config Introspection:**
   Works out of the box with standard POJOs, Maps, and Lists using smart defaults to understand your data model. JaVers automatically interprets JPA annotations to infer your domain mapping, requiring no extra setup for existing Hibernate or JPA projects.
 * **Rich Diff API:**
@@ -45,25 +45,8 @@ JaVers provides a powerful object-diffing engine that identifies deep changes be
 * **Customizable Comparison Logic**: JaVers allows you to override equality for specific types using Cusom Comparators, and select specific List Comparing Algorithms (like Levenshtein or Simple) to match your collection's specific semantics.
 
 See the documentation for
-[Domain Configuration](/domain-configuration) and
+[Domain Configuration](/documentation/domain-configuration) and
 [Diff Configuration](/documentation/diff-configuration).
-
-
-**How to use it?**
-
-* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
-  use [`javers.compare()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
-  to compare two object graphs.
-
-* As the result, you get list of atomic [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
-  There are several types of Changes:
-  [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java),
-  [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java),
-  [`ListChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ListChange.java) and so on (see the inheritance hierarchy of
-  [`Change`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java)
-  class to get the complete list).
-
-* Take a look at [diff examples](/documentation/diff-examples).
 
 <h2 id="data-audit">Data Audit</h2>
 
@@ -83,10 +66,8 @@ based on the [`JaversRepository`]({{ site.github_core_main_url }}org/javers/repo
 *   **Custom JSON serialization:** JaVers has a well-designed and customizable JSON serialization and deserialization module, based on
       [`GSON`](https://code.google.com/p/google-gson/) and Java reflection, see [custom JSON serialization](/documentation/repository-configuration#custom-json-serialization).
 
-See [Repository Configuration](/documentation/repository-configuration) documentation.
-
-If you are using another database, for example Cassandra, you are encouraged to implement
-the `JaversRepository` interface and contribute it to Javers project.
+See the documentation for
+[Repository Configuration](/documentation/repository-configuration).
 
 <h3 id="Advanced-Domain-Modeling">Advanced Domain Modeling</h3>
 
@@ -94,7 +75,7 @@ the `JaversRepository` interface and contribute it to Javers project.
 * **Flexible Mapping Configuration**: JaVers provides multiple ways to configure how domain objects are audited (mapped to Snapshots) and compared. You can use annotations, fluent API configuration, or default conventions to fine-tune auditing behavior without modifying your persistence model.
 * **Selective Property Auditing**: With mapping annotations such as `@DiffIgnore` and `@ShallowReference`, you can precisely control which fields are audited and how object references are handled.
   This allows you to focus the audit on important business changes while ignoring technical data noise.
-* **Type Name Customization**: By default, JaVers identifies types using their fully qualified Java class names. For better stability and alignment with your domain’s ubiquitous language, you can explicitly define type names using the @TypeName annotation. This decouples audit data from class and package names, enabling safe refactoring without breaking historical data.
+* **Type Name Customization**: By default, JaVers identifies types using their fully qualified Java class names. For better stability and alignment with your domain’s ubiquitous language, you can explicitly define type names using the `@TypeName` annotation. This decouples audit data from class and package names, enabling safe refactoring without breaking historical data.
 
 See [Domain Configuration](/documentation/domain-configuration) documentation.
 
@@ -121,7 +102,25 @@ See the [JaVers Query Language](/documentation/jql-examples) documentation.
 See the [Spring Integration](/documentation/spring-integration)
 and [Spring Boot Integration](/documentation/spring-boot-integration) documentation.
 
-<h3 id="How-to-use-JaVers-Data-Audit">How to use JaVers Data Audit</h3>
+<h2 id="How-to-use-JaVers">How to use JaVers</h2>
+
+<h3 id="How-to-use-JaVers-Object-Diff">How to use Object Diff</h3>
+
+* Create a JaVers instance (see [getting started](/documentation/getting-started#create-javers-instance)) and
+  use [`javers.compare()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
+  to compare two object graphs.
+
+* As the result, you get list of atomic [`Changes`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java).
+  There are several types of Changes:
+  [`ValueChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ValueChange.java),
+  [`ReferenceChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/ReferenceChange.java),
+  [`ListChange`]({{ site.github_core_main_url }}org/javers/core/diff/changetype/container/ListChange.java) and so on (see the inheritance hierarchy of
+  [`Change`]({{ site.github_core_main_url }}org/javers/core/diff/Change.java)
+  class to get the complete list).
+
+* See the [Diff Examples](/documentation/diff-examples).
+
+<h3 id="How-to-use-JaVers-Data-Audit">How to use Data Audit</h3>
 
 * Configure and build a
   JaVers instance (see [configuration](/documentation/domain-configuration)).
@@ -152,5 +151,5 @@ and [Spring Boot Integration](/documentation/spring-boot-integration) documentat
   Use [`javers.find*()`]({{ site.github_core_main_url }}org/javers/core/Javers.java)
   methods to browse detailed history of a given class, object or property.
 
-* Take a look at [repository examples](/documentation/repository-examples).
+See the [Repository Examples](/documentation/repository-examples).
 
