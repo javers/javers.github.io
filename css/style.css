@@ -211,6 +211,10 @@ pre.highlight > code {
     margin: 0 0 5px;
 }
 
+.feature {
+    background-color:red;
+}
+
 .feature a {
     text-decoration: none;
 }
@@ -251,6 +255,9 @@ pre.highlight > code {
     color: #000;
 }
 
+.light-gray-background {
+  background-color: #FAFAFA
+}
 .icon-container .icon {
     font-size: 48px;
     vertical-align: middle;
@@ -299,6 +306,10 @@ h3.black-header {
     text-transform: uppercase;
 }
 
+#why-javers {
+  background-color:#FAFAFA;
+}
+
 #why-javers .row {
     text-align: center;
     margin: 0 auto;
@@ -307,7 +318,7 @@ h3.black-header {
 
 #why-javers .row > div {
     text-align: center;
-    background-color: #fff;
+    background-color: #FAFAFA;
     padding: 25px 0;
 }
 
@@ -572,7 +583,7 @@ body.page section #sidebar section ul li.nested.active {
     }
 
     .hero p {
-        font-size: 0.8em;
+        font-size: 1em;
     }
 
     #why-javers .row > div > span {
