@@ -17,7 +17,126 @@ description: With JaVers you can forget about troublesome data versioning. Let t
     </div>
 </header>
 
-<h3 class="black-header">Why Javers?</h3>
+<style>
+    h3.section-header {
+
+        margin: 0;
+        text-align: center;
+        text-transform: uppercase;
+        padding-top: 25px;
+        border-top: 1px solid #eee;
+    }
+</style>
+
+<h3 class="section-header">Why Javers?</h3>
+
+<section>
+
+    {% assign start_year = 2015 %}
+    {% assign current_year = "now" | date: "%Y" | plus: 0 %}
+    {% assign years_proven = current_year | minus: start_year %}
+
+    <style>
+        .javers-stats-container {
+          background: #ffffff;
+          padding: 25px 0;
+
+        }
+
+        .stat-item {
+          padding: 30px 15px;
+        }
+
+        .stat-number {
+          font-size: 3rem;
+          font-weight: 800;
+          color: #2c3e50;
+          line-height: 1;
+          margin-bottom: 10px;
+        }
+
+        .stat-title {
+          text-transform: uppercase;
+          font-weight: 700;
+          color: #337ab7;
+          font-size: 1.1em;
+          letter-spacing: 0.5px;
+        }
+
+        .stat-desc {
+          font-size: 1em;
+          margin-top: 8px;
+          margin-bottom: 0;
+        }
+
+        /* --- MOBILE & TABLET STACKED VIEW --- */
+        /* This handles everything up to the point where Bootstrap columns kick in */
+        @media (max-width: 991px) {
+          .stat-item {
+            border-bottom: 1px solid #f2f2f2; /* Horizontal line only */
+            border-left: none !important;    /* Force remove any vertical lines */
+          }
+          .stat-item:last-child {
+            border-bottom: none;
+          }
+          .stat-number {
+            font-size: 2.5rem;
+          }
+        }
+
+        /* --- DESKTOP HORIZONTAL VIEW --- */
+        /* We use 992px to match Bootstrap's 'md' or 'lg' transition safely */
+        @media (min-width: 992px) {
+          .stat-item {
+            border-bottom: none;
+          }
+          /* Add vertical lines ONLY on desktop between items */
+          .stat-border-left {
+            border-left: 1px solid #f0f0f0;
+          }
+        }
+    </style>
+
+    <div class="container-fluid javers-stats-container">
+        <div class="container">
+            <div class="row text-center no-gutters">
+
+                <div class="col-lg-2 col-md-12 stat-item">
+                    <div class="stat-number">{{ years_proven }}</div>
+                    <div class="stat-title">Years on the Market</div>
+                    <p class="stat-desc">Established in 2015</p>
+                </div>
+
+                <div class="col-lg-3 col-md-12 stat-item stat-border-left">
+                    <div class="stat-number">4.3M</div>
+                    <div class="stat-title">Quarterly Downloads</div>
+                    <p class="stat-desc">via Maven Central</p>
+                </div>
+
+                <div class="col-lg-3 col-md-12 stat-item stat-border-left">
+                    <div class="stat-number">31,000+</div>
+                    <div class="stat-title" style="color: #ee6c21;">Organizations use JaVers</div>
+                    <p class="stat-desc">Trusted by Big Tech & Fortune 500</p>
+                </div>
+
+                <div class="col-lg-2 col-md-12 stat-item stat-border-left">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-title">OSS Contributors</div>
+                    <p class="stat-desc">Global Open Source Community</p>
+                </div>
+
+                <div class="col-lg-2 col-md-12 stat-item stat-border-left">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-title">Modern Java Stack</div>
+                    <p class="stat-desc">Spring Boot 4 and Spring Data Compatible</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<h3 class="section-header">Features</h3>
 
 <section id="why-javers" class="container-fluid">
     <div class="container white-container">
@@ -107,9 +226,9 @@ description: With JaVers you can forget about troublesome data versioning. Let t
     </div>
 </section>
 
-<h3 class="black-header">Community</h3>
+<h3 class="section-header">Community</h3>
 
-<section class="grey-container">
+<section class="community-container">
     <div class="container">
         <div class="row">
             <a href="https://github.com/javers/javers#guidelines-for-contributors">
