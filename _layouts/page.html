@@ -46,7 +46,7 @@
                 </div>
                 {% endif %}
 
-                {% if page.url contains '/contact-us' %}
+                {% if page.category == 'Contact' %}
                 {% else %}
                     {% include sponsorship-alert.html %}
                 {% endif %}
