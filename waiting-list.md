@@ -44,8 +44,10 @@ category: Contact
 
                 </div>
 
-                <form class="ml-block-form"
-                      action="https://dashboard.mailerlite.com/jsonp/2089683/forms/178505401492309060/subscribe"
+                <form id="ml-form-178505401492309060"
+                      class="ml-block-form"
+                      method="POST"
+                      action="https://steep-voice-0584.bwalacik-098.workers.dev/"
                       data-code="" method="post" target="_blank">
                     <div class="ml-form-formContent">
 
@@ -137,6 +139,8 @@ category: Contact
 
                     <input type="hidden" name="ml-submit" value="1">
 
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53"  data-callback="onTurnstileSuccess"></div>
+
                     <div class="ml-form-embedSubmit">
 
                         <button type="submit" class="primary">Subscribe</button>
@@ -146,6 +150,7 @@ category: Contact
                             <span class="sr-only">Loading...</span>
                         </button>
                     </div>
+
 
 
                     <input type="hidden" name="anticsrf" value="true">
@@ -166,6 +171,16 @@ category: Contact
     </div>
 </div>
 
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+function onTurnstileSuccess(token) {
+  document.getElementById("ml-form-178505401492309060").submit();
+}
+</script>
+
+
 <script>
     function ml_webform_success_36704342() {
       var $ = ml_jQuery || jQuery;
@@ -176,5 +191,6 @@ category: Contact
 
 
 <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v95037e5bac78f29ed026832ca21a7c7b"
-        type="text/javascript"></script>
+        type="text/javascript">
+</script>
 
