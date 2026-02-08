@@ -86,10 +86,7 @@ category: Contact
                 
                     <div class="ml-form-embedSubmit">
                         <button type="submit" class="primary">Subscribe</button>
-                        <button disabled="disabled" style="display: none;" type="button" class="loading">
-                            <div class="ml-form-embedSubmitLoad"></div>
-                            <span class="sr-only">Loading...</span>
-                        </button>
+
                     </div>
                 
                     <input type="hidden" name="anticsrf" value="true">
@@ -114,38 +111,49 @@ category: Contact
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
-const form = document.getElementById('ml-form-178505401492309060');
+let turnstileVerified = false;
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // stop normal submit
-    
-    // Get Turnstile token
-    const token = document.querySelector('.cf-turnstile iframe')?.contentWindow?.document?.querySelector('input[name="cf-turnstile-response"]')?.value;
-    
-    if (!token) {
-        alert("Please complete the Turnstile captcha");
-        return;
-    }
+function onTurnstileSuccess(token) {
+  // Send token to worker for verification
+  fetch("https://steep-voice-0584.bwalacik-098.workers.dev/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: { "cf-turnstile-response": token },
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Turnstile verification failed");
+    return res.json();
+  })
+  .then(data => {
+    // Worker verified token successfully
+    turnstileVerified = true;
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Turnstile verification failed. Please try again.");
+  });
+}
 
-    // Send token to Worker
-    try {
-        const workerResponse = await fetch('https://steep-voice-0584.bwalacik-098.workers.dev/', {
-            method: 'POST',
-            body: new URLSearchParams({ 'cf-turnstile-response': token })
-        });
-        const data = await workerResponse.json();
 
-        if (data.ok) {
-            // Turnstile passed -> submit to MailerLite Webform
-            console.log("Turnstile verification passed");
-            form.submit();
-        } else {
-            alert("Turnstile verification failed. Please try again.");
-            console.error(data);
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Error verifying captcha. Please try again later.");
-    }
+document.getElementById("ml-form-178505401492309060").addEventListener("submit", async (e) => {
+
+   e.preventDefault();
+
+  if (!turnstileVerified) {
+    alert("Please complete the CAPTCHA first.");
+    return;
+  }
+
+  const formData = new FormData(e.target);
+  const resp = await fetch(e.target.action, { method: "POST", body: formData });
+  const result = await resp.json();
+
+  if (resp.ok) {
+    document.getElementById("success-msg").style.display = "block";
+    e.target.style.display = "none";
+  } else {
+    document.getElementById("error-msg").style.display = "block";
+    console.error(result);
+  }
 });
 </script>
