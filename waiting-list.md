@@ -70,6 +70,18 @@ category: Contact
                         </div>
                     </div>
                 
+                    <!-- Privacy policy -->
+                    <div class="ml-form-embedPermissions" style="">
+                        <div class="ml-form-embedPermissionsContent default privacy-policy">
+
+
+                            <p>TODO CHECKBOX! You can unsubscribe anytime. For more details, review our Privacy Policy.</p>
+
+
+                        </div>
+                    </div>
+                    <!-- /Privacy policy -->
+
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53" data-callback="onTurnstileSuccess"></div>
                 
                     <div class="ml-form-embedSubmit">
