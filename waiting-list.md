@@ -51,7 +51,8 @@ category: Contact
                       class="ml-block-form"
                       method="POST"
                       action="https://dashboard.mailerlite.com/jsonp/2089683/forms/178505401492309060/subscribe"
-                      target="_self">
+                      target="_blank"
+>
                 
                     <div class="ml-form-formContent">
                         <div class="ml-form-fieldRow">
@@ -127,6 +128,7 @@ function onTurnstileSuccess(token) {
   .then(data => {
     // Worker verified token successfully
     turnstileVerified = true;
+    console.log("turnstile verified")
   })
   .catch(err => {
     console.error(err);
@@ -136,24 +138,10 @@ function onTurnstileSuccess(token) {
 
 
 document.getElementById("ml-form-178505401492309060").addEventListener("submit", async (e) => {
-
-   e.preventDefault();
-
   if (!turnstileVerified) {
+    e.preventDefault();
     alert("Please complete the CAPTCHA first.");
-    return;
-  }
-
-  const formData = new FormData(e.target);
-  const resp = await fetch(e.target.action, { method: "POST", body: formData });
-  const result = await resp.json();
-
-  if (resp.ok) {
-    document.getElementById("success-msg").style.display = "block";
-    e.target.style.display = "none";
-  } else {
-    document.getElementById("error-msg").style.display = "block";
-    console.error(result);
-  }
+  } 
+  // If verified → let natural form submission go to Worker
 });
 </script>
