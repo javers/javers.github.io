@@ -48,7 +48,7 @@ category: Contact
                       class="ml-block-form"
                       method="POST"
                       action="https://steep-voice-0584.bwalacik-098.workers.dev/"
-                      data-code="" method="post" target="_blank">
+                      data-code="">
                     <div class="ml-form-formContent">
 
 
@@ -151,7 +151,7 @@ category: Contact
                         </button>
                     </div>
 
-
+                    <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
 
                     <input type="hidden" name="anticsrf" value="true">
                 </form>
@@ -176,10 +176,44 @@ category: Contact
 
 <script>
 function onTurnstileSuccess(token) {
-  document.getElementById("ml-form-178505401492309060").submit();
+  var el = document.getElementById('cf-turnstile-response');
+  if (el) el.value = token;
+  console.log('Turnstile token received and stored.');
+  // NOTE: Do NOT auto-submit. Let user click Subscribe button.
 }
 </script>
 
+<script>
+(function() {
+  var form = document.getElementById('ml-form-178505401492309060');
+  if (!form) return;
+
+  function validateTurnstileTokenOnSubmit(e) {
+    var tokenInput = document.getElementById('cf-turnstile-response');
+    var token = tokenInput ? tokenInput.value : '';
+    
+    // Check if token is present and has minimum length (Turnstile tokens are ~100 chars)
+    if (!token || token.length < 10) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      alert('Please complete the security check (Turnstile) before submitting.');
+      
+      // Scroll widget into view to help user see it
+      try {
+        var widget = document.querySelector('.cf-turnstile');
+        if (widget) widget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (ex) { /* ignore */ }
+      
+      return false;
+    }
+    // Token present => allow submission to proceed
+  }
+
+  // Use capture=true so this runs early, before other handlers
+  form.addEventListener('submit', validateTurnstileTokenOnSubmit, true);
+  console.log('Form submit validator installed.');
+})();
+</script>
 
 <script>
     function ml_webform_success_36704342() {
@@ -193,4 +227,3 @@ function onTurnstileSuccess(token) {
 <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v95037e5bac78f29ed026832ca21a7c7b"
         type="text/javascript">
 </script>
-
