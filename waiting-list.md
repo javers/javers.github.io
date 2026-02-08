@@ -50,110 +50,36 @@ category: Contact
                 <form id="ml-form-178505401492309060"
                       class="ml-block-form"
                       method="POST"
-                      action="https://steep-voice-0584.bwalacik-098.workers.dev/"
-                      data-code="">
+                      action="https://dashboard.mailerlite.com/jsonp/2089683/forms/178505401492309060/subscribe"
+                      target="_self">
+                
                     <div class="ml-form-formContent">
-
-
-                        <div class="ml-form-fieldRow ">
+                        <div class="ml-form-fieldRow">
                             <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
-
                                 <label>Email</label>
-
-
-                                <!-- input -->
                                 <input aria-label="email" aria-required="true" type="email" class="form-control"
-                                       data-inputmask="" name="fields[email]" placeholder="" autocomplete="email">
-                                <!-- /input -->
-
-                                <!-- textarea -->
-
-                                <!-- /textarea -->
-
-                                <!-- select -->
-
-                                <!-- /select -->
-
-                                <!-- checkboxes -->
-
-                                <!-- /checkboxes -->
-
-                                <!-- radio -->
-
-                                <!-- /radio -->
-
-                                <!-- countries -->
-
-                                <!-- /countries -->
-
-
+                                       name="fields[email]" placeholder="" autocomplete="email">
                             </div>
                         </div>
                         <div class="ml-form-fieldRow ml-last-item">
                             <div class="ml-field-group ml-field-pro_feedback ml-validate-required">
-
                                 <label>Feedback</label>
-
-
-                                <!-- input -->
                                 <input aria-label="pro_feedback" aria-required="true" type="text" class="form-control"
-                                       data-inputmask="" name="fields[pro_feedback]" placeholder="" autocomplete="">
-                                <!-- /input -->
-
-                                <!-- textarea -->
-
-                                <!-- /textarea -->
-
-                                <!-- select -->
-
-                                <!-- /select -->
-
-                                <!-- checkboxes -->
-
-                                <!-- /checkboxes -->
-
-                                <!-- radio -->
-
-                                <!-- /radio -->
-
-                                <!-- countries -->
-
-                                <!-- /countries -->
-
-
+                                       name="fields[pro_feedback]" placeholder="" autocomplete="">
                             </div>
                         </div>
-
                     </div>
-
-
-                    <!-- Privacy policy -->
-                    <div class="ml-form-embedPermissions" style="">
-                        <div class="ml-form-embedPermissionsContent default privacy-policy">
-
-
-                            <p>You can unsubscribe anytime. For more details, review our Privacy Policy.</p>
-
-
-                        </div>
-                    </div>
-                    <!-- /Privacy policy -->
-
-
-                    <input type="hidden" name="ml-submit" value="1">
-
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53"  data-callback="onTurnstileSuccess"></div>
-
+                
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53" data-callback="onTurnstileSuccess"></div>
+                
                     <div class="ml-form-embedSubmit">
-
                         <button type="submit" class="primary">Subscribe</button>
-
                         <button disabled="disabled" style="display: none;" type="button" class="loading">
                             <div class="ml-form-embedSubmitLoad"></div>
                             <span class="sr-only">Loading...</span>
                         </button>
                     </div>
-
+                
                     <input type="hidden" name="anticsrf" value="true">
                 </form>
             </div>
@@ -176,20 +102,38 @@ category: Contact
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
-function onTurnstileSuccess(token) {
-  console.log('Turnstile token received');
-}
-</script>
+const form = document.getElementById('ml-form-178505401492309060');
 
-<script>
-    function ml_webform_success_36704342() {
-      var $ = ml_jQuery || jQuery;
-      $('.ml-subscribe-form-36704342 .row-success').show();
-      $('.ml-subscribe-form-36704342 .row-form').hide();
+form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // stop normal submit
+    
+    // Get Turnstile token
+    const token = document.querySelector('.cf-turnstile iframe')?.contentWindow?.document?.querySelector('input[name="cf-turnstile-response"]')?.value;
+    
+    if (!token) {
+        alert("Please complete the Turnstile captcha");
+        return;
     }
-</script>
 
-<!--
-<script src="https://groot.mailerlite.com/js/w/webforms.min.js?v95037e5bac78f29ed026832ca21a7c7b"
-        type="text/javascript"></script>
--->
+    // Send token to Worker
+    try {
+        const workerResponse = await fetch('https://steep-voice-0584.bwalacik-098.workers.dev/', {
+            method: 'POST',
+            body: new URLSearchParams({ 'cf-turnstile-response': token })
+        });
+        const data = await workerResponse.json();
+
+        if (data.ok) {
+            // Turnstile passed -> submit to MailerLite Webform
+            console.log("Turnstile verification passed");
+            form.submit();
+        } else {
+            alert("Turnstile verification failed. Please try again.");
+            console.error(data);
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error verifying captcha. Please try again later.");
+    }
+});
+</script>
