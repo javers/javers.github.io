@@ -14,6 +14,8 @@ category: Contact
     }
 </style>
 
+<!-- MailerLite is disabled on this page because we use Cloudflare Worker for Turnstile verification -->
+<!-- Uncomment the lines below if you want MailerLite form handling instead of Worker-based verification
 <script src="https://assets.mailerlite.com/js/universal.js" type="text/javascript"></script>
 
 <script>
@@ -24,6 +26,7 @@ category: Contact
     ml('initializeEmbeddedForm', '178505401492309060');
     ml('enablePopups', false);
 </script>
+-->
 <style type="text/css">@import url("https://assets.mlcdn.com/fonts.css?version=1770279");</style>
 
 <link rel="stylesheet" href="css/waiting-list-form.css">
@@ -179,7 +182,6 @@ function onTurnstileSuccess(token) {
   var el = document.getElementById('cf-turnstile-response');
   if (el) el.value = token;
   console.log('Turnstile token received and stored.');
-  // NOTE: Do NOT auto-submit. Let user click Subscribe button.
 }
 </script>
 
@@ -223,7 +225,3 @@ function onTurnstileSuccess(token) {
     }
 </script>
 
-
-<script src="https://groot.mailerlite.com/js/w/webforms.min.js?v95037e5bac78f29ed026832ca21a7c7b"
-        type="text/javascript">
-</script>
