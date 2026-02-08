@@ -47,13 +47,14 @@ category: Contact
 
                 </div>
 
-                <form id="ml-form-178505401492309060"
+                <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+                <form id="ml-form-178505401492309060" 
                       class="ml-block-form"
-                      method="POST"
+                      target="hidden_iframe"
                       action="https://dashboard.mailerlite.com/jsonp/2089683/forms/178505401492309060/subscribe"
-                      target="_blank"
->
-                
+                      data-code="" method="GET">
+
                     <div class="ml-form-formContent">
                         <div class="ml-form-fieldRow">
                             <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
@@ -83,8 +84,9 @@ category: Contact
                     </div>
                     <!-- /Privacy policy -->
 
+
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53" data-callback="onTurnstileSuccess"></div>
-                
+               
                     <div class="ml-form-embedSubmit">
                         <button type="submit" class="primary">Subscribe</button>
 
@@ -139,8 +141,8 @@ function onTurnstileSuccess(token) {
 
 document.getElementById("ml-form-178505401492309060").addEventListener("submit", async (e) => {
   if (!turnstileVerified) {
-    e.preventDefault();
-    alert("Please complete the CAPTCHA first.");
+     e.preventDefault();
+     alert("Please complete the CAPTCHA first.");
   } 
   // If verified → let natural form submission go to Worker
 });
