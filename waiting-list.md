@@ -14,6 +14,17 @@ category: Contact
     }
 </style>
 
+<script src="https://assets.mailerlite.com/js/universal.js" type="text/javascript"></script>
+
+<script>
+    window.ml = function () {
+        (window.ml.q = window.ml.q || []).push(arguments)
+    }
+    ml('account', 2089683);
+    ml('initializeEmbeddedForm', '178505401492309060');
+    ml('enablePopups', false);
+</script>
+
 <style type="text/css">@import url("https://assets.mlcdn.com/fonts.css?version=1770279");</style>
 
 <link rel="stylesheet" href="css/waiting-list-form.css">
@@ -141,6 +152,8 @@ category: Contact
                         </button>
                     </div>
 
+                    <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
+
                     <input type="hidden" name="anticsrf" value="true">
                 </form>
             </div>
@@ -175,4 +188,7 @@ function onTurnstileSuccess(token) {
       $('.ml-subscribe-form-36704342 .row-form').hide();
     }
 </script>
+
+<script src="https://groot.mailerlite.com/js/w/webforms.min.js?v95037e5bac78f29ed026832ca21a7c7b"
+        type="text/javascript"></script>
 
