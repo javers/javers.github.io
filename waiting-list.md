@@ -116,9 +116,9 @@ let turnstileVerified = false;
 function onTurnstileSuccess(token) {
   // Send token to worker for verification
   fetch("https://steep-voice-0584.bwalacik-098.workers.dev/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: { "cf-turnstile-response": token },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ "cf-turnstile-response": token }),
   })
   .then(res => {
     if (!res.ok) throw new Error("Turnstile verification failed");
