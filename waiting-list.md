@@ -14,19 +14,6 @@ category: Contact
     }
 </style>
 
-<!-- MailerLite is disabled on this page because we use Cloudflare Worker for Turnstile verification -->
-<!-- Uncomment the lines below if you want MailerLite form handling instead of Worker-based verification
-<script src="https://assets.mailerlite.com/js/universal.js" type="text/javascript"></script>
-
-<script>
-    window.ml = function () {
-        (window.ml.q = window.ml.q || []).push(arguments)
-    }
-    ml('account', 2089683);
-    ml('initializeEmbeddedForm', '178505401492309060');
-    ml('enablePopups', false);
-</script>
--->
 <style type="text/css">@import url("https://assets.mlcdn.com/fonts.css?version=1770279");</style>
 
 <link rel="stylesheet" href="css/waiting-list-form.css">
@@ -154,8 +141,6 @@ category: Contact
                         </button>
                     </div>
 
-                    <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
-
                     <input type="hidden" name="anticsrf" value="true">
                 </form>
             </div>
@@ -179,42 +164,8 @@ category: Contact
 
 <script>
 function onTurnstileSuccess(token) {
-  var el = document.getElementById('cf-turnstile-response');
-  if (el) el.value = token;
-  console.log('Turnstile token received and stored.');
+  console.log('Turnstile token received');
 }
-</script>
-
-<script>
-(function() {
-  var form = document.getElementById('ml-form-178505401492309060');
-  if (!form) return;
-
-  function validateTurnstileTokenOnSubmit(e) {
-    var tokenInput = document.getElementById('cf-turnstile-response');
-    var token = tokenInput ? tokenInput.value : '';
-    
-    // Check if token is present and has minimum length (Turnstile tokens are ~100 chars)
-    if (!token || token.length < 10) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      alert('Please complete the security check (Turnstile) before submitting.');
-      
-      // Scroll widget into view to help user see it
-      try {
-        var widget = document.querySelector('.cf-turnstile');
-        if (widget) widget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } catch (ex) { /* ignore */ }
-      
-      return false;
-    }
-    // Token present => allow submission to proceed
-  }
-
-  // Use capture=true so this runs early, before other handlers
-  form.addEventListener('submit', validateTurnstileTokenOnSubmit, true);
-  console.log('Form submit validator installed.');
-})();
 </script>
 
 <script>
