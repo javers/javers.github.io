@@ -154,8 +154,6 @@ category: Contact
                         </button>
                     </div>
 
-                    <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
-
                     <input type="hidden" name="anticsrf" value="true">
                 </form>
             </div>
