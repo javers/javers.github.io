@@ -73,12 +73,16 @@ category: Contact
                     </div>
                 
                     <!-- Privacy policy -->
-                    <div class="ml-form-embedPermissions" style="">
-                        <div class="ml-form-embedPermissionsContent default privacy-policy">
-
-
-                            <p>TODO CHECKBOX! You can unsubscribe anytime. For more details, review our Privacy Policy.</p>
-
+                    <div>
+                        <div class="privacy_policy_div">
+                            <p>
+                            The information you provide on this form will only be used to provide you with
+                            updates related to
+                            JaVers Pro Waiting List and occasional updates about JaVers Pro.
+                            We will not share your information with any third parties.
+                            </p>
+                            <p>You can unsubscribe anytime. For more details, review our <a href="/waiting-list-privacy-policy">Privacy Policy</a>.
+                            </p>
 
                         </div>
                     </div>

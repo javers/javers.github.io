@@ -1,3 +1,13 @@
+   .privacy_policy_div p {
+        font-size: 0.75em;
+        text-align: left;
+    }
+
+    .privacy_policy_div {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
     /* LOADER */
     .ml-form-embedSubmitLoad {
       display: inline-block;
