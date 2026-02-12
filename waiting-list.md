@@ -65,7 +65,7 @@ category: Contact
                             <p>
                             The information you provide on this form will only be used to provide you with
                             updates related to
-                            JaVers Pro Waiting List and occasional updates about JaVers Pro.
+                            JaVers Pro Waiting List.
                             We will not share your information with any third parties.
                             </p>
                             <p>You can unsubscribe anytime. For more details, review our <a href="/waiting-list-privacy-policy">Privacy Policy</a>.
