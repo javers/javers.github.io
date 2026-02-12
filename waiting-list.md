@@ -5,7 +5,6 @@ category: Contact
 ---
 
 <style>
-
     .ml-form-embedContainer{height:99.99%}
     .ml-form-align-center {
         text-align: center;
@@ -14,18 +13,6 @@ category: Contact
     }
 </style>
 
-<!--
-<script src="https://assets.mailerlite.com/js/universal.js" type="text/javascript"></script>
-
-<script>
-    window.ml = function () {
-        (window.ml.q = window.ml.q || []).push(arguments)
-    }
-    ml('account', 2089683);
-    ml('initializeEmbeddedForm', '178505401492309060');
-    ml('enablePopups', false);
-</script>
--->
 
 <style type="text/css">@import url("https://assets.mlcdn.com/fonts.css?version=1770279");</style>
 
@@ -60,7 +47,7 @@ category: Contact
                             <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
                                 <label>Email</label>
                                 <input aria-label="email" aria-required="true" type="email" class="form-control"
-                                       name="fields[email]" placeholder="" autocomplete="email">
+                                       name="fields[email]" placeholder="" autocomplete="email" required>
                             </div>
                         </div>
                         <div class="ml-form-fieldRow ml-last-item">
@@ -142,43 +129,9 @@ function onTurnstileSuccess(token) {
   });
 }
 
-function clearErrorMessages() {
-   //TODO clear any existing form inlined error messages, remove red borders.
-}
-
-function isValidEmail(email) {}
-    // Simple regex for email validation
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-function formValidate() {
-    cleerErrorMessages();
-
-    const email = document.querySelector('input[name="fields[email]"]').value.trim();
-    const feedback = document.querySelector('input[name="fields[pro_feedback]"]').value.trim();
-    if (!email) {
-        alert("Email is required.");//TODO replace with inline error message
-        //TODO: add focus to the email field, show red border.
-        // leverage existing css in waiting-list-form.css for error state styling.
-        return false;
-    }
-    if (!isValidEmail(email)) {
-        alert("Please enter a valid email address."); //TODO replace with inline error message
-        //TODO: add focus to the email field, show red border
-        // leverage existing css in waiting-list-form.css for error state styling.
-        return false;
-    }
-    return true;
-    }
-}
 
 document.getElementById("ml-form-178505401492309060").addEventListener("submit", async (e) => {
-  const formValid = formValidate();
-  if (!formValid) {
-    e.preventDefault();
-  }
-  if (!turnstileVerified) {
+  if (formValid && !turnstileVerified) {
      e.preventDefault();
      alert("Please complete the CAPTCHA first.");
   } 
