@@ -34,13 +34,10 @@ category: Contact
 
                 </div>
 
-                <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
                 <form id="ml-form-178505401492309060" 
                       class="ml-block-form"
-                      target="hidden_iframe"
-                      action="https://dashboard.mailerlite.com/jsonp/2089683/forms/178505401492309060/subscribe"
-                      data-code="" method="GET">
+                      data-code="">
 
                     <div class="ml-form-formContent">
                         <div class="ml-form-fieldRow">
@@ -78,6 +75,13 @@ category: Contact
 
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53" data-callback="onTurnstileSuccess"></div>
                
+                    <div class="ml-form-errorBody row-error" style="display: none">
+                        <div class="ml-form-errorContent">
+                            <h4>Something went wrong</h4>
+                            <p id="error-message">Please try again later.</p>
+                        </div>
+                    </div>
+
                     <div class="ml-form-embedSubmit">
                         <button type="submit" class="primary">Subscribe</button>
 
@@ -88,15 +92,12 @@ category: Contact
             </div>
 
             <div class="ml-form-successBody row-success" style="display: none">
-
                 <div class="ml-form-successContent">
-
                     <h4>Thank you!</h4>
                     <p>Please confirm your email address</p>
-
                 </div>
-
             </div>
+
         </div>
     </div>
 </div>
@@ -129,12 +130,71 @@ function onTurnstileSuccess(token) {
   });
 }
 
-
 document.getElementById("ml-form-178505401492309060").addEventListener("submit", async (e) => {
-  if (formValid && !turnstileVerified) {
-     e.preventDefault();
-     alert("Please complete the CAPTCHA first.");
-  } 
-  // If verified → let natural form submission go to Worker
+    e.preventDefault();
+
+    // 1. Validation & UI Reset
+    if (!turnstileVerified) {
+        alert("Please complete the CAPTCHA first.");
+        return;
+    }
+
+    const form = e.target;
+    const button = form.querySelector("button");
+    const rowForm = document.querySelector(".row-form");
+    const rowSuccess = document.querySelector(".row-success");
+    const rowError = document.querySelector(".row-error");
+    const errorText = document.getElementById("error-message");
+
+    button.disabled = true;
+    button.innerText = "Submitting...";
+    rowError.style.display = "none";
+
+    // 2. Prepare Data
+    const formData = new FormData(form);
+
+    try {
+        // Use the assets domain which handles AJAX/CORS better than the dashboard domain
+        const res = await fetch("https://assets.mailerlite.com/jsonp/2089683/forms/178505401492309060/subscribe", {
+            method: "POST",
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!res.ok) throw new Error("Network error occurred. Please try again.");
+
+        const json = await res.json();
+
+        // 3. Handle Response
+        if (json.success) {
+            rowForm.style.display = "none";
+            rowSuccess.style.display = "block";
+            rowError.style.display = "none";
+        } else {
+            // Extract messages from: {"errors":{"fields":{"email":["The email field..."]}}}
+            let errorMessages = [];
+            
+            if (json.errors && json.errors.fields) {
+                Object.keys(json.errors.fields).forEach(field => {
+                    const fieldErrors = json.errors.fields[field]; // This is the array
+                    errorMessages.push(fieldErrors.join(" "));   // Join array strings
+                });
+            }
+
+            throw new Error(errorMessages.join(" | ") || "Submission failed.");
+        }
+
+    } catch (err) {
+        // 4. Handle Failure
+        errorText.innerText = err.message;
+        rowError.style.display = "block";
+        console.error("MailerLite Error:", err);
+    } finally {
+        button.disabled = false;
+        button.innerText = "Subscribe";
+    }
 });
+
 </script>

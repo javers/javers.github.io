@@ -1,4 +1,8 @@
 
+    .ml-form-errorContent h4,
+    .ml-form-errorContent p {
+        color: #d93025;
+    }
 
     #mlb2-36704342 input:user-invalid {
       border-color: #d93025 !important;
