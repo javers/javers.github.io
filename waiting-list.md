@@ -1,8 +1,11 @@
 ---
 layout: page
-title: Subscribe to JaVers Pro Waitlist
+title: Join the JaVers Pro Early Access List
 category: Contact
 ---
+
+## Scale your Java Data Auditing to Enterprise levels
+
 
 <style>
     .ml-form-embedContainer{height:99.99%}
@@ -83,7 +86,7 @@ category: Contact
                     </div>
 
                     <div class="ml-form-embedSubmit">
-                        <button type="submit" class="primary">Subscribe</button>
+                        <button type="submit" class="primary">Request Early Access</button>
 
                     </div>
                 
@@ -93,8 +96,12 @@ category: Contact
 
             <div class="ml-form-successBody row-success" style="display: none">
                 <div class="ml-form-successContent">
-                    <h4>Thank you!</h4>
-                    <p>Please confirm your email address</p>
+                    <h4>Request Received!</h4>
+                    <p>Thanks for your interest in JaVers Pro. We've sent you a verification link to your inbox.
+                    </p>
+                    <p>
+                    <b>Please click the link in that email</b> to secure your spot on the Early Access list.
+                    </p>
                 </div>
             </div>
 
@@ -135,8 +142,8 @@ document.getElementById("ml-form-178505401492309060").addEventListener("submit",
 
     // 1. Validation & UI Reset
     if (!turnstileVerified) {
-        alert("Please complete the CAPTCHA first.");
-        return;
+        //alert("Please complete the CAPTCHA first.");
+        //return;
     }
 
     const form = e.target;
