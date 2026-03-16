@@ -96,12 +96,10 @@ category: Contact
 
             <div class="ml-form-successBody row-success" style="display: none">
                 <div class="ml-form-successContent">
-                    <h4>Request Received!</h4>
-                    <p>Thanks for your interest in JaVers Pro. We've sent you a verification link to your inbox.
-                    </p>
-                    <p>
-                    <b>Please click the link in that email</b> to secure your spot on the Early Access list.
-                    </p>
+                    <h4>Almost there! Check your inbox.</h4>
+                    <p>We sent a confirmation link to <strong id="submitted-email"></strong>.</p>
+                    <p><b>Click the link in that email</b> to secure your spot.</p>
+                    <p>After confirming, you will receive your <b>40% lifetime discount code</b>.</p>
                 </div>
             </div>
 
@@ -142,8 +140,9 @@ document.getElementById("ml-form-178505401492309060").addEventListener("submit",
 
     // 1. Validation & UI Reset
     if (!turnstileVerified) {
-        //alert("Please complete the CAPTCHA first.");
-        //return;
+        // TODO uncomment before launch
+        // alert("Please complete the CAPTCHA first.");
+        // return;
     }
 
     const form = e.target;
@@ -179,6 +178,11 @@ document.getElementById("ml-form-178505401492309060").addEventListener("submit",
             rowForm.style.display = "none";
             rowSuccess.style.display = "block";
             rowError.style.display = "none";
+            const emailInput = form.querySelector('input[name="fields[email]"]');
+            const submittedEmailEl = document.getElementById('submitted-email');
+            if (emailInput && submittedEmailEl) {
+                submittedEmailEl.textContent = emailInput.value;
+            }
         } else {
             // Extract messages from: {"errors":{"fields":{"email":["The email field..."]}}}
             let errorMessages = [];
