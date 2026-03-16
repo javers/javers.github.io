@@ -141,6 +141,7 @@ javers:
   sqlSchema:
   sqlSchemaManagementEnabled: true
   sqlGlobalIdCacheDisabled: false
+  sqlSequenceAllocationEnabled: true
   objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
   sqlGlobalIdTableName: jv_global_id
   sqlCommitTableName: jv_commit
@@ -149,7 +150,13 @@ javers:
   sqlGlobalIdSequenceName: jv_global_id_pk_seq
   sqlCommitSequenceName: jv_commit_pk_seq
   sqlSnapshotSequenceName: 'jv_snapshot_pk_seq
-```   
+```
+
+When `sqlSequenceAllocationEnabled` is `true` (the default), JaVers pre-allocates a block of
+100 primary keys per sequence call, which is efficient for typical single-database deployments.
+Set it to `false` in setups where a single JaVers instance serves multiple databases
+at runtime, or after a database restore where sequences may have jumped backwards — in those cases
+pre-allocation can cause primary key conflicts.
 
 #### Transaction management in the SQL starter
 

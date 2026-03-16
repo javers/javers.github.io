@@ -6,6 +6,36 @@ submenu: release-notes
 ---
 
 
+### 7.11.0
+released on 2026-03-15
+* [1447](https://github.com/javers/javers/issues/1447)
+  Added support for disabling the DB Sequence Allocation strategy for multi-tenant setups.
+
+  The Sequence Allocation strategy pre-fetches a block of 100
+  consecutive PKs from the DB sequence and hands them out locally. When the underlying
+  database connection switches to a different tenant's DB mid-flight, the cached PK range
+  becomes stale, causing PK collisions.
+
+  The fix introduces a new `withSequenceAllocationEnabled(false)` option on `SqlRepositoryBuilder`
+  that disables batched pre-fetching and calls the DB sequence on every insert instead:
+
+  ```java
+  SqlRepositoryBuilder.sqlRepository()
+      .withSequenceAllocationEnabled(false)
+      .build()
+  ```
+
+  In Spring Boot, the same option is available via `application.yml`:
+
+  ```yml
+  javers:
+    sqlSequenceAllocationEnabled: false
+  ```
+
+  **Note:** Disabling sequence allocation has a performance cost — it requires one extra
+  DB roundtrip per insert. Disable only when necessary (multi-database or shared-sequence
+  environments). The default remains `true`.
+
 ### <font color="red">7.10.0</font>
 released on 2025-12-28
 * [1465](https://github.com/javers/javers/issues/1465)
