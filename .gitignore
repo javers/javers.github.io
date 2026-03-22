@@ -6,3 +6,5 @@ Gemfile.lock
 vendor
 .bundle
 .jekyll-metadata
+node_modules
+package-lock.json

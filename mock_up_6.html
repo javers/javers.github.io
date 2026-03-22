@@ -1,0 +1,276 @@
+
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    .javers-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .selected-tier { border-color: #2563eb !important; border-width: 2px !important; transform: scale(1.05); z-index: 20; opacity: 1; }
+    .unselected-tier { border-color: #334155 !important; border-width: 1px !important; transform: scale(1); z-index: 10; }
+    .selected-tier .cta-button { background-color: #2563eb !important; color: white !important; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); }
+    .unselected-tier .cta-button { background-color: #334155 !important; color: #94a3b8 !important; box-shadow: none; }
+    /* Once form is open, demote the active card button so only the form submit is primary */
+    .form-open .selected-tier .cta-button { background-color: #334155 !important; color: #94a3b8 !important; box-shadow: none; }
+
+    /* Selected card: push all secondary text to near-white; icons keep their accent colour */
+    .selected-tier > h3 { color: #60a5fa; }
+    .selected-tier .feature-list { color: #f8fafc; }
+    .selected-tier .no-cc { color: #94a3b8 !important; }    /* "no credit card" stays subtle */
+
+    /* Unselected card: dim title to same faded blue as Features label; fade blue/green accents */
+    .unselected-tier > h3 { color: rgba(96, 165, 250, 0.5); }
+    .unselected-tier .text-blue-400,
+    .unselected-tier .text-blue-500,
+    .unselected-tier .text-green-400,
+    .unselected-tier .text-green-500 { opacity: 0.5; }
+
+    .feature-list li { display: flex; align-items: flex-start; margin-bottom: 0.5rem; }
+    .feature-icon { margin-right: 0.5rem; flex-shrink: 0; font-weight: bold; }
+
+    .row-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; padding-bottom: 0.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+    /* Vertical Alignment Logic */
+    .badge-spacer { } /* height set dynamically by JS to match #tier-badge */
+    .section-features { min-height: 100px; }
+    .section-support { min-height: 60px; }
+
+    @media (max-width: 1023px) {
+      .selected-tier { transform: none !important; }
+      .unselected-tier { transform: none !important; }
+    }
+
+    .selected-tier .promo-price { text-shadow: 0 0 10px rgba(74, 222, 128, 0.35); }
+
+    .price-strike {
+      position: relative;
+      display: inline-block;
+    }
+    .price-strike::after {
+      content: '';
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      top: 50%;
+      height: 3px;
+      background: rgba(239, 68, 68, 0.75);
+      transform: rotate(-10deg);
+    }
+</style>
+
+<section class="bg-[#0f172a] text-slate-200 py-4 px-4 lg:py-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tighter">The Future of JaVers is Pro</h1>
+            <p class="text-slate-300 text-lg">Join the waitlist for a <span class="font-bold">40% lifetime discount</span>.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+
+            <div class="flex bg-[#1e293b]/40 border border-slate-800 rounded-2xl p-4 lg:p-8 flex-col opacity-60">
+                <h3 class="text-xl font-bold text-white uppercase mb-1 lg:mb-3 text-sm">OSS Core</h3>
+                <div class="text-4xl font-bold text-white mb-4">$0</div>
+
+                <div class="badge-spacer"></div>
+
+                <div class="section-features mb-4">
+                    <p class="row-label text-white">Features</p>
+                    <ul class="feature-list text-sm text-white font-medium">
+                        <li><span class="feature-icon">✓</span> Core Auditing Engine</li>
+                    </ul>
+                </div>
+
+                <div class="section-support mb-4">
+                    <p class="row-label text-white">Support</p>
+                    <ul class="feature-list text-sm text-white font-medium">
+                        <li><span class="feature-icon">✓</span> Community Support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="pro-card" onclick="selectTier('pro')" class="javers-card bg-[#1e293b] rounded-2xl px-8 pt-5 pb-8 flex flex-col selected-tier cursor-pointer border border-transparent">
+                <h3 class="text-2xl font-bold text-white uppercase mb-2">Professional</h3>
+                <p class="text-xs text-slate-400 mb-2">Guaranteed compatibility. Priority support.</p>
+                <div class="mb-2 bg-slate-900/50 py-4 px-4 rounded-lg border border-slate-700/50 text-center">
+                    <div class="flex items-center justify-center gap-3">
+                        <span class="price-strike text-3xl text-slate-400">~$99</span>
+                        <span class="promo-price text-4xl font-bold text-green-400 tracking-tighter">~$59<span class="text-2xl font-normal text-white">/mo</span></span>
+                    </div>
+                    <span class="inline-block mt-2 text-green-400 text-[10px] font-bold uppercase tracking-widest" style="text-shadow: 0 0 8px rgba(74, 222, 128, 0.6)">
+                      40% Waitlist Discount
+                    </span>
+                </div>
+
+                <div class="badge-spacer"></div>
+
+                <div class="section-features mb-4">
+                    <p class="row-label text-blue-400">Features</p>
+                    <ul class="feature-list text-sm text-slate-200">
+                        <li><span class="feature-icon text-blue-500">✓</span> <strong>Audit Explorer UI</strong></li>
+                        <li><span class="feature-icon text-blue-500">✓</span> LTS Compatibility guarantees</li>
+                    </ul>
+                </div>
+
+                <div class="section-support mb-4">
+                    <p class="row-label text-blue-400">Support</p>
+                    <ul class="feature-list text-sm text-slate-200">
+                        <li><span class="feature-icon text-blue-500">✓</span> <strong>Priority Bug Fixing</strong></li>
+                        <li><span class="feature-icon text-blue-500">✓</span> Private Slack</li>
+                    </ul>
+                </div>
+
+                <div class="mt-auto">
+                    <button onclick="revealForm('pro')" class="cta-button w-full py-4 font-black rounded-lg transition-all uppercase text-[11px] tracking-widest">Join Pro Waitlist</button>
+                    <p class="no-cc text-center text-[10px] text-slate-400 mt-3 uppercase tracking-widest">No credit card required</p>
+                </div>
+            </div>
+
+            <div id="enterprise-card" onclick="selectTier('enterprise')" class="javers-card bg-[#1e293b] rounded-2xl px-8 pt-5 pb-8 flex flex-col unselected-tier cursor-pointer border border-transparent">
+                <h3 class="text-xl font-bold text-white uppercase mb-2">Enterprise</h3>
+                <p class="text-xs text-slate-400 mb-2">Compliance-ready. SLA-backed.</p>
+                <div class="mb-2 bg-slate-900/50 py-4 px-4 rounded-lg border border-slate-700/50 text-center">
+                    <div class="flex items-center justify-center gap-3">
+                        <span class="price-strike text-3xl text-slate-400">~$499</span>
+                        <span class="promo-price text-4xl font-bold text-green-400 tracking-tighter">~$299<span class="text-2xl font-normal text-white">/mo</span></span>
+                    </div>
+                    <span class="inline-block mt-2 text-green-400 text-[10px] font-bold uppercase tracking-widest" style="text-shadow: 0 0 8px rgba(74, 222, 128, 0.6)">
+                      40% Waitlist Discount
+                    </span>
+                </div>
+
+                <div id="tier-badge" class="mb-4 py-2 px-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                    <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest flex items-center">
+                        <svg class="w-3 h-3 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                        Includes All Pro Features
+                    </p>
+                </div>
+
+                <div class="section-features mb-4">
+                    <p class="row-label text-blue-400">Features</p>
+                    <ul class="feature-list text-[13px] text-slate-200">
+                        <li><span class="feature-icon text-blue-500">✓</span> <strong>Javers Pro Repo (10x Faster)</strong></li>
+                        <li><span class="feature-icon text-blue-500">✓</span> Multi-tenancy & Data Retention</li>
+                        <li><span class="feature-icon text-blue-500">✓</span> GDPR / SOX / HIPAA Compliance</li>
+                    </ul>
+                </div>
+
+                <div class="section-support mb-4">
+                    <p class="row-label text-blue-400">Support</p>
+                    <ul class="feature-list text-[13px] text-slate-200">
+                        <li><span class="feature-icon text-blue-500">✓</span> <strong>Priority Bug Fixing + SLA</strong></li>
+                    </ul>
+                </div>
+
+                <div class="mt-auto">
+                    <button onclick="revealForm('enterprise')" class="cta-button w-full py-4 font-black rounded-lg transition-all uppercase text-[11px] tracking-widest">Join Enterprise Waitlist</button>
+                    <p class="no-cc text-center text-[10px] text-slate-400 mt-3 uppercase tracking-widest">No credit card required</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-panel" style="max-height:0; overflow:hidden; transition: max-height 0.3s ease;">
+            <div class="mt-8 max-w-xl mx-auto bg-slate-800/50 p-6 md:p-10 rounded-3xl border border-slate-700 shadow-2xl">
+                <h4 class="text-2xl font-bold text-white mb-2" id="form-title">Join the Waitlist</h4>
+                <p class="text-slate-300 text-sm mb-8">Enter your work email to lock in your <span class="text-green-400 font-bold">40% lifetime discount</span>.</p>
+                <form id="waitlist-form" onsubmit="return false;" class="space-y-4">
+                    <input type="hidden" id="tier-field" name="tier" value="">
+                    <input type="email" name="email" placeholder="work-email@company.com" required
+                           class="w-full px-4 py-4 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm outline-none focus:border-blue-500 transition">
+                    <textarea name="feedback" placeholder="(Optional) What's your biggest Java auditing challenge?" rows="3"
+                              class="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm outline-none focus:border-blue-500 transition resize-none"></textarea>
+                    <button type="submit" id="submit-btn"
+                            class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-lg uppercase text-xs tracking-widest transition shadow-lg active:scale-95">
+                        Join Pro Waitlist
+                    </button>
+                </form>
+                <p class="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-widest">No credit card required</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function alignCardSections() {
+      if (window.innerWidth < 1024) {
+        // Reset any desktop heights set previously (e.g., after resize down)
+        document.querySelectorAll('.badge-spacer').forEach(s => s.style.height = '');
+        document.querySelectorAll('.section-features').forEach(s => s.style.minHeight = '');
+        return;
+      }
+
+      // Temporarily remove scale transform so getBoundingClientRect gives layout positions
+      const scaled = document.querySelector('.selected-tier');
+      if (scaled) scaled.style.transform = 'none';
+
+      // Reset so measurements start clean
+      document.querySelectorAll('.badge-spacer').forEach(s => s.style.height = '0px');
+      document.querySelectorAll('.section-features').forEach(s => s.style.minHeight = '');
+
+      // 1. Align Features tops via badge-spacer
+      const featureSections = Array.from(document.querySelectorAll('.section-features'));
+      const maxFeaturesTop = Math.max(...featureSections.map(s => s.getBoundingClientRect().top));
+      featureSections.forEach(section => {
+        const diff = maxFeaturesTop - section.getBoundingClientRect().top;
+        const spacer = section.parentElement.querySelector('.badge-spacer');
+        if (spacer && diff > 0) spacer.style.height = diff + 'px';
+      });
+
+      // 2. Equalize Features section heights so Support rows align too
+      const maxFeaturesHeight = Math.max(...featureSections.map(s => s.offsetHeight));
+      featureSections.forEach(s => s.style.minHeight = maxFeaturesHeight + 'px');
+
+      // Restore transform
+      if (scaled) scaled.style.transform = '';
+    }
+    alignCardSections();
+    window.addEventListener('resize', alignCardSections);
+
+    function selectTier(tierName) {
+      const pro = document.getElementById('pro-card');
+      const ent = document.getElementById('enterprise-card');
+      if (tierName === 'pro') {
+        pro.classList.replace('unselected-tier', 'selected-tier');
+        ent.classList.replace('selected-tier', 'unselected-tier');
+      } else {
+        ent.classList.replace('unselected-tier', 'selected-tier');
+        pro.classList.replace('selected-tier', 'unselected-tier');
+      }
+      alignCardSections();
+    }
+
+    function revealForm(tier) {
+      // Update tier selection visual
+      selectTier(tier);
+
+      // Update dynamic form labels
+      const label = tier === 'pro' ? 'Pro' : 'Enterprise';
+      document.getElementById('form-title').innerHTML = 'Join the <span class="text-blue-400">' + label + '</span> Waitlist';
+      document.getElementById('submit-btn').textContent = 'Join ' + label + ' Waitlist';
+      document.getElementById('tier-field').value = tier;
+
+      // Demote card buttons — form submit is now the only primary action
+      document.querySelector('section').classList.add('form-open');
+
+      // Reveal panel
+      const panel = document.getElementById('form-panel');
+      const emailInput = document.querySelector('#waitlist-form input[type="email"]');
+
+      // panel.scrollHeight = full content height even when max-height is 0
+      const panelNaturalHeight = panel.scrollHeight;
+
+      // Spacer instantly makes the document tall enough for the scroll target,
+      // since the panel's height isn't in document flow until the transition completes
+      const spacer = document.createElement('div');
+      spacer.style.height = panelNaturalHeight + 'px';
+      panel.after(spacer);
+
+      panel.style.maxHeight = (panelNaturalHeight + 50) + 'px';
+
+      // Scroll starts immediately in parallel with the panel opening animation
+      const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+      const targetScrollY = panelTop + panelNaturalHeight / 2 - window.innerHeight / 2;
+      window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'smooth' });
+      setTimeout(() => emailInput.focus({ preventScroll: true }), 700);
+
+      // Remove spacer once panel is fully open (it now occupies its own space)
+      panel.addEventListener('transitionend', () => spacer.remove(), { once: true });
+    }
+</script>
