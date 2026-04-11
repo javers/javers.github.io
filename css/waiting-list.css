@@ -194,3 +194,15 @@
 .success-card p { color: #cbd5e1; margin-bottom: 8px; }
 .success-card .email-addr { color: #fff; font-weight: 700; }
 .success-card .green { color: #4ade80; font-weight: 700; }
+
+/* ── Countdown timer ── */
+.wl-countdown {
+    color: #94a3b8;
+}
+.wl-countdown span.cd-green {
+    color: #4ade80; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.wl-countdown #cd-mins,
+.wl-countdown #cd-secs {
+    font-weight: 700; font-variant-numeric: tabular-nums;
+}

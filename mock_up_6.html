@@ -243,7 +243,7 @@
 
       // Update dynamic form labels
       const label = tier === 'pro' ? 'Pro' : 'Enterprise';
-      document.getElementById('form-title').innerHTML = 'Join the <span class="text-blue-400">' + label + '</span> Waitlist';
+      document.getElementById('form-title').textContent = 'Join the ' + label + ' Waitlist';
       document.getElementById('submit-btn').textContent = 'Join ' + label + ' Waitlist';
       document.getElementById('tier-field').value = tier;
 

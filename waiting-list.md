@@ -10,7 +10,7 @@ category: Contact
     <div class="wl-inner">
         <div class="wl-header">
             <h1>The Future of JaVers is Pro</h1>
-            <p>Join the waitlist for a <span class="bold">40% lifetime discount</span>.</p>
+            <p>Join the waitlist for a <span class="bold">40% lifetime discount</span>. <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
         </div>
 
         <div class="wl-grid">
@@ -255,8 +255,8 @@ category: Contact
 
         if (!turnstileVerified) {
             // TODO uncomment before launch
-            // alert("Please complete the CAPTCHA first.");
-            // return;
+            alert("Please complete the CAPTCHA first.");
+            return;
         }
 
         const form = e.target;
@@ -315,4 +315,35 @@ category: Contact
             button.innerText = 'Join ' + label + ' Waitlist';
         }
     });
+
+    // Countdown timer
+    (function() {
+        const deadline = new Date('2026-06-30T23:59:59').getTime();
+        const daysEl = document.getElementById('cd-days');
+        const hoursEl = document.getElementById('cd-hours');
+        const minsEl = document.getElementById('cd-mins');
+        const secsEl = document.getElementById('cd-secs');
+
+        function pad(n) { return n < 10 ? '0' + n : n; }
+
+        function tick() {
+            const now = Date.now();
+            const diff = deadline - now;
+            if (diff <= 0) {
+                document.querySelector('.wl-countdown').innerHTML =
+                    '<p class="countdown-label">Waitlist is closed</p>';
+                return;
+            }
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            daysEl.textContent = pad(d);
+            hoursEl.textContent = pad(h);
+            minsEl.textContent = pad(m);
+            secsEl.textContent = pad(s);
+        }
+        tick();
+        setInterval(tick, 1000);
+    })();
 </script>
