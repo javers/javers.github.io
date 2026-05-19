@@ -112,6 +112,8 @@ category: Contact
             </div>
         </div>
 
+        <p class="plans-disclaimer">Features listed in both plans are subject to change in the final version.</p>
+
         <div id="form-panel" class="form-panel-wrap">
             <div class="form-card">
                 <h4 id="form-title">Join the Waitlist</h4>

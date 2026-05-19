@@ -141,6 +141,12 @@
 .wl-card .title-lg { font-size: 24px; }
 .wl-card .title-md { font-size: 20px; }
 
+/* ── Plans disclaimer ── */
+.plans-disclaimer {
+    text-align: center; font-size: 11px; color: #64748b;
+    margin-top: 16px; margin-bottom: 0;
+}
+
 /* ── Form panel ── */
 .form-panel-wrap {
     max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
