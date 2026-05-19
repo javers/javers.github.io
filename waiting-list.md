@@ -10,7 +10,7 @@ category: Contact
     <div class="wl-inner">
         <div class="wl-header">
             <h1>The Future of JaVers is Pro</h1>
-            <p>Join the waitlist for a <span class="bold">40% lifetime discount</span>. <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
+            <p>Join the waitlist and lock in a <span class="bold">40% lifetime discount</span>. <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
         </div>
 
         <div class="wl-grid">
@@ -24,7 +24,7 @@ category: Contact
                 <div class="section-features mb-4">
                     <p class="row-label label-white">Features</p>
                     <ul class="feature-list text-sm text-white font-medium">
-                        <li><span class="feature-icon">✓</span> Core Auditing Engine</li>
+                        <li><span class="feature-icon">✓</span> JaVers OSS Core Features</li>
                     </ul>
                 </div>
 
@@ -38,7 +38,7 @@ category: Contact
 
             <div id="pro-card" onclick="selectTier('pro')" class="wl-card javers-card selected-tier">
                 <h3 class="title-lg">Professional</h3>
-                <p class="subtitle">Guaranteed compatibility. Priority support.</p>
+                <p class="subtitle">Long-term compatibility. Priority bug fixes.</p>
                 <div class="price-box">
                     <div class="price-row">
                         <span class="price-strike">~$99</span>
@@ -53,7 +53,7 @@ category: Contact
                     <p class="row-label label-blue accent">Features</p>
                     <ul class="feature-list text-sm text-slate">
                         <li><span class="feature-icon icon-blue accent">✓</span> <strong>Audit Explorer UI</strong></li>
-                        <li><span class="feature-icon icon-blue accent">✓</span> LTS Compatibility guarantees</li>
+                        <li><span class="feature-icon icon-blue accent">✓</span> Spring Boot & Java LTS Support</li>
                     </ul>
                 </div>
 
@@ -92,8 +92,8 @@ category: Contact
                 <div class="section-features mb-4">
                     <p class="row-label label-blue accent">Features</p>
                     <ul class="feature-list text-xs text-slate">
-                        <li><span class="feature-icon icon-blue accent">✓</span> <strong>Javers Pro Repo (10x Faster)</strong></li>
-                        <li><span class="feature-icon icon-blue accent">✓</span> Multi-tenancy &amp; Data Retention</li>
+                        <li><span class="feature-icon icon-blue accent">✓</span> <strong>JaVers Pro Repository (up to 5x Faster)</strong></li>
+                        <li><span class="feature-icon icon-blue accent">✓</span> Multi-Tenancy &amp; Data Retention Policies</li>
                         <li><span class="feature-icon icon-blue accent">✓</span> GDPR / SOX / HIPAA Compliance</li>
                     </ul>
                 </div>
@@ -115,12 +115,12 @@ category: Contact
         <div id="form-panel" class="form-panel-wrap">
             <div class="form-card">
                 <h4 id="form-title">Join the Waitlist</h4>
-                <p class="form-desc">Enter your work email to lock in your <span class="green">40% lifetime discount</span>.</p>
+                <p class="form-desc">Enter your work email to lock in your <span class="green">40% lifetime discount</span> before the waitlist closes.</p>
                 <form id="waitlist-form">
                     <input type="hidden" id="tier-field" name="fields[tier]" value="">
                     <input type="hidden" name="anticsrf" value="true">
                     <input type="email" name="fields[email]" placeholder="work-email@company.com" required>
-                    <textarea name="fields[pro_feedback]" placeholder="(Optional) What's your biggest Java auditing challenge?" rows="3"></textarea>
+                    <textarea name="fields[pro_feedback]" placeholder="(Optional) What's your biggest challenge with JaVers today?" rows="3"></textarea>
 
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAACY-8HdUj3S60t53" data-callback="onTurnstileSuccess"></div>
 
@@ -144,10 +144,9 @@ category: Contact
         <div class="row-success">
             <div class="success-card">
                 <div class="checkmark">&#10003;</div>
-                <h4>Almost there! Check your inbox.</h4>
+                <h4>Your 40% discount is one click away.</h4>
                 <p>We sent a confirmation link to <strong id="submitted-email" class="email-addr"></strong>.</p>
-                <p><strong style="color:#fff;">Click the link in that email</strong> to secure your spot.</p>
-                <p>After confirming, you will receive your <strong class="green">40% lifetime discount code</strong>.</p>
+                <p>Open that email and click the link to lock in your discount.</p>
             </div>
         </div>
 
