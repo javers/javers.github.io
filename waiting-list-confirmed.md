@@ -17,7 +17,7 @@ permalink: /waiting-list-confirmed/
 
         <p>Apply this code when JaVers Pro launches to get <strong style="color: #4ade80;">40% off for life</strong>.</p>
         <p>We've also sent it to your email for safekeeping.</p>
-        <p style="margin-top: 40px; color: #94a3b8; font-size: 15px;">I'm Bartosz Walacik, creator of JaVers.<br>
+        <p style="margin-top: 40px; color: #94a3b8; font-size: 15px;">I'm Bartosz, creator of JaVers.<br>
         I'd love to hear how you use JaVers and what you'd like to see in Pro.<br>
         Drop me a line at <a href="mailto:contact@javers.org">contact@javers.org</a> — I read every message.</p>
         <p style="margin-top: 24px;"><a href="/" style="color: #60a5fa; font-weight: 700;">Back to JaVers &rarr;</a></p>
