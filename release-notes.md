@@ -6,6 +6,14 @@ submenu: release-notes
 ---
 
 
+### 7.11.1
+released on 2026-05-22
+* [1373](https://github.com/javers/javers/issues/1373)
+  Fixed `withChildValueObjects()` not working in MongoRepository
+  when Entity `@Id` is `java.util.UUID`.
+
+  The fix converts `cdoId` to String when it's a `UUID` instance.
+
 ### 7.11.0
 released on 2026-03-15
 * [1447](https://github.com/javers/javers/issues/1447)

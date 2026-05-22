@@ -101,7 +101,7 @@ category: Contact
                 <div class="section-support mb-4">
                     <p class="row-label label-blue accent">Support</p>
                     <ul class="feature-list text-xs text-slate">
-                        <li><span class="feature-icon icon-blue accent">✓</span> <strong>Priority Bug Fixing + SLA</strong></li>
+                        <li><span class="feature-icon icon-blue accent">✓</span> <strong>SLA</strong></li>
                     </ul>
                 </div>
 
