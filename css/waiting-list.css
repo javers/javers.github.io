@@ -224,3 +224,11 @@
 .wl-prose a:hover { color: #93bbfd; }
 .wl-prose .wl-prose-subtitle { font-size: 18px; color: #94a3b8; margin-bottom: 4px; }
 .wl-prose .wl-prose-updated { font-size: 13px; color: #64748b; margin-bottom: 32px; }
+
+/* ── Discount code box (confirmation page) ── */
+.discount-code-box {
+    display: inline-block; padding: 16px 48px; margin-bottom: 32px;
+    background: rgba(15, 23, 42, 0.5); border: 2px dashed #4ade80; border-radius: 12px;
+    font-size: 32px; font-weight: 800; color: #4ade80; letter-spacing: 0.15em;
+    text-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
+}

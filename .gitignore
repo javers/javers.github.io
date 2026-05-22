@@ -8,3 +8,4 @@ vendor
 .jekyll-metadata
 node_modules
 package-lock.json
+CLAUDE.md
