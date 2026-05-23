@@ -7,7 +7,7 @@ category: page_center
 JaVers is an Apache-licensed open source project and it’s completely free to use.
  
 JaVers is gaining momentum, the number of downloads from The Central is growing.
-In July 2024, `javers-core` was downloaded nearly 1,000,000 times.
+In 2026, `javers-core` reached 1.6 Million monthly downloads.
  
 {% include fancy-image.html image="/img/javers-core-downloads-2025.png" alt="downloads from The Central chart" %}
 
@@ -33,6 +33,6 @@ Make a one-time or recurring contribution.
 
 Bartosz Walacik
 
-[bwalacik@gmail.com](mailto:bwalacik@gmail.com)
+[contact@javers.org](mailto:contact@javers.org)
 
 My [Github](https://github.com/bartoszwalacik) 

@@ -16,7 +16,7 @@ title: Privacy Policy — JaVers Pro Waiting List
 <p>When you join the JaVers Pro waiting list, we collect:</p>
 <ul>
     <li>Your <strong>email address</strong> (required)</li>
-    <li>Your <strong>selected pricing tier</strong> preference (Team or Enterprise)</li>
+    <li>Your <strong>selected pricing tier</strong> preference (Professional or Enterprise)</li>
     <li>Optional <strong>feedback or comments</strong> you provide in the form</li>
 </ul>
 
