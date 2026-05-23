@@ -30,12 +30,12 @@
                 <a href="/blog">Blog</a>
                 </li>-->
 
-                <li {% if page.url contains '/support' %}class='active'{% endif %}>
-                <a href="/support">Support</a>
-                </li>
-
-                <li {% if page.url contains '/sponsorship' %}class='active'{% endif %}>
-                <a href="/sponsorship">Sponsorship</a>
+                <li class="dropdown {% if page.url contains '/support' or page.url contains '/sponsorship' %}active{% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button">Support <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/support">Support</a></li>
+                        <li><a href="/sponsorship">Sponsorship</a></li>
+                    </ul>
                 </li>
 
                 <li class="dropdown {% if page.url contains '/documentation/' %}active{% endif %}">
@@ -57,6 +57,10 @@
 
                 <li {% if page.url contains '/release-notes' %}class='active'{% endif %}>
                     <a href="/release-notes">Release notes</a>
+                </li>
+
+                <li {% if page.url contains '/waiting-list' %}class='active'{% endif %}>
+                <a href="/waiting-list">JaVers Pro</a>
                 </li>
 
                 <li {% if page.url contains '/contact-us' %}class='active'{% endif %}>

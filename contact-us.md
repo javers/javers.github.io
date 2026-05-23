@@ -4,32 +4,34 @@ title: Contact Us
 category: Contact
 ---
 
-From individual developers to enterprise teams: we want to hear from you. Javers is entering a new chapter, evolving into an **Open Core** model with **Professional Support**
-services coming soon. Your insights help us ensure this transition serves our users' highest needs
+Whether you are a long-time user or just getting started — we want to hear from you.
+
+---
+
+### 🚀 JaVers Pro — Professional Support & Enterprise Features
+Need to scale JaVers in a high-stakes enterprise environment?
+**[JaVers Pro](/waiting-list)** gives you direct access to the author and premium features:
+
+* **Professional Bug Fixing** — priority response from the core team
+* **Audit Explorer UI** — visual interface for browsing audit data
+* **Spring Boot & Java LTS Support** — long-term compatibility guaranteed
+* **Professional Support with SLA** — enterprise-grade reliability
+* **Multi-Tenancy, Data Retention & GDPR Compliance** — built for regulated environments
+
+👉 **[Join the waitlist now](/waiting-list)** and lock in a **40% lifetime discount** before it closes.
 
 ---
 
 ### 💡 Feedback & Community
 Javers was built for the community, and it stays that way. Have thoughts on the roadmap, a feature request, or a success story to share?
 * **Email us:** [contact@javers.org](mailto:contact@javers.org)
-* **GitHub:** For bug reports and feature requests, please continue to use our [GitHub Issues](https://github.com/javers/javers/issues).
-
----
-
-### 🚀 Professional Consulting & Support
-Need to scale Javers in a high-stakes enterprise environment?
-You can now get **direct access to the author** for expert guidance.
-
-We are currently accepting inquiries for:
-* **Dedicated Support:** Priority response times and SLA-backed troubleshooting for critical systems.
-* **Architecture Reviews:** Custom consulting to optimize your Javers integration, performance tuning, and data modeling.
-* **Enterprise Features:** Early access to paid premium extensions designed for large-scale deployments.
+* **GitHub:** For bug reports and feature requests, please use our [GitHub Issues](https://github.com/javers/javers/issues).
 
 ---
 
 ### 📧 Get in Touch
-For all commercial inquiries, partnership proposals, or direct feedback, please reach out to:
+For general inquiries, partnership proposals, or direct feedback:
 
 **[contact@javers.org](mailto:contact@javers.org)**
 
-*We aim to respond to all professional inquiries within 24–48 hours.*
+*We aim to respond within 24–48 hours.*

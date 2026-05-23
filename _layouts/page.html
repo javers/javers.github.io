@@ -10,7 +10,7 @@
     <div id="content" class="container">
         <div class="row">
             <div id="main"
-                {% if page.category == "Blog" or page.category == "page_center" %}
+                {% if page.category == "Blog" or page.category == "page_center" or page.sidebar-url == nil %}
                    class="col-md-8 col-md-offset-2"{% else %}class="col-md-8"
                 {% endif %}
                 itemscope itemtype="http://schema.org/TechArticle">
@@ -46,10 +46,7 @@
                 </div>
                 {% endif %}
 
-                {% if page.category == 'Contact' %}
-                {% else %}
-                    {% include sponsorship-alert.html %}
-                {% endif %}
+                {% include promo-bar.html %}
 
                 <h1 itemprop="headline">{{ page.title }}</h1>
 

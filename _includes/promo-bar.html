@@ -1,0 +1,102 @@
+<a href="/waiting-list" class="promo-bar">
+    <span class="promo-bar-text">
+        <span class="promo-bar-title">The Future of JaVers is Pro</span><br/><span style="display:block; margin-top:8px;"></span>
+        Audit Explorer UI, Professional Support, Multi-Tenancy, Data Retention &amp; GDPR Compliance<br/><span style="display:block; margin-top:15px;"></span>
+        Join the waitlist and lock in a <span class="promo-bar-highlight">40% lifetime discount</span>. Waitlist closes in <span id="pb-days" class="promo-bar-highlight">--</span>d <span id="pb-hours" class="promo-bar-highlight">--</span>h <span id="pb-mins">--</span>m <span id="pb-secs">--</span>s
+    </span>
+    <span class="promo-bar-cta">Join the Waitlist &rarr;</span>
+</a>
+
+<style>
+.promo-bar {
+    margin: 14px 8px 14px 8px;
+    padding: 18px 28px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #172554 100%);
+    border: 3px solid #2563eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    text-decoration: none !important;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.15s;
+    cursor: pointer;
+}
+.promo-bar:hover {
+    border-color: #4ade80;
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.15), 0 4px 12px rgba(37, 99, 235, 0.2);
+    transform: translateY(-1px);
+    text-decoration: none !important;
+}
+.promo-bar:focus {
+    outline: 2px solid #4ade80;
+    outline-offset: 2px;
+}
+.promo-bar-text {
+    color: #cbd5e1;
+    font-size: 17px;
+    line-height: 1.6;
+    text-align: center;
+}
+.promo-bar-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+.promo-bar-text b {
+    color: #fff;
+    font-size: 19px;
+}
+.promo-bar-highlight {
+    color: #4ade80;
+    font-weight: 700;
+}
+.promo-bar-cta {
+    background: #2563eb;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.promo-bar:hover .promo-bar-cta {
+    background: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+@media (max-width: 600px) {
+    .promo-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        padding: 18px 16px;
+    }
+    .promo-bar-cta {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+}
+</style>
+
+<script>
+(function() {
+    var deadline = new Date('2026-06-30T23:59:59').getTime();
+    function pad(n) { return n < 10 ? '0' + n : n; }
+    function tick() {
+        var diff = deadline - Date.now();
+        if (diff <= 0) return;
+        document.getElementById('pb-days').textContent = pad(Math.floor(diff / 86400000));
+        document.getElementById('pb-hours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+        document.getElementById('pb-mins').textContent = pad(Math.floor((diff % 3600000) / 60000));
+        document.getElementById('pb-secs').textContent = pad(Math.floor((diff % 60000) / 1000));
+    }
+    tick();
+    setInterval(tick, 1000);
+})();
+</script>

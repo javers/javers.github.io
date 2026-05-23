@@ -10,7 +10,7 @@ category: Contact
     <div class="wl-inner">
         <div class="wl-header">
             <h1>The Future of JaVers is Pro</h1>
-            <p>Join the waitlist and lock in a <span class="bold">40% lifetime discount</span>. <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
+            <p>Join the waitlist and lock in a <span class="bold" style="color:#4ade80;">40% lifetime discount</span>. <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
         </div>
 
         <div class="wl-grid">
@@ -61,7 +61,6 @@ category: Contact
                     <p class="row-label label-blue accent">Support</p>
                     <ul class="feature-list text-sm text-slate">
                         <li><span class="feature-icon icon-blue accent">✓</span> <strong>Priority Bug Fixing</strong></li>
-                        <li><span class="feature-icon icon-blue accent">✓</span> Private Slack</li>
                     </ul>
                 </div>
 
@@ -91,7 +90,7 @@ category: Contact
 
                 <div class="section-features mb-4">
                     <p class="row-label label-blue accent">Features</p>
-                    <ul class="feature-list text-xs text-slate">
+                    <ul class="feature-list text-sm text-slate">
                         <li><span class="feature-icon icon-blue accent">✓</span> <strong>JaVers Pro Repository (up to 5x Faster)</strong></li>
                         <li><span class="feature-icon icon-blue accent">✓</span> Multi-Tenancy &amp; Data Retention Policies</li>
                         <li><span class="feature-icon icon-blue accent">✓</span> GDPR / SOX / HIPAA Compliance</li>
@@ -100,8 +99,9 @@ category: Contact
 
                 <div class="section-support mb-4">
                     <p class="row-label label-blue accent">Support</p>
-                    <ul class="feature-list text-xs text-slate">
-                        <li><span class="feature-icon icon-blue accent">✓</span> <strong>SLA</strong></li>
+                    <ul class="feature-list text-sm text-slate">
+                        <li><span class="feature-icon icon-blue accent">✓</span> <strong>Professional Support with SLA</strong></li>
+                        <li><span class="feature-icon icon-blue accent">✓</span> Private Slack</li>
                     </ul>
                 </div>
 
