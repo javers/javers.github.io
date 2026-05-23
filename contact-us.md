@@ -20,6 +20,12 @@ Need to scale JaVers in a high-stakes enterprise environment?
 
 👉 **[Join the waitlist now](/waiting-list)** and lock in a **40% lifetime discount** before it closes.
 
+### 📊 Downloads from The Maven Central
+
+With **1.6 Million monthly downloads** (counted by Scarf), JaVers is the leading data audit library for Java
+
+{% include fancy-image.html image="/img/scarf-stats-javers-2026-05.png" alt="JaVers monthly downloads from Scarf — May 2026" %}
+
 ---
 
 ### 💡 Feedback & Community
