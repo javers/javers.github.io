@@ -6,6 +6,14 @@ submenu: release-notes
 ---
 
 
+### 7.11.2
+released on 2026-06-10
+* [1481](https://github.com/javers/javers/issues/1481)
+  Fixed initialization order in `JaversBuilder` — built-in ValueTypes
+  (like `UUID`, `LocalDateTime`) are now registered before class scanning begins.
+  Previously, scanning could infer these types as ValueObjects and attempt
+  deep introspection of JDK internals, causing `InaccessibleObjectException` on Java 16+.
+
 ### 7.11.1
 released on 2026-05-22
 * [1373](https://github.com/javers/javers/issues/1373)
