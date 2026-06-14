@@ -6,6 +6,13 @@ submenu: release-notes
 ---
 
 
+### 7.11.4
+released on 2026-06-14
+* [1485](https://github.com/javers/javers/issues/1485)
+  Fixed Gradle capability conflict with Spring Boot 4.1+ by switching
+  `javers-spring-jpa` Hibernate dependency from the old relocated coordinates
+  (`org.hibernate:hibernate-core`) to the canonical ones (`org.hibernate.orm:hibernate-core`).
+
 ### 7.11.2
 released on 2026-06-10
 * [1481](https://github.com/javers/javers/issues/1481)
