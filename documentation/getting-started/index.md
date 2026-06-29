@@ -55,7 +55,7 @@ and [Javers’ Spring integration](/documentation/spring-integration/).
 
 - [[Baeldung] Intro to JaVers](https://www.baeldung.com/javers)
   <br/>
-    **Teaser**: This article, written by Eugen Baeldung, serves as a starting point for understanding JaVers.
+    **Teaser**: This article, published on Baeldung, serves as a starting point for understanding JaVers.
    It provides an overview of JaVers’ core feature &mdash;  **the Object Diff**. It covers comparing objects,
    collections, and object graphs.
 
