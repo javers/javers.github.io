@@ -1,5 +1,6 @@
 gems:
   - jekyll-sitemap
+  - jekyll-redirect-from
 
 # Build settings
 kramdown:
@@ -21,5 +22,3 @@ description: Object auditing and diff framework for Java
 
 permalink: /blog/:year/:month/:title.html
 
-plugins:
-  - jekyll-redirect-from
