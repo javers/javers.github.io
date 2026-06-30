@@ -6,6 +6,8 @@ image: /blog/javers-vs-envers/competition.png
 author: Bartosz Walacik
 authorTwitter: BartoszWalacik
 submenu: blog
+redirect_from:
+  - /blog/2017/12/javers-vs-envers-comparision.html
 ---
 
 In the Java world, there are two tools for data auditing: [Envers](http://hibernate.org/orm/envers/)
@@ -32,16 +34,16 @@ In the third section, I check how both tools are coping with queries on audit da
   * [Browsing objects history by type](#browsing-objects-history-by-type)
     * [Envers way](#envers-way-1)
     * [JaVers way](#javers-way-1)
-    * [Comparision](#comparision-1)
+    * [comparison](#comparison-1)
   * [Query filters](#query-filters)  
     * [Envers way](#envers-way-query-filters)
     * [JaVers way](#javers-way-query-filters)
-    * [Comparision](#comparision-query-filters)
+    * [comparison](#comparison-query-filters)
   * [More query filters](#more-query-filters)  
   * [Reconstructing full object graphs](#reconstructing-full-object-graphs) 
     * [Envers way](#envers-way-graphs)
     * [JaVers way](#javers-way-graphs)
-    * [Comparision](#comparision-graphs) 
+    * [comparison](#comparison-graphs) 
   * [Other query types](#other-query-types)    
 * [Final thoughts](#final-thoughts)   
 
@@ -443,7 +445,7 @@ commit:3.0, entity: Employee{ Gandalf CEO, $10200, Shire, subordinates:Aragorn,E
 commit:2.0, entity: Employee{ Gandalf CEO, $10200, Middle-earth, subordinates:Aragorn,Elrond }
 ```
 
-<h4 id="comparision-1">Comparision</h4>
+<h4 id="comparison-1">comparison</h4>
 
 Both tools have done the job and shown correct history. Both tools have loaded related entities.
 
@@ -655,7 +657,7 @@ commit:4.1, entity: Employee{ Aragorn CTO, $8100, Minas Tirith, subordinates: }
 commit:2.1, entity: Employee{ Gandalf CEO, $10100, Middle-earth, subordinates: }
 ```
 
-<h4 id="comparision-query-filters">Comparision</h4>
+<h4 id="comparison-query-filters">Comparison</h4>
 
 Once again both tools have done the job and shown correct history.
 
@@ -822,7 +824,7 @@ Employee{ Bombur SCRUM_MASTER, $6000, Lonely Mountain, subordinates: }
 JaVers query executed in 48 millis
 ```
 
-<h4 id="comparision-graphs">Comparision</h4>
+<h4 id="comparison-graphs">Comparison</h4>
 
 Both tools have succeeded to reconstruct the correct object graph.
 Thorin’s version is wired with

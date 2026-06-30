@@ -69,7 +69,7 @@ and [Javers’ Spring integration](/documentation/spring-integration/).
   It also explains JQL queries for retrieving historical data as `Snapshots` (state maps), `Changes` (atomic differences), or `Shadows` (reconstructed domain objects).
 
 
-- [[JaVers Blog] JaVers vs Envers Comparison](https://javers.org/blog/2017/12/javers-vs-envers-comparision.html)
+- [[JaVers Blog] JaVers vs Envers Comparison](https://javers.org/blog/2017/12/javers-vs-envers-comparison.html)
     <br/>
     **Teaser**: If you are debating between **JaVers** and Hibernate **Envers**, this article is essential reading.
     It provides a detailed technical breakdown of the object-oriented approach used by JaVers versus the table-oriented model of Envers, highlighting the benefits of technology independence.
