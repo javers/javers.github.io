@@ -41,4 +41,4 @@ This is the niche that JaVers fills. In JaVers, *version* and *change* are **fir
  
 <h2 id="licence">Licence</h2>
 JaVers is available under open source
-[Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0").
+[Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0).

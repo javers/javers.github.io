@@ -7,8 +7,8 @@ sidebar-url: docs-sidebar.html
 ---
 
 Javers’ diff algorithm has a pluggable construction.
-Each Java type is mapped to exact one [Javers type](/documentation/domain-configuration/#javers-types).
-Each Javers type is mapped to exact one *comparator*.
+Each Java type is mapped to exactly one [Javers type](/documentation/domain-configuration/#javers-types).
+Each Javers type is mapped to exactly one *comparator*.
 
 In most cases, you will rely on Javers’ core comparators.
 Optionally, you can register [Custom comparators](#custom-comparators)
@@ -20,13 +20,13 @@ For [comparing Lists](#list-algorithms), JaVers has three core comparators:
 <h2 id="list-algorithms">List comparing algorithms</h2>
 Generally, we recommend using **Levenshtein**, because it’s the smartest one.
 But use it with caution, it could be slow for long lists,
-say more then 300 elements.
+say more than 300 elements.
 
 The main advantage of **Simple** algorithm is speed, it has linear computation complexity.
 The main disadvantage is the verbose output.
 
 Choose the **Set** algorithm if you don’t care about the items ordering. 
-JaVers will convert all Lists to Sets before comparision.
+JaVers will convert all Lists to Sets before comparison.
 This algorithm produces the most concise output (only `ValueAdded` and `ValueRemoved`).   
 
 You can switch to Levenshtein or Set in JaversBuilder:
@@ -89,7 +89,7 @@ javers.compare(['a','b','c','d'],
                ['a','g','e','i'])
 ```
 
-the change list will the same:
+the change list will be the same:
 
 <table class="table" width="100%" style='word-wrap: break-word; font-family: monospace;'>
     <tr>
