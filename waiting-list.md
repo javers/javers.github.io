@@ -319,7 +319,7 @@ category: Contact
 
     // Countdown timer
     (function() {
-        const deadline = new Date('2026-06-30T23:59:59').getTime();
+        const deadline = new Date('2026-07-30T23:59:59').getTime();
         const daysEl = document.getElementById('cd-days');
         const hoursEl = document.getElementById('cd-hours');
         const minsEl = document.getElementById('cd-mins');
