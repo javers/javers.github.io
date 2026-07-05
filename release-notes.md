@@ -6,6 +6,11 @@ submenu: release-notes
 ---
 
 
+### 7.11.5
+released on 2026-07-05
+* [1484](https://github.com/javers/javers/issues/1484)
+  Fix SnapshotObjectHasher to produce deterministic hashes for Value Objects containing Sets.
+
 ### 7.11.4
 released on 2026-06-14
 * [1485](https://github.com/javers/javers/issues/1485)
