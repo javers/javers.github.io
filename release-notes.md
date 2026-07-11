@@ -6,6 +6,13 @@ submenu: release-notes
 ---
 
 
+
+### 7.11.6
+released on 2026-07-11
+* [1494](https://github.com/javers/javers/pull/1494)
+  Fixed `ClassCastException` in `SnapshotObjectHasher` when hashing a `List` property
+  mapped with `ListCompareAlgorithm.AS_SET` (regression introduced in 7.11.5).
+
 ### 7.11.5
 released on 2026-07-05
 * [1484](https://github.com/javers/javers/issues/1484)
