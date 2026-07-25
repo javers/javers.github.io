@@ -5,7 +5,25 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.11.7
+released on 2026-07-25
 
+* [1488](https://github.com/javers/javers/issues/1488) Added `printProBanner` switch to disable the startup JaVers pro banner.
+
+  Usage:
+
+```
+    Javers javers = JaversBuilder.javers()
+            .withPrintProBanner(false)
+            .build()
+```
+
+In Spring Boot, the same option is available via `application.yml`:
+
+```
+    javers:
+      printProBanner: false
+```
 
 ### 7.11.6
 released on 2026-07-11
