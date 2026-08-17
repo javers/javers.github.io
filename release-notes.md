@@ -5,6 +5,12 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.11.8
+released on 2026-08-17
+
+* [1076](https://github.com/javers/javers/issues/1076)
+Fixed `ClassCastException` when a `CustomPropertyComparator` handles a property present on only one side of a polymorphic compare.
+
 ### 7.11.7
 released on 2026-07-25
 
