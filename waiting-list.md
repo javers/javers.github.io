@@ -10,7 +10,9 @@ category: Contact
     <div class="wl-inner">
         <div class="wl-header">
             <h1>The Future of JaVers is Pro</h1>
-            <p>Join the waitlist and lock in a <span class="bold" style="color:#4ade80;">40% lifetime discount</span>. <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
+            <p>Join the waitlist and lock in a <span class="bold" style="color:#4ade80;">
+            40% lifetime discount</span>.
+            <span class="wl-countdown">Waitlist closes in <span id="cd-days" class="cd-green">--</span>d <span id="cd-hours" class="cd-green">--</span>h <span id="cd-mins">--</span>m <span id="cd-secs">--</span>s</span></p>
         </div>
 
         <div class="wl-grid">
@@ -331,8 +333,9 @@ category: Contact
             const now = Date.now();
             const diff = deadline - now;
             if (diff <= 0) {
-                document.querySelector('.wl-countdown').innerHTML =
-                    '<p class="countdown-label">Waitlist is closed</p>';
+
+                document.querySelector('.wl-countdown').innerHTML = '';
+                //'<p class="countdown-label">Waitlist is closed</p>';
                 return;
             }
             const d = Math.floor(diff / 86400000);

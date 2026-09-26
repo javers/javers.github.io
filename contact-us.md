@@ -40,4 +40,3 @@ For general inquiries, partnership proposals, or direct feedback:
 
 **[contact@javers.org](mailto:contact@javers.org)**
 
-*We aim to respond within 24–48 hours.*
