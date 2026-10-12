@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+### 7.11.9
+released on  2026-10-12
+
+* [1500](https://github.com/javers/javers/issues/1500)
+  Fixed JSON serialization of `java.sql.Timestamp`.
+  Nanoseconds were truncated to milliseconds, so a write/read round trip changed the value.
+
 ### 7.11.8
 released on 2026-08-17
 
