@@ -5,6 +5,13 @@ category: Documentation
 submenu: release-notes
 ---
 
+
+### 7.11.10
+released on  2026-11-08
+* [1509](https://github.com/javers/javers/issues/1509)
+    Fixed ClassCastException in SnapshotFactory.toOrderedSet since 7.11.5  
+    when a Set/List-as-Set holds non-Comparable values
+
 ### 7.11.9
 released on  2026-10-12
 
