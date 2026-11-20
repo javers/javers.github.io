@@ -8,7 +8,7 @@ submenu: release-notes
 
 ### 7.12.0
 released on 2026-11-20
-* [1507](https://github.com/javers/javers/pull/1507)
+* [1504](https://github.com/javers/javers/issues/1504)
     Improved MongoDB transactions support:
     * Reads join the application's transaction and see its uncommitted writes.
     * The latest-snapshot cache is transaction-safe: uncommitted snapshots never reach the shared cache.
