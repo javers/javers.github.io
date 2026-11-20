@@ -186,10 +186,58 @@ It could be a Service, Repository or anything which modifies domain objects.
 From now, all objects passed to the annotated methods will be automatically versioned by JaVers.
 
 <h4 id="at-auditable-delete">@JaversAuditableDelete</h4>
-TODO
+
+If you're using ordinary Repositories (non Spring Data),
+annotate delete methods you want to audit with the method-level `@JaversAuditableDelete`.
+JaVers commits a shallow delete (`javers.commitShallowDelete()`) for each method argument.
+
+The arguments can be Entities to delete or their ids.
+When deleting by id, set the Entity class in the `entity` attribute.
+
+For example:
+
+```java
+@Repository
+class UserRepository {
+    @JaversAuditableDelete
+    public void delete(User user) {
+        ...//
+    }
+
+    @JaversAuditableDelete(entity = User.class)
+    public void deleteById(String login) {
+        ...//
+    }
+}
+```
 
 <h4 id="at-javers-auditable-conditional-delete">@JaversAuditableConditionalDelete</h4>
-TODO
+
+If you're using ordinary Repositories (non Spring Data) and have delete methods with conditions
+(which take a condition instead of the objects to delete),
+put the method-level `@JaversAuditableConditionalDelete` on them to audit these deletes.
+
+For example:
+
+```java
+@Repository
+class UserRepository {
+    @JaversAuditableConditionalDelete
+    public User deleteByLogin(String login) {
+        ...//
+    }
+
+    @JaversAuditableConditionalDelete
+    public List<User> deleteAllByLogin(String login) {
+        ...//
+    }
+}
+```
+
+These delete methods must return the deleted Entity or a collection of deleted Entities.
+JaVers commits a shallow delete (`javers.commitShallowDelete()`) for each returned object.
+If a method returns something else, for example the number of deleted rows,
+JaVers throws `WRONG_USAGE_OF_JAVERS_AUDITABLE_CONDITIONAL_DELETE`.
 
 <h3 id="auto-audit-aspects-spring-configuration">Spring configuration of auto-audit aspects</h3>
 
