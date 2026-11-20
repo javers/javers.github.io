@@ -71,6 +71,20 @@ Javers javers = JaversBuilder.javers().registerJaversRepository(mongoRepository)
 
 Here’s the [Spring Config example](/documentation/spring-integration/#auto-audit-example) for MongoRepository.
 
+#### Transactions support in MongoRepository
+
+`MongoRepository` supports MongoDB multi-document transactions:
+Javers joins your application's transaction, so its reads see your uncommitted changes
+and its commits are rolled back together with your data.
+Transactions support is opt-in, by default `MongoRepository` works without transactions.
+
+The easiest way to use it is the integration with Spring's `MongoTransactionManager`,
+provided out of the box by the [Javers Spring Boot starter for MongoDB](/documentation/spring-boot-integration/#transaction-management-in-the-mongodb-starter).
+See [MongoDB transactions support](/documentation/spring-integration/#mongo-transactions).
+
+Without Spring, pass your own `MongoSessionProvider` to `MongoRepository`.
+It returns the transaction started by your application in the current thread (if any).
+
 **Schema**<br/>
 JaVers creates two collections in MongoDB:
 

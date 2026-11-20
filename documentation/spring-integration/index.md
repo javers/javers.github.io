@@ -523,8 +523,8 @@ by the well-known Spring Transaction Management platform.
 The central point of this platform is the `TransactionManager` abstraction
 , which for MongoDB is implemented by `MongoTransactionManager`.
 
-Once you have an instance of `MongoTransactionManager` you can easily build 
-the transactional version of Javers, which is going to participate
+Once you have an instance of `MongoTransactionManager` you can easily build
+a transactional `MongoRepository`, which participates
 in your application's transactions managed by Spring.
 
 For example:
@@ -532,15 +532,34 @@ For example:
 ```java
 @Bean
 public Javers javers() {
-        return TransactionalMongoJaversBuilder.javers()
-        .registerJaversRepository(new MongoRepository(mongoDatabase))
-        .withTxManager(mongoTransactionManager)
-        .build();
-        }
+    var javersRepository = TransactionalMongoRepositoryBuilder
+            .transactionalMongoRepository(mongoDatabase)
+            .withTxManager(mongoTransactionManager)
+            .build();
+
+    return JaversBuilder.javers()
+            .registerJaversRepository(javersRepository)
+            .build();
+}
 ```
 
+How it works:
+
+* Javers joins the application's Mongo transaction (the one of the `MongoTransactionManager` you pass)
+  for reads and writes. Reads see snapshots written earlier in the same, not yet committed transaction.
+  The `MongoTransactionManager` must manage the same database that is given to Javers.
+* A `javers.commit()` made outside a transaction runs in its own, short Mongo transaction,
+  so a commit is always atomic. Reads never start a transaction.
+* Other transactions (JPA, JDBC, etc.) are ignored.
+* `commitAsync()` runs on another thread and never joins the caller's transaction.
+* Transaction synchronization must stay enabled on the `MongoTransactionManager` (Spring's default).
+* The latest-snapshot cache holds only committed data, snapshots written in a transaction
+  reach it after the commit. Setting `snapshotsCacheSize = 0` turns caching off.
+
+`TransactionalMongoJaversBuilder` is deprecated, use `TransactionalMongoRepositoryBuilder`.
+
 See [Spring Data MongoDB Transactions by Baeldung](https://www.baeldung.com/spring-data-mongodb-transactions)
-and 
+and
 [MongoDB 4 Update: Multi-Document ACID Transactions](https://www.mongodb.com/blog/post/mongodb-multi-document-acid-transactions-general-availability).
 
 
@@ -562,121 +581,124 @@ package org.javers.spring.mongodb.example;
 import ...
 
 @Configuration
-@ComponentScan(basePackages = "org.javers.spring.repository")
-@EnableMongoRepositories({"org.javers.spring.repository"})
+@ComponentScan(basePackages = "org.javers.spring.mongodb.example")
+@EnableMongoRepositories({"org.javers.spring.mongodb.example"})
 @EnableAspectJAutoProxy
 public class JaversSpringMongoApplicationConfigExample {
-  private static final String DATABASE_NAME = "mydatabase";
+    private static final String DATABASE_NAME = "mydatabase";
 
-  @Autowired
-  Optional<MongoTransactionManager> mongoTransactionManager;
+    @Autowired
+    Optional<MongoTransactionManager> mongoTransactionManager;
 
-  /**
-   * Creates JaVers instance backed by {@link MongoRepository}
-   * <br/><br/>
-   *
-   * If you are using multi-document ACID transactions
-   * introduced in MongoDB 4.0 -- you can configure
-   * Javers' to participate in your application's transactions
-   * managed by MongoTransactionManager.
-   */
-  @Bean
-  public Javers javers() {
-    return TransactionalMongoJaversBuilder.javers()
-            .registerJaversRepository(new MongoRepository(mongo()))
-            .withTxManager(mongoTransactionManager.orElse(null))
-            .build();
-  }
+    /**
+     * Creates JaVers instance backed by {@link MongoRepository}
+     * <br/><br/>
+     *
+     * If you are using multi-document ACID transactions
+     * introduced in MongoDB 4.0 -- you can configure
+     * Javers' to participate in your application's transactions
+     * managed by MongoTransactionManager.
+     */
+    @Bean
+    public Javers javers() {
+        var transactionalMongoRepository = transactionalMongoRepository(mongo())
+                .withTxManager(mongoTransactionManager)
+                .build();
 
-  /**
-   * You can configure Javers' MongoRepository to use
-   * your application's primary database or a dedicated database.
-   */
-  @Bean
-  public MongoDatabase mongo() {
-    return MongoClients.create().getDatabase(DATABASE_NAME);
-  }
+        return JaversBuilder.javers()
+                .registerJaversRepository(transactionalMongoRepository)
+                .build();
+    }
 
-  /**
-   * Required by Spring Data Mongo
-   */
-  @Bean
-  public MongoTemplate mongoTemplate() {
-    return new MongoTemplate(MongoClients.create(), DATABASE_NAME);
-  }
+    /**
+     * You can configure Javers' MongoRepository to use
+     * your application's primary database or a dedicated database.
+     */
+    @Bean
+    public MongoDatabase mongo() {
+        return MongoClients.create().getDatabase(DATABASE_NAME);
+    }
 
-  /**
-   * Enables auto-audit aspect for ordinary repositories.<br/>
-   *
-   * Use {@link JaversAuditable}
-   * to mark repository methods that you want to audit.
-   */
-  @Bean
-  public JaversAuditableAspect javersAuditableAspect() {
-    return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
-  }
+    /**
+     * Required by Spring Data Mongo
+     */
+    @Bean
+    public MongoTemplate mongoTemplate() {
+        return new MongoTemplate(MongoClients.create(), DATABASE_NAME);
+    }
 
-  /**
-   * Enables auto-audit aspect for Spring Data repositories. <br/>
-   *
-   * Use {@link JaversSpringDataAuditable}
-   * to annotate CrudRepositories you want to audit.
-   */
-  @Bean
-  public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
-    return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
-            commitPropertiesProvider());
-  }
+    /**
+     * Enables auto-audit aspect for ordinary repositories.<br/>
+     *
+     * Use {@link JaversAuditable}
+     * to mark repository methods that you want to audit.
+     */
+    @Bean
+    public JaversAuditableAspect javersAuditableAspect() {
+        return new JaversAuditableAspect(javers(), authorProvider(), commitPropertiesProvider());
+    }
 
-  /**
-   * <b>INCUBATING - Javers Async API has incubating status.</b>
-   * <br/><br/>
-   *
-   * Enables asynchronous auto-audit aspect for ordinary repositories.<br/>
-   *
-   * Use {@link JaversAuditableAsync}
-   * to mark repository methods that you want to audit.
-   */
-  @Bean
-  public JaversAuditableAspectAsync javersAuditableAspectAsync() {
-    return new JaversAuditableAspectAsync(javers(), authorProvider(), commitPropertiesProvider(), javersAsyncAuditExecutor());
-  }
+    /**
+     * Enables auto-audit aspect for Spring Data repositories. <br/>
+     *
+     * Use {@link JaversSpringDataAuditable}
+     * to annotate CrudRepositories you want to audit.
+     */
+    @Bean
+    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
+        return new JaversSpringDataAuditableRepositoryAspect(javers(), authorProvider(),
+                commitPropertiesProvider());
+    }
 
-  /**
-   * <b>INCUBATING - Javers Async API has incubating status.</b>
-   * <br/><br/>
-   */
-  @Bean
-  public ExecutorService javersAsyncAuditExecutor() {
-    ThreadFactory threadFactory = new ThreadFactoryBuilder()
-            .setNameFormat("JaversAuditableAsync-%d")
-            .build();
-    return Executors.newFixedThreadPool(2, threadFactory);
-  }
+    /**
+     * <b>INCUBATING - Javers Async API has incubating status.</b>
+     * <br/><br/>
+     *
+     * Enables asynchronous auto-audit aspect for ordinary repositories.<br/>
+     *
+     * Use {@link JaversAuditableAsync}
+     * to mark repository methods that you want to audit.
+     */
+    @Bean
+    public JaversAuditableAspectAsync javersAuditableAspectAsync() {
+        return new JaversAuditableAspectAsync(javers(), authorProvider(), commitPropertiesProvider(), javersAsyncAuditExecutor());
+    }
 
-  /**
-   * Required by auto-audit aspect. <br/><br/>
-   *
-   * Creates {@link SpringSecurityAuthorProvider} instance,
-   * suitable when using Spring Security
-   */
-  @Bean
-  public AuthorProvider authorProvider() {
-    return new SpringSecurityAuthorProvider();
-  }
+    /**
+     * <b>INCUBATING - Javers Async API has incubating status.</b>
+     * <br/><br/>
+     */
+    @Bean
+    public ExecutorService javersAsyncAuditExecutor() {
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat("JaversAuditableAsync-%d")
+                .build();
+        return Executors.newFixedThreadPool(2, threadFactory);
+    }
 
-  /**
-   * Optional for auto-audit aspect. <br/>
-   * @see CommitPropertiesProvider
-   */
-  @Bean
-  public CommitPropertiesProvider commitPropertiesProvider() {
-    return new CommitPropertiesProvider() {
-      @Override
-      public Map<String, String> provideForCommittedObject(Object domainObject) {
-        return Maps.of("key", "ok");
-      }
-    };
-  }
+    /**
+     * Required by auto-audit aspect. <br/><br/>
+     *
+     * Creates {@link SpringSecurityAuthorProvider} instance,
+     * suitable when using Spring Security
+     */
+    @Bean
+    public AuthorProvider authorProvider() {
+        return new SpringSecurityAuthorProvider();
+    }
+
+    /**
+     * Optional for auto-audit aspect.
+     * See also {@link AdvancedCommitPropertiesProvider}
+     */
+    @Bean
+    public CommitPropertiesProvider commitPropertiesProvider() {
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provideForCommittedObject(Object domainObject) {
+                    return Maps.of("key", "ok");
+            }
+        };
+    }
 }
 ```
