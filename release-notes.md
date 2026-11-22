@@ -6,6 +6,20 @@ submenu: release-notes
 ---
 
 
+### 7.13.0
+released on 2026-11-22
+* [1505](https://github.com/javers/javers/issues/1505)
+    New `Javers.commitAggregateDelete()` and `commitAggregateDeleteById()`.
+    They mark as deleted a given Entity together with all its child Value Objects,
+    including nested Value Objects and those held in Lists, Sets, Maps, arrays and Optionals.
+    Referenced Entities are not marked as deleted.
+    Opt-in: the auto-audit aspects still use `commitShallowDelete()`.
+* [1515](https://github.com/javers/javers/pull/1515)
+    Fixed `commitShallowDelete()` of an already deleted object, it doesn't persist another terminal snapshot.
+* [1515](https://github.com/javers/javers/pull/1515)
+    Fixed `withChildValueObjects()` queries in `MongoRepository`,
+    they returned also Value Objects of other Entities with the same id.
+
 ### 7.12.0
 released on 2026-11-20
 * [1504](https://github.com/javers/javers/issues/1504)
